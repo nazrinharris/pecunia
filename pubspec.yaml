@@ -1,0 +1,47 @@
+name: pecunia
+description: A Personal Finance Management App.
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.19.5 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Backend
+  supabase_flutter: ^1.6.2
+
+  # Navigation
+  go_router: ^6.5.0
+
+  # Business Logic, Dependency Injection
+  flutter_riverpod: ^2.3.2
+
+  # Data classes
+  freezed_annotation: ^2.2.0
+  json_annotation: ^4.8.0
+  equatable: ^2.0.5
+
+  # Functional Programming
+  fpdart: ^0.5.0
+
+  # Icons
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Codegen
+  build_runner: ^2.3.3
+  freezed: ^2.3.2
+  json_serializable: ^6.6.1
+
+  # Linting
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
