@@ -1,3 +1,5 @@
+![Pecunia Banner](/assets/readme/Banner.png)
+
 # Pecunia: Personal Finance Management 💸
 
 Pecunia is a cross-platform personal finance management app built with Flutter. It enables users to effectively track their expenses, set budgets, visualize financial trends, and much more. Designed with a local-first approach, Pecunia puts your financial data directly in your hands.
