@@ -189,3 +189,179 @@ abstract class _PecuniaUser extends PecuniaUser {
   _$$_PecuniaUserCopyWith<_$_PecuniaUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+PecuniaUserDTO _$PecuniaUserDTOFromJson(Map<String, dynamic> json) {
+  return _PecuniaUserDTO.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PecuniaUserDTO {
+  String get uid => throw _privateConstructorUsedError;
+  String get username => throw _privateConstructorUsedError;
+  DateTime get dateCreated => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PecuniaUserDTOCopyWith<PecuniaUserDTO> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PecuniaUserDTOCopyWith<$Res> {
+  factory $PecuniaUserDTOCopyWith(
+          PecuniaUserDTO value, $Res Function(PecuniaUserDTO) then) =
+      _$PecuniaUserDTOCopyWithImpl<$Res, PecuniaUserDTO>;
+  @useResult
+  $Res call({String uid, String username, DateTime dateCreated});
+}
+
+/// @nodoc
+class _$PecuniaUserDTOCopyWithImpl<$Res, $Val extends PecuniaUserDTO>
+    implements $PecuniaUserDTOCopyWith<$Res> {
+  _$PecuniaUserDTOCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? uid = null,
+    Object? username = null,
+    Object? dateCreated = null,
+  }) {
+    return _then(_value.copyWith(
+      uid: null == uid
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      dateCreated: null == dateCreated
+          ? _value.dateCreated
+          : dateCreated // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_PecuniaUserDTOCopyWith<$Res>
+    implements $PecuniaUserDTOCopyWith<$Res> {
+  factory _$$_PecuniaUserDTOCopyWith(
+          _$_PecuniaUserDTO value, $Res Function(_$_PecuniaUserDTO) then) =
+      __$$_PecuniaUserDTOCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String uid, String username, DateTime dateCreated});
+}
+
+/// @nodoc
+class __$$_PecuniaUserDTOCopyWithImpl<$Res>
+    extends _$PecuniaUserDTOCopyWithImpl<$Res, _$_PecuniaUserDTO>
+    implements _$$_PecuniaUserDTOCopyWith<$Res> {
+  __$$_PecuniaUserDTOCopyWithImpl(
+      _$_PecuniaUserDTO _value, $Res Function(_$_PecuniaUserDTO) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? uid = null,
+    Object? username = null,
+    Object? dateCreated = null,
+  }) {
+    return _then(_$_PecuniaUserDTO(
+      uid: null == uid
+          ? _value.uid
+          : uid // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      dateCreated: null == dateCreated
+          ? _value.dateCreated
+          : dateCreated // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_PecuniaUserDTO extends _PecuniaUserDTO {
+  _$_PecuniaUserDTO(
+      {required this.uid, required this.username, required this.dateCreated})
+      : super._();
+
+  factory _$_PecuniaUserDTO.fromJson(Map<String, dynamic> json) =>
+      _$$_PecuniaUserDTOFromJson(json);
+
+  @override
+  final String uid;
+  @override
+  final String username;
+  @override
+  final DateTime dateCreated;
+
+  @override
+  String toString() {
+    return 'PecuniaUserDTO(uid: $uid, username: $username, dateCreated: $dateCreated)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_PecuniaUserDTO &&
+            (identical(other.uid, uid) || other.uid == uid) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.dateCreated, dateCreated) ||
+                other.dateCreated == dateCreated));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, uid, username, dateCreated);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_PecuniaUserDTOCopyWith<_$_PecuniaUserDTO> get copyWith =>
+      __$$_PecuniaUserDTOCopyWithImpl<_$_PecuniaUserDTO>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_PecuniaUserDTOToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PecuniaUserDTO extends PecuniaUserDTO {
+  factory _PecuniaUserDTO(
+      {required final String uid,
+      required final String username,
+      required final DateTime dateCreated}) = _$_PecuniaUserDTO;
+  _PecuniaUserDTO._() : super._();
+
+  factory _PecuniaUserDTO.fromJson(Map<String, dynamic> json) =
+      _$_PecuniaUserDTO.fromJson;
+
+  @override
+  String get uid;
+  @override
+  String get username;
+  @override
+  DateTime get dateCreated;
+  @override
+  @JsonKey(ignore: true)
+  _$$_PecuniaUserDTOCopyWith<_$_PecuniaUserDTO> get copyWith =>
+      throw _privateConstructorUsedError;
+}

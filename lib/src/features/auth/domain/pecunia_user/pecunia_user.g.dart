@@ -19,3 +19,17 @@ Map<String, dynamic> _$$_PecuniaUserToJson(_$_PecuniaUser instance) =>
       'username': instance.username,
       'dateCreated': instance.dateCreated.toIso8601String(),
     };
+
+_$_PecuniaUserDTO _$$_PecuniaUserDTOFromJson(Map<String, dynamic> json) =>
+    _$_PecuniaUserDTO(
+      uid: json['uid'] as String,
+      username: json['username'] as String,
+      dateCreated: DateTime.parse(json['dateCreated'] as String),
+    );
+
+Map<String, dynamic> _$$_PecuniaUserDTOToJson(_$_PecuniaUserDTO instance) =>
+    <String, dynamic>{
+      'uid': instance.uid,
+      'username': instance.username,
+      'dateCreated': instance.dateCreated.toIso8601String(),
+    };

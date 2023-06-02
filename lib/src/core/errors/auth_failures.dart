@@ -1,8 +1,8 @@
-import '../../features/auth/data/auth_repository.dart';
+import '../../features/auth/domain/auth_repo.dart';
 import 'failures.dart';
 import 'package:supabase/supabase.dart' as supa;
 
-abstract class AuthFailure extends Failure {
+abstract base class AuthFailure extends Failure {
   const AuthFailure({
     required super.message,
     required super.stackTrace,
@@ -20,7 +20,7 @@ abstract class AuthFailure extends Failure {
   }
 }
 
-class LoginFailure extends AuthFailure {
+final class LoginFailure extends AuthFailure {
   const LoginFailure({
     required super.message,
     required super.stackTrace,
@@ -30,7 +30,7 @@ class LoginFailure extends AuthFailure {
   final String? statusCode;
 }
 
-class LogoutFailure extends AuthFailure {
+final class LogoutFailure extends AuthFailure {
   const LogoutFailure({
     required super.message,
     required super.stackTrace,
@@ -40,7 +40,7 @@ class LogoutFailure extends AuthFailure {
   final String? statusCode;
 }
 
-class MissingUserIdLoginFailure extends AuthFailure {
+final class MissingUserIdLoginFailure extends AuthFailure {
   const MissingUserIdLoginFailure({
     required super.message,
     required super.stackTrace,
@@ -50,7 +50,7 @@ class MissingUserIdLoginFailure extends AuthFailure {
   final String? statusCode;
 }
 
-class UnknownAuthFailure extends AuthFailure {
+final class UnknownAuthFailure extends AuthFailure {
   const UnknownAuthFailure({
     required super.message,
     required super.stackTrace,
@@ -62,8 +62,7 @@ class UnknownAuthFailure extends AuthFailure {
 
 /// Supabase Specific Errors
 ///
-AuthFailure mapSupabaseToFailure<T>(
-    AuthAction authAction, Object error, StackTrace stackTrace) {
+AuthFailure mapSupabaseToFailure<T>(AuthAction authAction, Object error, StackTrace stackTrace) {
   if (error is! supa.AuthException) {
     return UnknownAuthFailure(
       message: "Unexpected error occurred, please try again.",

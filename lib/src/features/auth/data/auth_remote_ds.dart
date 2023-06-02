@@ -1,11 +1,15 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/src/features/auth/domain/pecunia_user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-abstract interface class AuthRemoteDS {
-  Future<PecuniaUser> loginWithPassword(String email, String password);
+import '../domain/pecunia_user/pecunia_user.dart';
 
-  Future<PecuniaUser> registerWithPassword(String email, String password);
+abstract interface class AuthRemoteDS {
+  Future<PecuniaUser> loginWithPassword({
+    required String email,
+    required String password,
+    required Session currentSession,
+  });
+  Future<PecuniaUser> registerWithPassword({required String email, required String password});
 
   Future<PecuniaUser> getUserInformation();
 
@@ -18,8 +22,26 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   SupabaseAuthRemoteDS(this.supabaseClient);
 
   @override
-  Future<PecuniaUser> loginWithPassword(String email, String password) async {
-    final response = await supabaseClient.auth.signInWithPassword(email: email, password: password);
+  Future<PecuniaUser> loginWithPassword({
+    required String email,
+    required String password,
+    required Session currentSession,
+  }) async {
+    final AuthResponse response =
+        await supabaseClient.auth.signInWithPassword(email: email, password: password);
+
+    final User? user = response.user;
+
+    if (user == null) {
+      throw const AuthException("Your password or email may be incorrect, please try again.");
+    }
+
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<PecuniaUser> registerWithPassword({required String email, required String password}) {
+    // TODO: implement registerWithPassword
     throw UnimplementedError();
   }
 
@@ -32,12 +54,6 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   @override
   Future<Unit> logout() {
     // TODO: implement logout
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<PecuniaUser> registerWithPassword(String email, String password) {
-    // TODO: implement registerWithPassword
     throw UnimplementedError();
   }
 }

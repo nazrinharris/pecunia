@@ -3,10 +3,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
 
-import 'package:pecunia/src/features/auth/domain/pecunia_user.dart';
+import 'package:pecunia/src/features/auth/domain/pecunia_user/pecunia_user.dart';
 
 void main() {
-  group('PecuniaUser', () {
+  group('PecuniaUser -', () {
     test('should create, serialize and deserialize correctly', () {
       // Arrange
       final uid = '12345';
@@ -35,6 +35,35 @@ void main() {
       expect(deserializedPecuniaUser.username, equals(username));
       expect(deserializedPecuniaUser.dateCreated.toIso8601String(),
           equals(dateCreated.toIso8601String()));
+    });
+  });
+
+  group('PecuniaUserDTO -', () {
+    test('should create, serialize and deserialize correctly', () {
+      final DateTime dateCreated = DateTime.now();
+
+      // Create a PecuniaUser
+      final PecuniaUser user = PecuniaUser(
+        uid: "1",
+        username: "Test User",
+        dateCreated: dateCreated,
+      );
+
+      // Convert the PecuniaUser to a PecuniaUserDTO
+      final PecuniaUserDTO dto = PecuniaUserDTO.fromDomain(user);
+
+      // Assert that the DTO has the same properties as the original user
+      expect(dto.uid, "1");
+      expect(dto.username, "Test User");
+      expect(dto.dateCreated, dateCreated);
+
+      // Convert the DTO back to a PecuniaUser
+      final PecuniaUser userFromDto = dto.toDomain();
+
+      // Assert that the user created from the DTO has the same properties as the original user
+      expect(userFromDto.uid, "1");
+      expect(userFromDto.username, "Test User");
+      expect(userFromDto.dateCreated, dateCreated);
     });
   });
 }

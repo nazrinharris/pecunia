@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:pecunia/src/features/auth/domain/pecunia_user.dart';
+import 'package:pecunia/src/features/auth/domain/pecunia_user/pecunia_user.dart';
 import 'package:pecunia/src/routing/router.dart';
 import 'package:pecunia/src/util/printer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
