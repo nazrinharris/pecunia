@@ -9,7 +9,7 @@ enum AuthAction {
   logout,
 }
 
-abstract class AuthRepository {
+abstract interface class AuthRepo {
   TaskEither<AuthFailure, String> loginWithPassword(String email, String password);
 
   TaskEither<AuthFailure, String> registerWithPassword(String email, String password);
@@ -19,10 +19,10 @@ abstract class AuthRepository {
   TaskEither<AuthFailure, Unit> logout();
 }
 
-class SupabaseAuthRepository implements AuthRepository {
+class AuthRepoImpl implements AuthRepo {
   final SupabaseClient supabaseClient;
 
-  SupabaseAuthRepository(this.supabaseClient);
+  AuthRepoImpl(this.supabaseClient);
 
   @override
   TaskEither<AuthFailure, String> loginWithPassword(
