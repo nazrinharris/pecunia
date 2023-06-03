@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../domain/pecunia_user/pecunia_user.dart';
+import '../domain/models/pecunia_user.dart';
 
 abstract interface class AuthRemoteDS {
   Future<PecuniaUser> loginWithPassword({

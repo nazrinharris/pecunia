@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_declarations
-
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
 
@@ -9,8 +7,8 @@ void main() {
   group('PecuniaUser -', () {
     test('should create, serialize and deserialize correctly', () {
       // Arrange
-      final uid = '12345';
-      final username = 'test_user';
+      const uid = '12345';
+      const username = 'test_user';
       final dateCreated = DateTime.now();
 
       // Act
@@ -39,7 +37,7 @@ void main() {
   });
 
   group('PecuniaUserDTO -', () {
-    test('should create, serialize and deserialize correctly', () {
+    test('should create and fromDomain and toDomain correctly', () {
       final DateTime dateCreated = DateTime.now();
 
       // Create a PecuniaUser
@@ -64,6 +62,33 @@ void main() {
       expect(userFromDto.uid, "1");
       expect(userFromDto.username, "Test User");
       expect(userFromDto.dateCreated, dateCreated);
+    });
+
+    test('should create, serialize and deserialize correctly', () {
+      final DateTime testDate = DateTime.now();
+
+      // Create a PecuniaUserDTO
+      final PecuniaUserDTO dto = PecuniaUserDTO(
+        uid: "1",
+        username: "Test User",
+        dateCreated: testDate,
+      );
+
+      // Serialize to JSON
+      final Map<String, dynamic> json = dto.toJson();
+
+      // Assert that JSON has correct values
+      expect(json['uid'], "1");
+      expect(json['username'], "Test User");
+      expect(json['dateCreated'], testDate.toIso8601String());
+
+      // Deserialize from JSON
+      final PecuniaUserDTO dtoFromJson = PecuniaUserDTO.fromJson(json);
+
+      // Assert that deserialized DTO is equivalent to original
+      expect(dtoFromJson.uid, "1");
+      expect(dtoFromJson.username, "Test User");
+      expect(dtoFromJson.dateCreated, testDate);
     });
   });
 }

@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/src/features/auth/domain/pecunia_user/pecunia_user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/errors/auth_failures.dart';
 import '../data/auth_remote_ds.dart';
+import 'models/pecunia_user.dart';
 
 enum AuthAction {
   login,

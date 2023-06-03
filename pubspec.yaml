@@ -28,6 +28,9 @@ dependencies:
   # Functional Programming
   fpdart: ^0.5.0
 
+  # Connectivity
+  internet_connection_checker_plus: ^1.0.1
+
   # Icons
   cupertino_icons: ^1.0.2
 
