@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../core/errors/auth_failures.dart';
+import '../../../core/errors/failures.dart';
 import '../data/auth_remote_ds.dart';
 import 'models/pecunia_user.dart';
+import 'models/session.dart';
 
 enum AuthAction {
   login,
@@ -11,14 +11,7 @@ enum AuthAction {
 }
 
 abstract interface class AuthRepo {
-  TaskEither<AuthFailure, String> loginWithPassword(String email, String password);
-
-  TaskEither<AuthFailure, String> registerWithPassword(String email, String password);
-
-  TaskEither<AuthFailure, PecuniaUser> getUserInformation();
-  TaskEither<AuthFailure, Session> updateSession(Session currentSession);
-
-  TaskEither<AuthFailure, Unit> logout();
+  Either<Failure, PecuniaUser> loginWithPassword(String email, String password, Session currentSession);
 }
 
 class AuthRepoImpl implements AuthRepo {
@@ -27,33 +20,38 @@ class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required this.authRemoteDS});
 
   @override
-  TaskEither<AuthFailure, String> loginWithPassword(
+  Either<Failure, PecuniaUser> loginWithPassword(
     String email,
     String password,
+    Session currentSession,
   ) {
+    final res = authRemoteDS
+        .loginWithPassword(email: email, password: password, currentSession: currentSession)
+        .run();
+
     throw UnimplementedError();
   }
 
   @override
-  TaskEither<AuthFailure, PecuniaUser> getUserInformation() {
+  TaskEither<Failure, PecuniaUser> getUserInformation() {
     // TODO: implement getUserInformation
     throw UnimplementedError();
   }
 
   @override
-  TaskEither<AuthFailure, Unit> logout() {
+  TaskEither<Failure, Unit> logout() {
     throw UnimplementedError();
   }
 
   @override
-  TaskEither<AuthFailure, String> registerWithPassword(String email, String password) {
+  TaskEither<Failure, String> registerWithPassword(String email, String password) {
     // TODO: implement registerWithPassword
 
     throw UnimplementedError();
   }
 
   @override
-  TaskEither<AuthFailure, Session> updateSession(Session currentSession) {
+  TaskEither<Failure, Session> updateSession(Session currentSession) {
     // TODO: implement updateSession
     throw UnimplementedError();
   }

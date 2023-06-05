@@ -1,11 +1,13 @@
-import '../../features/auth/domain/auth_repo.dart';
-import 'failures.dart';
-import 'package:supabase/supabase.dart' as supa;
+import '../../../features/auth/domain/auth_repo.dart';
+import '../failures.dart';
 
-abstract base class AuthFailure extends Failure {
+import 'package:supabase_flutter/supabase_flutter.dart' as supa;
+
+base class AuthFailure extends Failure {
   const AuthFailure({
     required super.message,
     required super.stackTrace,
+    super.rawException,
   });
 
   String get mapToErrorMessage {
@@ -24,6 +26,7 @@ final class LoginFailure extends AuthFailure {
   const LoginFailure({
     required super.message,
     required super.stackTrace,
+    super.rawException,
     this.statusCode,
   });
 
@@ -34,6 +37,7 @@ final class LogoutFailure extends AuthFailure {
   const LogoutFailure({
     required super.message,
     required super.stackTrace,
+    super.rawException,
     this.statusCode,
   });
 
@@ -44,6 +48,18 @@ final class MissingUserIdLoginFailure extends AuthFailure {
   const MissingUserIdLoginFailure({
     required super.message,
     required super.stackTrace,
+    super.rawException,
+    this.statusCode,
+  });
+
+  final String? statusCode;
+}
+
+final class MissingUsernameFailure extends AuthFailure {
+  const MissingUsernameFailure({
+    required super.message,
+    required super.stackTrace,
+    super.rawException,
     this.statusCode,
   });
 
@@ -54,6 +70,7 @@ final class UnknownAuthFailure extends AuthFailure {
   const UnknownAuthFailure({
     required super.message,
     required super.stackTrace,
+    super.rawException,
     this.statusCode,
   });
 

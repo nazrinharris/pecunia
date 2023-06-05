@@ -26,13 +26,16 @@ dependencies:
   equatable: ^2.0.5
 
   # Functional Programming
-  fpdart: ^0.5.0
+  fpdart: ^0.6.0
 
   # Connectivity
   internet_connection_checker_plus: ^1.0.1
 
   # Icons
   cupertino_icons: ^1.0.2
+
+  # Testing
+  mocktail: ^0.3.0
 
 dev_dependencies:
   flutter_test:

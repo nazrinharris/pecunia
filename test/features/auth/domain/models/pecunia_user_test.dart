@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
 import 'dart:convert';
-
-import 'package:pecunia/src/features/auth/domain/pecunia_user/pecunia_user.dart';
 
 void main() {
   group('PecuniaUser -', () {
@@ -31,8 +30,7 @@ void main() {
       // Assert deserialized object
       expect(deserializedPecuniaUser.uid, equals(uid));
       expect(deserializedPecuniaUser.username, equals(username));
-      expect(deserializedPecuniaUser.dateCreated.toIso8601String(),
-          equals(dateCreated.toIso8601String()));
+      expect(deserializedPecuniaUser.dateCreated.toIso8601String(), equals(dateCreated.toIso8601String()));
     });
   });
 
