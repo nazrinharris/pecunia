@@ -94,6 +94,7 @@ AuthFailure mapSupabaseToFailure(AuthAction authAction, Object error, StackTrace
     return UnknownAuthFailure(
       message: 'Unexpected error occurred, please try again.',
       stackTrace: stackTrace,
+      rawException: error,
     );
   }
 

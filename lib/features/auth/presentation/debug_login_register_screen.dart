@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
 
 class DebugLoginAndRegisterScreen extends StatelessWidget {
   const DebugLoginAndRegisterScreen({super.key});
@@ -17,9 +19,10 @@ class DebugLoginAndRegisterScreen extends StatelessWidget {
         title: const Text('Debug Login & Register'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           children: [
+            const SizedBox(height: 50),
             const Text('Login Here'),
             TextField(
               controller: emailLoginController,
@@ -65,5 +68,22 @@ class DebugLoginAndRegisterScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+final debugLoginAndRegisterProvider = StateNotifierProvider(
+  (ref) => DebugLoginAndRegisterNotifier(),
+);
+
+class DebugLoginAndRegisterNotifier
+    extends StateNotifier<(PecuniaUser? registeredUser, PecuniaUser? loggedInUser)> {
+  DebugLoginAndRegisterNotifier() : super((null, null));
+
+  void updateLogin(PecuniaUser loggedInUser) {
+    state = (state.$1, loggedInUser);
+  }
+
+  void updateRegister(PecuniaUser registeredUser) {
+    state = (registeredUser, state.$2);
   }
 }

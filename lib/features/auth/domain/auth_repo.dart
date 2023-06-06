@@ -10,18 +10,20 @@ typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
 enum AuthAction { login, logout, register }
 
 abstract interface class AuthRepo {
-  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword(
-    String email,
-    String password,
-    Session currentSession,
-  );
+  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword({
+    required String email,
+    required String password,
+    required Session currentSession,
+  });
 
-  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword(
-    String username,
-    String email,
-    String password,
-    Session currentSession,
-  );
+  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword({
+    required String username,
+    required String email,
+    required String password,
+    required Session currentSession,
+  });
+
+  TaskEither<Failure, Session> logout(Session currentSession);
 }
 
 class AuthRepoImpl implements AuthRepo {
@@ -29,24 +31,45 @@ class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDS authRemoteDS;
 
   @override
-  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword(
-    String email,
-    String password,
-    Session currentSession,
-  ) {
+  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword({
+    required String email,
+    required String password,
+    required Session currentSession,
+  }) {
     return authRemoteDS
         .loginWithPassword(email: email, password: password, currentSession: currentSession)
         .flatMap(
           (r) => TaskEither.of(
-            (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
+            (
+              pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO),
+              session: r.newSession,
+            ),
           ),
         );
   }
 
   @override
-  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword(
-      String username, String email, String password, Session currentSession) {
-    // TODO: implement registerWithPassword
-    throw UnimplementedError();
+  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword({
+    required String username,
+    required String email,
+    required String password,
+    required Session currentSession,
+  }) {
+    return authRemoteDS
+        .registerWithPassword(
+            username: username, email: email, password: password, currentSession: currentSession)
+        .flatMap(
+          (r) => TaskEither.of(
+            (
+              pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO),
+              session: r.newSession,
+            ),
+          ),
+        );
+  }
+
+  @override
+  TaskEither<Failure, Session> logout(Session currentSession) {
+    return authRemoteDS.logout(currentSession);
   }
 }
