@@ -11,6 +11,7 @@ _$_PecuniaUser _$$_PecuniaUserFromJson(Map<String, dynamic> json) =>
       uid: json['uid'] as String,
       username: json['username'] as String,
       dateCreated: DateTime.parse(json['dateCreated'] as String),
+      email: json['email'] as String?,
     );
 
 Map<String, dynamic> _$$_PecuniaUserToJson(_$_PecuniaUser instance) =>
@@ -18,6 +19,7 @@ Map<String, dynamic> _$$_PecuniaUserToJson(_$_PecuniaUser instance) =>
       'uid': instance.uid,
       'username': instance.username,
       'dateCreated': instance.dateCreated.toIso8601String(),
+      'email': instance.email,
     };
 
 _$_PecuniaUserDTO _$$_PecuniaUserDTOFromJson(Map<String, dynamic> json) =>
@@ -25,6 +27,7 @@ _$_PecuniaUserDTO _$$_PecuniaUserDTOFromJson(Map<String, dynamic> json) =>
       uid: json['uid'] as String,
       username: json['username'] as String,
       dateCreated: DateTime.parse(json['dateCreated'] as String),
+      email: json['email'] as String?,
     );
 
 Map<String, dynamic> _$$_PecuniaUserDTOToJson(_$_PecuniaUserDTO instance) =>
@@ -32,4 +35,5 @@ Map<String, dynamic> _$$_PecuniaUserDTOToJson(_$_PecuniaUserDTO instance) =>
       'uid': instance.uid,
       'username': instance.username,
       'dateCreated': instance.dateCreated.toIso8601String(),
+      'email': instance.email,
     };

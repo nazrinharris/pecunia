@@ -48,6 +48,7 @@ dev_dependencies:
 
   # Linting
   flutter_lints: ^2.0.0
+  very_good_analysis: ^5.0.0+1
 
 flutter:
   uses-material-design: true

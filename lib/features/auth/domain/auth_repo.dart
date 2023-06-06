@@ -1,58 +1,52 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../core/errors/failures.dart';
-import '../data/auth_remote_ds.dart';
-import 'models/pecunia_user.dart';
-import 'models/session.dart';
+import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
+import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
+import 'package:pecunia/features/auth/domain/models/session.dart';
 
-enum AuthAction {
-  login,
-  logout,
-}
+typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
+
+enum AuthAction { login, logout, register }
 
 abstract interface class AuthRepo {
-  Either<Failure, PecuniaUser> loginWithPassword(String email, String password, Session currentSession);
+  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword(
+    String email,
+    String password,
+    Session currentSession,
+  );
+
+  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword(
+    String username,
+    String email,
+    String password,
+    Session currentSession,
+  );
 }
 
 class AuthRepoImpl implements AuthRepo {
+  AuthRepoImpl({required this.authRemoteDS});
   final AuthRemoteDS authRemoteDS;
 
-  AuthRepoImpl({required this.authRemoteDS});
-
   @override
-  Either<Failure, PecuniaUser> loginWithPassword(
+  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword(
     String email,
     String password,
     Session currentSession,
   ) {
-    final res = authRemoteDS
+    return authRemoteDS
         .loginWithPassword(email: email, password: password, currentSession: currentSession)
-        .run();
-
-    throw UnimplementedError();
+        .flatMap(
+          (r) => TaskEither.of(
+            (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
+          ),
+        );
   }
 
   @override
-  TaskEither<Failure, PecuniaUser> getUserInformation() {
-    // TODO: implement getUserInformation
-    throw UnimplementedError();
-  }
-
-  @override
-  TaskEither<Failure, Unit> logout() {
-    throw UnimplementedError();
-  }
-
-  @override
-  TaskEither<Failure, String> registerWithPassword(String email, String password) {
+  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword(
+      String username, String email, String password, Session currentSession) {
     // TODO: implement registerWithPassword
-
-    throw UnimplementedError();
-  }
-
-  @override
-  TaskEither<Failure, Session> updateSession(Session currentSession) {
-    // TODO: implement updateSession
     throw UnimplementedError();
   }
 }

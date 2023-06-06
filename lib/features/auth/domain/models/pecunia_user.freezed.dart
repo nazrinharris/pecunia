@@ -23,6 +23,7 @@ mixin _$PecuniaUser {
   String get uid => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   DateTime get dateCreated => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,7 @@ abstract class $PecuniaUserCopyWith<$Res> {
           PecuniaUser value, $Res Function(PecuniaUser) then) =
       _$PecuniaUserCopyWithImpl<$Res, PecuniaUser>;
   @useResult
-  $Res call({String uid, String username, DateTime dateCreated});
+  $Res call({String uid, String username, DateTime dateCreated, String? email});
 }
 
 /// @nodoc
@@ -55,6 +56,7 @@ class _$PecuniaUserCopyWithImpl<$Res, $Val extends PecuniaUser>
     Object? uid = null,
     Object? username = null,
     Object? dateCreated = null,
+    Object? email = freezed,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -69,6 +71,10 @@ class _$PecuniaUserCopyWithImpl<$Res, $Val extends PecuniaUser>
           ? _value.dateCreated
           : dateCreated // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -81,7 +87,7 @@ abstract class _$$_PecuniaUserCopyWith<$Res>
       __$$_PecuniaUserCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String uid, String username, DateTime dateCreated});
+  $Res call({String uid, String username, DateTime dateCreated, String? email});
 }
 
 /// @nodoc
@@ -98,6 +104,7 @@ class __$$_PecuniaUserCopyWithImpl<$Res>
     Object? uid = null,
     Object? username = null,
     Object? dateCreated = null,
+    Object? email = freezed,
   }) {
     return _then(_$_PecuniaUser(
       uid: null == uid
@@ -112,6 +119,10 @@ class __$$_PecuniaUserCopyWithImpl<$Res>
           ? _value.dateCreated
           : dateCreated // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -120,7 +131,10 @@ class __$$_PecuniaUserCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_PecuniaUser extends _PecuniaUser {
   _$_PecuniaUser(
-      {required this.uid, required this.username, required this.dateCreated})
+      {required this.uid,
+      required this.username,
+      required this.dateCreated,
+      this.email})
       : super._();
 
   factory _$_PecuniaUser.fromJson(Map<String, dynamic> json) =>
@@ -132,10 +146,12 @@ class _$_PecuniaUser extends _PecuniaUser {
   final String username;
   @override
   final DateTime dateCreated;
+  @override
+  final String? email;
 
   @override
   String toString() {
-    return 'PecuniaUser(uid: $uid, username: $username, dateCreated: $dateCreated)';
+    return 'PecuniaUser(uid: $uid, username: $username, dateCreated: $dateCreated, email: $email)';
   }
 
   @override
@@ -147,12 +163,14 @@ class _$_PecuniaUser extends _PecuniaUser {
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.dateCreated, dateCreated) ||
-                other.dateCreated == dateCreated));
+                other.dateCreated == dateCreated) &&
+            (identical(other.email, email) || other.email == email));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uid, username, dateCreated);
+  int get hashCode =>
+      Object.hash(runtimeType, uid, username, dateCreated, email);
 
   @JsonKey(ignore: true)
   @override
@@ -172,7 +190,8 @@ abstract class _PecuniaUser extends PecuniaUser {
   factory _PecuniaUser(
       {required final String uid,
       required final String username,
-      required final DateTime dateCreated}) = _$_PecuniaUser;
+      required final DateTime dateCreated,
+      final String? email}) = _$_PecuniaUser;
   _PecuniaUser._() : super._();
 
   factory _PecuniaUser.fromJson(Map<String, dynamic> json) =
@@ -184,6 +203,8 @@ abstract class _PecuniaUser extends PecuniaUser {
   String get username;
   @override
   DateTime get dateCreated;
+  @override
+  String? get email;
   @override
   @JsonKey(ignore: true)
   _$$_PecuniaUserCopyWith<_$_PecuniaUser> get copyWith =>
@@ -199,6 +220,7 @@ mixin _$PecuniaUserDTO {
   String get uid => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   DateTime get dateCreated => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -212,7 +234,7 @@ abstract class $PecuniaUserDTOCopyWith<$Res> {
           PecuniaUserDTO value, $Res Function(PecuniaUserDTO) then) =
       _$PecuniaUserDTOCopyWithImpl<$Res, PecuniaUserDTO>;
   @useResult
-  $Res call({String uid, String username, DateTime dateCreated});
+  $Res call({String uid, String username, DateTime dateCreated, String? email});
 }
 
 /// @nodoc
@@ -231,6 +253,7 @@ class _$PecuniaUserDTOCopyWithImpl<$Res, $Val extends PecuniaUserDTO>
     Object? uid = null,
     Object? username = null,
     Object? dateCreated = null,
+    Object? email = freezed,
   }) {
     return _then(_value.copyWith(
       uid: null == uid
@@ -245,6 +268,10 @@ class _$PecuniaUserDTOCopyWithImpl<$Res, $Val extends PecuniaUserDTO>
           ? _value.dateCreated
           : dateCreated // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -257,7 +284,7 @@ abstract class _$$_PecuniaUserDTOCopyWith<$Res>
       __$$_PecuniaUserDTOCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String uid, String username, DateTime dateCreated});
+  $Res call({String uid, String username, DateTime dateCreated, String? email});
 }
 
 /// @nodoc
@@ -274,6 +301,7 @@ class __$$_PecuniaUserDTOCopyWithImpl<$Res>
     Object? uid = null,
     Object? username = null,
     Object? dateCreated = null,
+    Object? email = freezed,
   }) {
     return _then(_$_PecuniaUserDTO(
       uid: null == uid
@@ -288,6 +316,10 @@ class __$$_PecuniaUserDTOCopyWithImpl<$Res>
           ? _value.dateCreated
           : dateCreated // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -296,7 +328,10 @@ class __$$_PecuniaUserDTOCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_PecuniaUserDTO extends _PecuniaUserDTO {
   _$_PecuniaUserDTO(
-      {required this.uid, required this.username, required this.dateCreated})
+      {required this.uid,
+      required this.username,
+      required this.dateCreated,
+      this.email})
       : super._();
 
   factory _$_PecuniaUserDTO.fromJson(Map<String, dynamic> json) =>
@@ -308,10 +343,12 @@ class _$_PecuniaUserDTO extends _PecuniaUserDTO {
   final String username;
   @override
   final DateTime dateCreated;
+  @override
+  final String? email;
 
   @override
   String toString() {
-    return 'PecuniaUserDTO(uid: $uid, username: $username, dateCreated: $dateCreated)';
+    return 'PecuniaUserDTO(uid: $uid, username: $username, dateCreated: $dateCreated, email: $email)';
   }
 
   @override
@@ -323,12 +360,14 @@ class _$_PecuniaUserDTO extends _PecuniaUserDTO {
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.dateCreated, dateCreated) ||
-                other.dateCreated == dateCreated));
+                other.dateCreated == dateCreated) &&
+            (identical(other.email, email) || other.email == email));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uid, username, dateCreated);
+  int get hashCode =>
+      Object.hash(runtimeType, uid, username, dateCreated, email);
 
   @JsonKey(ignore: true)
   @override
@@ -348,7 +387,8 @@ abstract class _PecuniaUserDTO extends PecuniaUserDTO {
   factory _PecuniaUserDTO(
       {required final String uid,
       required final String username,
-      required final DateTime dateCreated}) = _$_PecuniaUserDTO;
+      required final DateTime dateCreated,
+      final String? email}) = _$_PecuniaUserDTO;
   _PecuniaUserDTO._() : super._();
 
   factory _PecuniaUserDTO.fromJson(Map<String, dynamic> json) =
@@ -360,6 +400,8 @@ abstract class _PecuniaUserDTO extends PecuniaUserDTO {
   String get username;
   @override
   DateTime get dateCreated;
+  @override
+  String? get email;
   @override
   @JsonKey(ignore: true)
   _$$_PecuniaUserDTOCopyWith<_$_PecuniaUserDTO> get copyWith =>

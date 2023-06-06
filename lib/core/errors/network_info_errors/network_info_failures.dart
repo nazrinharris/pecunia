@@ -1,4 +1,4 @@
-import '../failures.dart';
+import 'package:pecunia/core/errors/failures.dart';
 
 base class NetworkInfoFailure extends Failure {
   const NetworkInfoFailure({
@@ -13,6 +13,6 @@ final class NoInternetFailure extends NetworkInfoFailure {
     required super.stackTrace,
     super.rawException,
   }) : super(
-          message: "No internet connection detected. Please check your connection and try again.",
+          message: 'No internet connection detected. Please check your connection and try again.',
         );
 }

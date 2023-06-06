@@ -1,4 +1,4 @@
-import '../exceptions.dart';
+import 'package:pecunia/core/errors/exceptions.dart';
 
 // Auth Error Codes
 const String noInternetErrorCode = 'no-internet';
@@ -9,33 +9,27 @@ const String unknownAuthErrorCode = 'unknown-auth-error';
 
 final class IncorrectCredentialsException extends BaseException {
   const IncorrectCredentialsException({
-    String? errorCode,
-    StackTrace? stackTrace,
+    super.stackTrace,
   }) : super(
-          message: "Incorrect email or password. Please try again.",
+          message: 'Incorrect email or password. Please try again.',
           errorCode: invalidCredentialsErrorCode,
-          stackTrace: stackTrace,
         );
 }
 
 final class MissingUsernameException extends BaseException {
   const MissingUsernameException({
-    String? errorCode,
-    StackTrace? stackTrace,
+    super.stackTrace,
   }) : super(
-          message: "Username is missing. Please contact support.",
+          message: 'Username is missing. Please contact support.',
           errorCode: missingUsernameErrorCode,
-          stackTrace: stackTrace,
         );
 }
 
 final class UnknownAuthException extends BaseException {
   const UnknownAuthException({
-    String? errorCode,
-    StackTrace? stackTrace,
+    super.stackTrace,
   }) : super(
-          message: "An unknown error occurred during authentication. Please try again.",
+          message: 'An unknown error occurred during authentication. Please try again.',
           errorCode: unknownAuthErrorCode,
-          stackTrace: stackTrace,
         );
 }

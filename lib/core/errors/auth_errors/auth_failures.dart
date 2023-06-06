@@ -1,6 +1,5 @@
-import '../../../features/auth/domain/auth_repo.dart';
-import '../failures.dart';
-
+import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 base class AuthFailure extends Failure {
@@ -18,7 +17,7 @@ base class AuthFailure extends Failure {
       return failure.message;
     }
 
-    return "Unexpected error occurred, please try again.";
+    return 'Unexpected error occurred, please try again.';
   }
 }
 
@@ -35,6 +34,17 @@ final class LoginFailure extends AuthFailure {
 
 final class LogoutFailure extends AuthFailure {
   const LogoutFailure({
+    required super.message,
+    required super.stackTrace,
+    super.rawException,
+    this.statusCode,
+  });
+
+  final String? statusCode;
+}
+
+final class RegisterFailure extends AuthFailure {
+  const RegisterFailure({
     required super.message,
     required super.stackTrace,
     super.rawException,
@@ -79,10 +89,10 @@ final class UnknownAuthFailure extends AuthFailure {
 
 /// Supabase Specific Errors
 ///
-AuthFailure mapSupabaseToFailure<T>(AuthAction authAction, Object error, StackTrace stackTrace) {
+AuthFailure mapSupabaseToFailure(AuthAction authAction, Object error, StackTrace stackTrace) {
   if (error is! supa.AuthException) {
     return UnknownAuthFailure(
-      message: "Unexpected error occurred, please try again.",
+      message: 'Unexpected error occurred, please try again.',
       stackTrace: stackTrace,
     );
   }
@@ -90,6 +100,12 @@ AuthFailure mapSupabaseToFailure<T>(AuthAction authAction, Object error, StackTr
   switch (authAction) {
     case AuthAction.login:
       return LoginFailure(
+        message: error.message,
+        stackTrace: stackTrace,
+        statusCode: error.statusCode,
+      );
+    case AuthAction.register:
+      return RegisterFailure(
         message: error.message,
         stackTrace: stackTrace,
         statusCode: error.statusCode,
