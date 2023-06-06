@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pecunia/routing/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
@@ -16,7 +17,7 @@ void main() async {
     url: 'https://ptrklugmlpnhycmklnwx.supabase.co',
   );
 
-  runApp(const PecuniaApp());
+  runApp(ProviderScope(child: const PecuniaApp()));
 }
 
 class PecuniaApp extends StatelessWidget {

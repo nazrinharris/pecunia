@@ -70,7 +70,9 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
       );
 
   TaskEither<AuthFailure, SupaUserAndSession> _getUserFromResponse(
-          s.AuthResponse response, Session newSession) =>
+    s.AuthResponse response,
+    Session newSession,
+  ) =>
       TaskEither.tryCatch(
         () async {
           final user = response.user;

@@ -183,7 +183,8 @@ void main() {
 
       test('returns a Failure when the call to authRemoteDS is unsuccessful', () async {
         when(() => mockAuthRemoteDS.logout(testSession)).thenAnswer(
-            (_) => TaskEither.left(AuthFailure(message: 'Error', stackTrace: StackTrace.current)));
+          (_) => TaskEither.left(AuthFailure(message: 'Error', stackTrace: StackTrace.current)),
+        );
 
         final result = await authRepo.logout(testSession).run();
 

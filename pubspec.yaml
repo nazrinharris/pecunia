@@ -19,6 +19,7 @@ dependencies:
 
   # Business Logic, Dependency Injection
   flutter_riverpod: ^2.3.6
+  riverpod_annotation: ^2.1.1
 
   # Data classes
   freezed_annotation: ^2.2.0
@@ -47,7 +48,9 @@ dev_dependencies:
   json_serializable: ^6.6.1
 
   # Linting
+  custom_lint:
   flutter_lints: ^2.0.0
+  riverpod_lint: ^1.3.2
   very_good_analysis: ^5.0.0+1
 
 flutter:

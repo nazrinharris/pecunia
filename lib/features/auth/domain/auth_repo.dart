@@ -57,7 +57,11 @@ class AuthRepoImpl implements AuthRepo {
   }) {
     return authRemoteDS
         .registerWithPassword(
-            username: username, email: email, password: password, currentSession: currentSession)
+          username: username,
+          email: email,
+          password: password,
+          currentSession: currentSession,
+        )
         .flatMap(
           (r) => TaskEither.of(
             (
