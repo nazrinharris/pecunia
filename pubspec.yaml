@@ -18,7 +18,7 @@ dependencies:
   go_router: ^6.5.0
 
   # Business Logic, Dependency Injection
-  flutter_riverpod: ^2.3.6
+  hooks_riverpod: ^2.3.6
   riverpod_annotation: ^2.1.1
 
   # Data classes

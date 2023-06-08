@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
 
 class DebugLoginAndRegisterScreen extends ConsumerWidget {

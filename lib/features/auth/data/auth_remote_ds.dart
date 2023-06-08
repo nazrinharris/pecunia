@@ -1,13 +1,22 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_exceptions.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
 import 'package:pecunia/core/network_info/network_info.dart';
+import 'package:pecunia/core/third_party_providers.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/models/session.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as s;
+
+final authRemoteDSProvider = Provider<AuthRemoteDS>(
+  (ref) => SupabaseAuthRemoteDS(
+    ref.watch(supabaseProvider),
+    ref.watch(networkInfoProvider),
+  ),
+);
 
 typedef PecuniaUserDTOAndSession = ({PecuniaUserDTO pecuniaUserDTO, Session newSession});
 typedef SupaUserAndSession = ({s.User user, Session newSession});
