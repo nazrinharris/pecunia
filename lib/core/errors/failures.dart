@@ -14,3 +14,14 @@ base class Failure extends Equatable {
   @override
   List<Object> get props => [message, stackTrace];
 }
+
+final class UnexpectedFailure extends Failure {
+  const UnexpectedFailure({
+    required super.stackTrace,
+    super.message = 'Unexpected error occurred, please try again.',
+    super.rawException,
+  });
+
+  @override
+  List<Object> get props => [message, stackTrace];
+}

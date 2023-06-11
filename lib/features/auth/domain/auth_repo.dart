@@ -1,16 +1,18 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/models/session.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final authRepoProvider = Provider<AuthRepo>(
-  (ref) => AuthRepoImpl(
+part 'auth_repo.g.dart';
+
+@riverpod
+AuthRepo authRepo(AuthRepoRef ref) {
+  return AuthRepoImpl(
     authRemoteDS: ref.watch(authRemoteDSProvider),
-  ),
-);
+  );
+}
 
 typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
 
