@@ -4,7 +4,7 @@ import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
 import 'package:pecunia/core/network_info/network_info.dart';
-import 'package:pecunia/core/supabase/supabase_provider.dart';
+import 'package:pecunia/core/providers/supabase/supabase_provider.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
@@ -37,6 +37,8 @@ abstract interface class AuthRemoteDS {
     required Session currentSession,
   });
 
+  TaskEither<Failure, PecuniaUserDTO> getLoggedInUser();
+
   TaskEither<Failure, Session> logout(Session currentSession);
 }
 
@@ -59,11 +61,11 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
               ? _requestLoginWithPassword(email: email, password: password, currentSession: currentSession)
               : TaskEither.left(NoInternetFailure(stackTrace: StackTrace.current)),
         )
-        .flatMap((r) => _getUserFromResponse(r.response, r.currentSession))
-        .flatMap((r) => _mapToDTO(r.user, r.newSession));
+        .flatMap((r) => SupabaseAuthRemoteDSHelper.getUserFromAuthResponse(r.response, r.currentSession))
+        .flatMap((r) => SupabaseAuthRemoteDSHelper.mapSupaUserToDTOWithSession(r.user, r.newSession));
   }
 
-  TaskEither<AuthFailure, AuthResponseAndSession> _requestLoginWithPassword({
+  TaskEither<Failure, AuthResponseAndSession> _requestLoginWithPassword({
     required String email,
     required String password,
     required Session currentSession,
@@ -75,37 +77,6 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
             password: password,
           );
           return (response: response, currentSession: const Session(isValid: true));
-        },
-        (error, stackTrace) => mapSupabaseToFailure(AuthAction.login, error, stackTrace),
-      );
-
-  TaskEither<AuthFailure, SupaUserAndSession> _getUserFromResponse(
-    s.AuthResponse response,
-    Session newSession,
-  ) =>
-      TaskEither.tryCatch(
-        () async {
-          final user = response.user;
-
-          if (user == null || user.appMetadata['username'] == null) {
-            throw MissingUsernameException(stackTrace: StackTrace.current);
-          }
-          return (user: user, newSession: newSession);
-        },
-        (error, stackTrace) => mapSupabaseToFailure(AuthAction.login, error, stackTrace),
-      );
-
-  TaskEither<AuthFailure, PecuniaUserDTOAndSession> _mapToDTO(s.User user, Session newSession) =>
-      TaskEither.tryCatch(
-        () async {
-          return (
-            pecuniaUserDTO: PecuniaUserDTO(
-              uid: user.id,
-              username: user.appMetadata['username'] as String,
-              dateCreated: DateTime.parse(user.createdAt),
-            ),
-            newSession: newSession
-          );
         },
         (error, stackTrace) => mapSupabaseToFailure(AuthAction.login, error, stackTrace),
       );
@@ -129,11 +100,11 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
                 )
               : TaskEither.left(NoInternetFailure(stackTrace: StackTrace.current)),
         )
-        .flatMap((r) => _getUserFromResponse(r.response, r.currentSession))
-        .flatMap((r) => _mapToDTO(r.user, r.newSession));
+        .flatMap((r) => SupabaseAuthRemoteDSHelper.getUserFromAuthResponse(r.response, r.currentSession))
+        .flatMap((r) => SupabaseAuthRemoteDSHelper.mapSupaUserToDTOWithSession(r.user, r.newSession));
   }
 
-  TaskEither<AuthFailure, AuthResponseAndSession> _requestRegisterWithPassword({
+  TaskEither<Failure, AuthResponseAndSession> _requestRegisterWithPassword({
     required String username,
     required String email,
     required String password,
@@ -172,4 +143,63 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
       (error, stackTrace) => mapSupabaseToFailure(AuthAction.logout, error, stackTrace),
     );
   }
+
+  @override
+  TaskEither<Failure, PecuniaUserDTO> getLoggedInUser() {
+    final user = supabaseClient.auth.currentUser;
+    if (user == null) {
+      return TaskEither.left(NoLoggedInUserFailure(
+        message: 'No user is currently logged in',
+        stackTrace: StackTrace.current,
+      ));
+    }
+    return SupabaseAuthRemoteDSHelper.mapSupaUserToDTO(user);
+  }
+}
+
+class SupabaseAuthRemoteDSHelper {
+  static TaskEither<Failure, PecuniaUserDTO> mapSupaUserToDTO(s.User user) => TaskEither.tryCatch(
+        () async {
+          return PecuniaUserDTO(
+            uid: user.id,
+            email: user.email,
+            username: user.userMetadata!['username'] as String,
+            dateCreated: DateTime.parse(user.createdAt),
+          );
+        },
+        (error, stackTrace) => mapSupabaseToFailure(AuthAction.login, error, stackTrace),
+      );
+
+  static TaskEither<Failure, PecuniaUserDTOAndSession> mapSupaUserToDTOWithSession(
+          s.User user, Session newSession) =>
+      TaskEither.tryCatch(
+        () async {
+          return (
+            pecuniaUserDTO: PecuniaUserDTO(
+              uid: user.id,
+              email: user.email,
+              username: user.userMetadata!['username'] as String,
+              dateCreated: DateTime.parse(user.createdAt),
+            ),
+            newSession: newSession
+          );
+        },
+        (error, stackTrace) => mapSupabaseToFailure(AuthAction.login, error, stackTrace),
+      );
+
+  static TaskEither<Failure, SupaUserAndSession> getUserFromAuthResponse(
+    s.AuthResponse response,
+    Session newSession,
+  ) =>
+      TaskEither.tryCatch(
+        () async {
+          final user = response.user;
+
+          if (user == null || user.userMetadata?['username'] == null) {
+            throw MissingUsernameException(stackTrace: StackTrace.current);
+          }
+          return (user: user, newSession: newSession);
+        },
+        (error, stackTrace) => mapSupabaseToFailure(AuthAction.login, error, stackTrace),
+      );
 }

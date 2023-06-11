@@ -28,12 +28,14 @@ abstract interface class AuthRepo {
     required Session currentSession,
   });
 
+  TaskEither<Failure, PecuniaUser> getLoggedInUser();
+
   TaskEither<Failure, Session> logout(Session currentSession);
 }
 
 typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
 
-enum AuthAction { login, logout, register }
+enum AuthAction { login, logout, register, getLoggedInUser }
 
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required this.authRemoteDS});
@@ -84,5 +86,14 @@ class AuthRepoImpl implements AuthRepo {
   @override
   TaskEither<Failure, Session> logout(Session currentSession) {
     return authRemoteDS.logout(currentSession);
+  }
+
+  @override
+  TaskEither<Failure, PecuniaUser> getLoggedInUser() {
+    return authRemoteDS.getLoggedInUser().flatMap<PecuniaUser>(
+          (r) => TaskEither.of(
+            PecuniaUser.fromDTO(r),
+          ),
+        );
   }
 }

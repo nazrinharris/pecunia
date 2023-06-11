@@ -55,6 +55,17 @@ final class RegisterFailure extends AuthFailure {
   final String? statusCode;
 }
 
+final class GetLoggedInUserFailure extends AuthFailure {
+  const GetLoggedInUserFailure({
+    required super.message,
+    required super.stackTrace,
+    super.rawException,
+    this.statusCode,
+  });
+
+  final String? statusCode;
+}
+
 final class MissingUserIdLoginFailure extends AuthFailure {
   const MissingUserIdLoginFailure({
     required super.message,
@@ -68,6 +79,17 @@ final class MissingUserIdLoginFailure extends AuthFailure {
 
 final class MissingUsernameFailure extends AuthFailure {
   const MissingUsernameFailure({
+    required super.message,
+    required super.stackTrace,
+    super.rawException,
+    this.statusCode,
+  });
+
+  final String? statusCode;
+}
+
+final class NoLoggedInUserFailure extends AuthFailure {
+  const NoLoggedInUserFailure({
     required super.message,
     required super.stackTrace,
     super.rawException,
@@ -104,6 +126,11 @@ AuthFailure _handleAuthException(AuthAction authAction, String message, StackTra
       );
     case AuthAction.logout:
       return LogoutFailure(
+        message: message,
+        stackTrace: stackTrace,
+      );
+    case AuthAction.getLoggedInUser:
+      return GetLoggedInUserFailure(
         message: message,
         stackTrace: stackTrace,
       );

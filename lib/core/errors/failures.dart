@@ -18,7 +18,7 @@ base class Failure extends Equatable {
 final class UnexpectedFailure extends Failure {
   const UnexpectedFailure({
     required super.stackTrace,
-    super.message = 'Unexpected error occurred, please try again.',
+    super.message,
     super.rawException,
   });
 
