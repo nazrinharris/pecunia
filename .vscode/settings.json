@@ -1,8 +1,9 @@
 {
-  "dart.lineLength" : 100,
+"editor.fontLigatures": true,
+"dart.lineLength" : 110,
 "[dart]": {
     "editor.rulers": [
-        100
+        110
     ],
 },
   "cmake.configureOnOpen": false
