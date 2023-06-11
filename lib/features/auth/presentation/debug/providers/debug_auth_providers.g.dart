@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'debug_auth_controller.dart';
+part of 'debug_auth_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debugAuthControllerHash() =>
-    r'0e93fab6550651e5173e8262f0f32c99998df319';
+String _$loginWithEmailAndPasswordHash() =>
+    r'08c23141d7087d0265f9675cdeb170ec902493d6';
 
-/// See also [DebugAuthController].
-@ProviderFor(DebugAuthController)
-final debugAuthControllerProvider =
-    AutoDisposeAsyncNotifierProvider<DebugAuthController, void>.internal(
-  DebugAuthController.new,
-  name: r'debugAuthControllerProvider',
+/// See also [LoginWithEmailAndPassword].
+@ProviderFor(LoginWithEmailAndPassword)
+final loginWithEmailAndPasswordProvider = AutoDisposeAsyncNotifierProvider<
+    LoginWithEmailAndPassword, Option<PecuniaUser>>.internal(
+  LoginWithEmailAndPassword.new,
+  name: r'loginWithEmailAndPasswordProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$debugAuthControllerHash,
+      : _$loginWithEmailAndPasswordHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugAuthController = AutoDisposeAsyncNotifier<void>;
+typedef _$LoginWithEmailAndPassword
+    = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

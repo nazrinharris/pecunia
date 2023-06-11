@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/features/auth/presentation/debug/controller/debug_auth_controller.dart';
+import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/features/auth/domain/entities/session.dart';
+import 'package:pecunia/features/auth/presentation/debug/form/debug_form.dart';
+import 'package:pecunia/features/auth/presentation/debug/providers/debug_auth_providers.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-import 'form/debug_form.dart';
 
 class DebugLoginAndRegisterScreen extends HookConsumerWidget {
   const DebugLoginAndRegisterScreen({super.key});
@@ -39,31 +40,40 @@ class LoginForm extends HookConsumerWidget {
       formGroup: loginForm,
       child: Column(
         children: [
-          ReactiveTextField(
+          ReactiveTextField<String>(
             formControlName: 'email',
             decoration: const InputDecoration(
               labelText: 'Email',
             ),
           ),
-          ReactiveTextField(
+          ReactiveTextField<String>(
             formControlName: 'password',
             obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Password',
             ),
           ),
+          const SizedBox(height: 16),
           ReactiveFormConsumer(
             builder: (context, form, child) {
               return ElevatedButton(
                 onPressed: form.valid
-                    ? () => ref.read(debugAuthControllerProvider.notifier).loginWithEmailAndPassword(
+                    ? () => ref.read(loginWithEmailAndPasswordProvider.notifier).loginWithEmailAndPassword((
                           email: form.value['email']! as String,
                           password: form.value['password']! as String,
-                        )
+                          currentSession: const Session(isValid: false),
+                        ))
                     : null,
                 child: const Text('Login'),
               );
             },
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () async {
+              await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
+            },
+            child: const Text('Logout'),
           ),
         ],
       ),
@@ -75,26 +85,35 @@ class LoginDetails extends HookConsumerWidget {
   const LoginDetails({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(debugAuthControllerProvider);
-
+    final state = ref.watch(loginWithEmailAndPasswordProvider);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: state.map(
-        data: (data) {},
-        error: (error) {},
-        loading: (loading) {
-          return Container(
-            height: 200,
-            width: 200,
-            alignment: Alignment.center,
-            child: const CircularProgressIndicator(),
-          );
-        },
-      ),
-    );
+        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: state.when(
+          data: (data) {
+            return Column(
+              children: [
+                Text(data.toString()),
+              ],
+            );
+          },
+          error: (e, stack) {
+            final error = e as Failure;
+            return Column(
+              children: [
+                Text(error.message),
+              ],
+            );
+          },
+          loading: () {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ));
   }
 }

@@ -7,8 +7,8 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
 import 'package:pecunia/core/network_info/network_info.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
-import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
-import 'package:pecunia/features/auth/domain/models/session.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as s;
 
 // Mock classes

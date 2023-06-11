@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 
 void main() {
   group('PecuniaUser -', () {

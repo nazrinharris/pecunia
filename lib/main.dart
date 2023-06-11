@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,7 +15,9 @@ void main() async {
     url: 'https://ptrklugmlpnhycmklnwx.supabase.co',
   );
 
-  runApp(ProviderScope(child: const PecuniaApp()));
+  runApp(ProviderScope(
+    child: const PecuniaApp(),
+  ));
 }
 
 class PecuniaApp extends StatelessWidget {
@@ -53,7 +53,7 @@ class _EntryScreenState extends State<EntryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
       ),

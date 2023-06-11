@@ -1,3 +1,4 @@
+import 'package:pecunia/core/errors/exceptions.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
@@ -89,33 +90,38 @@ final class UnknownAuthFailure extends AuthFailure {
 
 /// Supabase Specific Errors
 ///
-AuthFailure mapSupabaseToFailure(AuthAction authAction, Object error, StackTrace stackTrace) {
-  if (error is! supa.AuthException) {
-    return UnknownAuthFailure(
-      message: 'Unexpected error occurred, please try again.',
-      stackTrace: stackTrace,
-      rawException: error,
-    );
-  }
-
+AuthFailure _handleAuthException(AuthAction authAction, String message, StackTrace stackTrace) {
   switch (authAction) {
     case AuthAction.login:
       return LoginFailure(
-        message: error.message,
+        message: message,
         stackTrace: stackTrace,
-        statusCode: error.statusCode,
       );
     case AuthAction.register:
       return RegisterFailure(
-        message: error.message,
+        message: message,
         stackTrace: stackTrace,
-        statusCode: error.statusCode,
       );
     case AuthAction.logout:
       return LogoutFailure(
-        message: error.message,
+        message: message,
         stackTrace: stackTrace,
-        statusCode: error.statusCode,
       );
+  }
+}
+
+AuthFailure mapSupabaseToFailure(AuthAction authAction, Object error, StackTrace stackTrace) {
+  if (error is BaseException) {
+    // Handle BaseException
+    return _handleAuthException(authAction, error.message, stackTrace);
+  } else if (error is supa.AuthException) {
+    // Handle supa.AuthException
+    return _handleAuthException(authAction, error.message, stackTrace);
+  } else {
+    // Handle other exceptions
+    return UnknownAuthFailure(
+      message: error.toString(), // Or another way to get a meaningful message from the error
+      stackTrace: stackTrace,
+    );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
-import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
-import 'package:pecunia/features/auth/domain/models/session.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_repo.g.dart';
@@ -13,10 +13,6 @@ AuthRepo authRepo(AuthRepoRef ref) {
     authRemoteDS: ref.watch(authRemoteDSProvider),
   );
 }
-
-typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
-
-enum AuthAction { login, logout, register }
 
 abstract interface class AuthRepo {
   TaskEither<Failure, PecuniaUserAndSession> loginWithPassword({
@@ -34,6 +30,10 @@ abstract interface class AuthRepo {
 
   TaskEither<Failure, Session> logout(Session currentSession);
 }
+
+typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
+
+enum AuthAction { login, logout, register }
 
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required this.authRemoteDS});

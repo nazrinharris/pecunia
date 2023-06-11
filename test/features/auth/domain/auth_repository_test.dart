@@ -4,8 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
-import 'package:pecunia/features/auth/domain/models/pecunia_user.dart';
-import 'package:pecunia/features/auth/domain/models/session.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/domain/entities/session.dart';
 
 class MockAuthRemoteDS extends Mock implements AuthRemoteDS {}
 
