@@ -28,10 +28,10 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 
 ### 🏗️ Phase 1: Basic Features
 
+- [x] Simple authentication and integration with `supabase`.
+- [ ] Local database setup with `drift`.
 - [ ] Transaction tracking.
 - [ ] Simple budget creation and management.
-- [ ] Local database setup with `drift`.
-- [ ] Simple authentication and integration with `supabase`.
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 
