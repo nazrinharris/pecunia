@@ -76,7 +76,7 @@ void main() {
             .thenAnswer((_) async => authResponse);
         when(() => authResponse.user).thenReturn(user);
         when(() => user.id).thenReturn('id');
-        when(() => user.appMetadata).thenReturn({'username': 'username'});
+        when(() => user.userMetadata).thenReturn({'username': 'username'});
         when(() => user.createdAt).thenReturn('2023-06-06T14:34:34Z');
 
         final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
@@ -146,7 +146,7 @@ void main() {
         ).thenAnswer((_) async => authResponse);
         when(() => authResponse.user).thenReturn(user);
         when(() => user.id).thenReturn('id');
-        when(() => user.appMetadata).thenReturn({'username': 'username'});
+        when(() => user.userMetadata).thenReturn({'username': 'username'});
         when(() => user.createdAt).thenReturn('2023-06-06T14:34:34Z');
 
         final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
