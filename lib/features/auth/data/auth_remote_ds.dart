@@ -3,8 +3,8 @@ import 'package:pecunia/core/errors/auth_errors/auth_exceptions.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
+import 'package:pecunia/core/infrastructure/remote/supabase/supabase_provider.dart';
 import 'package:pecunia/core/network_info/network_info.dart';
-import 'package:pecunia/core/providers/supabase/supabase_provider.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
@@ -127,7 +127,7 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
 
   @override
   TaskEither<Failure, Session> logout(Session currentSession) {
-    return network.isConnected().flatMap(
+    return network.isConnected().flatMap<Session>(
           (isConnected) => isConnected
               ? _requestLogout(currentSession)
               : TaskEither.left(NoInternetFailure(stackTrace: StackTrace.current)),

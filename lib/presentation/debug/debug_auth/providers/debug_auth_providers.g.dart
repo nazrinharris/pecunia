@@ -42,4 +42,21 @@ final registerWithEmailAndPasswordProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$RegisterWithEmailAndPassword
     = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
+String _$navigateToDebugLocalDBHash() =>
+    r'96a3fcd96dea7e490544821603509e1c614b528b';
+
+/// See also [NavigateToDebugLocalDB].
+@ProviderFor(NavigateToDebugLocalDB)
+final navigateToDebugLocalDBProvider =
+    AutoDisposeAsyncNotifierProvider<NavigateToDebugLocalDB, bool>.internal(
+  NavigateToDebugLocalDB.new,
+  name: r'navigateToDebugLocalDBProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$navigateToDebugLocalDBHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NavigateToDebugLocalDB = AutoDisposeAsyncNotifier<bool>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

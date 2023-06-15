@@ -98,3 +98,24 @@ class RegisterWithEmailAndPassword extends _$RegisterWithEmailAndPassword {
     state = const AsyncValue.data(Option.none());
   }
 }
+
+@riverpod
+class NavigateToDebugLocalDB extends _$NavigateToDebugLocalDB {
+  @override
+  FutureOr<bool> build() {
+    return false;
+  }
+
+  Future<void> navigateToDebugLocalDB() async {
+    state = const AsyncLoading();
+    final result = await ref.read(authRepoProvider).getLoggedInUser().run();
+
+    result.fold(
+      (l) => state = AsyncValue.error(l, l.stackTrace),
+      (r) {
+        state = const AsyncValue.data(true);
+        state = const AsyncValue.data(false);
+      },
+    );
+  }
+}
