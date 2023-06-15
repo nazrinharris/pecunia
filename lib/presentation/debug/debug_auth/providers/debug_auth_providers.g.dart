@@ -7,7 +7,7 @@ part of 'debug_auth_providers.dart';
 // **************************************************************************
 
 String _$loginWithEmailAndPasswordHash() =>
-    r'fcde75732f233fa8468e8591171a9e69ebf687f8';
+    r'5e83ae021a4500af65727d4c24c25c3f2fe4003d';
 
 /// See also [LoginWithEmailAndPassword].
 @ProviderFor(LoginWithEmailAndPassword)
@@ -43,7 +43,7 @@ final registerWithEmailAndPasswordProvider = AutoDisposeAsyncNotifierProvider<
 typedef _$RegisterWithEmailAndPassword
     = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
 String _$navigateToDebugLocalDBHash() =>
-    r'96a3fcd96dea7e490544821603509e1c614b528b';
+    r'5b75f6fa3263f5af9939a0ba448ff096f7e5cc81';
 
 /// See also [NavigateToDebugLocalDB].
 @ProviderFor(NavigateToDebugLocalDB)

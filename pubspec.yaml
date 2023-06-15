@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Backend
+  # Remote
   supabase_flutter: ^1.6.2
 
   # Navigation
@@ -26,6 +26,7 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
   equatable: ^2.0.5
+  uuid:
 
   # Local Storage
   drift: ^2.8.2

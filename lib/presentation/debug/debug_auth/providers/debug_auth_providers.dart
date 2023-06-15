@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
@@ -55,7 +56,7 @@ class LoginWithEmailAndPassword extends _$LoginWithEmailAndPassword {
 
     failureOrPecuniaUser.fold(
       (failure) {
-        if (failure is NotLoggedInFailure) {
+        if (failure is NoLoggedInUserFailure) {
           state = const AsyncValue.data(Option.none());
         } else {
           state = AsyncValue.error(failure, failure.stackTrace);
@@ -65,8 +66,6 @@ class LoginWithEmailAndPassword extends _$LoginWithEmailAndPassword {
     );
   }
 }
-
-class NotLoggedInFailure {}
 
 @riverpod
 class RegisterWithEmailAndPassword extends _$RegisterWithEmailAndPassword {
@@ -109,6 +108,8 @@ class NavigateToDebugLocalDB extends _$NavigateToDebugLocalDB {
   Future<void> navigateToDebugLocalDB() async {
     state = const AsyncLoading();
     final result = await ref.read(authRepoProvider).getLoggedInUser().run();
+
+    print(result);
 
     result.fold(
       (l) => state = AsyncValue.error(l, l.stackTrace),

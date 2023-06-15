@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/core/presentation_shared/router/router.dart';
+import 'package:pecunia/presentation/router/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 const bool isDebugMode = true;
