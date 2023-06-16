@@ -111,11 +111,9 @@ class NavigateToDebugLocalDB extends _$NavigateToDebugLocalDB {
 
     result.fold(
       (l) {
-        print(l);
         state = AsyncValue.error(l, l.stackTrace);
       },
       (r) {
-        print("User is logged in!");
         state = const AsyncValue.data(true);
       },
     );

@@ -13,6 +13,12 @@ class ProviderLogger extends ProviderObserver {
     ProviderContainer container,
   ) {
     // debugPrint('(${provider.name} | ${provider.runtimeType}) : $newValue');
-    debugPrint('(${provider.name}) : $newValue');
+    if (newValue is AsyncError) {
+      debugPrint('(${provider.name}) : ${newValue.error.runtimeType}');
+    } else if (newValue is AsyncData) {
+      debugPrint('(${provider.name}) : ${newValue}');
+    } else {
+      debugPrint('(${provider.name}) : ${newValue.runtimeType}');
+    }
   }
 }

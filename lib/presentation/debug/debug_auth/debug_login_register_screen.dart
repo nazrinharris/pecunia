@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -130,7 +131,7 @@ class LoginDetails extends HookConsumerWidget {
           },
           loading: () {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CupertinoActivityIndicator(),
             );
           },
         ));
@@ -252,7 +253,7 @@ class RegisterDetails extends HookConsumerWidget {
           },
           loading: () {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CupertinoActivityIndicator(),
             );
           },
         ));
