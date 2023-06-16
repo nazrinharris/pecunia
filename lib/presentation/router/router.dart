@@ -14,10 +14,12 @@ final router = GoRouter(
     // Debug Routes
     GoRoute(
       path: '/debug-login',
+      name: 'debug-login',
       builder: (context, state) => const DebugLoginAndRegisterScreen(),
     ),
     GoRoute(
       path: '/debug-local-db',
+      name: 'debug-local-db',
       builder: (context, state) => const DebugLocalDBScreen(),
     ),
     GoRoute(

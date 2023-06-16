@@ -14,11 +14,13 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(navigateToDebugLocalDBProvider, (prev, next) {
-      if (prev != null && next.hasValue && next.value != prev.value) {
+    ref.listen<AsyncValue<bool>>(navigateToDebugLocalDBProvider, (prev, next) {
+      if (next.runtimeType == AsyncData<bool>) {
         next.value!
-            ? context.push('/debug-local-db')
-            : debugPrint('User not logged in, cannot navigate to debug local db screen');
+            ? context.pushNamed('debug-local-db')
+            : debugPrint(
+                'Not navigating to debug local db',
+              );
       }
     });
 

@@ -43,7 +43,7 @@ final registerWithEmailAndPasswordProvider = AutoDisposeAsyncNotifierProvider<
 typedef _$RegisterWithEmailAndPassword
     = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
 String _$navigateToDebugLocalDBHash() =>
-    r'5b75f6fa3263f5af9939a0ba448ff096f7e5cc81';
+    r'5250ec64ee765f69e2de9e198afb3ecee74d447f';
 
 /// See also [NavigateToDebugLocalDB].
 @ProviderFor(NavigateToDebugLocalDB)
