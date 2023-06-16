@@ -109,7 +109,7 @@ class LoginDetails extends HookConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(8),
         ),
         child: state.when(
@@ -231,7 +231,7 @@ class RegisterDetails extends HookConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(8),
         ),
         child: state.when(
