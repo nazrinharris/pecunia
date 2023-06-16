@@ -68,5 +68,5 @@ class _EntryScreenState extends State<EntryScreen> {
 /// This comment is just for initial commits for new branches. A cool history so to speak.
 /// 
 /// Comment for testing local database: test-local-db
-/// Comment for implementing accounts: accounts-feature
+/// Comment for internal improvements: internal-improvements
 
