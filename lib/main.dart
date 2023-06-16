@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/core/presentation_shared/router/router.dart';
+import 'package:pecunia/core/util/logger.dart';
+import 'package:pecunia/presentation/router/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 const bool isDebugMode = true;
@@ -15,8 +16,11 @@ void main() async {
     url: 'https://ptrklugmlpnhycmklnwx.supabase.co',
   );
 
-  runApp(const ProviderScope(
-    child: PecuniaApp(),
+  runApp(ProviderScope(
+    observers: [
+      ProviderLogger(),
+    ],
+    child: const PecuniaApp(),
   ));
 }
 
@@ -60,3 +64,8 @@ class _EntryScreenState extends State<EntryScreen> {
     );
   }
 }
+
+/// This comment is just for initial commits for new branches. A cool history so to speak.
+/// 
+/// Comment for testing local database: test-local-db
+

@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Backend
+  # Remote
   supabase_flutter: ^1.6.2
 
   # Navigation
@@ -26,12 +26,14 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
   equatable: ^2.0.5
+  uuid:
 
   # Local Storage
   drift: ^2.8.2
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.0.0
   path: ^1.8.3
+  drift_db_viewer: ^2.0.0
 
   # Functional Programming
   fpdart: ^0.6.0
@@ -44,6 +46,7 @@ dependencies:
 
   # Convenience
   reactive_forms: ^15.0.0
+  screwdriver: ^4.1.0
 
   # Testing
   mocktail: ^0.3.0

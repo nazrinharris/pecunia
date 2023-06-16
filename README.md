@@ -59,17 +59,3 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [ ] Desktop apps? Mac and Windows or even Web?
 
 ---
-
-# Temporary Wiki 🔎?
-
-## General Architecture
-
-The architecture of the app follows (or attempts to with its best) the Clean Architecture Paradigm. With a feature-first or feature-enclosed approach. In layman terms, I group everything into chunks of "features". Each feature will have the folder structure as such:
-
-1. `data` will communicate with the dirty outer world.
-2. `domain` will communicate with `data` and provide a clean API.
-3. `interactor` (more widely known as `usecase`) will be the Providers which will coordinate data from the `domain` layer, as well as combine with other features' providers if necessary.
-4. `presentation` will communicate with its feature `interactor` to build UI.
-
-> **Why use `interactor` and not `usecase`?** \
-> I really want the folder structure to be ordered as it should, with `data` being the bottom (or top in the folder structure) and `presentation` being the top (vice versa).

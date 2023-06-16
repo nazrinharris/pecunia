@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
@@ -55,7 +56,7 @@ class LoginWithEmailAndPassword extends _$LoginWithEmailAndPassword {
 
     failureOrPecuniaUser.fold(
       (failure) {
-        if (failure is NotLoggedInFailure) {
+        if (failure is NoLoggedInUserFailure) {
           state = const AsyncValue.data(Option.none());
         } else {
           state = AsyncValue.error(failure, failure.stackTrace);
@@ -65,8 +66,6 @@ class LoginWithEmailAndPassword extends _$LoginWithEmailAndPassword {
     );
   }
 }
-
-class NotLoggedInFailure {}
 
 @riverpod
 class RegisterWithEmailAndPassword extends _$RegisterWithEmailAndPassword {
@@ -96,5 +95,29 @@ class RegisterWithEmailAndPassword extends _$RegisterWithEmailAndPassword {
 
   void reset() {
     state = const AsyncValue.data(Option.none());
+  }
+}
+
+@riverpod
+class NavigateToDebugLocalDB extends _$NavigateToDebugLocalDB {
+  @override
+  FutureOr<bool> build() {
+    return false;
+  }
+
+  Future<void> navigateToDebugLocalDB() async {
+    state = const AsyncValue.loading();
+    final result = await ref.read(authRepoProvider).getLoggedInUser().run();
+
+    result.fold(
+      (l) {
+        print(l);
+        state = AsyncValue.error(l, l.stackTrace);
+      },
+      (r) {
+        print("User is logged in!");
+        state = const AsyncValue.data(true);
+      },
+    );
   }
 }

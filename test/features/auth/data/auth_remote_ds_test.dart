@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
-import 'package:pecunia/core/network_info/network_info.dart';
+import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';

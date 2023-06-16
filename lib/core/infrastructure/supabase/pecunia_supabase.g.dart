@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'supabase_provider.dart';
+part of 'pecunia_supabase.dart';
 
 // **************************************************************************
 // RiverpodGenerator

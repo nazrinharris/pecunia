@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
-import 'package:pecunia/presentation/debug/form/debug_form.dart';
-import 'package:pecunia/presentation/debug/providers/debug_auth_providers.dart';
+import 'package:pecunia/presentation/debug/debug_auth/form/debug_form.dart';
+import 'package:pecunia/presentation/debug/debug_auth/providers/debug_auth_providers.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugLoginAndRegisterScreen extends HookConsumerWidget {
@@ -12,6 +14,16 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<bool>>(navigateToDebugLocalDBProvider, (prev, next) {
+      if (next.runtimeType == AsyncData<bool>) {
+        next.value!
+            ? context.pushNamed('debug-local-db')
+            : debugPrint(
+                'Not navigating to debug local db',
+              );
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Debug Login & Register'),
@@ -178,13 +190,29 @@ class RegisterForm extends HookConsumerWidget {
             },
           ),
           const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () async {
-              await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
-              ref.read(loginWithEmailAndPasswordProvider.notifier).reset();
-              ref.read(registerWithEmailAndPasswordProvider.notifier).reset();
-            },
-            child: const Text('Logout'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.red),
+                ),
+                onPressed: () async {
+                  await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
+                  ref.read(loginWithEmailAndPasswordProvider.notifier).reset();
+                  ref.read(registerWithEmailAndPasswordProvider.notifier).reset();
+                },
+                child: const Text('Logout'),
+              ),
+              const SizedBox(width: 14),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.purple),
+                ),
+                onPressed: () => ref.read(navigateToDebugLocalDBProvider.notifier).navigateToDebugLocalDB(),
+                child: const Text('Go to Debug Local Storage'),
+              ),
+            ],
           ),
         ],
       ),
@@ -196,6 +224,8 @@ class RegisterDetails extends HookConsumerWidget {
   const RegisterDetails({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(() => null, const []);
+
     final state = ref.watch(registerWithEmailAndPasswordProvider);
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),

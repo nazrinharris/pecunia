@@ -7,7 +7,7 @@ part of 'debug_auth_providers.dart';
 // **************************************************************************
 
 String _$loginWithEmailAndPasswordHash() =>
-    r'fcde75732f233fa8468e8591171a9e69ebf687f8';
+    r'5e83ae021a4500af65727d4c24c25c3f2fe4003d';
 
 /// See also [LoginWithEmailAndPassword].
 @ProviderFor(LoginWithEmailAndPassword)
@@ -42,4 +42,21 @@ final registerWithEmailAndPasswordProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$RegisterWithEmailAndPassword
     = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
+String _$navigateToDebugLocalDBHash() =>
+    r'5250ec64ee765f69e2de9e198afb3ecee74d447f';
+
+/// See also [NavigateToDebugLocalDB].
+@ProviderFor(NavigateToDebugLocalDB)
+final navigateToDebugLocalDBProvider =
+    AutoDisposeAsyncNotifierProvider<NavigateToDebugLocalDB, bool>.internal(
+  NavigateToDebugLocalDB.new,
+  name: r'navigateToDebugLocalDBProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$navigateToDebugLocalDBHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$NavigateToDebugLocalDB = AutoDisposeAsyncNotifier<bool>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
