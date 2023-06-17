@@ -71,4 +71,5 @@ class _EntryScreenState extends State<EntryScreen> {
 /// 
 /// Comment for testing local database: test-local-db
 /// Comment for internal improvements: internal-improvements
+/// Comment for accounts feature - accounts-feature
 
