@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:stack_trace/stack_trace.dart';
 
-class Failure extends Equatable {
+abstract class Failure extends Equatable {
   const Failure({
     required this.stackTrace,
     this.message = 'Unexpected error occurred, please try again.',
@@ -19,6 +20,16 @@ class Failure extends Equatable {
         stackTrace,
         rawException ?? 'No raw exception',
       ];
+
+  @override
+  String toString() {
+    final stack = Trace.from(stackTrace).terse;
+    return '$runtimeType: $message \n$stack';
+  }
+
+  String toVerboseString() {
+    return '$runtimeType: $message \n$stackTrace \nRawException: $rawException';
+  }
 }
 
 final class UnexpectedFailure extends Failure {

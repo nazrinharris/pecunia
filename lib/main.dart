@@ -30,7 +30,7 @@ class PecuniaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: ThemeMode.dark,
       title: 'Pecunia',
       // home: EntryScreen(),

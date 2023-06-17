@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:stack_trace/stack_trace.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 part 'auth_errors.freezed.dart';
@@ -93,6 +94,17 @@ class AuthFailure with _$AuthFailure implements Failure {
 
   @override
   bool? get stringify => true;
+
+  @override
+  String toString() {
+    final terse = Trace.from(stackTrace).terse;
+    return 'AuthFailure: $message \n$terse';
+  }
+
+  @override
+  String toVerboseString() {
+    return 'AuthFailure: $message \n$stackTrace \nRawException: $rawException';
+  }
 }
 
 /// ****************************************************************

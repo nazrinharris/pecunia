@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 part 'network_info_errors.freezed.dart';
 
@@ -40,4 +41,15 @@ class NetworkInfoFailure with _$NetworkInfoFailure implements Failure {
 
   @override
   bool? get stringify => true;
+
+  @override
+  String toString() {
+    final terse = Trace.from(stackTrace).terse;
+    return 'NetworkInfoFailure: $message \n$terse';
+  }
+
+  @override
+  String toVerboseString() {
+    return 'NetworkInfoFailure: $message \n$stackTrace \nRawException: $rawException';
+  }
 }
