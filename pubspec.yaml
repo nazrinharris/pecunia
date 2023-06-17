@@ -53,6 +53,7 @@ dependencies:
 
   # Logging
   logger: ^1.4.0
+  stack_trace: ^1.11.0
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,9 @@ dev_dependencies:
 
   # Local Storage
   drift_dev: ^2.8.3
+
+  # Package Name
+  change_app_package_name: ^1.1.0
 
 flutter:
   uses-material-design: true

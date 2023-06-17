@@ -2,14 +2,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
-import 'package:pecunia/core/errors/failures.dart';
-import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as s;
+
+import '../../../matcher/auth_matchers.dart';
 
 // Mock classes
 class MockSupabaseClient extends Mock implements s.SupabaseClient {}
@@ -38,9 +40,13 @@ void main() {
     group('loginWithPassword()', () {
       setUpAll(() {});
 
-      test('returns NoInternetFailure when there is no internet connection', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(false));
+      test(
+          'returns [AuthFailure] with [AuthErrorType.noInternet] and [AuthAction.login] when there is no internet connection',
+          () async {
+        // Arrange
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(false));
 
+        // Act
         final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
             .loginWithPassword(
@@ -50,11 +56,14 @@ void main() {
             )
             .run();
 
-        expect(result.fold((l) => l, (r) => null), isA<NoInternetFailure>());
+        // Assert
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet, AuthAction.login));
       });
 
-      test('returns LoginFailure when there is an error during authentication', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(true));
+      test(
+          'returns [AuthFailure] with [AuthErrorType.unknown] and [AuthAction.login] when [Supabase] throws an error',
+          () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(() => auth.signInWithPassword(email: 'email', password: 'password'))
             .thenThrow(const s.AuthException('Error'));
 
@@ -67,11 +76,11 @@ void main() {
             )
             .run();
 
-        expect(result.fold((l) => l, (r) => null), isA<LoginFailure>());
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown, AuthAction.login));
       });
 
-      test('returns PecuniaUserDTO and new Session when authentication is successful', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(true));
+      test('returns [PecuniaUserDTO] and new [Session] when authentication is successful', () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(() => auth.signInWithPassword(email: 'email', password: 'password'))
             .thenAnswer((_) async => authResponse);
         when(() => authResponse.user).thenReturn(user);
@@ -96,8 +105,10 @@ void main() {
     });
 
     group('registerWithPassword()', () {
-      test('returns NoInternetFailure when there is no internet connection', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(false));
+      test(
+          'returns [AuthFailure] with [AuthErrorType.noInternet] and [AuthAction.register] when there is no internet connection',
+          () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(false));
 
         final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
@@ -109,11 +120,14 @@ void main() {
             )
             .run();
 
-        expect(result.fold((l) => l, (r) => null), isA<NoInternetFailure>());
+        expect(
+            result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet, AuthAction.register));
       });
 
-      test('returns RegisterFailure when there is an error during registration', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(true));
+      test(
+          'returns [AuthFailure] with [AuthErrorType.unknown] and [AuthAction.register] when [Supabase] throws an error',
+          () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(
           () => auth.signUp(
             email: any(named: 'email'),
@@ -132,11 +146,11 @@ void main() {
             )
             .run();
 
-        expect(result.fold((l) => l, (r) => null), isA<RegisterFailure>());
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown, AuthAction.register));
       });
 
-      test('returns PecuniaUserDTO and new Session when registration is successful', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(true));
+      test('returns [PecuniaUserDTO] and new [Session] when registration is successful', () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(
           () => auth.signUp(
             email: any(named: 'email'),
@@ -167,17 +181,20 @@ void main() {
     });
 
     group('logout()', () {
-      test('should return NoInternetFailure when there is no internet connection', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(false));
+      test(
+          'returns [AuthFailure] with [AuthErrorType.noInternet] and [AuthAction.logout] when there is no internet connection',
+          () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(false));
 
         final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS.logout(const Session(isValid: true)).run();
 
-        expect(result.fold((l) => l, (r) => null), isA<NoInternetFailure>());
+        expect(
+            result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet, AuthAction.logout));
       });
 
-      test('should return updated session when succesfull logout', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(true));
+      test('returns updated [Session] when succesfull logout', () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(auth.signOut).thenAnswer((_) async {});
 
         final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
@@ -188,14 +205,16 @@ void main() {
         });
       });
 
-      test('should return LogoutFailure when logout fails', () async {
-        when(network.isConnected).thenAnswer((_) => TaskEither<Failure, bool>.right(true));
+      test(
+          'returns [AuthFailure] with [AuthErrorType.unknown] and [AuthAction.logout] when [Supabase] throws an error',
+          () async {
+        when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(auth.signOut).thenThrow(const s.AuthException('Error'));
 
         final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS.logout(const Session(isValid: true)).run();
 
-        expect(result.fold((l) => l, (r) => null), isA<LogoutFailure>());
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown, AuthAction.logout));
       });
     });
   });

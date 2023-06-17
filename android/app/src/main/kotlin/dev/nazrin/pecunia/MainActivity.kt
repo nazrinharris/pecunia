@@ -1,4 +1,4 @@
-package com.example.pecunia
+package dev.nazrin.pecunia
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
@@ -56,7 +56,7 @@ class LoginWithEmailAndPassword extends _$LoginWithEmailAndPassword {
 
     failureOrPecuniaUser.fold(
       (failure) {
-        if (failure is NoLoggedInUserFailure) {
+        if (failure.errorType == AuthErrorType.noLoggedInUser) {
           state = const AsyncValue.data(Option.none());
         } else {
           state = AsyncValue.error(failure, failure.stackTrace);
@@ -111,11 +111,9 @@ class NavigateToDebugLocalDB extends _$NavigateToDebugLocalDB {
 
     result.fold(
       (l) {
-        print(l);
         state = AsyncValue.error(l, l.stackTrace);
       },
       (r) {
-        print("User is logged in!");
         state = const AsyncValue.data(true);
       },
     );

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -109,7 +110,7 @@ class LoginDetails extends HookConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(8),
         ),
         child: state.when(
@@ -130,7 +131,7 @@ class LoginDetails extends HookConsumerWidget {
           },
           loading: () {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CupertinoActivityIndicator(),
             );
           },
         ));
@@ -231,7 +232,7 @@ class RegisterDetails extends HookConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(8),
         ),
         child: state.when(
@@ -252,7 +253,7 @@ class RegisterDetails extends HookConsumerWidget {
           },
           loading: () {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CupertinoActivityIndicator(),
             );
           },
         ));

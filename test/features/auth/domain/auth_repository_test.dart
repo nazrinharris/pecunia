@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pecunia/core/errors/auth_errors/auth_failures.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
+
+import '../../../matcher/auth_matchers.dart';
 
 class MockAuthRemoteDS extends Mock implements AuthRemoteDS {}
 
@@ -39,7 +41,8 @@ void main() {
       );
       final testUser = PecuniaUser.fromDTO(testUserDto);
 
-      test('returns a PecuniaUser when the call to authRemoteDS is successful', () async {
+      test('returns a [PecuniaUser] when the call to authRemoteDS is successful', () async {
+        // Arrange
         when(
           () => mockAuthRemoteDS.loginWithPassword(
             email: any(named: 'email'),
@@ -50,14 +53,12 @@ void main() {
           (_) => TaskEither.right((newSession: testSession, pecuniaUserDTO: testUserDto)),
         );
 
+        // Act
         final result = await authRepo
-            .loginWithPassword(
-              email: testEmail,
-              password: testPassword,
-              currentSession: testSession,
-            )
+            .loginWithPassword(email: testEmail, password: testPassword, currentSession: testSession)
             .run();
 
+        // Assert
         expect(result.isRight(), isTrue);
         result.fold(
           (l) => fail('Operation failed with error: $l'),
@@ -68,7 +69,10 @@ void main() {
         );
       });
 
-      test('returns a Failure when the call to authRemoteDS is unsuccessful', () async {
+      test(
+          'returns an [AuthFailure] with [AuthAction.login] and correct [AuthErrorType] when the call to authRemoteDS is unsuccessful',
+          () async {
+        // Arrange
         when(
           () => mockAuthRemoteDS.loginWithPassword(
             email: any(named: 'email'),
@@ -76,20 +80,22 @@ void main() {
             currentSession: any(named: 'currentSession'),
           ),
         ).thenAnswer(
-          (_) => TaskEither.left(AuthFailure(message: 'Error', stackTrace: StackTrace.current)),
+          (_) => TaskEither.left(AuthFailure.unknown(
+            stackTrace: StackTrace.current,
+            message: AuthErrorType.unknown.message,
+            authAction: AuthAction.login,
+          )),
         );
 
+        // Act
         final result = await authRepo
-            .loginWithPassword(
-              email: testEmail,
-              password: testPassword,
-              currentSession: testSession,
-            )
+            .loginWithPassword(email: testEmail, password: testPassword, currentSession: testSession)
             .run();
 
+        // Assert
         expect(result.isLeft(), isTrue);
         result.fold(
-          (l) => expect(l, isA<AuthFailure>()),
+          (l) => expect(l, isAuthFailure(AuthErrorType.unknown, AuthAction.login)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -110,7 +116,7 @@ void main() {
       );
       final testUser = PecuniaUser.fromDTO(testUserDto);
 
-      test('returns a PecuniaUser when the call to authRemoteDS is successful', () async {
+      test('returns a [PecuniaUser] when the call to authRemoteDS is successful', () async {
         when(
           () => mockAuthRemoteDS.registerWithPassword(
             email: any(named: 'email'),
@@ -124,11 +130,7 @@ void main() {
 
         final result = await authRepo
             .registerWithPassword(
-              email: testEmail,
-              password: testPassword,
-              username: testUsername,
-              currentSession: testSession,
-            )
+                email: testEmail, password: testPassword, username: testUsername, currentSession: testSession)
             .run();
 
         expect(result.isRight(), isTrue);
@@ -141,7 +143,9 @@ void main() {
         );
       });
 
-      test('returns a Failure when the call to authRemoteDS is unsuccessful', () async {
+      test(
+          'returns an [AuthFailure] with [AuthAction.register] and correct [AuthErrorType] when the call to authRemoteDS is unsuccessful',
+          () async {
         when(
           () => mockAuthRemoteDS.registerWithPassword(
             email: any(named: 'email'),
@@ -150,7 +154,11 @@ void main() {
             currentSession: any(named: 'currentSession'),
           ),
         ).thenAnswer(
-          (_) => TaskEither.left(AuthFailure(message: 'Error', stackTrace: StackTrace.current)),
+          (_) => TaskEither.left(AuthFailure.unknown(
+            stackTrace: StackTrace.current,
+            message: AuthErrorType.unknown.message,
+            authAction: AuthAction.register,
+          )),
         );
 
         final result = await authRepo
@@ -164,7 +172,7 @@ void main() {
 
         expect(result.isLeft(), isTrue);
         result.fold(
-          (l) => expect(l, isA<AuthFailure>()),
+          (l) => expect(l, isAuthFailure(AuthErrorType.unknown, AuthAction.register)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -172,7 +180,7 @@ void main() {
 
     group('logout()', () {
       const testSession = Session(isValid: true);
-      test('returns an updated session when logged out succesfully', () async {
+      test('returns an updated [Session] when logged out succesfully', () async {
         when(() => mockAuthRemoteDS.logout(testSession))
             .thenAnswer((_) => TaskEither.right(testSession.copyWith(isValid: false)));
 
@@ -183,14 +191,18 @@ void main() {
 
       test('returns a Failure when the call to authRemoteDS is unsuccessful', () async {
         when(() => mockAuthRemoteDS.logout(testSession)).thenAnswer(
-          (_) => TaskEither.left(AuthFailure(message: 'Error', stackTrace: StackTrace.current)),
+          (_) => TaskEither.left(AuthFailure.unknown(
+            stackTrace: StackTrace.current,
+            message: AuthErrorType.unknown.message,
+            authAction: AuthAction.logout,
+          )),
         );
 
         final result = await authRepo.logout(testSession).run();
 
         expect(result.isLeft(), isTrue);
         result.fold(
-          (l) => expect(l, isA<AuthFailure>()),
+          (l) => expect(l, isAuthFailure(AuthErrorType.unknown, AuthAction.logout)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });

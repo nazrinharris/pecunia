@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
+import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 
 class MockInternetConnectionCheckerPlus extends Mock implements InternetConnectionCheckerPlus {}
