@@ -1,7 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:pecunia/core/errors/failures.dart';
-import 'package:pecunia/core/errors/network_info_errors/network_info_failures.dart';
+import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'network_info.g.dart';
@@ -19,7 +18,7 @@ NetworkInfo networkInfo(NetworkInfoRef ref) {
 }
 
 abstract interface class NetworkInfo {
-  TaskEither<Failure, bool> isConnected();
+  TaskEither<NetworkInfoFailure, bool> isConnected();
 }
 
 class NetworkInfoImpl implements NetworkInfo {
@@ -28,10 +27,9 @@ class NetworkInfoImpl implements NetworkInfo {
   final InternetConnectionCheckerPlus connectionChecker;
 
   @override
-  TaskEither<Failure, bool> isConnected() => TaskEither.tryCatch(
+  TaskEither<NetworkInfoFailure, bool> isConnected() => TaskEither.tryCatch(
         () => connectionChecker.hasConnection,
         (error, stackTrace) => NetworkInfoFailure(
-          message: 'Something went wrong while checking for connection.',
           stackTrace: stackTrace,
           rawException: error,
         ),

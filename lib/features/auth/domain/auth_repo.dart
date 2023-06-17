@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
@@ -15,34 +15,40 @@ AuthRepo authRepo(AuthRepoRef ref) {
 }
 
 abstract interface class AuthRepo {
-  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword({
+  TaskEither<AuthFailure, PecuniaUserAndSession> loginWithPassword({
     required String email,
     required String password,
     required Session currentSession,
   });
 
-  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword({
+  TaskEither<AuthFailure, PecuniaUserAndSession> registerWithPassword({
     required String username,
     required String email,
     required String password,
     required Session currentSession,
   });
 
-  TaskEither<Failure, PecuniaUser> getLoggedInUser();
+  TaskEither<AuthFailure, PecuniaUser> getLoggedInUser();
 
-  TaskEither<Failure, Session> logout(Session currentSession);
+  TaskEither<AuthFailure, Session> logout(Session currentSession);
 }
 
 typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
 
-enum AuthAction { login, logout, register, getLoggedInUser }
+enum AuthAction {
+  login,
+  logout,
+  register,
+  getLoggedInUser,
+  unknown,
+}
 
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required this.authRemoteDS});
   final AuthRemoteDS authRemoteDS;
 
   @override
-  TaskEither<Failure, PecuniaUserAndSession> loginWithPassword({
+  TaskEither<AuthFailure, PecuniaUserAndSession> loginWithPassword({
     required String email,
     required String password,
     required Session currentSession,
@@ -60,7 +66,7 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  TaskEither<Failure, PecuniaUserAndSession> registerWithPassword({
+  TaskEither<AuthFailure, PecuniaUserAndSession> registerWithPassword({
     required String username,
     required String email,
     required String password,
@@ -84,12 +90,12 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  TaskEither<Failure, Session> logout(Session currentSession) {
+  TaskEither<AuthFailure, Session> logout(Session currentSession) {
     return authRemoteDS.logout(currentSession);
   }
 
   @override
-  TaskEither<Failure, PecuniaUser> getLoggedInUser() {
+  TaskEither<AuthFailure, PecuniaUser> getLoggedInUser() {
     return authRemoteDS.getLoggedInUser().flatMap<PecuniaUser>(
           (r) => TaskEither.of(
             PecuniaUser.fromDTO(r),
