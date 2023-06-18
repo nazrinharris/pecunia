@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/presentation/debug/debug_local_db/form/debug_create_account_form.dart';
+import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(createAccountProvider, (prev, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: "We couldn't create an account for you.",
+              failure: next.error as AuthFailure?,
+            );
+      }
+
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Account created successfully!',
+            );
+      }
+    });
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Debug Local DB'),
@@ -37,58 +56,163 @@ class DebugLocalDBScreen extends ConsumerWidget {
             const SizedBox(height: 14),
             const Divider(),
             const SizedBox(height: 7),
-            const Align(
-              child: Text(
-                'flutter_easy_dialogs',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 14),
-            Container(
-              alignment: Alignment.center,
-              height: 50,
-              child: ListView(
-                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                scrollDirection: Axis.horizontal,
-                children: [
-                  const SizedBox(width: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(pecuniaDialogsProvider).showDebugPositionedDialog();
-                    },
-                    child: const Text('Show Positioned Dialog'),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      ref.read(pecuniaDialogsProvider).showDebugFullScreenDialog();
-                    },
-                    child: const Text('Show Full Screen Dialog'),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 61, 14, 11)),
-                    ),
-                    onPressed: () {
-                      ref.read(pecuniaDialogsProvider).showFailureDialog(
-                              failure: AuthFailure(
-                            stackTrace: StackTrace.current,
-                            message: AuthErrorType.unknown.message,
-                            authAction: AuthAction.unknown,
-                            errorType: AuthErrorType.unknown,
-                          ));
-                    },
-                    child: const Text('Show Failure Screen Dialog'),
-                  ),
-                ],
-              ),
-            ),
+            const DebugDialogsButtons(),
             const SizedBox(height: 14),
             const Divider(),
+            const SizedBox(height: 14),
+            const CreateAccountFormWidget(),
           ],
         ));
+  }
+}
+
+class DebugDialogsButtons extends ConsumerWidget {
+  const DebugDialogsButtons({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        const Align(
+          child: Text(
+            'flutter_easy_dialogs',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        Container(
+          alignment: Alignment.center,
+          height: 50,
+          child: ListView(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            scrollDirection: Axis.horizontal,
+            children: [
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(pecuniaDialogsProvider).showDebugPositionedDialog();
+                },
+                child: const Text('Show Positioned Dialog'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(pecuniaDialogsProvider).showDebugFullScreenDialog();
+                },
+                child: const Text('Show Full Screen Dialog'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 61, 14, 11)),
+                ),
+                onPressed: () {
+                  ref.read(pecuniaDialogsProvider).showFailureDialog(
+                          failure: AuthFailure(
+                        stackTrace: StackTrace.current,
+                        message: AuthErrorType.unknown.message,
+                        authAction: AuthAction.unknown,
+                        errorType: AuthErrorType.unknown,
+                      ));
+                },
+                child: const Text('Show Failure Screen Dialog'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 33, 1)),
+                ),
+                onPressed: () {
+                  ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                        title: 'Account created successfully!',
+                      );
+                },
+                child: const Text('Show Success Screen Dialog'),
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CreateAccountFormWidget extends ConsumerWidget {
+  const CreateAccountFormWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ReactiveForm(
+          formGroup: createAccountForm,
+          child: Column(children: [
+            ReactiveTextField<String>(
+              formControlName: 'name',
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) => createAccountForm.focus('description'),
+              decoration: const InputDecoration(
+                labelText: 'Account Name',
+                hintText: 'What name do you want to give to this account?',
+              ),
+            ),
+            ReactiveTextField<String>(
+              formControlName: 'description',
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) => createAccountForm.focus('currency'),
+              decoration: const InputDecoration(
+                  labelText: 'Description', hintText: 'You could also leave this empty.'),
+            ),
+            ReactiveDropdownField<String>(
+              formControlName: 'currency',
+              onTap: (_) => createAccountForm.focus('initialBalance'),
+              decoration: const InputDecoration(
+                labelText: 'Currency',
+                hintText: 'What currency should this account use?',
+              ),
+              items: const [
+                DropdownMenuItem<String>(
+                  value: 'MYR',
+                  child: Text('MYR - Malaysian Ringgit'),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'USD',
+                  child: Text('USD - United States Dollar'),
+                ),
+              ],
+            ),
+            ReactiveTextField<String>(
+              formControlName: 'initialBalance',
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              textInputAction: TextInputAction.done,
+              decoration: const InputDecoration(
+                labelText: 'Starting Balance',
+                hintText: 'How much money do you have?',
+              ),
+              onSubmitted: (control) {
+                print(control.value.runtimeType);
+              },
+            ),
+            const SizedBox(height: 16),
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                return ElevatedButton(
+                  onPressed: form.valid
+                      ? () => ref.read(createAccountProvider.notifier).createAccount(
+                            name: form.value['name']! as String,
+                            initialBalance: double.parse(form.value['initialBalance']! as String),
+                            currency: form.value['currency']! as String,
+                            description: form.value['description'] as String?,
+                          )
+                      : null,
+                  child: const Text('Create Account'),
+                );
+              },
+            )
+          ])),
+    );
   }
 }

@@ -60,6 +60,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
             balance: initialBalance,
             currency: currency,
             createdOn: DateTime.now(),
+            description: desc,
           ),
         );
         return unit;
