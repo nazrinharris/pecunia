@@ -24,6 +24,7 @@ enum AccountsErrorType {
   final String message;
 
   static AccountsErrorType fromErrorCode(String errorCode) {
+    return AccountsErrorType.values.firstWhere(
       (element) => element.code == errorCode,
       orElse: () => AccountsErrorType.unknown,
     );

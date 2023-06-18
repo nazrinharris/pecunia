@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
+import 'package:pecunia/features/accounts/data/accounts_local_ds.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,13 +12,15 @@ enum AccountsAction {
 }
 
 @riverpod
-AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl();
+AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl(
+      accountsLocalDS: ref.watch(accountsLocalDSProvider),
+    );
 
 abstract interface class AccountsRepo {
   TaskEither<AccountsFailure, List<Account>> getAccounts();
-  TaskEither<AccountsFailure, Account> createAccount({
+  TaskEither<AccountsFailure, Unit> createAccount({
     required String name,
-    required String creatorId,
+    required String creatorUid,
     required double initialBalance,
     required String currency,
     String? desc,
@@ -25,6 +28,9 @@ abstract interface class AccountsRepo {
 }
 
 class AccountsRepoImpl implements AccountsRepo {
+  AccountsRepoImpl({required this.accountsLocalDS});
+  final AccountsLocalDS accountsLocalDS;
+
   @override
   TaskEither<AccountsFailure, List<Account>> getAccounts() {
     // TODO: implement getAccounts
@@ -32,14 +38,19 @@ class AccountsRepoImpl implements AccountsRepo {
   }
 
   @override
-  TaskEither<AccountsFailure, Account> createAccount({
+  TaskEither<AccountsFailure, Unit> createAccount({
     required String name,
-    required String creatorId,
+    required String creatorUid,
     required double initialBalance,
     required String currency,
     String? desc,
   }) {
-    // TODO: implement createAccount
-    throw UnimplementedError();
+    return accountsLocalDS.createAccount(
+      name: name,
+      creatorUid: creatorUid,
+      initialBalance: initialBalance,
+      currency: currency,
+      desc: desc,
+    );
   }
 }

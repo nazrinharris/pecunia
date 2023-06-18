@@ -1,7 +1,11 @@
 import 'package:drift/drift.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'accounts_dao_tables.g.dart';
+
+@riverpod
+AccountsDAO accountsDAO(AccountsDAORef ref) => ref.watch(pecuniaDBProvider).accountsDAO;
 
 @DataClassName('AccountDTO')
 class AccountsTable extends Table {
