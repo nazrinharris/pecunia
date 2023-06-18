@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_dialogs/flutter_easy_dialogs.dart';
+import 'package:full_screen_dialog_manager/full_screen_dialog_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/util/logger.dart';
 import 'package:pecunia/presentation/router/router.dart';
+import 'package:positioned_dialog_manager/positioned_dialog_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 const bool isDebugMode = true;
@@ -33,8 +36,14 @@ class PecuniaApp extends StatelessWidget {
       darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: ThemeMode.dark,
       title: 'Pecunia',
-      // home: EntryScreen(),
       routerConfig: router,
+      builder: FlutterEasyDialogs.builder(
+        setupManagers: (overlayController, managerRegistry) {
+          managerRegistry
+            ..registerFullScreen(overlayController)
+            ..registerPositioned(overlayController);
+        },
+      ),
     );
   }
 }

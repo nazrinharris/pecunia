@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 import 'package:pecunia/core/infrastructure/supabase/pecunia_supabase.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
@@ -7,8 +8,6 @@ import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as s;
-
-import '../../../core/errors/network_info_errors/network_info_errors.dart';
 
 part 'auth_remote_ds.g.dart';
 
