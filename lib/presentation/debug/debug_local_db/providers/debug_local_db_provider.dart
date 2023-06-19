@@ -2,9 +2,12 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../../features/accounts/domain/entities/account.dart';
 
 part 'debug_local_db_provider.g.dart';
 
@@ -51,4 +54,9 @@ class CreateAccount extends _$CreateAccount {
         );
     }
   }
+}
+
+@riverpod
+Stream<Either<AccountsFailure, List<Account>>> watchAccounts(WatchAccountsRef ref) {
+  return ref.watch(accountsRepoProvider).watchAccounts();
 }

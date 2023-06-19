@@ -232,7 +232,7 @@ class $AccountsTableTable extends AccountsTable
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 500),
+          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 500),
       type: DriftSqlType.string,
       requiredDuringInsert: false);
   @override

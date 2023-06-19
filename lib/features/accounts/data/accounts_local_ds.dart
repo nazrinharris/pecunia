@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
@@ -17,6 +19,8 @@ AccountsLocalDS accountsLocalDS(AccountsLocalDSRef ref) => AccountsLocalDSImpl(
 
 abstract interface class AccountsLocalDS {
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts();
+  Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts();
+
   TaskEither<AccountsFailure, Unit> createAccount({
     required String name,
     required String creatorUid,
@@ -38,6 +42,28 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {
     // TODO: implement getAccounts
     throw UnimplementedError();
+  }
+
+  @override
+  Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts() {
+    return accountsDAO.watchAllAccounts().transform(StreamTransformer.fromHandlers(
+          handleData: (listOfDTOs, sink) {
+            sink.add(
+              right(listOfDTOs),
+            );
+          },
+          handleError: (error, stackTrace, sink) {
+            sink.add(
+              left(
+                AccountsFailure.unknown(
+                  stackTrace: stackTrace,
+                  message: AccountsErrorType.unknown.toString(),
+                  accountsAction: AccountsAction.getAccounts,
+                ),
+              ),
+            );
+          },
+        ));
   }
 
   @override
@@ -69,6 +95,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
         stackTrace: stackTrace,
         message: AccountsErrorType.unknown.toString(),
         accountsAction: currentAction,
+        rawException: error,
       ),
     );
   }

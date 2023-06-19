@@ -18,6 +18,8 @@ AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl(
 
 abstract interface class AccountsRepo {
   TaskEither<AccountsFailure, List<Account>> getAccounts();
+  Stream<Either<AccountsFailure, List<Account>>> watchAccounts();
+
   TaskEither<AccountsFailure, Unit> createAccount({
     required String name,
     required String creatorUid,
@@ -35,6 +37,18 @@ class AccountsRepoImpl implements AccountsRepo {
   TaskEither<AccountsFailure, List<Account>> getAccounts() {
     // TODO: implement getAccounts
     throw UnimplementedError();
+  }
+
+  @override
+  Stream<Either<AccountsFailure, List<Account>>> watchAccounts() {
+    return accountsLocalDS.watchAccounts().map(
+          (either) => either.fold(
+            left,
+            (listOfDTOs) => right(
+              listOfDTOs.map(Account.fromDTO).toList(),
+            ),
+          ),
+        );
   }
 
   @override

@@ -91,7 +91,7 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
                 height: 3,
                 decoration: BoxDecoration(
                   color: Colors.red[100]!.withOpacity(0.5),
-                  borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(12)),
                 ),
               )
             ],
@@ -150,8 +150,8 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
                   padding: const EdgeInsets.symmetric(horizontal: 44),
                   child: Text(
                     message,
-                    style: TextStyle(
-                      color: Colors.green[100],
+                    style: const TextStyle(
+                      color: Colors.white,
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,

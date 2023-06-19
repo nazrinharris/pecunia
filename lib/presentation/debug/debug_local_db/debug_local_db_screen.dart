@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,8 @@ import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../core/errors/failures.dart';
+
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
 
@@ -19,7 +22,7 @@ class DebugLocalDBScreen extends ConsumerWidget {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
               title: "We couldn't create an account for you.",
-              failure: next.error as AuthFailure?,
+              failure: next.error as Failure?,
             );
       }
 
@@ -61,6 +64,10 @@ class DebugLocalDBScreen extends ConsumerWidget {
             const Divider(),
             const SizedBox(height: 14),
             const CreateAccountFormWidget(),
+            const SizedBox(height: 14),
+            const Divider(),
+            const SizedBox(height: 14),
+            const AccountsList(),
           ],
         ));
   }
@@ -126,8 +133,8 @@ class DebugDialogsButtons extends ConsumerWidget {
                 ),
                 onPressed: () {
                   ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                        title: 'Account created successfully!',
-                      );
+                      title: 'Account created successfully!',
+                      message: 'You can check it out in the accounts tab.');
                 },
                 child: const Text('Show Success Screen Dialog'),
               ),
@@ -162,13 +169,18 @@ class CreateAccountFormWidget extends ConsumerWidget {
             ReactiveTextField<String>(
               formControlName: 'description',
               textInputAction: TextInputAction.next,
-              onSubmitted: (_) => createAccountForm.focus('currency'),
+              onSubmitted: (_) {
+                if (createAccountForm.value['currency'] == '') {
+                  createAccountForm.value['currency'] = null;
+                }
+                createAccountForm.focus('currency');
+              },
               decoration: const InputDecoration(
                   labelText: 'Description', hintText: 'You could also leave this empty.'),
             ),
             ReactiveDropdownField<String>(
               formControlName: 'currency',
-              onTap: (_) => createAccountForm.focus('initialBalance'),
+              onChanged: (_) => createAccountForm.focus('initialBalance'),
               decoration: const InputDecoration(
                 labelText: 'Currency',
                 hintText: 'What currency should this account use?',
@@ -213,6 +225,77 @@ class CreateAccountFormWidget extends ConsumerWidget {
               },
             )
           ])),
+    );
+  }
+}
+
+class AccountsList extends ConsumerWidget {
+  const AccountsList({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stream = ref.watch(watchAccountsProvider);
+
+    return Column(
+      children: [
+        const Align(
+          child: Text(
+            'All Accounts List',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        stream.when(
+          data: (failureOrList) => failureOrList.fold(
+              (l) => Text(l.toString()),
+              (list) => ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: list.length,
+                    itemBuilder: (ctx, index) => ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      title: Text(list[index].name),
+                      subtitle: list[index].description != '' ? Text(list[index].description!) : null,
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            '${list[index].currency} ${list[index].balance}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple[100],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              // Handle edit action here
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red[300],
+                            ),
+                            onPressed: () {
+                              // Handle delete action here
+                            },
+                          ),
+                        ],
+                      ),
+                      onTap: () {},
+                    ),
+                  )),
+          error: (e, __) => Text(e.toString()),
+          loading: () => const Align(child: CupertinoActivityIndicator()),
+        )
+      ],
     );
   }
 }
