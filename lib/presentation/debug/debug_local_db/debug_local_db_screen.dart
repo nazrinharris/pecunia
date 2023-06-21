@@ -4,14 +4,13 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/form/debug_create_account_form.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-import '../../../core/errors/failures.dart';
 
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
@@ -138,10 +137,49 @@ class DebugDialogsButtons extends ConsumerWidget {
                 },
                 child: const Text('Show Success Screen Dialog'),
               ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 2, 33)),
+                ),
+                onPressed: () {
+                  ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                        title: 'Are you sure?',
+                        message: "This isn't reversible.",
+                        onConfirm: () {},
+                      );
+                },
+                child: const Text('Show Confirmation Dialog'),
+              ),
               const SizedBox(width: 16),
             ],
           ),
         ),
+        const SizedBox(height: 10),
+        Container(
+          alignment: Alignment.center,
+          child: ElevatedButton(
+            onPressed: () {
+              context.pushNamed('debug-dialogs');
+            },
+            style: const ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll(
+                Color.fromARGB(255, 15, 9, 49),
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(14),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.chat),
+                  SizedBox(width: 10),
+                  Text('Visit All Dialogs'),
+                ],
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
@@ -170,8 +208,8 @@ class CreateAccountFormWidget extends ConsumerWidget {
               formControlName: 'description',
               textInputAction: TextInputAction.next,
               onSubmitted: (_) {
-                if (createAccountForm.value['currency'] == '') {
-                  createAccountForm.value['currency'] = null;
+                if (createAccountForm.value['description'] == '') {
+                  createAccountForm.value['description'] = null;
                 }
                 createAccountForm.focus('currency');
               },
@@ -204,9 +242,6 @@ class CreateAccountFormWidget extends ConsumerWidget {
                 labelText: 'Starting Balance',
                 hintText: 'How much money do you have?',
               ),
-              onSubmitted: (control) {
-                print(control.value.runtimeType);
-              },
             ),
             const SizedBox(height: 16),
             ReactiveFormConsumer(

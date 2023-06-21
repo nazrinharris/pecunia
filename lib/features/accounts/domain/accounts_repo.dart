@@ -8,6 +8,7 @@ part 'accounts_repo.g.dart';
 
 enum AccountsAction {
   getAccounts,
+  watchAccounts,
   createAccount,
 }
 

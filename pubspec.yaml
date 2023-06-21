@@ -42,6 +42,7 @@ dependencies:
 
   # Icons
   cupertino_icons: ^1.0.2
+  icons_plus: ^4.0.0
 
   # Dialogs
   flutter_easy_dialogs: ^2.0.8+7

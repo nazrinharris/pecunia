@@ -1,3 +1,5 @@
+import 'package:drift/isolate.dart';
+import 'package:drift/native.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
@@ -70,5 +72,30 @@ class AccountsFailure with _$AccountsFailure implements Failure {
   @override
   String toVerboseString() {
     return 'AccountFailure: $message \n$stackTrace \nRawException: $rawException';
+  }
+}
+
+/// ****************************************************************
+/// * Helpers
+/// ****************************************************************
+
+AccountsFailure mapDriftToFailure(AccountsAction accountsAction, Object error, StackTrace stackTrace) {
+  print(error.runtimeType);
+  if (error is DriftRemoteException && error.remoteCause is SqliteException) {
+    final cause = error.remoteCause as SqliteException;
+    return AccountsFailure(
+      accountsAction: accountsAction,
+      errorType: AccountsErrorType.unknown,
+      message: '${cause.message} \n${cause.causingStatement}',
+      stackTrace: stackTrace,
+      rawException: error,
+    );
+  } else {
+    return AccountsFailure.unknown(
+      stackTrace: stackTrace,
+      message: AccountsErrorType.unknown.message,
+      accountsAction: accountsAction,
+      rawException: error,
+    );
   }
 }

@@ -40,12 +40,21 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
 
   @override
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {
-    // TODO: implement getAccounts
-    throw UnimplementedError();
+    const currentAction = AccountsAction.getAccounts;
+    return TaskEither.tryCatch(
+      accountsDAO.getAllAccounts,
+      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+    );
   }
 
+  /// This honestly feels like a frankensteins job. I'm not sure if this is the
+  /// right way to do it. But it works. So I'm going to leave it as is for now.
+  ///
+  /// Another solution is to simply return the pure stream, though I'm not sure
+  /// on how I'd handle the errors in that case.
   @override
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts() {
+    const currentAction = AccountsAction.watchAccounts;
     return accountsDAO.watchAllAccounts().transform(StreamTransformer.fromHandlers(
           handleData: (listOfDTOs, sink) {
             sink.add(
@@ -54,13 +63,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
           },
           handleError: (error, stackTrace, sink) {
             sink.add(
-              left(
-                AccountsFailure.unknown(
-                  stackTrace: stackTrace,
-                  message: AccountsErrorType.unknown.toString(),
-                  accountsAction: AccountsAction.getAccounts,
-                ),
-              ),
+              left(mapDriftToFailure(currentAction, error, stackTrace)),
             );
           },
         ));
@@ -91,12 +94,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
         );
         return unit;
       },
-      (error, stackTrace) => AccountsFailure.unknown(
-        stackTrace: stackTrace,
-        message: AccountsErrorType.unknown.toString(),
-        accountsAction: currentAction,
-        rawException: error,
-      ),
+      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
     );
   }
 }

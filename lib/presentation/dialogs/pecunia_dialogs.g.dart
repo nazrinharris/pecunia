@@ -8,7 +8,11 @@ part of 'pecunia_dialogs.dart';
 
 String _$pecuniaDialogsHash() => r'af0defabba286b18286b08d18be0fad8a2a3b45c';
 
-/// See also [pecuniaDialogs].
+/// ******************************************************************************************************
+/// * General Interface for Pecunia Dialogs
+/// ******************************************************************************************************
+///
+/// Copied from [pecuniaDialogs].
 @ProviderFor(pecuniaDialogs)
 final pecuniaDialogsProvider = Provider<PecuniaDialogs>.internal(
   pecuniaDialogs,
