@@ -105,7 +105,7 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
           reverseDuration: Duration(milliseconds: 200),
         ),
         backgroundAnimator: FullScreenBackgroundAnimator.fade(
-          backgroundColor: Colors.black.withOpacity(0.6),
+          backgroundColor: Colors.black.withOpacity(0.8),
         ),
       ),
     );
@@ -213,58 +213,74 @@ class FailureDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chosenMessage = message ?? failure?.message;
+    const bg = Color.fromARGB(255, 61, 4, 0);
+    final overlayColor = calculateOverlayColor(bg, 0.15);
 
     return Container(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 61, 4, 0),
+        gradient: LinearGradient(
+          colors: [
+            overlayColor,
+            bg,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         borderRadius: BorderRadius.circular(32),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.warning_amber_rounded, color: Colors.red[100]),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 34),
-            child: Text(
-              title ?? 'Uh oh, something went wrong!',
-              style: TextStyle(
-                color: Colors.red[100],
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          if (chosenMessage != null) ...[
-            const SizedBox(height: 4),
-            Divider(color: Colors.white.withOpacity(0.1)),
-            const SizedBox(height: 4),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 44),
+      child: Container(
+        padding: const EdgeInsets.only(top: 16),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.red[100]),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 34),
               child: Text(
-                chosenMessage,
+                title ?? 'Uh oh, something went wrong!',
                 style: TextStyle(
                   color: Colors.red[100],
                   fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
+            if (chosenMessage != null) ...[
+              const SizedBox(height: 4),
+              Divider(color: Colors.white.withOpacity(0.1)),
+              const SizedBox(height: 4),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 44),
+                child: Text(
+                  chosenMessage,
+                  style: TextStyle(
+                    color: Colors.red[100],
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+            const SizedBox(height: 24),
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              width: 50,
+              height: 3,
+              decoration: BoxDecoration(
+                color: Colors.red[100]!.withOpacity(0.5),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+            )
           ],
-          const SizedBox(height: 24),
-          Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            width: 50,
-            height: 3,
-            decoration: BoxDecoration(
-              color: Colors.red[100]!.withOpacity(0.5),
-              borderRadius: const BorderRadius.all(Radius.circular(12)),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
@@ -282,57 +298,74 @@ class SuccessDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    const bg = Color.fromARGB(255, 0, 33, 1);
+    final overlayColor = calculateOverlayColor(bg, 0.15);
+
     return Container(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 0, 33, 1),
+        gradient: LinearGradient(
+          colors: [
+            overlayColor,
+            bg,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         borderRadius: BorderRadius.circular(32),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.done, color: Colors.green[100]),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 34),
-            child: Text(
-              title!,
-              style: TextStyle(
-                color: Colors.green[100],
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          if (message != null) ...[
-            const SizedBox(height: 4),
-            Divider(color: Colors.white.withOpacity(0.1)),
-            const SizedBox(height: 4),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 44),
+      child: Container(
+        padding: const EdgeInsets.only(top: 16),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.done, color: Colors.green[100]),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 34),
               child: Text(
-                message!,
-                style: const TextStyle(
-                  color: Colors.white,
+                title!,
+                style: TextStyle(
+                  color: Colors.green[100],
                   fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
+            if (message != null) ...[
+              const SizedBox(height: 4),
+              Divider(color: Colors.white.withOpacity(0.1)),
+              const SizedBox(height: 4),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 44),
+                child: Text(
+                  message!,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+            const SizedBox(height: 24),
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              width: 50,
+              height: 3,
+              decoration: BoxDecoration(
+                color: Colors.green[100]!.withOpacity(0.5),
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
+              ),
+            )
           ],
-          const SizedBox(height: 24),
-          Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            width: 50,
-            height: 3,
-            decoration: BoxDecoration(
-              color: Colors.green[100]!.withOpacity(0.5),
-              borderRadius: const BorderRadius.all(Radius.circular(12)),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
@@ -356,6 +389,7 @@ class ConfirmationDialog extends ConsumerWidget {
     final overlayColor = calculateOverlayColor(bg, 0.15);
 
     return Container(
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -367,109 +401,109 @@ class ConfirmationDialog extends ConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(32),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(2),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(32),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(EvaIcons.question_mark_circle_outline, color: Colors.white),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 34),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(EvaIcons.question_mark_circle_outline, color: Colors.white),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 34),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            if (message != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 44),
                 child: Text(
-                  title,
+                  message!,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
-                    fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              if (message != null) ...[
-                const SizedBox(height: 8),
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 44),
-                  child: Text(
-                    message!,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 10),
-              Divider(color: Colors.white.withOpacity(0.1)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => FlutterEasyDialogs.provider.hideFullScreen(),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(bg),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                          ),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: onConfirm,
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 37, 23, 72)),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                          ),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 14),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Confirm',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
-          ),
+            const SizedBox(height: 10),
+            Divider(color: Colors.white.withOpacity(0.1)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => FlutterEasyDialogs.provider.hideFullScreen(),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(bg),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        onConfirm();
+                        FlutterEasyDialogs.provider.hideFullScreen();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 37, 23, 72)),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Confirm',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

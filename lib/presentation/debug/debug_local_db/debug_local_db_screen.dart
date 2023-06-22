@@ -294,7 +294,13 @@ class AccountsList extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       title: Text(list[index].name),
-                      subtitle: list[index].description != '' ? Text(list[index].description!) : null,
+                      subtitle: list[index].description == null
+                          ? null
+                          : Text(
+                              list[index].description!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -311,6 +317,7 @@ class AccountsList extends ConsumerWidget {
                             icon: const Icon(Icons.edit),
                             onPressed: () {
                               // Handle edit action here
+                              context.pushNamed('debug-edit-account', extra: list[index]);
                             },
                           ),
                           IconButton(
@@ -324,7 +331,9 @@ class AccountsList extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        context.pushNamed('debug-view-account', extra: list[index]);
+                      },
                     ),
                   )),
           error: (e, __) => Text(e.toString()),

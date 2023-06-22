@@ -10,6 +10,7 @@ enum AccountsAction {
   getAccounts,
   watchAccounts,
   createAccount,
+  updateAccountDetails,
 }
 
 @riverpod
@@ -28,6 +29,8 @@ abstract interface class AccountsRepo {
     required String currency,
     String? desc,
   });
+
+  TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails);
 }
 
 class AccountsRepoImpl implements AccountsRepo {
@@ -67,5 +70,10 @@ class AccountsRepoImpl implements AccountsRepo {
       currency: currency,
       desc: desc,
     );
+  }
+
+  @override
+  TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails) {
+    return accountsLocalDS.updateAccountDetails(newAccountDetails);
   }
 }

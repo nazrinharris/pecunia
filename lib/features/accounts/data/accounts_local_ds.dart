@@ -6,6 +6,7 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
 import 'package:pecunia/features/accounts/dao_tables/accounts_dao_tables.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
+import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -28,6 +29,8 @@ abstract interface class AccountsLocalDS {
     required String currency,
     String? desc,
   });
+
+  TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails);
 }
 
 class AccountsLocalDSImpl implements AccountsLocalDS {
@@ -92,6 +95,18 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
             description: desc,
           ),
         );
+        return unit;
+      },
+      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+    );
+  }
+
+  @override
+  TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails) {
+    const currentAction = AccountsAction.updateAccountDetails;
+    return TaskEither.tryCatch(
+      () async {
+        await accountsDAO.updateAccount(newAccountDetails.toDTO());
         return unit;
       },
       (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),

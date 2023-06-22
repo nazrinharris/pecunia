@@ -27,7 +27,25 @@ class Account with _$Account {
       balance: dto.balance,
       currency: dto.currency,
       createdOn: dto.createdOn,
-      description: dto.description,
+
+      /// This basically checks if the [desc] is an empty String, if it is, return a null value, else return the [desc].
+      /// Best case scenario is [desc] is always null, but sometimes life doesn't go our way.
+      /// (The UI sometimes give an empty String as the description, so we have to check for that) Might do something
+      /// about it, but this is a stopgap measure.
+      description: (dto.description?.isEmpty ?? true) ? null : dto.description,
+    );
+  }
+
+  AccountDTO toDTO() {
+    return AccountDTO(
+      id: id,
+      creatorUid: creatorUid,
+      name: name,
+      initialBalance: initialBalance,
+      balance: balance,
+      currency: currency,
+      createdOn: createdOn,
+      description: description,
     );
   }
 }
