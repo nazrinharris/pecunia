@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/edit_account/debug_edit_account_providers.dart';
+import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugEditAccountScreen extends ConsumerWidget {
@@ -12,6 +15,22 @@ class DebugEditAccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(editAccountProvider, (prev, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: 'Something went wrong while editing your account.',
+              failure: next.error as AccountsFailure?,
+            );
+      }
+
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Your account has been edited!',
+            );
+        context.pop();
+      }
+    });
+
     final formGroup = ref.watch(editAccountFormProvider(
       name: account.name,
       description: account.description,

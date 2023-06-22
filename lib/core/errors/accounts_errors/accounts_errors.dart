@@ -15,7 +15,7 @@ part 'accounts_errors.freezed.dart';
 /// These are here because I cannot use the [AccountsErrorType] enum to retrieve the
 /// error message and code because they are not constant.
 const defaultUnknownAccountErrorCode = 'unknown-account-error';
-const defaultUnknownAccountErrorMessage = 'Something went wrong, please try again.';
+const defaultUnknownAccountErrorMessage = "We're not sure what happened, please try again.";
 
 enum AccountsErrorType {
   unknown(defaultUnknownAccountErrorCode, defaultUnknownAccountErrorMessage);
