@@ -307,10 +307,10 @@ class AccountsList extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       title: Text(list[index].name),
-                      subtitle: list[index].description == null
+                      subtitle: list[index].description.value == null
                           ? null
                           : Text(
-                              list[index].description!,
+                              list[index].description.value!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),

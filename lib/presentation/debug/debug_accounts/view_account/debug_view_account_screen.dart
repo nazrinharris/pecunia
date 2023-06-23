@@ -66,7 +66,7 @@ class DebugViewAccountScreen extends ConsumerWidget {
                 const Divider(),
                 const SizedBox(height: 14),
                 Text(
-                  'Description: ${account.description ?? 'No description'}',
+                  'Description: ${account.description.value ?? 'No description'}',
                   style: const TextStyle(fontSize: 22),
                 ),
                 const SizedBox(height: 14),

@@ -13,7 +13,7 @@ class Account with _$Account {
     required double balance, // The current balance of the account
     required String currency, // The currency used by the account
     required DateTime createdOn, // The date when the account was created
-    String? description, // Description of the account
+    required Description description, // Description of the account
   }) = _Account;
 
   const Account._();
@@ -27,12 +27,7 @@ class Account with _$Account {
       balance: dto.balance,
       currency: dto.currency,
       createdOn: dto.createdOn,
-
-      /// This basically checks if the [desc] is an empty String, if it is, return a null value, else return the [desc].
-      /// Best case scenario is [desc] is always null, but sometimes life doesn't go our way.
-      /// (The UI sometimes give an empty String as the description, so we have to check for that) Might do something
-      /// about it, but this is a stopgap measure.
-      description: (dto.description?.isEmpty ?? true) ? null : dto.description,
+      description: Description(dto.description),
     );
   }
 
@@ -45,7 +40,26 @@ class Account with _$Account {
       balance: balance,
       currency: currency,
       createdOn: createdOn,
-      description: description,
+      description: description.value,
     );
+  }
+}
+
+/// Value object for the description of an account
+/// The description can be null, so check for that.
+@immutable
+class Description {
+  Description(String? input) : value = _validateInput(input);
+
+  final String? value;
+
+  @override
+  String toString() => value ?? 'No Description';
+
+  static String? _validateInput(String? input) {
+    if (input == null || input.trim().isEmpty) {
+      return null;
+    }
+    return input;
   }
 }

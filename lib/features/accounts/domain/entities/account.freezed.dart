@@ -30,7 +30,7 @@ mixin _$Account {
       throw _privateConstructorUsedError; // The currency used by the account
   DateTime get createdOn =>
       throw _privateConstructorUsedError; // The date when the account was created
-  String? get description => throw _privateConstructorUsedError;
+  Description get description => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AccountCopyWith<Account> get copyWith => throw _privateConstructorUsedError;
@@ -49,7 +49,7 @@ abstract class $AccountCopyWith<$Res> {
       double balance,
       String currency,
       DateTime createdOn,
-      String? description});
+      Description description});
 }
 
 /// @nodoc
@@ -72,7 +72,7 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
     Object? balance = null,
     Object? currency = null,
     Object? createdOn = null,
-    Object? description = freezed,
+    Object? description = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -103,10 +103,10 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
           ? _value.createdOn
           : createdOn // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      description: freezed == description
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as Description,
     ) as $Val);
   }
 }
@@ -126,7 +126,7 @@ abstract class _$$_AccountCopyWith<$Res> implements $AccountCopyWith<$Res> {
       double balance,
       String currency,
       DateTime createdOn,
-      String? description});
+      Description description});
 }
 
 /// @nodoc
@@ -146,7 +146,7 @@ class __$$_AccountCopyWithImpl<$Res>
     Object? balance = null,
     Object? currency = null,
     Object? createdOn = null,
-    Object? description = freezed,
+    Object? description = null,
   }) {
     return _then(_$_Account(
       id: null == id
@@ -177,10 +177,10 @@ class __$$_AccountCopyWithImpl<$Res>
           ? _value.createdOn
           : createdOn // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      description: freezed == description
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as Description,
     ));
   }
 }
@@ -196,7 +196,7 @@ class _$_Account extends _Account {
       required this.balance,
       required this.currency,
       required this.createdOn,
-      this.description})
+      required this.description})
       : super._();
 
   @override
@@ -221,7 +221,7 @@ class _$_Account extends _Account {
   final DateTime createdOn;
 // The date when the account was created
   @override
-  final String? description;
+  final Description description;
 
   @override
   String toString() {
@@ -268,7 +268,7 @@ abstract class _Account extends Account {
       required final double balance,
       required final String currency,
       required final DateTime createdOn,
-      final String? description}) = _$_Account;
+      required final Description description}) = _$_Account;
   const _Account._() : super._();
 
   @override
@@ -286,7 +286,7 @@ abstract class _Account extends Account {
   @override // The currency used by the account
   DateTime get createdOn;
   @override // The date when the account was created
-  String? get description;
+  Description get description;
   @override
   @JsonKey(ignore: true)
   _$$_AccountCopyWith<_$_Account> get copyWith =>
