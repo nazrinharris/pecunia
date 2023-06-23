@@ -476,7 +476,7 @@ class ConfirmationDialog extends ConsumerWidget {
                         FlutterEasyDialogs.provider.hideFullScreen();
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 37, 23, 72)),
+                        backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 37, 23, 72)),
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18),

@@ -13,7 +13,7 @@ class Account with _$Account {
     required double balance, // The current balance of the account
     required String currency, // The currency used by the account
     required DateTime createdOn, // The date when the account was created
-    required Description description, // Description of the account
+    required AccountDescription description, // Description of the account
   }) = _Account;
 
   const Account._();
@@ -27,7 +27,7 @@ class Account with _$Account {
       balance: dto.balance,
       currency: dto.currency,
       createdOn: dto.createdOn,
-      description: Description(dto.description),
+      description: AccountDescription(dto.description),
     );
   }
 
@@ -48,8 +48,8 @@ class Account with _$Account {
 /// Value object for the description of an account
 /// The description can be null, so check for that.
 @immutable
-class Description {
-  Description(String? input) : value = _validateInput(input);
+class AccountDescription {
+  AccountDescription(String? input) : value = _validateInput(input);
 
   final String? value;
 

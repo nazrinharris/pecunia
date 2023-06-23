@@ -48,8 +48,7 @@ class AccountsRepoImpl implements AccountsRepo {
 
   @override
   TaskEither<AccountsFailure, List<Account>> getAccounts() {
-    // TODO: implement getAccounts
-    throw UnimplementedError();
+    return accountsLocalDS.getAccounts().map((listOfDTOs) => listOfDTOs.map(Account.fromDTO).toList());
   }
 
   @override

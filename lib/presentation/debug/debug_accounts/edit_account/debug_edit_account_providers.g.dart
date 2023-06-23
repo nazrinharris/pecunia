@@ -135,7 +135,7 @@ class EditAccountFormProvider extends AutoDisposeProvider<FormGroup> {
   }
 }
 
-String _$editAccountHash() => r'f100ad4f0685cfcb8259ef0c90088db63cc1940a';
+String _$editAccountHash() => r'7ea02abf350d2b056d4a91b1a7812e87eece9281';
 
 /// See also [EditAccount].
 @ProviderFor(EditAccount)

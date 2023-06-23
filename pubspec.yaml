@@ -55,6 +55,7 @@ dependencies:
 
   # Testing
   mocktail: ^0.3.0
+  clock: ^1.1.1
 
   # Logging
   logger: ^1.4.0

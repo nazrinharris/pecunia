@@ -26,7 +26,7 @@ class EditAccount extends _$EditAccount {
       name: name,
       initialBalance: initialBalance,
       currency: currency,
-      description: Description(description),
+      description: AccountDescription(description),
     );
 
     (await ref.watch(accountsRepoProvider).updateAccountDetails(newAccount).run()).fold(
