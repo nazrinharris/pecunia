@@ -43,4 +43,8 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
   Future<void> updateAccount(AccountDTO account) async {
     await update(accountsTable).replace(account);
   }
+
+  Future<void> deleteAccount(AccountDTO account) async {
+    await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
+  }
 }

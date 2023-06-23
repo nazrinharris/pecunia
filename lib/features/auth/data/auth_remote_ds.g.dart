@@ -6,7 +6,7 @@ part of 'auth_remote_ds.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRemoteDSHash() => r'acc9f259207fa0f2c9b3bfda9aba535282907fb4';
+String _$authRemoteDSHash() => r'8c3ef8c7494715f0d778ef4cc61fdb3e304d5b0b';
 
 /// See also [authRemoteDS].
 @ProviderFor(authRemoteDS)

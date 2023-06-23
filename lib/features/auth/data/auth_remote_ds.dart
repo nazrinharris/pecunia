@@ -15,6 +15,7 @@ part 'auth_remote_ds.g.dart';
 AuthRemoteDS authRemoteDS(AuthRemoteDSRef ref) => SupabaseAuthRemoteDS(
       ref.watch(supabaseClientProvider),
       ref.watch(networkInfoProvider),
+      AuthRemoteDSHelper(),
     );
 
 typedef PecuniaUserDTOAndSession = ({PecuniaUserDTO pecuniaUserDTO, Session newSession});
@@ -41,10 +42,11 @@ abstract interface class AuthRemoteDS {
 }
 
 class SupabaseAuthRemoteDS implements AuthRemoteDS {
-  SupabaseAuthRemoteDS(this.supabaseClient, this.network);
+  SupabaseAuthRemoteDS(this.supabaseClient, this.network, this.helper);
 
   final s.SupabaseClient supabaseClient;
   final NetworkInfo network;
+  final AuthRemoteDSHelper helper;
 
   /// ******************************************************************************************************
   /// * [loginWithPassword]
@@ -58,19 +60,19 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     const currentAction = AuthAction.login;
     return network
         .isConnected()
-        .mapLeft(AuthRemoteDSHelper.mapNetworkInfoFailureToAuthFailure)
+        .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
         .flatMap<AuthResponseAndSession>(_loginIfConnected(
           currentAction: currentAction,
           currentSession: currentSession,
           email: email,
           password: password,
         ))
-        .flatMap((r) => AuthRemoteDSHelper.getUserFromAuthResponse(
+        .flatMap((r) => helper.getUserFromAuthResponse(
               r.response,
               r.currentSession,
               currentAction,
             ))
-        .flatMap((r) => AuthRemoteDSHelper.mapSupaUserToDTOWithSession(
+        .flatMap((r) => helper.mapSupaUserToDTOWithSession(
               r.user,
               r.newSession,
               currentAction,
@@ -116,19 +118,19 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     const currentAction = AuthAction.register;
     return network
         .isConnected()
-        .mapLeft(AuthRemoteDSHelper.mapNetworkInfoFailureToAuthFailure)
+        .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
         .flatMap<AuthResponseAndSession>(_registerIfConnected(
             currentAction: currentAction,
             currentSession: currentSession,
             username: username,
             email: email,
             password: password))
-        .flatMap((r) => AuthRemoteDSHelper.getUserFromAuthResponse(
+        .flatMap((r) => helper.getUserFromAuthResponse(
               r.response,
               r.currentSession,
               currentAction,
             ))
-        .flatMap((r) => AuthRemoteDSHelper.mapSupaUserToDTOWithSession(
+        .flatMap((r) => helper.mapSupaUserToDTOWithSession(
               r.user,
               r.newSession,
               currentAction,
@@ -171,7 +173,7 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     const currentAction = AuthAction.logout;
     return network
         .isConnected()
-        .mapLeft(AuthRemoteDSHelper.mapNetworkInfoFailureToAuthFailure)
+        .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
         .flatMap<Session>(logoutIfConnected(currentSession: currentSession, currentAction: currentAction));
   }
 
@@ -211,15 +213,27 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
         message: AuthErrorType.noLoggedInUser.message,
       ));
     }
-    return AuthRemoteDSHelper.mapSupaUserToDTO(user, currentAction);
+    return helper.mapSupaUserToDTO(user, currentAction);
   }
 }
 
 /// ========================================================================================================
-/// * Helpers
+/// Also see [SupabaseAuthRemoteDS]
+///
+/// This class provides utility methods for handling common tasks
+/// related to authentication in the context of the `SupabaseAuthRemoteDS` class.
+///
+/// It's primarily designed to keep the code in `SupabaseAuthRemoteDS` more clean
+/// and readable by abstracting away some of the lower-level operations that
+/// are needed for authentication.
 /// ========================================================================================================
 class AuthRemoteDSHelper {
-  static TaskEither<AuthFailure, PecuniaUserDTO> mapSupaUserToDTO(
+  /// Tries to map a Supabase User object to a PecuniaUserDTO object,
+  /// and wraps the operation in a TaskEither to handle potential errors.
+  ///
+  /// If the mapping is successful, it will return a Right with the DTO.
+  /// If an error occurs, it will return a Left with an AuthFailure.
+  TaskEither<AuthFailure, PecuniaUserDTO> mapSupaUserToDTO(
     s.User user,
     AuthAction authAction,
   ) =>
@@ -235,7 +249,8 @@ class AuthRemoteDSHelper {
         (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
       );
 
-  static TaskEither<AuthFailure, PecuniaUserDTOAndSession> mapSupaUserToDTOWithSession(
+  /// Similar to `mapSupaUserToDTO`, but also includes the session information.
+  TaskEither<AuthFailure, PecuniaUserDTOAndSession> mapSupaUserToDTOWithSession(
     s.User user,
     Session newSession,
     AuthAction authAction,
@@ -255,7 +270,12 @@ class AuthRemoteDSHelper {
         (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
       );
 
-  static TaskEither<AuthFailure, SupaUserAndSession> getUserFromAuthResponse(
+  /// Tries to extract the user and update session information from a Supabase AuthResponse,
+  /// and wraps the operation in a TaskEither to handle potential errors.
+  ///
+  /// If the extraction is successful, it will return a Right with the user and session.
+  /// If an error occurs, it will return a Left with an AuthFailure.
+  TaskEither<AuthFailure, SupaUserAndSession> getUserFromAuthResponse(
     s.AuthResponse response,
     Session newSession,
     AuthAction authAction,
@@ -276,7 +296,8 @@ class AuthRemoteDSHelper {
         (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
       );
 
-  static AuthFailure mapNetworkInfoFailureToAuthFailure(NetworkInfoFailure failure) {
+  /// Converts a `NetworkInfoFailure` to an `AuthFailure`.
+  AuthFailure mapNetworkInfoFailureToAuthFailure(NetworkInfoFailure failure) {
     return AuthFailure.unknown(
         stackTrace: StackTrace.current,
         message: AuthErrorType.unknown.message,

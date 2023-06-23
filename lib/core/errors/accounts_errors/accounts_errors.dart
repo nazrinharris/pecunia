@@ -18,7 +18,8 @@ const defaultUnknownAccountErrorCode = 'unknown-account-error';
 const defaultUnknownAccountErrorMessage = "We're not sure what happened, please try again.";
 
 enum AccountsErrorType {
-  unknown(defaultUnknownAccountErrorCode, defaultUnknownAccountErrorMessage);
+  unknown(defaultUnknownAccountErrorCode, defaultUnknownAccountErrorMessage),
+  cannotConvertToDTO('cannot-convert-to-dto', 'Something went wrong while converting the account to a DTO.');
 
   const AccountsErrorType(this.code, this.message);
 
@@ -80,7 +81,6 @@ class AccountsFailure with _$AccountsFailure implements Failure {
 /// ****************************************************************
 
 AccountsFailure mapDriftToFailure(AccountsAction accountsAction, Object error, StackTrace stackTrace) {
-  print(error.runtimeType);
   if (error is DriftRemoteException && error.remoteCause is SqliteException) {
     final cause = error.remoteCause as SqliteException;
     return AccountsFailure(

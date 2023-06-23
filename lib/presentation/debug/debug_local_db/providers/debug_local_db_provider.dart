@@ -56,6 +56,23 @@ class CreateAccount extends _$CreateAccount {
 }
 
 @riverpod
+class DeleteAccount extends _$DeleteAccount {
+  @override
+  Future<Option<Unit>> build() async {
+    return const Option.none();
+  }
+
+  Future<void> deleteAccount(Account account) async {
+    state = const AsyncValue.loading();
+
+    (await ref.watch(accountsRepoProvider).deleteAccount(account).run()).fold(
+      (l) => state = AsyncError(l, l.stackTrace),
+      (r) => state = AsyncData(Option.of(r)),
+    );
+  }
+}
+
+@riverpod
 Stream<Either<AccountsFailure, List<Account>>> watchAccounts(WatchAccountsRef ref) {
   return ref.watch(accountsRepoProvider).watchAccounts();
 }

@@ -17,20 +17,33 @@ class DebugLocalDBScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(createAccountProvider, (prev, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
-              title: "We couldn't create an account for you.",
-              failure: next.error as Failure?,
-            );
-      }
-
-      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
-              title: 'Account created successfully!',
-            );
-      }
-    });
+    ref
+      ..listen(createAccountProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't create an account for you.",
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Account created successfully!',
+              );
+        }
+      })
+      ..listen(deleteAccountProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't delete your account.",
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Account deleted successfully!',
+              );
+        }
+      });
 
     return Scaffold(
         appBar: AppBar(
@@ -327,6 +340,13 @@ class AccountsList extends ConsumerWidget {
                             ),
                             onPressed: () {
                               // Handle delete action here
+                              ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                                    title: 'Are you sure you want to delete this account?',
+                                    message: 'This is irreversible',
+                                    onConfirm: () {
+                                      ref.read(deleteAccountProvider.notifier).deleteAccount(list[index]);
+                                    },
+                                  );
                             },
                           ),
                         ],

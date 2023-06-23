@@ -32,6 +32,8 @@ void main() {
     final user = MockUser();
     final network = MockNetworkInfo();
 
+    final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network, AuthRemoteDSHelper());
+
     setUpAll(() {
       registerFallbackValue(StackTrace.empty);
       when(() => supabaseClient.auth).thenReturn(auth);
@@ -47,7 +49,6 @@ void main() {
         when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(false));
 
         // Act
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
             .loginWithPassword(
               email: 'email',
@@ -67,7 +68,6 @@ void main() {
         when(() => auth.signInWithPassword(email: 'email', password: 'password'))
             .thenThrow(const s.AuthException('Error'));
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
             .loginWithPassword(
               email: 'email',
@@ -88,7 +88,6 @@ void main() {
         when(() => user.userMetadata).thenReturn({'username': 'username'});
         when(() => user.createdAt).thenReturn('2023-06-06T14:34:34Z');
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
             .loginWithPassword(
               email: 'email',
@@ -110,7 +109,6 @@ void main() {
           () async {
         when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(false));
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
             .registerWithPassword(
               username: 'username',
@@ -136,7 +134,6 @@ void main() {
           ),
         ).thenThrow(const s.AuthException('Error'));
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
             .registerWithPassword(
               username: 'username',
@@ -163,7 +160,6 @@ void main() {
         when(() => user.userMetadata).thenReturn({'username': 'username'});
         when(() => user.createdAt).thenReturn('2023-06-06T14:34:34Z');
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS
             .registerWithPassword(
               username: 'username',
@@ -186,7 +182,6 @@ void main() {
           () async {
         when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(false));
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS.logout(const Session(isValid: true)).run();
 
         expect(
@@ -197,7 +192,6 @@ void main() {
         when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(auth.signOut).thenAnswer((_) async {});
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS.logout(const Session(isValid: true)).run();
 
         result.fold((failure) => fail('Operation failed with error: $failure'), (session) {
@@ -211,7 +205,6 @@ void main() {
         when(network.isConnected).thenAnswer((_) => TaskEither<NetworkInfoFailure, bool>.right(true));
         when(auth.signOut).thenThrow(const s.AuthException('Error'));
 
-        final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
         final result = await authRemoteDS.logout(const Session(isValid: true)).run();
 
         expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown, AuthAction.logout));
