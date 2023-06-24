@@ -626,7 +626,7 @@ mixin _$DebugDAOMixin on DatabaseAccessor<PecuniaDB> {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDBHash() => r'3c8a377a761d7367cbf8c42149cc7d63596e98e5';
+String _$pecuniaDBHash() => r'12ac2257a15a1170557c84b0a17e9fec85a5182e';
 
 /// See also [pecuniaDB].
 @ProviderFor(pecuniaDB)
