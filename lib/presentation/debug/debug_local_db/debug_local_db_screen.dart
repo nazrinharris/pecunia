@@ -61,11 +61,26 @@ class DebugLocalDBScreen extends ConsumerWidget {
             Container(
               alignment: Alignment.center,
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
-                },
-                child: const Text('Inspect DB'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
+                    },
+                    child: const Text('Inspect DB'),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
+                    ),
+                    onPressed: () {
+                      context.pushNamed('debug-transactions');
+                    },
+                    child: const Text('Go to Debug Transactions'),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 14),
@@ -172,26 +187,11 @@ class DebugDialogsButtons extends ConsumerWidget {
         Container(
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: () {
-              context.pushNamed('debug-dialogs');
-            },
-            style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(
-                Color.fromARGB(255, 15, 9, 49),
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(14),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.chat),
-                  SizedBox(width: 10),
-                  Text('Visit All Dialogs'),
-                ],
-              ),
-            ),
-          ),
+              onPressed: () {
+                context.pushNamed('debug-dialogs');
+              },
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.purple[900])),
+              child: const Text('Go to All Dialogs')),
         )
       ],
     );
