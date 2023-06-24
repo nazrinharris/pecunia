@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 import 'package:pecunia/core/infrastructure/supabase/pecunia_supabase.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
@@ -14,6 +15,7 @@ part 'auth_remote_ds.g.dart';
 AuthRemoteDS authRemoteDS(AuthRemoteDSRef ref) => SupabaseAuthRemoteDS(
       ref.watch(supabaseClientProvider),
       ref.watch(networkInfoProvider),
+      AuthRemoteDSHelper(),
     );
 
 typedef PecuniaUserDTOAndSession = ({PecuniaUserDTO pecuniaUserDTO, Session newSession});
@@ -40,11 +42,15 @@ abstract interface class AuthRemoteDS {
 }
 
 class SupabaseAuthRemoteDS implements AuthRemoteDS {
-  SupabaseAuthRemoteDS(this.supabaseClient, this.network);
+  SupabaseAuthRemoteDS(this.supabaseClient, this.network, this.helper);
 
   final s.SupabaseClient supabaseClient;
   final NetworkInfo network;
+  final AuthRemoteDSHelper helper;
 
+  /// ******************************************************************************************************
+  /// * [loginWithPassword]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUserDTOAndSession> loginWithPassword({
     required String email,
@@ -54,54 +60,54 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     const currentAction = AuthAction.login;
     return network
         .isConnected()
-        .mapLeft((l) => AuthFailure.unknown(
-              authAction: currentAction,
-              stackTrace: StackTrace.current,
-              message: AuthErrorType.unknown.message,
-            ))
-        .flatMap<AuthResponseAndSession>(
-          (isConnected) => isConnected
-              ? _requestLoginWithPassword(
-                  email: email,
-                  password: password,
-                  currentSession: currentSession,
-                  authAction: currentAction,
-                )
-              : TaskEither.left(AuthFailure.noInternet(
-                  authAction: currentAction,
-                  message: AuthErrorType.noInternet.message,
-                  stackTrace: StackTrace.current,
-                )),
-        )
-        .flatMap((r) => SupabaseAuthRemoteDSHelper.getUserFromAuthResponse(
+        .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
+        .flatMap<AuthResponseAndSession>(_loginIfConnected(
+          currentAction: currentAction,
+          currentSession: currentSession,
+          email: email,
+          password: password,
+        ))
+        .flatMap((r) => helper.getUserFromAuthResponse(
               r.response,
               r.currentSession,
               currentAction,
             ))
-        .flatMap((r) => SupabaseAuthRemoteDSHelper.mapSupaUserToDTOWithSession(
+        .flatMap((r) => helper.mapSupaUserToDTOWithSession(
               r.user,
               r.newSession,
               currentAction,
             ));
   }
 
-  TaskEither<AuthFailure, AuthResponseAndSession> _requestLoginWithPassword({
+  TaskEither<AuthFailure, AuthResponseAndSession> Function(bool isConnected) _loginIfConnected({
     required String email,
     required String password,
     required Session currentSession,
-    required AuthAction authAction,
-  }) =>
-      TaskEither.tryCatch(
-        () async {
-          final response = await supabaseClient.auth.signInWithPassword(
-            email: email,
-            password: password,
-          );
-          return (response: response, currentSession: const Session(isValid: true));
-        },
-        (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
-      );
+    required AuthAction currentAction,
+  }) {
+    return (isConnected) {
+      return isConnected
+          ? TaskEither.tryCatch(
+              () async {
+                final response = await supabaseClient.auth.signInWithPassword(
+                  email: email,
+                  password: password,
+                );
+                return (response: response, currentSession: const Session(isValid: true));
+              },
+              (error, stackTrace) => mapSupabaseToFailure(currentAction, error, stackTrace),
+            )
+          : TaskEither.left(AuthFailure.noInternet(
+              authAction: currentAction,
+              message: AuthErrorType.noInternet.message,
+              stackTrace: StackTrace.current,
+            ));
+    };
+  }
 
+  /// ******************************************************************************************************
+  /// * [registerWithPassword]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUserDTOAndSession> registerWithPassword({
     required String username,
@@ -112,93 +118,89 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     const currentAction = AuthAction.register;
     return network
         .isConnected()
-        .mapLeft((l) => AuthFailure.unknown(
-              authAction: currentAction,
-              stackTrace: StackTrace.current,
-              message: AuthErrorType.unknown.message,
-            ))
-        .flatMap<AuthResponseAndSession>(
-          (isConnected) => isConnected
-              ? _requestRegisterWithPassword(
-                  username: username,
-                  email: email,
-                  password: password,
-                  currentSession: currentSession,
-                  authAction: currentAction,
-                )
-              : TaskEither.left(AuthFailure.noInternet(
-                  authAction: currentAction,
-                  message: AuthErrorType.noInternet.message,
-                  stackTrace: StackTrace.current,
-                )),
-        )
-        .flatMap((r) => SupabaseAuthRemoteDSHelper.getUserFromAuthResponse(
+        .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
+        .flatMap<AuthResponseAndSession>(_registerIfConnected(
+            currentAction: currentAction,
+            currentSession: currentSession,
+            username: username,
+            email: email,
+            password: password))
+        .flatMap((r) => helper.getUserFromAuthResponse(
               r.response,
               r.currentSession,
               currentAction,
             ))
-        .flatMap((r) => SupabaseAuthRemoteDSHelper.mapSupaUserToDTOWithSession(
+        .flatMap((r) => helper.mapSupaUserToDTOWithSession(
               r.user,
               r.newSession,
               currentAction,
             ));
   }
 
-  TaskEither<AuthFailure, AuthResponseAndSession> _requestRegisterWithPassword({
+  TaskEither<AuthFailure, AuthResponseAndSession> Function(bool isConnected) _registerIfConnected({
     required String username,
     required String email,
     required String password,
     required Session currentSession,
-    required AuthAction authAction,
+    required AuthAction currentAction,
   }) {
-    return TaskEither.tryCatch(
-      () async {
-        final response = await supabaseClient.auth.signUp(
-          email: email,
-          password: password,
-          data: {'username': username},
-        );
-        return (response: response, currentSession: const Session(isValid: true));
-      },
-      (error, stackTrace) {
-        return mapSupabaseToFailure(authAction, error, stackTrace);
-      },
-    );
+    return (isConnected) {
+      return isConnected
+          ? TaskEither.tryCatch(
+              () async {
+                final response = await supabaseClient.auth.signUp(
+                  email: email,
+                  password: password,
+                  data: {'username': username},
+                );
+                return (response: response, currentSession: const Session(isValid: true));
+              },
+              (error, stackTrace) => mapSupabaseToFailure(currentAction, error, stackTrace),
+            )
+          : TaskEither.left(AuthFailure.noInternet(
+              authAction: currentAction,
+              message: AuthErrorType.noInternet.message,
+              stackTrace: StackTrace.current,
+            ));
+    };
   }
 
+  /// ******************************************************************************************************
+  /// * [logout]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, Session> logout(Session currentSession) {
     const currentAction = AuthAction.logout;
     return network
         .isConnected()
-        .mapLeft(
-          (l) => AuthFailure.unknown(
-            authAction: currentAction,
-            stackTrace: StackTrace.current,
-            message: AuthErrorType.unknown.message,
-          ),
-        )
-        .flatMap<Session>(
-          (isConnected) => isConnected
-              ? _requestLogout(currentSession, currentAction)
-              : TaskEither.left(AuthFailure.noInternet(
-                  authAction: currentAction,
-                  message: AuthErrorType.noInternet.message,
-                  stackTrace: StackTrace.current,
-                )),
-        );
+        .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
+        .flatMap<Session>(logoutIfConnected(currentSession: currentSession, currentAction: currentAction));
   }
 
-  TaskEither<AuthFailure, Session> _requestLogout(Session currentSession, AuthAction authAction) {
-    return TaskEither.tryCatch(
-      () async {
-        await supabaseClient.auth.signOut();
-        return currentSession.copyWith(isValid: false);
-      },
-      (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
-    );
+  TaskEither<AuthFailure, Session> Function(bool isConnected) logoutIfConnected({
+    required Session currentSession,
+    required AuthAction currentAction,
+  }) {
+    return (isConnected) {
+      return isConnected
+          ? TaskEither.tryCatch(
+              () async {
+                await supabaseClient.auth.signOut();
+                return currentSession.copyWith(isValid: false);
+              },
+              (error, stackTrace) => mapSupabaseToFailure(currentAction, error, stackTrace),
+            )
+          : TaskEither.left(AuthFailure.noInternet(
+              authAction: currentAction,
+              message: AuthErrorType.noInternet.message,
+              stackTrace: StackTrace.current,
+            ));
+    };
   }
 
+  /// ******************************************************************************************************
+  /// * [getLoggedInUser]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUserDTO> getLoggedInUser() {
     const currentAction = AuthAction.getLoggedInUser;
@@ -211,16 +213,27 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
         message: AuthErrorType.noLoggedInUser.message,
       ));
     }
-    return SupabaseAuthRemoteDSHelper.mapSupaUserToDTO(user, currentAction);
+    return helper.mapSupaUserToDTO(user, currentAction);
   }
 }
 
-/// ****************************************************************
-/// * Helpers
-/// ****************************************************************
-
-class SupabaseAuthRemoteDSHelper {
-  static TaskEither<AuthFailure, PecuniaUserDTO> mapSupaUserToDTO(
+/// ******************************************************************************************************
+/// Also see [SupabaseAuthRemoteDS]
+///
+/// This class provides utility methods for handling common tasks
+/// related to authentication in the context of the `SupabaseAuthRemoteDS` class.
+///
+/// It's primarily designed to keep the code in `SupabaseAuthRemoteDS` more clean
+/// and readable by abstracting away some of the lower-level operations that
+/// are needed for authentication.
+/// ******************************************************************************************************
+class AuthRemoteDSHelper {
+  /// Tries to map a Supabase User object to a PecuniaUserDTO object,
+  /// and wraps the operation in a TaskEither to handle potential errors.
+  ///
+  /// If the mapping is successful, it will return a Right with the DTO.
+  /// If an error occurs, it will return a Left with an AuthFailure.
+  TaskEither<AuthFailure, PecuniaUserDTO> mapSupaUserToDTO(
     s.User user,
     AuthAction authAction,
   ) =>
@@ -236,7 +249,8 @@ class SupabaseAuthRemoteDSHelper {
         (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
       );
 
-  static TaskEither<AuthFailure, PecuniaUserDTOAndSession> mapSupaUserToDTOWithSession(
+  /// Similar to `mapSupaUserToDTO`, but also includes the session information.
+  TaskEither<AuthFailure, PecuniaUserDTOAndSession> mapSupaUserToDTOWithSession(
     s.User user,
     Session newSession,
     AuthAction authAction,
@@ -256,7 +270,12 @@ class SupabaseAuthRemoteDSHelper {
         (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
       );
 
-  static TaskEither<AuthFailure, SupaUserAndSession> getUserFromAuthResponse(
+  /// Tries to extract the user and update session information from a Supabase AuthResponse,
+  /// and wraps the operation in a TaskEither to handle potential errors.
+  ///
+  /// If the extraction is successful, it will return a Right with the user and session.
+  /// If an error occurs, it will return a Left with an AuthFailure.
+  TaskEither<AuthFailure, SupaUserAndSession> getUserFromAuthResponse(
     s.AuthResponse response,
     Session newSession,
     AuthAction authAction,
@@ -276,4 +295,12 @@ class SupabaseAuthRemoteDSHelper {
         },
         (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
       );
+
+  /// Converts a `NetworkInfoFailure` to an `AuthFailure`.
+  AuthFailure mapNetworkInfoFailureToAuthFailure(NetworkInfoFailure failure) {
+    return AuthFailure.unknown(
+        stackTrace: StackTrace.current,
+        message: AuthErrorType.unknown.message,
+        authAction: AuthAction.unknown);
+  }
 }

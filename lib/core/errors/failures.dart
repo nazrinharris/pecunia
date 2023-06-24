@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:stack_trace/stack_trace.dart';
 
-abstract class Failure extends Equatable {
+abstract interface class Failure extends Equatable {
   const Failure({
     required this.stackTrace,
     this.message = 'Unexpected error occurred, please try again.',

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 
 import 'package:pecunia/core/errors/failures.dart';
 
@@ -15,10 +16,20 @@ class ProviderLogger extends ProviderObserver {
     ProviderContainer container,
   ) {
     if (newValue is AsyncError) {
+      if (newValue.error is AuthFailure) {
+        final failure = newValue.error as Failure;
+        debugPrint(
+            '(${provider.name}) : ${newValue.runtimeType} ${failure.runtimeType} - ${failure.errorType}');
+        return;
+      }
+
       if (newValue.error is Failure) {
-        debugPrint('(${provider.name}) : ${newValue.error}');
+        final failure = newValue.error as Failure;
+        debugPrint('(${provider.name}) : ${failure.toVerboseString()}');
+        return;
       } else {
         debugPrint('(${provider.name}) : ${newValue.error.runtimeType}');
+        return;
       }
     } else if (newValue is AsyncData) {
       debugPrint('(${provider.name}) : $newValue');

@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/presentation/debug/debug_auth/form/debug_form.dart';
 import 'package:pecunia/presentation/debug/debug_auth/providers/debug_auth_providers.dart';
+import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugLoginAndRegisterScreen extends HookConsumerWidget {
@@ -15,15 +16,39 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AsyncValue<bool>>(navigateToDebugLocalDBProvider, (prev, next) {
-      if (next.runtimeType == AsyncData<bool>) {
-        next.value!
-            ? context.pushNamed('debug-local-db')
-            : debugPrint(
-                'Not navigating to debug local db',
+    ref
+      ..listen<AsyncValue<bool>>(navigateToDebugLocalDBProvider, (prev, next) {
+        if (next.runtimeType == AsyncData<bool>) {
+          next.value!
+              ? context.pushNamed('debug-local-db')
+              : debugPrint(
+                  'Not navigating to debug local db',
+                );
+        }
+
+        if (next.runtimeType == AsyncError<bool>) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'You cannot navigate to DebugLocalDB',
+                failure: next.error as AuthFailure?,
               );
-      }
-    });
+        }
+      })
+      ..listen(loginWithEmailAndPasswordProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't log you in.",
+                failure: next.error as AuthFailure?,
+              );
+        }
+      })
+      ..listen(registerWithEmailAndPasswordProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't register an account for you.",
+                failure: next.error as AuthFailure?,
+              );
+        }
+      });
 
     return Scaffold(
       appBar: AppBar(
@@ -196,7 +221,7 @@ class RegisterForm extends HookConsumerWidget {
             children: [
               ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.red),
+                  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 83, 10, 10)),
                 ),
                 onPressed: () async {
                   await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
@@ -208,7 +233,7 @@ class RegisterForm extends HookConsumerWidget {
               const SizedBox(width: 14),
               ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.purple),
+                  backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
                 ),
                 onPressed: () => ref.read(navigateToDebugLocalDBProvider.notifier).navigateToDebugLocalDB(),
                 child: const Text('Go to Debug Local Storage'),
@@ -225,8 +250,6 @@ class RegisterDetails extends HookConsumerWidget {
   const RegisterDetails({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(() => null, const []);
-
     final state = ref.watch(registerWithEmailAndPasswordProvider);
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
