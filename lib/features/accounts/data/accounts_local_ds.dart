@@ -21,13 +21,7 @@ abstract interface class AccountsLocalDS {
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts();
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts();
 
-  TaskEither<AccountsFailure, Unit> createAccount({
-    required String name,
-    required String creatorUid,
-    required double initialBalance,
-    required String currency,
-    String? desc,
-  });
+  TaskEither<AccountsFailure, Unit> createAccount(AccountDTO account);
 
   TaskEither<AccountsFailure, Unit> updateAccountDetails(AccountDTO newAccountDetails);
   TaskEither<AccountsFailure, Unit> deleteAccount(AccountDTO accountToDelete);
@@ -83,28 +77,11 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
   /// [createAccount]
   /// ******************************************************************************************************
   @override
-  TaskEither<AccountsFailure, Unit> createAccount({
-    required String name,
-    required String creatorUid,
-    required double initialBalance,
-    required String currency,
-    String? desc,
-  }) {
+  TaskEither<AccountsFailure, Unit> createAccount(AccountDTO account) {
     const currentAction = AccountsAction.createAccount;
     return TaskEither.tryCatch(
       () async {
-        await accountsDAO.insertAccount(
-          AccountDTO(
-            id: uuid.v4(),
-            creatorUid: creatorUid,
-            name: name,
-            initialBalance: initialBalance,
-            balance: initialBalance,
-            currency: currency,
-            createdOn: DateTime.now(),
-            description: desc,
-          ),
-        );
+        await accountsDAO.insertAccount(account);
         return unit;
       },
       (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),

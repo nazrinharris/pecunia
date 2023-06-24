@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:uuid/uuid.dart';
 
 part 'account.freezed.dart';
 
@@ -17,6 +18,26 @@ class Account with _$Account {
   }) = _Account;
 
   const Account._();
+
+  factory Account.newAccount({
+    required String creatorUid,
+    required String name,
+    required double initialBalance,
+    required String currency,
+    required DateTime createdOn,
+    required Uuid uuid,
+    required AccountDescription description,
+  }) =>
+      Account(
+        id: uuid.v4(),
+        creatorUid: creatorUid,
+        name: name,
+        initialBalance: initialBalance,
+        balance: initialBalance,
+        currency: currency,
+        createdOn: createdOn,
+        description: description,
+      );
 
   factory Account.fromDTO(AccountDTO dto) {
     return Account(

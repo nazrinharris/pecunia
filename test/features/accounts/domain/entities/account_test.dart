@@ -1,7 +1,11 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:uuid/uuid.dart';
+
+class MockUuid extends Mock implements Uuid {}
 
 void main() {
   group('Account -', () {
@@ -55,6 +59,38 @@ void main() {
         expect(deserializedAccount.currency, equals(currency));
         expect(deserializedAccount.createdOn.toUtc().toIso8601String(), equals(createdOn.toIso8601String()));
         expect(deserializedAccount.description.toString(), equals(description));
+      });
+    });
+
+    group('Account.newAccount()', () {
+      test('should create a new account with the given arguments', () {
+        // Arrange
+        final mockU = MockUuid();
+        final clock = Clock.fixed(DateTime.utc(2023));
+        const name = 'Test Account';
+        const currency = 'USD';
+
+        when(mockU.v4).thenReturn('1');
+        // Act
+        final account = Account.newAccount(
+          creatorUid: '12345',
+          name: name,
+          initialBalance: 0,
+          currency: currency,
+          createdOn: clock.now(),
+          uuid: mockU,
+          description: AccountDescription('testDescription'),
+        );
+
+        // Assert
+        expect(account.id, '1');
+        expect(account.creatorUid, equals('12345'));
+        expect(account.name, equals(name));
+        expect(account.initialBalance, equals(0.0));
+        expect(account.balance, equals(0.0));
+        expect(account.currency, equals(currency));
+        expect(account.createdOn, equals(clock.now()));
+        expect(account.description.toString(), equals('testDescription'));
       });
     });
 

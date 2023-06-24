@@ -217,7 +217,7 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   }
 }
 
-/// ========================================================================================================
+/// ******************************************************************************************************
 /// Also see [SupabaseAuthRemoteDS]
 ///
 /// This class provides utility methods for handling common tasks
@@ -226,7 +226,7 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
 /// It's primarily designed to keep the code in `SupabaseAuthRemoteDS` more clean
 /// and readable by abstracting away some of the lower-level operations that
 /// are needed for authentication.
-/// ========================================================================================================
+/// ******************************************************************************************************
 class AuthRemoteDSHelper {
   /// Tries to map a Supabase User object to a PecuniaUserDTO object,
   /// and wraps the operation in a TaskEither to handle potential errors.

@@ -7,6 +7,7 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_ds.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../matcher/accounts_matchers.dart';
 
@@ -18,6 +19,8 @@ class MockAccountDescription extends Mock implements AccountDescription {}
 
 class MockAccount extends Mock implements Account {}
 
+class MockUuid extends Mock implements Uuid {}
+
 void main() {
   late AccountsRepoImpl accountsRepo;
   late AccountsRepoHelper accountsRepoHelper;
@@ -26,6 +29,7 @@ void main() {
   late MockAccountsRepoHelper mockAccountsRepoHelper;
   late MockAccountDescription mockAccountDescription;
   late MockAccount mockAccount;
+  late MockUuid mockUuid;
 
   late Account testAccount;
   late AccountDTO testAccountDTO;
@@ -39,11 +43,13 @@ void main() {
     mockAccountsRepoHelper = MockAccountsRepoHelper();
     mockAccountDescription = MockAccountDescription();
     mockAccount = MockAccount();
+    mockUuid = MockUuid();
 
     // Setup repo and helper
     accountsRepo = AccountsRepoImpl(
       accountsLocalDS: mockAccountsLocalDS,
       helper: mockAccountsRepoHelper,
+      uuid: mockUuid,
     );
     accountsRepoHelper = AccountsRepoHelper();
 
@@ -82,6 +88,9 @@ void main() {
 
     // Mock Desc
     when(() => mockAccountDescription.value).thenReturn('testDescription');
+
+    // Mock Uuid
+    when(() => mockUuid.v4()).thenReturn('testId');
   });
 
   group('AccountsRepoImpl -', () {
@@ -169,13 +178,7 @@ void main() {
       test('returns a [Unit] when the call to accountsLocalDS is successful', () async {
         // Arrange
         when(
-          () => mockAccountsLocalDS.createAccount(
-            name: any(named: 'name'),
-            creatorUid: any(named: 'creatorUid'),
-            initialBalance: any(named: 'initialBalance'),
-            currency: any(named: 'currency'),
-            desc: any(named: 'desc'),
-          ),
+          () => mockAccountsLocalDS.createAccount(any<AccountDTO>()),
         ).thenAnswer((_) => TaskEither.right(unit));
 
         // Act
@@ -199,13 +202,7 @@ void main() {
           () async {
         // Arrange
         when(
-          () => mockAccountsLocalDS.createAccount(
-            name: any(named: 'name'),
-            creatorUid: any(named: 'creatorUid'),
-            initialBalance: any(named: 'initialBalance'),
-            currency: any(named: 'currency'),
-            desc: any(named: 'desc'),
-          ),
+          () => mockAccountsLocalDS.createAccount(any<AccountDTO>()),
         ).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,

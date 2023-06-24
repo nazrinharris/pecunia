@@ -125,26 +125,12 @@ void main() {
 
     group('createAccount()', () {
       test('returns [Unit] when creating account is successful', () async {
-        const testName = 'account1';
-        const testCreatorUid = '12345';
-        const testInitialBalance = 1000.0;
-        const testCurrency = 'USD';
-        const testDescription = 'Test account';
-
         // Arrange
         when(() => mockAccountsDAO.insertAccount(any())).thenAnswer((_) async {});
         when(() => mockUuid.v4()).thenReturn('testId');
 
         // Act
-        final result = await accountsLocalDS
-            .createAccount(
-              name: testName,
-              creatorUid: testCreatorUid,
-              initialBalance: testInitialBalance,
-              currency: testCurrency,
-              desc: testDescription,
-            )
-            .run();
+        final result = await accountsLocalDS.createAccount(testAccountDTO).run();
 
         // Assert
         expect(result.isRight(), true);
@@ -156,37 +142,23 @@ void main() {
         // Verify that insertAccount was called
         final captured = verify(() => mockAccountsDAO.insertAccount(captureAny())).captured;
         final capturedDTO = captured[0] as AccountDTO;
-        expect(capturedDTO.name, testName);
-        expect(capturedDTO.creatorUid, testCreatorUid);
-        expect(capturedDTO.initialBalance, testInitialBalance);
-        expect(capturedDTO.balance, testInitialBalance);
-        expect(capturedDTO.currency, testCurrency);
-        expect(capturedDTO.description, testDescription);
+        expect(capturedDTO.name, testAccountDTO.name);
+        expect(capturedDTO.creatorUid, testAccountDTO.creatorUid);
+        expect(capturedDTO.initialBalance, testAccountDTO.initialBalance);
+        expect(capturedDTO.balance, testAccountDTO.balance);
+        expect(capturedDTO.currency, testAccountDTO.currency);
+        expect(capturedDTO.description, testAccountDTO.description);
       });
 
       test(
           'returns [AccountsFailure] with [AccountsAction.createAccount] and correct [AccountsErrorType] when creating account is unsuccessful',
           () async {
-        const testName = 'account1';
-        const testCreatorUid = '12345';
-        const testInitialBalance = 1000.0;
-        const testCurrency = 'USD';
-        const testDescription = 'Test account';
-
         // Arrange
         when(() => mockAccountsDAO.insertAccount(any())).thenThrow(Exception());
         when(() => mockUuid.v4()).thenReturn('testId');
 
         // Act
-        final result = await accountsLocalDS
-            .createAccount(
-              name: testName,
-              creatorUid: testCreatorUid,
-              initialBalance: testInitialBalance,
-              currency: testCurrency,
-              desc: testDescription,
-            )
-            .run();
+        final result = await accountsLocalDS.createAccount(testAccountDTO).run();
 
         // Assert
         expect(result.isLeft(), isTrue);
