@@ -47,6 +47,9 @@ class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required this.authRemoteDS});
   final AuthRemoteDS authRemoteDS;
 
+  /// ******************************************************************************************************
+  /// [loginWithPassword]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUserAndSession> loginWithPassword({
     required String email,
@@ -65,6 +68,9 @@ class AuthRepoImpl implements AuthRepo {
         );
   }
 
+  /// ******************************************************************************************************
+  /// [registerWithPassword]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUserAndSession> registerWithPassword({
     required String username,
@@ -89,11 +95,17 @@ class AuthRepoImpl implements AuthRepo {
         );
   }
 
+  /// ******************************************************************************************************
+  /// [logout]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, Session> logout(Session currentSession) {
     return authRemoteDS.logout(currentSession);
   }
 
+  /// ******************************************************************************************************
+  /// [getLoggedInUser]
+  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUser> getLoggedInUser() {
     return authRemoteDS.getLoggedInUser().flatMap<PecuniaUser>(

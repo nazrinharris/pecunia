@@ -46,6 +46,9 @@ class AccountsRepoImpl implements AccountsRepo {
   final AccountsLocalDS accountsLocalDS;
   final AccountsRepoHelper helper;
 
+  /// ******************************************************************************************************
+  /// * [loginWithPassword]
+  /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, List<Account>> getAccounts() {
     return accountsLocalDS.getAccounts().map((listOfDTOs) => listOfDTOs.map(Account.fromDTO).toList());

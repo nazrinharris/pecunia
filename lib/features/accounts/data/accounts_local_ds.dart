@@ -41,6 +41,9 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
   final AccountsDAO accountsDAO;
   final Uuid uuid;
 
+  /// ******************************************************************************************************
+  /// [getAccounts]
+  /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {
     const currentAction = AccountsAction.getAccounts;
@@ -50,11 +53,15 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
     );
   }
 
+  /// ******************************************************************************************************
+  /// [watchAccounts]
+  ///
   /// This honestly feels like a frankensteins job. I'm not sure if this is the
   /// right way to do it. But it works. So I'm going to leave it as is for now.
   ///
   /// Another solution is to simply return the pure stream, though I'm not sure
   /// on how I'd handle the errors in that case.
+  /// ******************************************************************************************************
   @override
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts() {
     const currentAction = AccountsAction.watchAccounts;
@@ -72,6 +79,9 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
         ));
   }
 
+  /// ******************************************************************************************************
+  /// [createAccount]
+  /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, Unit> createAccount({
     required String name,
@@ -101,6 +111,9 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
     );
   }
 
+  /// ******************************************************************************************************
+  /// [updateAccountDetails]
+  /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, Unit> updateAccountDetails(AccountDTO newAccountDetails) {
     const currentAction = AccountsAction.updateAccountDetails;
@@ -113,6 +126,9 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
     );
   }
 
+  /// ******************************************************************************************************
+  /// [deleteAccount]
+  /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, Unit> deleteAccount(AccountDTO accountToDelete) {
     const currentAction = AccountsAction.deleteAccount;
