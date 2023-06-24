@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'pecunia_drift_db.g.dart';
 
 @Riverpod(keepAlive: true)
-PecuniaDB pecuniaDB(PecuniaDBRef ref) => PecuniaDB();
+PecuniaDB pecuniaDB(PecuniaDBRef ref) => PecuniaDB(_openConnection());
 
 @DriftDatabase(
   tables: [
@@ -24,7 +24,7 @@ PecuniaDB pecuniaDB(PecuniaDBRef ref) => PecuniaDB();
   ],
 )
 class PecuniaDB extends _$PecuniaDB {
-  PecuniaDB() : super(_openConnection());
+  PecuniaDB(super.e);
 
   @override
   int get schemaVersion => 1;
