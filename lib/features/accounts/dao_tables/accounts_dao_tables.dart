@@ -37,11 +37,11 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
   }
 
   Future<void> insertAccount(AccountDTO account) async {
-    await into(accountsTable).insert(account);
+    await into(accountsTable).insert(account.toCompanion(false));
   }
 
   Future<void> updateAccount(AccountDTO account) async {
-    await update(accountsTable).replace(account);
+    await update(accountsTable).replace(account.toCompanion(false));
   }
 
   Future<void> deleteAccount(AccountDTO account) async {
