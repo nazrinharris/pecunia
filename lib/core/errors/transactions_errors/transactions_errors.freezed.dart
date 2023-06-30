@@ -15,6 +15,455 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
+mixin _$TransactionsException {
+  StackTrace get stackTrace => throw _privateConstructorUsedError;
+  TransactionsErrorType get errorType => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)
+        $default, {
+    required TResult Function(
+            StackTrace stackTrace, TransactionsErrorType errorType)
+        unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+        unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
+        $default, {
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+        unknown,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_TransactionsException value) $default, {
+    required TResult Function(_UnknownTransactionsException value) unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_TransactionsException value)? $default, {
+    TResult? Function(_UnknownTransactionsException value)? unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_TransactionsException value)? $default, {
+    TResult Function(_UnknownTransactionsException value)? unknown,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $TransactionsExceptionCopyWith<TransactionsException> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransactionsExceptionCopyWith<$Res> {
+  factory $TransactionsExceptionCopyWith(TransactionsException value,
+          $Res Function(TransactionsException) then) =
+      _$TransactionsExceptionCopyWithImpl<$Res, TransactionsException>;
+  @useResult
+  $Res call({StackTrace stackTrace, TransactionsErrorType errorType});
+}
+
+/// @nodoc
+class _$TransactionsExceptionCopyWithImpl<$Res,
+        $Val extends TransactionsException>
+    implements $TransactionsExceptionCopyWith<$Res> {
+  _$TransactionsExceptionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? errorType = null,
+  }) {
+    return _then(_value.copyWith(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      errorType: null == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as TransactionsErrorType,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_TransactionsExceptionCopyWith<$Res>
+    implements $TransactionsExceptionCopyWith<$Res> {
+  factory _$$_TransactionsExceptionCopyWith(_$_TransactionsException value,
+          $Res Function(_$_TransactionsException) then) =
+      __$$_TransactionsExceptionCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {StackTrace stackTrace,
+      TransactionsErrorType errorType,
+      TransactionsAction transactionsAction});
+}
+
+/// @nodoc
+class __$$_TransactionsExceptionCopyWithImpl<$Res>
+    extends _$TransactionsExceptionCopyWithImpl<$Res, _$_TransactionsException>
+    implements _$$_TransactionsExceptionCopyWith<$Res> {
+  __$$_TransactionsExceptionCopyWithImpl(_$_TransactionsException _value,
+      $Res Function(_$_TransactionsException) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? errorType = null,
+    Object? transactionsAction = null,
+  }) {
+    return _then(_$_TransactionsException(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      errorType: null == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as TransactionsErrorType,
+      transactionsAction: null == transactionsAction
+          ? _value.transactionsAction
+          : transactionsAction // ignore: cast_nullable_to_non_nullable
+              as TransactionsAction,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_TransactionsException extends _TransactionsException {
+  _$_TransactionsException(
+      {required this.stackTrace,
+      required this.errorType,
+      required this.transactionsAction})
+      : super._();
+
+  @override
+  final StackTrace stackTrace;
+  @override
+  final TransactionsErrorType errorType;
+  @override
+  final TransactionsAction transactionsAction;
+
+  @override
+  String toString() {
+    return 'TransactionsException(stackTrace: $stackTrace, errorType: $errorType, transactionsAction: $transactionsAction)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_TransactionsException &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace) &&
+            (identical(other.errorType, errorType) ||
+                other.errorType == errorType) &&
+            (identical(other.transactionsAction, transactionsAction) ||
+                other.transactionsAction == transactionsAction));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, stackTrace, errorType, transactionsAction);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_TransactionsExceptionCopyWith<_$_TransactionsException> get copyWith =>
+      __$$_TransactionsExceptionCopyWithImpl<_$_TransactionsException>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)
+        $default, {
+    required TResult Function(
+            StackTrace stackTrace, TransactionsErrorType errorType)
+        unknown,
+  }) {
+    return $default(stackTrace, errorType, transactionsAction);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+        unknown,
+  }) {
+    return $default?.call(stackTrace, errorType, transactionsAction);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
+        $default, {
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+        unknown,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(stackTrace, errorType, transactionsAction);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_TransactionsException value) $default, {
+    required TResult Function(_UnknownTransactionsException value) unknown,
+  }) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_TransactionsException value)? $default, {
+    TResult? Function(_UnknownTransactionsException value)? unknown,
+  }) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_TransactionsException value)? $default, {
+    TResult Function(_UnknownTransactionsException value)? unknown,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _TransactionsException extends TransactionsException {
+  factory _TransactionsException(
+          {required final StackTrace stackTrace,
+          required final TransactionsErrorType errorType,
+          required final TransactionsAction transactionsAction}) =
+      _$_TransactionsException;
+  _TransactionsException._() : super._();
+
+  @override
+  StackTrace get stackTrace;
+  @override
+  TransactionsErrorType get errorType;
+  TransactionsAction get transactionsAction;
+  @override
+  @JsonKey(ignore: true)
+  _$$_TransactionsExceptionCopyWith<_$_TransactionsException> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_UnknownTransactionsExceptionCopyWith<$Res>
+    implements $TransactionsExceptionCopyWith<$Res> {
+  factory _$$_UnknownTransactionsExceptionCopyWith(
+          _$_UnknownTransactionsException value,
+          $Res Function(_$_UnknownTransactionsException) then) =
+      __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({StackTrace stackTrace, TransactionsErrorType errorType});
+}
+
+/// @nodoc
+class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
+    extends _$TransactionsExceptionCopyWithImpl<$Res,
+        _$_UnknownTransactionsException>
+    implements _$$_UnknownTransactionsExceptionCopyWith<$Res> {
+  __$$_UnknownTransactionsExceptionCopyWithImpl(
+      _$_UnknownTransactionsException _value,
+      $Res Function(_$_UnknownTransactionsException) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? errorType = null,
+  }) {
+    return _then(_$_UnknownTransactionsException(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      errorType: null == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as TransactionsErrorType,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_UnknownTransactionsException extends _UnknownTransactionsException {
+  _$_UnknownTransactionsException(
+      {required this.stackTrace, required this.errorType})
+      : super._();
+
+  @override
+  final StackTrace stackTrace;
+  @override
+  final TransactionsErrorType errorType;
+
+  @override
+  String toString() {
+    return 'TransactionsException.unknown(stackTrace: $stackTrace, errorType: $errorType)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_UnknownTransactionsException &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace) &&
+            (identical(other.errorType, errorType) ||
+                other.errorType == errorType));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, stackTrace, errorType);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_UnknownTransactionsExceptionCopyWith<_$_UnknownTransactionsException>
+      get copyWith => __$$_UnknownTransactionsExceptionCopyWithImpl<
+          _$_UnknownTransactionsException>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)
+        $default, {
+    required TResult Function(
+            StackTrace stackTrace, TransactionsErrorType errorType)
+        unknown,
+  }) {
+    return unknown(stackTrace, errorType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+        unknown,
+  }) {
+    return unknown?.call(stackTrace, errorType);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
+        $default, {
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+        unknown,
+    required TResult orElse(),
+  }) {
+    if (unknown != null) {
+      return unknown(stackTrace, errorType);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_TransactionsException value) $default, {
+    required TResult Function(_UnknownTransactionsException value) unknown,
+  }) {
+    return unknown(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_TransactionsException value)? $default, {
+    TResult? Function(_UnknownTransactionsException value)? unknown,
+  }) {
+    return unknown?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_TransactionsException value)? $default, {
+    TResult Function(_UnknownTransactionsException value)? unknown,
+    required TResult orElse(),
+  }) {
+    if (unknown != null) {
+      return unknown(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UnknownTransactionsException extends TransactionsException {
+  factory _UnknownTransactionsException(
+          {required final StackTrace stackTrace,
+          required final TransactionsErrorType errorType}) =
+      _$_UnknownTransactionsException;
+  _UnknownTransactionsException._() : super._();
+
+  @override
+  StackTrace get stackTrace;
+  @override
+  TransactionsErrorType get errorType;
+  @override
+  @JsonKey(ignore: true)
+  _$$_UnknownTransactionsExceptionCopyWith<_$_UnknownTransactionsException>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$TransactionsFailure {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;

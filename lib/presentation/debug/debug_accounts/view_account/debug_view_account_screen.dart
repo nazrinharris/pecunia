@@ -55,7 +55,7 @@ class DebugViewAccountScreen extends ConsumerWidget {
                     style: const TextStyle(fontSize: 22),
                     children: [
                       TextSpan(
-                        text: account.balance.toStringAsFixed(2),
+                        text: account.initialBalance.toStringAsFixed(2),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextSpan(text: ' ${account.currency}'),

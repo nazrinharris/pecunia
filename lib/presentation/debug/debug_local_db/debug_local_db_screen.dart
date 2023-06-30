@@ -9,6 +9,7 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/form/debug_create_account_form.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
+import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -76,6 +77,8 @@ class DebugLocalDBScreen extends ConsumerWidget {
                       backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
                     ),
                     onPressed: () {
+                      ref.watch(getAllAccountsProvider.notifier).getAllAccounts();
+                      ref.watch(getAllTransactionsProvider.notifier).getAllTransactions();
                       context.pushNamed('debug-transactions');
                     },
                     child: const Text('Go to Debug Transactions'),

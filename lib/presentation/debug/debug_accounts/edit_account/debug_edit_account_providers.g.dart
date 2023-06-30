@@ -6,7 +6,7 @@ part of 'debug_edit_account_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editAccountFormHash() => r'f1383345770097af1e69d6999c6d72b54676a836';
+String _$editAccountFormHash() => r'e39c69e0473177cba0cb83d2ea4464449889bb57';
 
 /// Copied from Dart SDK
 class _SystemHash {

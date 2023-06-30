@@ -1,26 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transactions_local_ds.dart';
+part of 'transactions_repo.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$transactionsLocalDSHash() =>
-    r'f478b458c2d092002361b46679787be85f154712';
+String _$transactionsRepoHash() => r'72ce4d2398dff27354bec15ea48bc2e085bbf402';
 
-/// See also [transactionsLocalDS].
-@ProviderFor(transactionsLocalDS)
-final transactionsLocalDSProvider =
-    AutoDisposeProvider<TransactionsLocalDS>.internal(
-  transactionsLocalDS,
-  name: r'transactionsLocalDSProvider',
+/// See also [transactionsRepo].
+@ProviderFor(transactionsRepo)
+final transactionsRepoProvider = AutoDisposeProvider<TransactionsRepo>.internal(
+  transactionsRepo,
+  name: r'transactionsRepoProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$transactionsLocalDSHash,
+      : _$transactionsRepoHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef TransactionsLocalDSRef = AutoDisposeProviderRef<TransactionsLocalDS>;
+typedef TransactionsRepoRef = AutoDisposeProviderRef<TransactionsRepo>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

@@ -21,7 +21,8 @@ enum TransactionsErrorType {
   unknown(unknownTransactionErrorCode, unknownTransactionErrorMessage),
   cannotConvertToDTO(
       'cannot-convert-to-dto', 'Something went wrong while converting the transaction to a DTO.'),
-  sqliteException('sqlite-exception', 'Something went wrong while accessing the database.');
+  sqliteException('sqlite-exception', 'Something went wrong while accessing the database.'),
+  invalidType('invalid-type', 'The transaction type is invalid');
 
   const TransactionsErrorType(this.code, this.message);
 
@@ -34,6 +35,26 @@ enum TransactionsErrorType {
       orElse: () => TransactionsErrorType.unknown,
     );
   }
+}
+
+/// ****************************************************************
+/// * TransactionsException
+/// ****************************************************************
+
+@freezed
+class TransactionsException with _$TransactionsException implements Exception {
+  factory TransactionsException({
+    required StackTrace stackTrace,
+    required TransactionsErrorType errorType,
+    required TransactionsAction transactionsAction,
+  }) = _TransactionsException;
+
+  TransactionsException._();
+
+  factory TransactionsException.unknown({
+    required StackTrace stackTrace,
+    required TransactionsErrorType errorType,
+  }) = _UnknownTransactionsException;
 }
 
 /// ****************************************************************
@@ -92,6 +113,13 @@ TransactionsFailure mapDriftToFailure(
       message: '${cause.message} \n${cause.causingStatement}',
       stackTrace: stackTrace,
       rawException: error,
+    );
+  } else if (error is TransactionsException) {
+    return TransactionsFailure(
+      stackTrace: stackTrace,
+      message: error.errorType.message,
+      transactionsAction: transactionsAction,
+      errorType: error.errorType,
     );
   } else {
     return TransactionsFailure.unknown(

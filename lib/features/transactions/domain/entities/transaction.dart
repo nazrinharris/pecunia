@@ -1,5 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
+import 'package:uuid/uuid.dart';
 
 part 'transaction.freezed.dart';
 
@@ -11,9 +14,14 @@ enum TransactionType {
 
   final String typeAsString;
 
-  static TransactionType fromString(String value) {
+  static TransactionType fromString(String inputType, TransactionsAction action) {
     return TransactionType.values.firstWhere(
-      (element) => element.typeAsString == value,
+      (element) => element.typeAsString.toLowerCase() == inputType.toLowerCase(),
+      orElse: () => throw TransactionsException(
+        stackTrace: StackTrace.current,
+        errorType: TransactionsErrorType.invalidType,
+        transactionsAction: action,
+      ),
     );
   }
 }
@@ -33,7 +41,28 @@ class Transaction with _$Transaction {
 
   const Transaction._();
 
-  factory Transaction.fromDTO(TransactionDTO dto) {
+  factory Transaction.newTransaction({
+    required String creatorUid,
+    required String name,
+    required TransactionDescription transactionDescription,
+    required DateTime transactionDate,
+    required String accountId,
+    required TransactionType type,
+    required FundDetails fundDetails,
+    required Uuid uuid,
+  }) =>
+      Transaction(
+        id: uuid.v4(),
+        creatorUid: creatorUid,
+        name: name,
+        transactionDescription: transactionDescription,
+        transactionDate: transactionDate,
+        accountId: accountId,
+        type: type,
+        fundDetails: fundDetails,
+      );
+
+  factory Transaction.fromDTO(TransactionDTO dto, TransactionsAction action) {
     return Transaction(
       id: dto.id,
       creatorUid: dto.creatorUid,
@@ -41,24 +70,25 @@ class Transaction with _$Transaction {
       transactionDescription: TransactionDescription(dto.description),
       transactionDate: dto.transactionDate,
       accountId: dto.accountId,
-      type: TransactionType.fromString(dto.transactionType),
+      type: TransactionType.fromString(dto.transactionType, action),
       fundDetails: FundDetails.fromDTO(dto),
     );
   }
 
-  TransactionDTO toDTO(Transaction txn) {
+  TransactionDTO toDTO() {
     return TransactionDTO(
-      id: txn.id,
-      creatorUid: txn.creatorUid,
-      name: txn.name,
-      transactionDate: txn.transactionDate,
-      accountId: txn.accountId,
-      transactionType: txn.type.typeAsString,
-      originalAmount: txn.fundDetails.originalAmount,
-      originalCurrency: txn.fundDetails.originalCurrency,
-      exchangeRate: txn.fundDetails.exchangeRate,
-      exchangedToAmount: txn.fundDetails.exchangedToAmount,
-      exchangedToCurrency: txn.fundDetails.exchangedToCurrency,
+      id: id,
+      creatorUid: creatorUid,
+      name: name,
+      description: transactionDescription.value,
+      transactionDate: transactionDate,
+      accountId: accountId,
+      transactionType: type.typeAsString,
+      originalAmount: fundDetails.originalAmount,
+      originalCurrency: fundDetails.originalCurrency,
+      exchangeRate: fundDetails.exchangeRate,
+      exchangedToAmount: fundDetails.exchangedToAmount,
+      exchangedToCurrency: fundDetails.exchangedToCurrency,
     );
   }
 }
