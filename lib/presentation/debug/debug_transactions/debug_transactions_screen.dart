@@ -234,22 +234,256 @@ class ViewAllTransactions extends ConsumerWidget {
             child: Text('No transactions yet!'),
           );
         }
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: transactions.length,
-          itemBuilder: (context, index) {
-            final transaction = transactions[index];
-            return ListTile(
-              title: Text(transaction.name),
-              subtitle: Text(transaction.transactionDescription.value ?? 'No description'),
-              trailing: Text(transaction.fundDetails.originalAmount.toString()),
-            );
-          },
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: transactions.length,
+            itemBuilder: (context, index) {
+              final txn = transactions[index];
+              return ListTile(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                title: Text(
+                  txn.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: txn.transactionDescription.value == null
+                    ? null
+                    : Text(
+                        txn.transactionDescription.value!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                trailing: BuildTxnAmountText(txn),
+                onTap: () {
+                  showModalBottomSheet<void>(
+                      isScrollControlled: true,
+                      context: context,
+                      showDragHandle: true,
+                      builder: (context) {
+                        return SizedBox(
+                          height: 550,
+                          child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                            child: BottomSheetContent(txn),
+                          ),
+                        );
+                      });
+                },
+              );
+            },
+          ),
         );
       },
       error: (err, s) => Center(child: Text(err.toString())),
       loading: () => const Center(child: CupertinoActivityIndicator()),
+    );
+  }
+}
+
+class BuildTxnAmountText extends ConsumerWidget {
+  const BuildTxnAmountText(this.txn, {super.key});
+
+  final Transaction txn;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isCredit = txn.type == TransactionType.credit;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (isCredit)
+          Text(
+            '+${txn.fundDetails.originalAmount}',
+            style: TextStyle(
+              color: Colors.green[300],
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        if (!isCredit)
+          Text(
+            '-${txn.fundDetails.originalAmount}',
+            style: TextStyle(
+              color: Colors.red[300],
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        const SizedBox(width: 10),
+        Text(
+          txn.fundDetails.originalCurrency,
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class BottomSheetContent extends ConsumerWidget {
+  const BottomSheetContent(this.txn, {super.key});
+
+  final Transaction txn;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      padding: const EdgeInsets.only(top: 14, bottom: 14),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              txn.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: txn.transactionDescription.value == null
+                ? null
+                : Text(
+                    txn.transactionDescription.value!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+            trailing: BuildTxnAmountText(txn),
+          ),
+          const Divider(),
+          Container(
+            alignment: Alignment.centerLeft,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    text: 'txn_id: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(text: txn.id, style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'acc_id: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(text: txn.accountId, style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'creator_id: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(text: txn.creatorUid, style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'txn_type: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(text: txn.type.typeAsString, style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'txn_date: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.transactionDate.toString(), style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'original_currency: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.originalCurrency, style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'original_amount: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.originalAmount.toString(),
+                          style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'exchanged_to_currency: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.exchangedToCurrency,
+                          style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'exchanged_amount: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.exchangedToAmount.toString(),
+                          style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'exchange_rate: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.exchangeRate.toString(),
+                          style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text('Edit'),
+            leading: const Icon(Icons.edit),
+            onTap: () {},
+          ),
+          ListTile(
+            title: Text('Delete', style: TextStyle(color: Colors.red[300])),
+            leading: Icon(Icons.delete, color: Colors.red[300]),
+            onTap: () {},
+          ),
+        ],
+      ),
     );
   }
 }
