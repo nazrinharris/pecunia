@@ -32,9 +32,9 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Local database setup with `drift`.
 - [x] Accounts creation, deletion, editing, and viewing.
 - [ ] Transaction creation, deletion, editing and viewing.
-- [ ] Transferring funds between accounts.
-- [ ] Multi-currency transactions.
-- [ ] Simple budget creation and management.
+- [ ] Transferring funds between accounts (and multi-currency transactions).
+- [ ] Transaction categories.
+- [ ] Simple budget creation, deletion, editin, and viewing.
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 
