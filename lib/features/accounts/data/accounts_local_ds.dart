@@ -19,6 +19,7 @@ AccountsLocalDS accountsLocalDS(AccountsLocalDSRef ref) => AccountsLocalDSImpl(
 
 abstract interface class AccountsLocalDS {
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts();
+  TaskEither<AccountsFailure, AccountDTO> getAccountById(String id);
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts();
 
   TaskEither<AccountsFailure, Unit> createAccount(AccountDTO accountDTO);
@@ -43,8 +44,16 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
     const currentAction = AccountsAction.getAccounts;
     return TaskEither.tryCatch(
       accountsDAO.getAllAccounts,
-      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
     );
+  }
+
+  /// ******************************************************************************************************
+  /// [getAccountById]
+  /// ******************************************************************************************************
+  @override
+  TaskEither<AccountsFailure, AccountDTO> getAccountById(String id) {
+    return accountsDAO.getAccountById(id);
   }
 
   /// ******************************************************************************************************
@@ -67,7 +76,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
           },
           handleError: (error, stackTrace, sink) {
             sink.add(
-              left(mapDriftToFailure(currentAction, error, stackTrace)),
+              left(mapDriftToAccountsFailure(currentAction, error, stackTrace)),
             );
           },
         ));
@@ -84,7 +93,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
         await accountsDAO.insertAccount(account);
         return unit;
       },
-      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
     );
   }
 
@@ -93,14 +102,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
   /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, Unit> updateAccountDetails(AccountDTO newAccountDetails) {
-    const currentAction = AccountsAction.updateAccountDetails;
-    return TaskEither.tryCatch(
-      () async {
-        await accountsDAO.updateAccount(newAccountDetails);
-        return unit;
-      },
-      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
-    );
+    return accountsDAO.updateAccount(newAccountDetails);
   }
 
   /// ******************************************************************************************************
@@ -111,7 +113,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
     const currentAction = AccountsAction.deleteAccount;
     return TaskEither.tryCatch(
       () async => accountsDAO.deleteAccount(accountToDelete).then((_) => unit),
-      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
     );
   }
 }

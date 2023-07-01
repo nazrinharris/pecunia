@@ -11,10 +11,13 @@ part 'accounts_repo.g.dart';
 
 enum AccountsAction {
   getAccounts,
+  getAccountById,
   watchAccounts,
   createAccount,
   updateAccountDetails,
   deleteAccount,
+
+  recalculateAccountBalance,
 
   /// This is a special case. This is used to map an [Account] to an [AccountDTO]
   mapAccountToDTO,
@@ -29,6 +32,7 @@ AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl(
 
 abstract interface class AccountsRepo {
   TaskEither<AccountsFailure, List<Account>> getAccounts();
+  TaskEither<AccountsFailure, Account> getAccountById(String id);
   Stream<Either<AccountsFailure, List<Account>>> watchAccounts();
 
   TaskEither<AccountsFailure, Unit> createAccount({
@@ -60,6 +64,14 @@ class AccountsRepoImpl implements AccountsRepo {
   @override
   TaskEither<AccountsFailure, List<Account>> getAccounts() {
     return accountsLocalDS.getAccounts().map((listOfDTOs) => listOfDTOs.map(Account.fromDTO).toList());
+  }
+
+  /// ******************************************************************************************************
+  /// [getAccountById]
+  /// ******************************************************************************************************
+  @override
+  TaskEither<AccountsFailure, Account> getAccountById(String id) {
+    return accountsLocalDS.getAccountById(id).map(Account.fromDTO);
   }
 
   /// ******************************************************************************************************

@@ -183,7 +183,7 @@ void main() {
 
       test('returns [Unit] when updating account is successful', () async {
         // Arrange
-        when(() => mockAccountsDAO.updateAccount(any())).thenAnswer((_) async => 1);
+        when(() => mockAccountsDAO.updateAccount(any())).thenAnswer((_) => TaskEither.right(unit));
 
         // Act
         final result = await accountsLocalDS.updateAccountDetails(updatedAccountDTO).run();

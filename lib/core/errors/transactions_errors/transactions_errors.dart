@@ -103,7 +103,7 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
 /// * Helpers
 /// ****************************************************************
 
-TransactionsFailure mapDriftToFailure(
+TransactionsFailure mapDriftToTransactionsFailure(
     TransactionsAction transactionsAction, Object error, StackTrace stackTrace) {
   if (error is DriftRemoteException && error.remoteCause is SqliteException) {
     final cause = error.remoteCause as SqliteException;

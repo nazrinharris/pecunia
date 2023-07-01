@@ -18,6 +18,7 @@ enum TransactionsAction {
   create,
   getTransactionsByAccount,
   getAllTransactions,
+  unknown,
 }
 
 class TransactionsRepo {

@@ -56,7 +56,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           await _updateAccountBalance(accountDto, newBalance);
         }).then((_) => unit);
       },
-      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
     );
   }
 
@@ -66,7 +66,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
       () async {
         return (select(transactionsTable)..where((tbl) => tbl.accountId.equals(accountId))).get();
       },
-      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
     );
   }
 
@@ -74,7 +74,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     const currentAction = TransactionsAction.getAllTransactions;
     return TaskEither.tryCatch(
       () async => select(transactionsTable).get(),
-      (error, stackTrace) => mapDriftToFailure(currentAction, error, stackTrace),
+      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
     );
   }
 
