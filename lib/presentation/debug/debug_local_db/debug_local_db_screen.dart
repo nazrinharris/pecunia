@@ -7,6 +7,7 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/form/debug_create_account_form.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
@@ -356,6 +357,9 @@ class AccountsList extends ConsumerWidget {
                         ],
                       ),
                       onTap: () {
+                        ref
+                            .watch(getTransactionsByAccountIdProvider.notifier)
+                            .getAllTransactions(list[index].id);
                         context.pushNamed('debug-view-account', extra: list[index]);
                       },
                     ),
