@@ -309,13 +309,14 @@ class AccountsList extends ConsumerWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      title: Text(list[index].name),
+                      title: Text(list[index].name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: list[index].description.value == null
                           ? null
                           : Text(
                               list[index].description.value!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.grey.withOpacity(0.8)),
                             ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,

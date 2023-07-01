@@ -22,6 +22,8 @@ enum AuthErrorType {
   invalidCredentials('invalid-credentials', 'Your email or password are incorrect.'),
   missingUsername('missing-username', 'Username is missing, please contact support.'),
   noLoggedInUser('no-logged-in-user', 'No user is currently logged in.'),
+  cannotConvertToDTO('cannot-convert-to-pecunia-user-dto',
+      'Something went wrong while converting the PecuniaUser to a DTO.'),
   unknown(defaultUnknownAuthErrorCode, defaultUnknownAuthErrorMessage);
 
   const AuthErrorType(this.code, this.message);

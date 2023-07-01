@@ -5,6 +5,8 @@ part of 'accounts_dao_tables.dart';
 // ignore_for_file: type=lint
 mixin _$AccountsDAOMixin on DatabaseAccessor<PecuniaDB> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
+  $TransactionsTableTable get transactionsTable =>
+      attachedDatabase.transactionsTable;
 }
 
 // **************************************************************************

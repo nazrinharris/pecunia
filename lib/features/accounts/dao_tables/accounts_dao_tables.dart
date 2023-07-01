@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'accounts_dao_tables.g.dart';
@@ -22,9 +23,7 @@ class AccountsTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftAccessor(tables: [
-  AccountsTable,
-])
+@DriftAccessor(tables: [AccountsTable, TransactionsTable])
 class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
   AccountsDAO(super.db);
 

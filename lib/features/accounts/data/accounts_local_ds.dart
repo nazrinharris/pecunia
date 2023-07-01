@@ -21,7 +21,7 @@ abstract interface class AccountsLocalDS {
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts();
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts();
 
-  TaskEither<AccountsFailure, Unit> createAccount(AccountDTO account);
+  TaskEither<AccountsFailure, Unit> createAccount(AccountDTO accountDTO);
 
   TaskEither<AccountsFailure, Unit> updateAccountDetails(AccountDTO newAccountDetails);
   TaskEither<AccountsFailure, Unit> deleteAccount(AccountDTO accountToDelete);

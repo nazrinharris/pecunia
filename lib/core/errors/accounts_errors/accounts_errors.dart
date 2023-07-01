@@ -19,7 +19,8 @@ const defaultUnknownAccountErrorMessage = "We're not sure what happened, please 
 
 enum AccountsErrorType {
   unknown(defaultUnknownAccountErrorCode, defaultUnknownAccountErrorMessage),
-  cannotConvertToDTO('cannot-convert-to-dto', 'Something went wrong while converting the account to a DTO.'),
+  cannotConvertToDTO(
+      'cannot-convert-to-account-dto', 'Something went wrong while converting the Account to a DTO.'),
   sqliteException('sqlite-exception', 'Something went wrong while accessing the database.');
 
   const AccountsErrorType(this.code, this.message);
