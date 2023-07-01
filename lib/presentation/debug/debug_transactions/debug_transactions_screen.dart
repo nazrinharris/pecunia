@@ -114,6 +114,7 @@ class CreateTransactionForm extends ConsumerWidget {
               ),
               ReactiveDropdownField<String>(
                 formControlName: 'type',
+                isExpanded: true,
                 onChanged: (formControl) => formGroup.focus('account'),
                 decoration: const InputDecoration(
                   labelText: 'Transaction Type',
@@ -130,17 +131,27 @@ class CreateTransactionForm extends ConsumerWidget {
                   ),
                 ],
               ),
-              ReactiveDropdownField<String>(
-                formControlName: 'account',
-                decoration: const InputDecoration(
-                  labelText: 'Account',
-                  hintText: 'Choose an account to add this transaction to',
+              SizedBox(
+                height: 90,
+                width: double.infinity,
+                child: ReactiveDropdownField<String>(
+                  isExpanded: true,
+                  formControlName: 'account',
+                  decoration: const InputDecoration(
+                    labelText: 'Account',
+                    hintText: 'Choose an account',
+                  ),
+                  onChanged: (control) {
+                    ref.watch(chosenAccountProvider.notifier).updateChosenAccount(accounts, control.value!);
+                    formGroup.focus('amount');
+                  },
+                  selectedItemBuilder: (context) {
+                    return accounts.map((account) {
+                      return Text(account.name, overflow: TextOverflow.ellipsis);
+                    }).toList();
+                  },
+                  items: buildAccountsDropdown(accounts),
                 ),
-                onChanged: (control) {
-                  ref.watch(chosenAccountProvider.notifier).updateChosenAccount(accounts, control.value!);
-                  formGroup.focus('amount');
-                },
-                items: buildAccountsDropdown(accounts),
               ),
               Row(
                 children: [
@@ -180,14 +191,17 @@ class CreateTransactionForm extends ConsumerWidget {
                 builder: (context, form, child) {
                   return ElevatedButton(
                     onPressed: form.valid
-                        ? () => ref.read(createTransactionProvider.notifier).createTransaction(
-                              name: form.value['txnName']! as String,
-                              description: form.value['description'] as String?,
-                              amount: double.parse(form.value['amount']! as String),
-                              currency: ref.watch(chosenAccountProvider).toNullable()!.currency,
-                              accountId: ref.watch(chosenAccountProvider).toNullable()!.id,
-                              type: form.value['type']! as String,
-                            )
+                        ? () {
+                            ref.read(createTransactionProvider.notifier).createTransaction(
+                                  name: form.value['txnName']! as String,
+                                  description: form.value['description'] as String?,
+                                  amount: double.parse(form.value['amount']! as String),
+                                  currency: ref.watch(chosenAccountProvider).toNullable()!.currency,
+                                  accountId: ref.watch(chosenAccountProvider).toNullable()!.id,
+                                  type: form.value['type']! as String,
+                                );
+                            form.unfocus();
+                          }
                         : null,
                     child: const Text('Create Transaction'),
                   );
@@ -213,7 +227,10 @@ class CreateTransactionForm extends ConsumerWidget {
       items.add(
         DropdownMenuItem<String>(
           value: account.id,
-          child: Text(account.name),
+          child: Text(
+            account.name,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       );
     }
@@ -227,6 +244,7 @@ class ViewAllTransactions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final transactionsList = ref.watch(getAllTransactionsProvider);
+    final accountsList = ref.watch(getAllAccountsProvider);
     return transactionsList.when(
       data: (transactions) {
         if (transactions.isEmpty) {
@@ -242,35 +260,54 @@ class ViewAllTransactions extends ConsumerWidget {
             itemCount: transactions.length,
             itemBuilder: (context, index) {
               final txn = transactions[index];
-              return ListTile(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                title: Text(
-                  txn.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: txn.transactionDescription.value == null
-                    ? null
-                    : Text(
-                        txn.transactionDescription.value!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                trailing: BuildTxnAmountText(txn),
-                onTap: () {
-                  showModalBottomSheet<void>(
-                      isScrollControlled: true,
-                      context: context,
-                      showDragHandle: true,
-                      builder: (context) {
-                        return SizedBox(
-                          height: 550,
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                            child: BottomSheetContent(txn),
+              return Column(
+                children: [
+                  ListTile(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          returnAccountName(
+                              txn.accountId, accountsList.whenData((value) => value).asData?.value ?? []),
+                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          txn.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    subtitle: txn.transactionDescription.value == null
+                        ? null
+                        : Text(
+                            txn.transactionDescription.value!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        );
-                      });
-                },
+                    trailing: BuildTxnAmountText(txn),
+                    onTap: () {
+                      showModalBottomSheet<void>(
+                          isScrollControlled: true,
+                          context: context,
+                          showDragHandle: true,
+                          builder: (context) {
+                            return SizedBox(
+                              height: 550,
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                                child: BottomSheetContent(txn),
+                              ),
+                            );
+                          });
+                    },
+                  ),
+                  Divider(color: Colors.grey.withOpacity(0.1)),
+                ],
               );
             },
           ),
@@ -279,6 +316,15 @@ class ViewAllTransactions extends ConsumerWidget {
       error: (err, s) => Center(child: Text(err.toString())),
       loading: () => const Center(child: CupertinoActivityIndicator()),
     );
+  }
+
+  String returnAccountName(String accountId, List<Account> accounts) {
+    if (accounts.isEmpty) {
+      return '';
+    }
+
+    final account = accounts.firstWhere((element) => element.id == accountId);
+    return account.name;
   }
 }
 
