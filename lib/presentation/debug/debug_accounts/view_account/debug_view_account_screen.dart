@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
+import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
+import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
 class DebugViewAccountScreen extends ConsumerWidget {
   const DebugViewAccountScreen(this.account, {super.key});
@@ -14,6 +18,21 @@ class DebugViewAccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(deleteAccountProvider, (prev, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: "We couldn't delete your account.",
+              failure: next.error as Failure?,
+            );
+      }
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Account deleted successfully!',
+            );
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -232,7 +251,15 @@ class DebugViewAccountScreen extends ConsumerWidget {
                       ),
                       title: Text('Delete', style: TextStyle(color: Colors.red[300])),
                       leading: Icon(Icons.delete, color: Colors.red[300]),
-                      onTap: () {},
+                      onTap: () {
+                        ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                              title: 'Are you sure you want to delete this account?',
+                              message: 'This is irreversible',
+                              onConfirm: () {
+                                ref.read(deleteAccountProvider.notifier).deleteAccount(account);
+                              },
+                            );
+                      },
                     ),
                   ],
                 ),
