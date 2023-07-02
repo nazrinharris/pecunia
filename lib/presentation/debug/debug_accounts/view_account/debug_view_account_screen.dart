@@ -234,12 +234,29 @@ class DebugViewAccountScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ListTile(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
-                      title: const Text('Edit'),
+                      title: Text('Add income', style: TextStyle(color: Colors.green[100])),
+                      leading: Icon(Icons.add, color: Colors.green[100]),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      title: Text('Add expense', style: TextStyle(color: Colors.red[100])),
+                      leading: Icon(Icons.remove, color: Colors.red[100]),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      title: const Text('Edit account'),
                       leading: const Icon(Icons.edit),
                       onTap: () {
                         context.pushNamed('debug-edit-account', extra: account);
@@ -249,7 +266,7 @@ class DebugViewAccountScreen extends ConsumerWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
-                      title: Text('Delete', style: TextStyle(color: Colors.red[300])),
+                      title: Text('Delete account', style: TextStyle(color: Colors.red[300])),
                       leading: Icon(Icons.delete, color: Colors.red[300]),
                       onTap: () {
                         ref.read(pecuniaDialogsProvider).showConfirmationDialog(
@@ -309,6 +326,7 @@ class TransactionsList extends ConsumerWidget {
               final txn = transactions[index];
               return Column(
                 children: [
+                  if (index == 0) Divider(color: Colors.grey.withOpacity(0.1)),
                   ListTile(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     title: Column(

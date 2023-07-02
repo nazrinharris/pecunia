@@ -16,6 +16,8 @@ TransactionsRepo transactionsRepo(TransactionsRepoRef ref) => TransactionsRepo(
 
 enum TransactionsAction {
   create,
+  delete,
+  edit,
   getTransactionsByAccount,
   getAllTransactions,
   unknown,
@@ -73,5 +75,9 @@ class TransactionsRepo {
     return transactionsLocalDS.getTransactionsByAccount(accountId).map((transactions) {
       return transactions.map((txn) => Transaction.fromDTO(txn, currentAction)).toList();
     });
+  }
+
+  TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {
+    return transactionsLocalDS.deleteTransaction(transactionToDelete.toDTO());
   }
 }

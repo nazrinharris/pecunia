@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/form/debug_transactions_form.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
@@ -378,6 +379,21 @@ class BottomSheetContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(deleteTransactionProvider, (previous, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: 'Oopsies',
+              failure: next.error as Failure?,
+            );
+      }
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Transaction deleted succesfully!',
+            );
+      }
+    });
+
     return Container(
       padding: const EdgeInsets.only(top: 14, bottom: 14),
       child: Column(
@@ -526,7 +542,15 @@ class BottomSheetContent extends ConsumerWidget {
           ListTile(
             title: Text('Delete', style: TextStyle(color: Colors.red[300])),
             leading: Icon(Icons.delete, color: Colors.red[300]),
-            onTap: () {},
+            onTap: () {
+              ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                    title: 'Delete transaction?',
+                    message: "This isn't a reversible action, think twice.",
+                    onConfirm: () {
+                      ref.read(deleteTransactionProvider.notifier).deleteTransaction(txn);
+                    },
+                  );
+            },
           ),
         ],
       ),

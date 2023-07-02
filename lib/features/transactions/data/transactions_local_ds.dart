@@ -12,6 +12,11 @@ TransactionsLocalDS transactionsLocalDS(TransactionsLocalDSRef ref) =>
 
 abstract interface class TransactionsLocalDS {
   TaskEither<TransactionsFailure, Unit> createTransaction(TransactionDTO transaction);
+  TaskEither<TransactionsFailure, Unit> deleteTransaction(TransactionDTO transaction);
+  TaskEither<TransactionsFailure, Unit> editTransaction({
+    required TransactionDTO newTxnDTO,
+    required TransactionDTO oldTxnDto,
+  });
 
   TaskEither<TransactionsFailure, List<TransactionDTO>> getTransactionsByAccount(String accountId);
   TaskEither<TransactionsFailure, List<TransactionDTO>> getAllTransactions();
@@ -37,5 +42,17 @@ class TransactionsLocalDSImpl implements TransactionsLocalDS {
   @override
   TaskEither<TransactionsFailure, List<TransactionDTO>> getTransactionsByAccount(String accountId) {
     return transactionsDAO.getTransactionsByAccount(accountId);
+  }
+
+  @override
+  TaskEither<TransactionsFailure, Unit> deleteTransaction(TransactionDTO transaction) {
+    return transactionsDAO.deleteTransaction(transaction);
+  }
+
+  @override
+  TaskEither<TransactionsFailure, Unit> editTransaction(
+      {required TransactionDTO newTxnDTO, required TransactionDTO oldTxnDto}) {
+    // TODO: implement editTransaction
+    throw UnimplementedError();
   }
 }
