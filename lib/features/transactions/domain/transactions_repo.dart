@@ -77,6 +77,13 @@ class TransactionsRepo {
     });
   }
 
+  TaskEither<TransactionsFailure, Unit> updateTransaction({
+    required Transaction newTxn,
+    required Transaction oldTxn,
+  }) {
+    return transactionsLocalDS.updateTransaction(newTxnDTO: newTxn.toDTO(), oldTxnDto: oldTxn.toDTO());
+  }
+
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {
     return transactionsLocalDS.deleteTransaction(transactionToDelete.toDTO());
   }

@@ -6,7 +6,7 @@ part of 'debug_transactions_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createTransactionHash() => r'c4bf211f5007d7cc5a1653eed945d66bf2c5ed33';
+String _$createTransactionHash() => r'eb8c12d4cbdcb0df9b51795fe3abc87bde250bef';
 
 /// See also [CreateTransaction].
 @ProviderFor(CreateTransaction)
@@ -55,7 +55,7 @@ final getAllAccountsProvider =
 
 typedef _$GetAllAccounts = AutoDisposeAsyncNotifier<List<Account>>;
 String _$getAllTransactionsHash() =>
-    r'aa8764699f5541a0e149ab572ba24324528a268b';
+    r'e3c1ed01fb3d8b43396376f78acd96109f43577f';
 
 /// See also [GetAllTransactions].
 @ProviderFor(GetAllTransactions)

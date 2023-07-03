@@ -79,7 +79,6 @@ class DebugLocalDBScreen extends ConsumerWidget {
                     ),
                     onPressed: () {
                       ref.watch(getAllAccountsProvider.notifier).getAllAccounts();
-                      ref.watch(getAllTransactionsProvider.notifier).getAllTransactions();
                       context.pushNamed('debug-transactions');
                     },
                     child: const Text('Go to Debug Transactions'),
@@ -357,9 +356,8 @@ class AccountsList extends ConsumerWidget {
                         ],
                       ),
                       onTap: () {
-                        ref
-                            .watch(getTransactionsByAccountIdProvider.notifier)
-                            .getAllTransactions(list[index].id);
+                        ref.watch(getTransactionsByAccountIdProvider(list[index].id));
+
                         context.pushNamed('debug-view-account', extra: list[index]);
                       },
                     ),

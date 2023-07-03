@@ -5,7 +5,6 @@ import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
-import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_transactions_provider.g.dart';
@@ -55,7 +54,7 @@ class CreateTransaction extends _$CreateTransaction {
           .fold(
         (l) => state = AsyncError(l, l.stackTrace),
         (r) {
-          ref.read(getAllTransactionsProvider.notifier).getAllTransactions();
+          ref.invalidate(getAllTransactionsProvider);
           state = AsyncData(Option.of(r));
         },
       );
@@ -109,16 +108,14 @@ class GetAllAccounts extends _$GetAllAccounts {
 @riverpod
 class GetAllTransactions extends _$GetAllTransactions {
   @override
-  FutureOr<List<Transaction>> build() {
-    return [];
+  Future<List<Transaction>> build() async {
+    return _getAllTransactions();
   }
 
-  Future<void> getAllTransactions() async {
-    state = const AsyncValue.loading();
-
-    (await ref.read(transactionsRepoProvider).getAllTransactions().run()).fold(
-      (l) => state = AsyncError(l, l.stackTrace),
-      (r) => state = AsyncData(r),
+  Future<List<Transaction>> _getAllTransactions() async {
+    return (await ref.read(transactionsRepoProvider).getAllTransactions().run()).fold(
+      (l) => Future<List<Transaction>>.error(l, l.stackTrace),
+      (r) => r,
     );
   }
 }

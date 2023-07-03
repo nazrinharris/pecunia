@@ -55,6 +55,14 @@ class TransactionsException with _$TransactionsException implements Exception {
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
   }) = _UnknownTransactionsException;
+
+  factory TransactionsException.fromFailure(TransactionsFailure failure) {
+    return TransactionsException(
+      stackTrace: failure.stackTrace,
+      errorType: failure.errorType,
+      transactionsAction: failure.transactionsAction,
+    );
+  }
 }
 
 /// ****************************************************************

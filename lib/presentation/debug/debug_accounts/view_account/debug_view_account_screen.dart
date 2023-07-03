@@ -308,7 +308,7 @@ class TransactionsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final txnList = ref.watch(getTransactionsByAccountIdProvider);
+    final txnList = ref.watch(getTransactionsByAccountIdProvider(account.id));
     return txnList.when(
       data: (transactions) {
         if (transactions.isEmpty) {
@@ -324,6 +324,7 @@ class TransactionsList extends ConsumerWidget {
             itemCount: transactions.length,
             itemBuilder: (context, index) {
               final txn = transactions[index];
+
               return Column(
                 children: [
                   if (index == 0) Divider(color: Colors.grey.withOpacity(0.1)),
@@ -364,7 +365,7 @@ class TransactionsList extends ConsumerWidget {
                               height: 550,
                               child: SingleChildScrollView(
                                 physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                                child: BottomSheetContent(txn),
+                                child: BottomSheetContent(txn, [], account),
                               ),
                             );
                           });

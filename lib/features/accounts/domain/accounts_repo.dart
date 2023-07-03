@@ -18,6 +18,7 @@ enum AccountsAction {
   deleteAccount,
 
   recalculateAccountBalance,
+  unknown,
 
   /// This is a special case. This is used to map an [Account] to an [AccountDTO]
   mapAccountToDTO,

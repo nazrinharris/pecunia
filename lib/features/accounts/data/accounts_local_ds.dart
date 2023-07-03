@@ -25,6 +25,9 @@ abstract interface class AccountsLocalDS {
   TaskEither<AccountsFailure, Unit> createAccount(AccountDTO accountDTO);
 
   TaskEither<AccountsFailure, Unit> updateAccountDetails(AccountDTO newAccountDetails);
+  TaskEither<AccountsFailure, (bool isValid, double calculatedAmount)> validateAccountBalance(
+      AccountDTO accountToRecalculate);
+
   TaskEither<AccountsFailure, Unit> deleteAccount(AccountDTO accountToDelete);
 }
 
@@ -115,5 +118,13 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
       () async => accountsDAO.deleteAccount(accountToDelete).then((_) => unit),
       (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
     );
+  }
+
+  /// ******************************************************************************************************
+  /// [validateAccountBalance]
+  /// ******************************************************************************************************
+  @override
+  TaskEither<AccountsFailure, (bool, double)> validateAccountBalance(AccountDTO accountToRecalculate) {
+    return accountsDAO.validateAccountBalance(accountToRecalculate);
   }
 }

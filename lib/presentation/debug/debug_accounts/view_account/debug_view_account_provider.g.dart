@@ -7,21 +7,128 @@ part of 'debug_view_account_provider.dart';
 // **************************************************************************
 
 String _$getTransactionsByAccountIdHash() =>
-    r'0eb7d68b1f11cf08d9f8db730d3672753b456c2d';
+    r'8d9e085ee16a6ad1ff0ddd3f2e0aee78d699fa12';
 
-/// See also [GetTransactionsByAccountId].
-@ProviderFor(GetTransactionsByAccountId)
-final getTransactionsByAccountIdProvider = AutoDisposeAsyncNotifierProvider<
-    GetTransactionsByAccountId, List<Transaction>>.internal(
-  GetTransactionsByAccountId.new,
-  name: r'getTransactionsByAccountIdProvider',
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+typedef GetTransactionsByAccountIdRef
+    = AutoDisposeFutureProviderRef<List<Transaction>>;
+
+/// See also [getTransactionsByAccountId].
+@ProviderFor(getTransactionsByAccountId)
+const getTransactionsByAccountIdProvider = GetTransactionsByAccountIdFamily();
+
+/// See also [getTransactionsByAccountId].
+class GetTransactionsByAccountIdFamily
+    extends Family<AsyncValue<List<Transaction>>> {
+  /// See also [getTransactionsByAccountId].
+  const GetTransactionsByAccountIdFamily();
+
+  /// See also [getTransactionsByAccountId].
+  GetTransactionsByAccountIdProvider call(
+    String accountId,
+  ) {
+    return GetTransactionsByAccountIdProvider(
+      accountId,
+    );
+  }
+
+  @override
+  GetTransactionsByAccountIdProvider getProviderOverride(
+    covariant GetTransactionsByAccountIdProvider provider,
+  ) {
+    return call(
+      provider.accountId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getTransactionsByAccountIdProvider';
+}
+
+/// See also [getTransactionsByAccountId].
+class GetTransactionsByAccountIdProvider
+    extends AutoDisposeFutureProvider<List<Transaction>> {
+  /// See also [getTransactionsByAccountId].
+  GetTransactionsByAccountIdProvider(
+    this.accountId,
+  ) : super.internal(
+          (ref) => getTransactionsByAccountId(
+            ref,
+            accountId,
+          ),
+          from: getTransactionsByAccountIdProvider,
+          name: r'getTransactionsByAccountIdProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getTransactionsByAccountIdHash,
+          dependencies: GetTransactionsByAccountIdFamily._dependencies,
+          allTransitiveDependencies:
+              GetTransactionsByAccountIdFamily._allTransitiveDependencies,
+        );
+
+  final String accountId;
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetTransactionsByAccountIdProvider &&
+        other.accountId == accountId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, accountId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+String _$editTransactionHash() => r'00eba1a7ab30d9cf416c4dfad7c27d01831bf6f1';
+
+/// See also [EditTransaction].
+@ProviderFor(EditTransaction)
+final editTransactionProvider =
+    AutoDisposeAsyncNotifierProvider<EditTransaction, Option<Unit>>.internal(
+  EditTransaction.new,
+  name: r'editTransactionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$getTransactionsByAccountIdHash,
+      : _$editTransactionHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GetTransactionsByAccountId
-    = AutoDisposeAsyncNotifier<List<Transaction>>;
+typedef _$EditTransaction = AutoDisposeAsyncNotifier<Option<Unit>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

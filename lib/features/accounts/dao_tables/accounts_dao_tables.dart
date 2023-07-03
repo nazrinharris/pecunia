@@ -74,6 +74,33 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
     );
   }
 
+  TaskEither<AccountsFailure, (bool isValid, double actualBalance)> validateAccountBalance(
+      AccountDTO account) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        // Get all transactions for this account
+        final txnList =
+            await (select(transactionsTable)..where((tbl) => tbl.accountId.equals(account.id))).get();
+
+        // Calculate the new balance
+        var calculatedBalance = account.initialBalance;
+        for (final txn in txnList) {
+          final type = TransactionType.fromString(txn.transactionType, TransactionsAction.unknown);
+          if (type == TransactionType.credit) {
+            calculatedBalance += txn.originalAmount;
+          } else if (type == TransactionType.debit) {
+            calculatedBalance -= txn.originalAmount;
+          } else {
+            throw ArgumentError('Invalid transaction type: ${txn.transactionType}');
+          }
+        }
+
+        return (calculatedBalance == account.balance, calculatedBalance);
+      }),
+      (error, stackTrace) => mapDriftToAccountsFailure(AccountsAction.unknown, error, stackTrace),
+    );
+  }
+
   Stream<List<AccountDTO>> watchAllAccounts() {
     return select(accountsTable).watch();
   }

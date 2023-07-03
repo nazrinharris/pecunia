@@ -52,8 +52,12 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           await _insertTransactionToTable(txnDto);
           final accountDto = await _retrieveAccountById(txnDto);
           final txnType = TransactionType.fromString(txnDto.transactionType, currentAction);
-          final newBalance = _calculateBalanceByOneTransaction(accountDto, txnDto, txnType);
-          await _updateAccountBalance(accountDto, newBalance);
+          final updatedAccountDTO = _calculateBalanceByOneTransaction(
+            accountDto: accountDto,
+            txnDto: txnDto,
+            txnType: txnType,
+          );
+          await _updateAccountDTO(updatedAccountDTO);
         }).then((_) => unit);
       },
       (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
@@ -66,14 +70,14 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
       () async => transaction(() async {
         final accountDto = await _retrieveAccountById(txnDto);
         final txnType = TransactionType.fromString(txnDto.transactionType, currentAction);
-        final newBalance = _calculateBalanceByOneTransaction(
-          accountDto,
-          txnDto,
-          txnType,
+        final updatedAccountDTO = _calculateBalanceByOneTransaction(
+          accountDto: accountDto,
+          txnDto: txnDto,
+          txnType: txnType,
           shouldReverseTransaction: true,
         );
 
-        await _updateAccountBalance(accountDto, newBalance);
+        await _updateAccountDTO(updatedAccountDTO);
         await (delete(transactionsTable)..where((tbl) => tbl.id.equals(txnDto.id))).go();
         return unit;
       }),
@@ -92,17 +96,22 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
         final oldTxnType = TransactionType.fromString(oldTxnDto.transactionType, currentAction);
         final newTxnType = TransactionType.fromString(newTxnDTO.transactionType, currentAction);
 
-        final oldBalance = _calculateBalanceByOneTransaction(
-          accountDto,
-          oldTxnDto,
-          oldTxnType,
+        // Remove the old transaction from the balance
+        final removedOldTxnAccountDTO = _calculateBalanceByOneTransaction(
+          accountDto: accountDto,
+          txnDto: oldTxnDto,
+          txnType: oldTxnType,
           shouldReverseTransaction: true,
         );
-        final newBalance = _calculateBalanceByOneTransaction(accountDto, newTxnDTO, newTxnType);
 
-        final updatedBalance = oldBalance + newBalance;
+        // Add the new balance to the account
+        final updatedAccountDTO = _calculateBalanceByOneTransaction(
+          accountDto: removedOldTxnAccountDTO,
+          txnDto: newTxnDTO,
+          txnType: newTxnType,
+        );
 
-        await _updateAccountBalance(accountDto, updatedBalance);
+        await _updateAccountDTO(updatedAccountDTO);
         await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxnDto.id)))
             .write(newTxnDTO.toCompanion(true));
         return unit;
@@ -129,10 +138,10 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     );
   }
 
-  /// ********************************************************************************************************
-  /// DAO Private Methods, these methods are extracted to improve legibility of the DAO methods. These methods
-  /// must be directly related to the database actions.
-  /// ********************************************************************************************************
+  // ********************************************************************************************************
+  // DAO Private Methods, these methods are extracted to improve legibility of the DAO methods. These methods
+  // must be directly related to the database actions.
+  // ********************************************************************************************************
 
   Future<AccountDTO> _retrieveAccountById(TransactionDTO txnDto) async {
     return (select(accountsTable)..where((tbl) => tbl.id.equals(txnDto.accountId))).getSingle();
@@ -142,14 +151,14 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     await into(transactionsTable).insert(txnDto.toCompanion(false));
   }
 
-  Future<void> _updateAccountBalance(AccountDTO accountDto, double newBalance) async {
-    await update(accountsTable).replace(accountDto.copyWith(balance: newBalance).toCompanion(true));
+  Future<void> _updateAccountDTO(AccountDTO accountDto) async {
+    await update(accountsTable).replace(accountDto.toCompanion(false));
   }
 
-  /// ********************************************************************************************************
-  /// Other private methods, also extracted for legibility. These methods should not be executing actions
-  /// on the database.
-  /// ********************************************************************************************************
+  // ********************************************************************************************************
+  // Other private methods, extracted for legibility. These methods should not be executing actions
+  // on the database.
+  // ********************************************************************************************************
 
   /// Calculates the new balance of an account based on a single transaction.
   ///
@@ -164,9 +173,12 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
   ///
   /// Returns a [double] value representing the new balance of the account after
   /// the transaction has been applied (or reversed, if shouldReverseTransaction is true).
-  double _calculateBalanceByOneTransaction(
-      AccountDTO accountDto, TransactionDTO txnDto, TransactionType txnType,
-      {bool shouldReverseTransaction = false}) {
+  AccountDTO _calculateBalanceByOneTransaction({
+    required AccountDTO accountDto,
+    required TransactionDTO txnDto,
+    required TransactionType txnType,
+    bool shouldReverseTransaction = false,
+  }) {
     double newBalance;
     if (txnType == TransactionType.credit) {
       newBalance = shouldReverseTransaction
@@ -177,6 +189,6 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           ? accountDto.balance + txnDto.originalAmount
           : accountDto.balance - txnDto.originalAmount;
     }
-    return newBalance;
+    return accountDto.copyWith(balance: newBalance);
   }
 }
