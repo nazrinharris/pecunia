@@ -53,7 +53,7 @@ final router = GoRouter(
       name: 'debug-view-account',
       builder: (context, state) {
         final account = state.extra! as Account;
-        return DebugViewAccountScreen(account);
+        return DebugViewAccountScreen(account.id);
       },
     ),
     GoRoute(

@@ -1,9 +1,28 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
+import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_view_account_provider.g.dart';
+
+@riverpod
+Future<Account> getAccountById(GetAccountByIdRef ref, String accountId) async {
+  return (await ref.read(accountsRepoProvider).getAccountById(accountId).run()).fold(
+    (l) => Future<Account>.error(l, l.stackTrace),
+    (r) => r,
+  );
+}
+
+@riverpod
+Future<(bool isValid, double actualBalance)> validateAccountBalance(
+    ValidateAccountBalanceRef ref, Account account) async {
+  return (await ref.read(accountsRepoProvider).validateAccountBalance(account).run()).fold(
+    (l) => Future<(bool isValid, double actualBalance)>.error(l, l.stackTrace),
+    (r) => r,
+  );
+}
 
 @riverpod
 Future<List<Transaction>> getTransactionsByAccountId(

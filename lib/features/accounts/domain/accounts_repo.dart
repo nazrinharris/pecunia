@@ -45,6 +45,9 @@ abstract interface class AccountsRepo {
   });
 
   TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails);
+  TaskEither<AccountsFailure, (bool isValid, double calculatedAmount)> validateAccountBalance(
+      Account accountToRecalculate);
+
   TaskEither<AccountsFailure, Unit> deleteAccount(Account accountToDelete);
 }
 
@@ -132,6 +135,14 @@ class AccountsRepoImpl implements AccountsRepo {
   @override
   TaskEither<AccountsFailure, Unit> deleteAccount(Account accountToDelete) {
     return helper.mapAccountToDTO(accountToDelete).flatMap(accountsLocalDS.deleteAccount);
+  }
+
+  /// ******************************************************************************************************
+  /// [validateAccountBalance]
+  /// ******************************************************************************************************
+  @override
+  TaskEither<AccountsFailure, (bool, double)> validateAccountBalance(Account accountToRecalculate) {
+    return helper.mapAccountToDTO(accountToRecalculate).flatMap(accountsLocalDS.validateAccountBalance);
   }
 }
 

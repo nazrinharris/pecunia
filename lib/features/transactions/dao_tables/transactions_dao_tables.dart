@@ -92,6 +92,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     const currentAction = TransactionsAction.edit;
     return TaskEither.tryCatch(
       () async => transaction(() async {
+        // Retrieve and setup required data
         final accountDto = await _retrieveAccountById(oldTxnDto);
         final oldTxnType = TransactionType.fromString(oldTxnDto.transactionType, currentAction);
         final newTxnType = TransactionType.fromString(newTxnDTO.transactionType, currentAction);
@@ -104,13 +105,14 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           shouldReverseTransaction: true,
         );
 
-        // Add the new balance to the account
+        // Add the new transaction to the balance
         final updatedAccountDTO = _calculateBalanceByOneTransaction(
           accountDto: removedOldTxnAccountDTO,
           txnDto: newTxnDTO,
           txnType: newTxnType,
         );
 
+        // Update the account and transactions
         await _updateAccountDTO(updatedAccountDTO);
         await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxnDto.id)))
             .write(newTxnDTO.toCompanion(true));

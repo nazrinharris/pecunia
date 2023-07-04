@@ -78,7 +78,7 @@ class DebugLocalDBScreen extends ConsumerWidget {
                       backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
                     ),
                     onPressed: () {
-                      ref.watch(getAllAccountsProvider.notifier).getAllAccounts();
+                      ref.watch(getAllAccountsProvider);
                       context.pushNamed('debug-transactions');
                     },
                     child: const Text('Go to Debug Transactions'),

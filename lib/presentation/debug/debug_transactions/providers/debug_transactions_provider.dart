@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
@@ -63,6 +64,23 @@ class CreateTransaction extends _$CreateTransaction {
 }
 
 @riverpod
+class DeleteTransaction extends _$DeleteTransaction {
+  @override
+  Future<Option<Unit>> build() async {
+    return const Option.none();
+  }
+
+  Future<void> deleteTransaction(Transaction txn) async {
+    state = const AsyncValue.loading();
+
+    (await ref.watch(transactionsRepoProvider).deleteTransaction(txn).run()).fold(
+      (l) => state = AsyncError(l, l.stackTrace),
+      (r) => state = AsyncData(Option.of(r)),
+    );
+  }
+}
+
+@riverpod
 class ChosenAccount extends _$ChosenAccount {
   @override
   Option<Account> build() {
@@ -78,11 +96,11 @@ class ChosenAccount extends _$ChosenAccount {
 @riverpod
 class GetAllAccounts extends _$GetAllAccounts {
   @override
-  FutureOr<List<Account>> build() {
-    return [];
+  Future<List<Account>> build() async {
+    return _getAllAccounts();
   }
 
-  Future<void> getAllAccounts() async {
+  Future<List<Account>> _getAllAccounts() async {
     state = const AsyncValue.loading();
 
     debugPrint('retrieving logged in user...');
@@ -97,9 +115,18 @@ class GetAllAccounts extends _$GetAllAccounts {
 
     if (pecuniaUser != null) {
       debugPrint('user exists, retrieving accounts...');
-      (await ref.read(accountsRepoProvider).getAccounts().run()).fold(
-        (l) => state = AsyncError(l, l.stackTrace),
-        (r) => state = AsyncData(r),
+      return (await ref.read(accountsRepoProvider).getAccounts().run()).fold(
+        (l) => Future<List<Account>>.error(l, l.stackTrace),
+        (r) => r,
+      );
+    } else {
+      return Future<List<Account>>.error(
+        AccountsFailure.unknown(
+          stackTrace: StackTrace.current,
+          message: 'This should never happen, please contact support.',
+          accountsAction: AccountsAction.unknown,
+        ),
+        StackTrace.current,
       );
     }
   }
