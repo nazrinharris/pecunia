@@ -550,6 +550,7 @@ class BottomSheetContent extends ConsumerWidget {
                     onConfirm: () {
                       ref.read(deleteTransactionProvider.notifier).deleteTransaction(txn);
                     },
+                    context: context,
                   );
             },
           ),

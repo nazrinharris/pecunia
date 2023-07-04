@@ -175,10 +175,10 @@ class DebugDialogsButtons extends ConsumerWidget {
                 ),
                 onPressed: () {
                   ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                        title: 'Are you sure?',
-                        message: "This isn't reversible.",
-                        onConfirm: () {},
-                      );
+                      title: 'Are you sure?',
+                      message: "This isn't reversible.",
+                      onConfirm: () {},
+                      context: context);
                 },
                 child: const Text('Show Confirmation Dialog'),
               ),
@@ -345,12 +345,12 @@ class AccountsList extends ConsumerWidget {
                             onPressed: () {
                               // Handle delete action here
                               ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                                    title: 'Are you sure you want to delete this account?',
-                                    message: 'This is irreversible',
-                                    onConfirm: () {
-                                      ref.read(deleteAccountProvider.notifier).deleteAccount(list[index]);
-                                    },
-                                  );
+                                  title: 'Are you sure you want to delete this account?',
+                                  message: 'This is irreversible',
+                                  onConfirm: () {
+                                    ref.read(deleteAccountProvider.notifier).deleteAccount(list[index]);
+                                  },
+                                  context: context);
                             },
                           ),
                         ],

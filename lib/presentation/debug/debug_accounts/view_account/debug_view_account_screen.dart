@@ -195,79 +195,83 @@ class AccountDetails extends ConsumerWidget {
             const SizedBox(height: 14),
             const Divider(),
             const SizedBox(height: 14),
-            AccountMetadataCard(account),
+            SafeArea(child: AccountMetadataCard(account)),
             const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        title: Text('Add income', style: TextStyle(color: Colors.green[100])),
+                        leading: Icon(Icons.add, color: Colors.green[100]),
+                        onTap: () {
+                          showCreateTransactionBottomSheet(context, account, true);
+                        },
                       ),
-                      title: Text('Add income', style: TextStyle(color: Colors.green[100])),
-                      leading: Icon(Icons.add, color: Colors.green[100]),
-                      onTap: () {
-                        showCreateTransactionBottomSheet(context, account, true);
-                      },
-                    ),
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        title: Text('Add expense', style: TextStyle(color: Colors.red[100])),
+                        leading: Icon(Icons.remove, color: Colors.red[100]),
+                        onTap: () {
+                          showCreateTransactionBottomSheet(context, account, false);
+                        },
                       ),
-                      title: Text('Add expense', style: TextStyle(color: Colors.red[100])),
-                      leading: Icon(Icons.remove, color: Colors.red[100]),
-                      onTap: () {
-                        showCreateTransactionBottomSheet(context, account, false);
-                      },
-                    ),
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        title: const Text('Edit account'),
+                        leading: const Icon(Icons.edit),
+                        onTap: () {
+                          context.pushNamed('debug-edit-account', extra: account);
+                        },
                       ),
-                      title: const Text('Edit account'),
-                      leading: const Icon(Icons.edit),
-                      onTap: () {
-                        context.pushNamed('debug-edit-account', extra: account);
-                      },
-                    ),
-                    ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      title: Text('Delete account', style: TextStyle(color: Colors.red[300])),
-                      leading: Icon(Icons.delete, color: Colors.red[300]),
-                      onTap: () {
-                        ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                      ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        title: Text('Delete account', style: TextStyle(color: Colors.red[300])),
+                        leading: Icon(Icons.delete, color: Colors.red[300]),
+                        onTap: () {
+                          ref.read(pecuniaDialogsProvider).showConfirmationDialog(
                               title: 'Are you sure you want to delete this account?',
                               message: 'This is irreversible',
                               onConfirm: () {
                                 ref.read(deleteAccountProvider.notifier).deleteAccount(account);
                               },
-                            );
-                      },
-                    ),
-                  ],
+                              context: context);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              alignment: Alignment.center,
-              child: const Text(
-                'Transactions',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+            SafeArea(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                alignment: Alignment.center,
+                child: const Text(
+                  'Transactions',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            TransactionsList(account),
+            SafeArea(child: TransactionsList(account)),
           ],
         ),
       ),
@@ -527,10 +531,11 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
         return SizedBox(
           height: 550,
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             child: Column(
               children: [
                 CreateTransactionForm(account, isCredit),
+                const SizedBox(height: 64),
               ],
             ),
           ),
