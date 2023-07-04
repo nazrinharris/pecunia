@@ -19,7 +19,8 @@ const defaultUnknownAccountErrorMessage = "We're not sure what happened, please 
 
 enum AccountsErrorType {
   unknown(defaultUnknownAccountErrorCode, defaultUnknownAccountErrorMessage),
-  cannotConvertToDTO('cannot-convert-to-dto', 'Something went wrong while converting the account to a DTO.'),
+  cannotConvertToDTO(
+      'cannot-convert-to-account-dto', 'Something went wrong while converting the Account to a DTO.'),
   sqliteException('sqlite-exception', 'Something went wrong while accessing the database.');
 
   const AccountsErrorType(this.code, this.message);
@@ -81,7 +82,10 @@ class AccountsFailure with _$AccountsFailure implements Failure {
 /// * Helpers
 /// ****************************************************************
 
-AccountsFailure mapDriftToFailure(AccountsAction accountsAction, Object error, StackTrace stackTrace) {
+AccountsFailure mapDriftToAccountsFailure<T extends Failure>(
+    AccountsAction accountsAction, Object error, StackTrace stackTrace) {
+  assert(T is AccountsFailure, 'This [mapDriftToFailure] is used out of where its supposed to.');
+
   if (error is DriftRemoteException && error.remoteCause is SqliteException) {
     final cause = error.remoteCause as SqliteException;
     return AccountsFailure(

@@ -70,13 +70,13 @@ FormGroup editAccountForm(
         value: initialBalance,
         validators: [
           Validators.required,
-          const CurrencyValidator(),
+          const NumberValidator(),
         ],
       ),
     });
 
-class CurrencyValidator extends Validator<dynamic> {
-  const CurrencyValidator() : super();
+class NumberValidator extends Validator<dynamic> {
+  const NumberValidator() : super();
 
   @override
   Map<String, dynamic>? validate(AbstractControl<dynamic> control) {

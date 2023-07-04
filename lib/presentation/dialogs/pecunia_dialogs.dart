@@ -30,6 +30,7 @@ abstract interface class PecuniaDialogs {
   Future<void> showConfirmationDialog({
     required String title,
     required void Function() onConfirm,
+    required BuildContext context,
     String? message,
   });
   Future<void> showInfoDialog(String message);
@@ -91,24 +92,62 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
   Future<void> showConfirmationDialog({
     required String title,
     required void Function() onConfirm,
+    required BuildContext context,
     String? message,
   }) async {
-    await FlutterEasyDialogs.provider.showFullScreen(
-      FullScreenShowParams(
-        content: ConfirmationDialog(
-          title: title,
-          message: message,
-          onConfirm: onConfirm,
-        ),
-        animationConfiguration: const EasyDialogAnimatorConfiguration(
-          duration: Duration(milliseconds: 200),
-          reverseDuration: Duration(milliseconds: 200),
-        ),
-        backgroundAnimator: FullScreenBackgroundAnimator.fade(
-          backgroundColor: Colors.black.withOpacity(0.8),
-        ),
-      ),
-    );
+    await showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              title,
+              style: TextStyle(
+                color: Colors.red[200],
+              ),
+            ),
+            content: Text(
+              message ?? '',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  onConfirm();
+                  Navigator.of(context).pop();
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 53, 0, 0)),
+                ),
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: Colors.red[200],
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+
+    // await FlutterEasyDialogs.provider.showFullScreen(
+    //   FullScreenShowParams(
+    //     content: ConfirmationDialog(
+    //       title: title,
+    //       message: message,
+    //       onConfirm: onConfirm,
+    //     ),
+    //     animationConfiguration: const EasyDialogAnimatorConfiguration(
+    //       duration: Duration(milliseconds: 200),
+    //       reverseDuration: Duration(milliseconds: 200),
+    //     ),
+    //     backgroundAnimator: FullScreenBackgroundAnimator.fade(
+    //       backgroundColor: Colors.black.withOpacity(0.8),
+    //     ),
+    //   ),
+    // );
   }
 
   @override

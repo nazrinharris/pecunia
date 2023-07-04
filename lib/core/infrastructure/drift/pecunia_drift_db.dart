@@ -4,8 +4,8 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:pecunia/core/infrastructure/drift/tables/debug_table.dart';
 import 'package:pecunia/features/accounts/dao_tables/accounts_dao_tables.dart';
+import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pecunia_drift_db.g.dart';
@@ -15,12 +15,12 @@ PecuniaDB pecuniaDB(PecuniaDBRef ref) => PecuniaDB(_openConnection());
 
 @DriftDatabase(
   tables: [
-    DebugTable,
     AccountsTable,
+    TransactionsTable,
   ],
   daos: [
-    DebugDAO,
     AccountsDAO,
+    TransactionsDAO,
   ],
 )
 class PecuniaDB extends _$PecuniaDB {
@@ -36,19 +36,4 @@ LazyDatabase _openConnection() {
     final file = File(p.join(dbFolder.path, 'pecunia.db'));
     return NativeDatabase.createBackgroundConnection(file);
   });
-}
-
-@DriftAccessor(tables: [
-  DebugTable,
-])
-class DebugDAO extends DatabaseAccessor<PecuniaDB> with _$DebugDAOMixin {
-  DebugDAO(super.db);
-
-  Future<void> insertDebugEntry(DebugEntryDTO entry) async {
-    await into(debugTable).insert(entry);
-  }
-
-  Future<List<DebugEntryDTO>> getAllDebugEntries() async {
-    return select(debugTable).get();
-  }
 }

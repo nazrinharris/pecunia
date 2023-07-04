@@ -7,8 +7,10 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/form/debug_create_account_form.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
+import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -61,11 +63,27 @@ class DebugLocalDBScreen extends ConsumerWidget {
             Container(
               alignment: Alignment.center,
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
-                },
-                child: const Text('Inspect DB'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
+                    },
+                    child: const Text('Inspect DB'),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
+                    ),
+                    onPressed: () {
+                      ref.watch(getAllAccountsProvider);
+                      context.pushNamed('debug-transactions');
+                    },
+                    child: const Text('Go to Debug Transactions'),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 14),
@@ -157,10 +175,10 @@ class DebugDialogsButtons extends ConsumerWidget {
                 ),
                 onPressed: () {
                   ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                        title: 'Are you sure?',
-                        message: "This isn't reversible.",
-                        onConfirm: () {},
-                      );
+                      title: 'Are you sure?',
+                      message: "This isn't reversible.",
+                      onConfirm: () {},
+                      context: context);
                 },
                 child: const Text('Show Confirmation Dialog'),
               ),
@@ -172,26 +190,11 @@ class DebugDialogsButtons extends ConsumerWidget {
         Container(
           alignment: Alignment.center,
           child: ElevatedButton(
-            onPressed: () {
-              context.pushNamed('debug-dialogs');
-            },
-            style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(
-                Color.fromARGB(255, 15, 9, 49),
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(14),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.chat),
-                  SizedBox(width: 10),
-                  Text('Visit All Dialogs'),
-                ],
-              ),
-            ),
-          ),
+              onPressed: () {
+                context.pushNamed('debug-dialogs');
+              },
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.purple[900])),
+              child: const Text('Go to All Dialogs')),
         )
       ],
     );
@@ -203,6 +206,8 @@ class CreateAccountFormWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final createAccountForm = ref.watch(createAccountFormProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ReactiveForm(
@@ -306,13 +311,14 @@ class AccountsList extends ConsumerWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      title: Text(list[index].name),
+                      title: Text(list[index].name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: list[index].description.value == null
                           ? null
                           : Text(
                               list[index].description.value!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.grey.withOpacity(0.8)),
                             ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -341,17 +347,19 @@ class AccountsList extends ConsumerWidget {
                             onPressed: () {
                               // Handle delete action here
                               ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                                    title: 'Are you sure you want to delete this account?',
-                                    message: 'This is irreversible',
-                                    onConfirm: () {
-                                      ref.read(deleteAccountProvider.notifier).deleteAccount(list[index]);
-                                    },
-                                  );
+                                  title: 'Are you sure you want to delete this account?',
+                                  message: 'This is irreversible',
+                                  onConfirm: () {
+                                    ref.read(deleteAccountProvider.notifier).deleteAccount(list[index]);
+                                  },
+                                  context: context);
                             },
                           ),
                         ],
                       ),
                       onTap: () {
+                        ref.watch(getTransactionsByAccountIdProvider(list[index].id));
+
                         context.pushNamed('debug-view-account', extra: list[index]);
                       },
                     ),

@@ -11,10 +11,14 @@ part 'accounts_repo.g.dart';
 
 enum AccountsAction {
   getAccounts,
+  getAccountById,
   watchAccounts,
   createAccount,
   updateAccountDetails,
   deleteAccount,
+
+  recalculateAccountBalance,
+  unknown,
 
   /// This is a special case. This is used to map an [Account] to an [AccountDTO]
   mapAccountToDTO,
@@ -29,6 +33,7 @@ AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl(
 
 abstract interface class AccountsRepo {
   TaskEither<AccountsFailure, List<Account>> getAccounts();
+  TaskEither<AccountsFailure, Account> getAccountById(String id);
   Stream<Either<AccountsFailure, List<Account>>> watchAccounts();
 
   TaskEither<AccountsFailure, Unit> createAccount({
@@ -40,6 +45,9 @@ abstract interface class AccountsRepo {
   });
 
   TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails);
+  TaskEither<AccountsFailure, (bool isValid, double calculatedAmount)> validateAccountBalance(
+      Account accountToRecalculate);
+
   TaskEither<AccountsFailure, Unit> deleteAccount(Account accountToDelete);
 }
 
@@ -60,6 +68,14 @@ class AccountsRepoImpl implements AccountsRepo {
   @override
   TaskEither<AccountsFailure, List<Account>> getAccounts() {
     return accountsLocalDS.getAccounts().map((listOfDTOs) => listOfDTOs.map(Account.fromDTO).toList());
+  }
+
+  /// ******************************************************************************************************
+  /// [getAccountById]
+  /// ******************************************************************************************************
+  @override
+  TaskEither<AccountsFailure, Account> getAccountById(String id) {
+    return accountsLocalDS.getAccountById(id).map(Account.fromDTO);
   }
 
   /// ******************************************************************************************************
@@ -119,6 +135,14 @@ class AccountsRepoImpl implements AccountsRepo {
   @override
   TaskEither<AccountsFailure, Unit> deleteAccount(Account accountToDelete) {
     return helper.mapAccountToDTO(accountToDelete).flatMap(accountsLocalDS.deleteAccount);
+  }
+
+  /// ******************************************************************************************************
+  /// [validateAccountBalance]
+  /// ******************************************************************************************************
+  @override
+  TaskEither<AccountsFailure, (bool, double)> validateAccountBalance(Account accountToRecalculate) {
+    return helper.mapAccountToDTO(accountToRecalculate).flatMap(accountsLocalDS.validateAccountBalance);
   }
 }
 

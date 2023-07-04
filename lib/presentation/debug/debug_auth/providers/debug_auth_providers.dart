@@ -107,9 +107,7 @@ class NavigateToDebugLocalDB extends _$NavigateToDebugLocalDB {
 
   Future<void> navigateToDebugLocalDB() async {
     state = const AsyncValue.loading();
-    final result = await ref.read(authRepoProvider).getLoggedInUser().run();
-
-    result.fold(
+    (await ref.read(authRepoProvider).getLoggedInUser().run()).fold(
       (l) {
         state = AsyncValue.error(l, l.stackTrace);
       },

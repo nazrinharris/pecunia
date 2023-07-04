@@ -76,6 +76,8 @@ class LoginForm extends HookConsumerWidget {
   const LoginForm({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loginForm = ref.watch(loginFormProvider);
+
     return ReactiveForm(
       formGroup: loginForm,
       child: Column(
@@ -167,6 +169,8 @@ class RegisterForm extends HookConsumerWidget {
   const RegisterForm({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final registerForm = ref.watch(registerFormProvider);
+
     return ReactiveForm(
       formGroup: registerForm,
       child: Column(
