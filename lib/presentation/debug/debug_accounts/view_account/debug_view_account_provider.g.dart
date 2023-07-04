@@ -111,7 +111,7 @@ class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
 }
 
 String _$validateAccountBalanceHash() =>
-    r'933119bc753ac91716823e4a7e319597dc88b18d';
+    r'e27e608721fa2b782d10e00d32f3160c51def678';
 typedef ValidateAccountBalanceRef
     = AutoDisposeFutureProviderRef<(bool, double)>;
 

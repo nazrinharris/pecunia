@@ -18,7 +18,7 @@ Future<Account> getAccountById(GetAccountByIdRef ref, String accountId) async {
 @riverpod
 Future<(bool isValid, double actualBalance)> validateAccountBalance(
     ValidateAccountBalanceRef ref, Account account) async {
-  return (await ref.read(accountsRepoProvider).validateAccountBalance(account).run()).fold(
+  return (await ref.read(accountsRepoProvider).validateAccountBalance(account).run()).match(
     (l) => Future<(bool isValid, double actualBalance)>.error(l, l.stackTrace),
     (r) => r,
   );

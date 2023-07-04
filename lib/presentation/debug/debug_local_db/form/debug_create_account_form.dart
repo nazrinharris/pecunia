@@ -1,31 +1,35 @@
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final createAccountForm = FormGroup({
-  'name': FormControl<String>(
-    validators: [
-      Validators.required,
-      Validators.minLength(1),
-      Validators.maxLength(50),
-    ],
-  ),
-  'description': FormControl<String>(
-    validators: [
-      Validators.maxLength(500),
-    ],
-  ),
-  'currency': FormControl<String>(
-    validators: [
-      Validators.required,
-      Validators.maxLength(3),
-    ],
-  ),
-  'initialBalance': FormControl<String>(
-    validators: [
-      Validators.required,
-      const CurrencyValidator(),
-    ],
-  ),
-});
+part 'debug_create_account_form.g.dart';
+
+@riverpod
+FormGroup createAccountForm(CreateAccountFormRef ref) => FormGroup({
+      'name': FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(50),
+        ],
+      ),
+      'description': FormControl<String>(
+        validators: [
+          Validators.maxLength(500),
+        ],
+      ),
+      'currency': FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.maxLength(3),
+        ],
+      ),
+      'initialBalance': FormControl<String>(
+        validators: [
+          Validators.required,
+          const CurrencyValidator(),
+        ],
+      ),
+    });
 
 class CurrencyValidator extends Validator<dynamic> {
   const CurrencyValidator() : super();

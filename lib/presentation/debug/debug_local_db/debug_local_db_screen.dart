@@ -206,6 +206,8 @@ class CreateAccountFormWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final createAccountForm = ref.watch(createAccountFormProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ReactiveForm(
