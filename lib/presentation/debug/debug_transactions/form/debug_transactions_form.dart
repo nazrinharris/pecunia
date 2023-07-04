@@ -7,7 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'debug_transactions_form.g.dart';
 
 @riverpod
-FormGroup createTransactionForm(CreateTransactionFormRef ref) => FormGroup({
+FormGroup createTransactionForm(CreateTransactionFormRef ref, {String? typeDefault, String? accountId}) =>
+    FormGroup({
       'txnName': FormControl<String>(validators: [
         Validators.required,
         Validators.minLength(1),
@@ -16,12 +17,18 @@ FormGroup createTransactionForm(CreateTransactionFormRef ref) => FormGroup({
       'description': FormControl<String>(validators: [
         Validators.maxLength(500),
       ]),
-      'type': FormControl<String>(validators: [
-        Validators.required,
-      ]),
-      'account': FormControl<String>(validators: [
-        Validators.required,
-      ]),
+      'type': FormControl<String>(
+        value: typeDefault,
+        validators: [
+          Validators.required,
+        ],
+      ),
+      'account': FormControl<String>(
+        value: accountId,
+        validators: [
+          Validators.required,
+        ],
+      ),
       'amount': FormControl<String>(validators: [
         Validators.required,
         const NumberValidator(),

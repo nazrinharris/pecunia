@@ -6,11 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
+import 'package:pecunia/presentation/debug/debug_transactions/form/debug_transactions_form.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugViewAccountScreen extends ConsumerWidget {
   const DebugViewAccountScreen(this.accountId, {super.key});
@@ -37,14 +40,14 @@ class DebugViewAccountScreen extends ConsumerWidget {
       ..listen(editTransactionProvider, (previous, next) {
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           ref
-            ..invalidate(getAllTransactionsProvider)
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
             ..invalidate(getAccountByIdProvider(accountId));
         }
       })
       ..listen(deleteTransactionProvider, (previous, next) {
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           ref
-            ..invalidate(getAllTransactionsProvider)
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
             ..invalidate(getAccountByIdProvider(accountId));
         }
       });
@@ -209,7 +212,9 @@ class AccountDetails extends ConsumerWidget {
                       ),
                       title: Text('Add income', style: TextStyle(color: Colors.green[100])),
                       leading: Icon(Icons.add, color: Colors.green[100]),
-                      onTap: () {},
+                      onTap: () {
+                        showCreateTransactionBottomSheet(context, account, true);
+                      },
                     ),
                     ListTile(
                       shape: RoundedRectangleBorder(
@@ -217,7 +222,9 @@ class AccountDetails extends ConsumerWidget {
                       ),
                       title: Text('Add expense', style: TextStyle(color: Colors.red[100])),
                       leading: Icon(Icons.remove, color: Colors.red[100]),
-                      onTap: () {},
+                      onTap: () {
+                        showCreateTransactionBottomSheet(context, account, false);
+                      },
                     ),
                     ListTile(
                       shape: RoundedRectangleBorder(
@@ -377,7 +384,7 @@ class AccountMetadataCard extends ConsumerWidget {
           loading: () => (const Option.none(), 'loading...'),
         );
 
-    final isValidText = isValid.fold(() => 'error', (t) => t.toString());
+    final isValidText = isValid.match(() => 'error', (t) => t.toString());
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -505,6 +512,201 @@ class AccountMetadataCard extends ConsumerWidget {
               )),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+void showCreateTransactionBottomSheet(BuildContext context, Account account, bool isCredit) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SizedBox(
+          height: 550,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            child: Column(
+              children: [
+                CreateTransactionForm(account, isCredit),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
+class CreateTransactionForm extends ConsumerWidget {
+  const CreateTransactionForm(this.account, this.isCredit, {super.key});
+
+  final Account account;
+  final bool isCredit;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(createTransactionProvider, (prev, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: "We couldn't delete your account.",
+              failure: next.error as Failure?,
+            );
+      }
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Transaction created successfully!',
+            );
+        ref
+          ..invalidate(getTransactionsByAccountIdProvider(account.id))
+          ..invalidate(getAccountByIdProvider(account.id));
+      }
+    });
+    final typeDefault = isCredit ? 'credit' : 'debit';
+    final formGroup =
+        ref.watch(createTransactionFormProvider(typeDefault: typeDefault, accountId: account.id));
+
+    return ReactiveForm(
+      formGroup: formGroup,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Column(
+          children: [
+            const Align(
+              child: Text(
+                'Create Transaction',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ReactiveTextField<String>(
+              formControlName: 'txnName',
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) => formGroup.focus('description'),
+              decoration: const InputDecoration(
+                labelText: 'Transaction Name',
+                hintText: 'Give a short name for this transaction',
+              ),
+            ),
+            ReactiveTextField<String>(
+              formControlName: 'description',
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) {
+                if (formGroup.value['description'] == '') {
+                  formGroup.value['description'] = null;
+                }
+                formGroup.focus('currency');
+              },
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                hintText: 'You could also leave this empty.',
+              ),
+            ),
+            ReactiveDropdownField<String>(
+              formControlName: 'type',
+              isExpanded: true,
+              onChanged: (formControl) => formGroup.focus('account'),
+              decoration: const InputDecoration(
+                labelText: 'Transaction Type',
+                hintText: 'Is this an income or an expense?',
+              ),
+              items: [
+                DropdownMenuItem<String>(
+                  value: TransactionType.credit.typeAsString,
+                  child: const Text('Income (or known as credit)'),
+                ),
+                DropdownMenuItem<String>(
+                  value: TransactionType.debit.typeAsString,
+                  child: const Text('Expense (or known as debit)'),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 90,
+              width: double.infinity,
+              child: ReactiveDropdownField<String>(
+                isExpanded: true,
+                readOnly: true,
+                formControlName: 'account',
+                decoration: InputDecoration(
+                  labelText: account.name,
+                  hintText: 'Choose an account',
+                ),
+                onChanged: (control) {
+                  formGroup.focus('amount');
+                },
+                selectedItemBuilder: (context) {
+                  return [Text(account.name)];
+                },
+                items: [
+                  DropdownMenuItem<String>(
+                    value: account.id,
+                    child: Text(
+                      account.name,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 14, right: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.2),
+                      // border: Border.all(color: Colors.grey.withOpacity(0.5)),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      account.currency,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: ReactiveTextField<String>(
+                    formControlName: 'amount',
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    textInputAction: TextInputAction.done,
+                    decoration: const InputDecoration(
+                      labelText: 'Amount',
+                      hintText: 'Couple bucks? A few hundred?',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                return ElevatedButton(
+                  onPressed: form.valid
+                      ? () {
+                          ref.read(createTransactionProvider.notifier).createTransaction(
+                                name: form.value['txnName']! as String,
+                                description: form.value['description'] as String?,
+                                amount: double.parse(form.value['amount']! as String),
+                                currency: account.currency,
+                                accountId: account.id,
+                                type: form.value['type']! as String,
+                              );
+                          form.unfocus();
+                        }
+                      : null,
+                  child: const Text('Create Transaction'),
+                );
+              },
+            )
+          ],
         ),
       ),
     );

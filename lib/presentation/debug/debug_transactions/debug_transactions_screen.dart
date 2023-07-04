@@ -81,7 +81,7 @@ class CreateTransactionForm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formGroup = ref.watch(createTransactionFormProvider);
+    final formGroup = ref.watch(createTransactionFormProvider());
     final accountsList = ref.watch(getAllAccountsProvider);
     return accountsList.when(
       data: (accounts) => ReactiveForm(
