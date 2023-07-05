@@ -83,3 +83,4 @@ class _EntryScreenState extends State<EntryScreen> {
 /// Comment for accounts feature - accounts-feature
 /// Comment for transactions feature - transactions-feature
 
+/// Comment for tests for accounts and transactions
