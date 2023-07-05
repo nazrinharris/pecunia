@@ -1,4 +1,4 @@
-![Pecunia Banner](/assets/readme/Banner.png)
+![Pecunia Banner](/assets/readme/Banner%20V2.png)
 
 # Pecunia: Personal Finance Management 💸
 
