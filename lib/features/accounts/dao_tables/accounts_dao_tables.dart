@@ -109,6 +109,8 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
     await into(accountsTable).insert(account.toCompanion(false));
   }
 
+  /// Deletes the account by the [id] from the [AccountDTO], may be changed in the future
+  /// so that we can just supply the [id], but I'll keep it as is for now.
   Future<void> deleteAccount(AccountDTO account) async {
     await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
   }

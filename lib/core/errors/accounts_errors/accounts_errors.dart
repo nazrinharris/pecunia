@@ -86,21 +86,21 @@ AccountsFailure mapDriftToAccountsFailure<T extends Failure>(
     AccountsAction accountsAction, Object error, StackTrace stackTrace) {
   assert(T is AccountsFailure, 'This [mapDriftToFailure] is used out of where its supposed to.');
 
-  if (error is DriftRemoteException && error.remoteCause is SqliteException) {
-    final cause = error.remoteCause as SqliteException;
-    return AccountsFailure(
-      accountsAction: accountsAction,
-      errorType: AccountsErrorType.sqliteException,
-      message: '${cause.message} \n${cause.causingStatement}',
-      stackTrace: stackTrace,
-      rawException: error,
-    );
-  } else {
-    return AccountsFailure.unknown(
-      stackTrace: stackTrace,
-      message: AccountsErrorType.unknown.message,
-      accountsAction: accountsAction,
-      rawException: error,
-    );
+  switch (error) {
+    case DriftRemoteException(remoteCause: SqliteException):
+      final cause = error.remoteCause as SqliteException;
+      return AccountsFailure(
+        stackTrace: stackTrace,
+        message: '${cause.message} \n${cause.causingStatement}',
+        accountsAction: accountsAction,
+        errorType: AccountsErrorType.sqliteException,
+      );
+    default:
+      return AccountsFailure.unknown(
+        stackTrace: stackTrace,
+        message: AccountsErrorType.unknown.message,
+        accountsAction: accountsAction,
+        rawException: error,
+      );
   }
 }

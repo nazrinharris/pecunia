@@ -19,6 +19,7 @@ enum TransactionsAction {
   delete,
   edit,
   getTransactionsByAccount,
+  getTransactionById,
   getAllTransactions,
   unknown,
 }

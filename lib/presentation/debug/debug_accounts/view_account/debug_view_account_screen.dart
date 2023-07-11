@@ -62,7 +62,7 @@ class DebugViewAccountScreen extends ConsumerWidget {
       case AsyncData():
         return AccountDetails(acc.value);
       default:
-        return throw UnimplementedError();
+        throw UnimplementedError();
     }
   }
 }
