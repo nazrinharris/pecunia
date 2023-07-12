@@ -39,7 +39,7 @@ void main() {
     );
 
     testIncomeTxn = Transaction(
-      id: 'id',
+      id: 'id_income',
       creatorUid: 'creatorUid',
       name: 'name',
       transactionDescription: TransactionDescription('input'),
@@ -53,7 +53,7 @@ void main() {
     );
 
     testExpenseTxn = Transaction(
-      id: 'id',
+      id: 'id_expense',
       creatorUid: 'creatorUid',
       name: 'name',
       transactionDescription: TransactionDescription('input'),
@@ -143,19 +143,33 @@ void main() {
     // Run editTransaction() with the updated transaction data
     await transactionsDAO
         .editTransaction(
-          newTxnDTO: testIncomeTxn.copyWith(name: 'updated_name').toDTO(),
+          newTxnDTO: testIncomeTxn
+              .copyWith(
+                name: 'updated_name',
+                fundDetails: testIncomeTxn.fundDetails.copyWith(originalAmount: 30),
+              )
+              .toDTO(),
           oldTxnDto: testIncomeTxn.toDTO(),
         )
         .run();
     final txnResult = await transactionsDAO.getTransactionById(testIncomeTxn.id).run();
+    final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
     // Assert
     // Check if the transaction data is updated in the database
     // Check if the account balance is updated correctly
     txnResult.fold(
       (l) => fail('Operation failed with error: $l'),
-      (dto) => expect(Transaction.fromDTO(dto, TransactionsAction.edit),
-          equals(testIncomeTxn.copyWith(name: 'updated_name'))),
+      (dto) => expect(
+          Transaction.fromDTO(dto, TransactionsAction.edit),
+          equals(testIncomeTxn.copyWith(
+            name: 'updated_name',
+            fundDetails: testIncomeTxn.fundDetails.copyWith(originalAmount: 30),
+          ))),
+    );
+    accountResult.fold(
+      (l) => fail('Operation failed with error: $l'),
+      (dto) => expect(Account.fromDTO(dto), equals(testAccount.copyWith(balance: 30))),
     );
 
     // Clean up
@@ -196,11 +210,29 @@ void main() {
   test('getAllTransactions() should retrieve all transactions', () async {
     // Arrange
     // Create multiple transactions for multiple accounts
+    await accountsDAO.insertAccount(testAccount.toDTO());
+    await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
+    await transactionsDAO.createTransaction(testExpenseTxn.toDTO()).run();
 
     // Act
     // Run getAllTransactions()
+    final result = await transactionsDAO.getAllTransactions().run();
 
     // Assert
     // Check if the retrieved transactions match the expected total set of transactions
+    result.fold(
+      (l) => fail('Operation failed with error: $l'),
+      (list) {
+        final expectedList =
+            list.map((dto) => Transaction.fromDTO(dto, TransactionsAction.getAllTransactions)).toList();
+        expect(expectedList, contains(testIncomeTxn));
+        expect(expectedList, contains(testExpenseTxn));
+      },
+    );
+
+    // Clean up
+    await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
+    await transactionsDAO.deleteTransaction(testExpenseTxn.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.toDTO());
   });
 }

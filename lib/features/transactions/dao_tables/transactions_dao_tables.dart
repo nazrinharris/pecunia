@@ -194,7 +194,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
   /// of the transaction type is inverted - debits will add to the balance,
   /// and credits will subtract. Useful when, for example, deleting a transaction.
   ///
-  /// Returns a [double] value representing the new balance of the account after
+  /// Returns an [AccountDTO] with the updated balance after
   /// the transaction has been applied (or reversed, if shouldReverseTransaction is true).
   AccountDTO _calculateBalanceByOneTransaction({
     required AccountDTO accountDto,
