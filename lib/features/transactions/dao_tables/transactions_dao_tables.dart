@@ -49,15 +49,15 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     return TaskEither.tryCatch(
       () async {
         return transaction(() async {
-          await _insertTransactionToTable(txnDto);
-          final accountDto = await _retrieveAccountById(txnDto);
+          await insertTransactionToTable(txnDto);
+          final accountDto = await retrieveAccountById(txnDto);
           final txnType = TransactionType.fromString(txnDto.transactionType, currentAction);
           final updatedAccountDTO = _calculateBalanceByOneTransaction(
             accountDto: accountDto,
             txnDto: txnDto,
             txnType: txnType,
           );
-          await _updateAccountDTO(updatedAccountDTO);
+          await updateAccountDTO(updatedAccountDTO);
         }).then((_) => unit);
       },
       (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
@@ -68,7 +68,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     const currentAction = TransactionsAction.delete;
     return TaskEither.tryCatch(
       () async => transaction(() async {
-        final accountDto = await _retrieveAccountById(txnDto);
+        final accountDto = await retrieveAccountById(txnDto);
         final txnType = TransactionType.fromString(txnDto.transactionType, currentAction);
         final updatedAccountDTO = _calculateBalanceByOneTransaction(
           accountDto: accountDto,
@@ -77,7 +77,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           shouldReverseTransaction: true,
         );
 
-        await _updateAccountDTO(updatedAccountDTO);
+        await updateAccountDTO(updatedAccountDTO);
         await (delete(transactionsTable)..where((tbl) => tbl.id.equals(txnDto.id))).go();
         return unit;
       }),
@@ -93,7 +93,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     return TaskEither.tryCatch(
       () async => transaction(() async {
         // Retrieve and setup required data
-        final accountDto = await _retrieveAccountById(oldTxnDto);
+        final accountDto = await retrieveAccountById(oldTxnDto);
         final oldTxnType = TransactionType.fromString(oldTxnDto.transactionType, currentAction);
         final newTxnType = TransactionType.fromString(newTxnDTO.transactionType, currentAction);
 
@@ -113,7 +113,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
         );
 
         // Update the account and transactions
-        await _updateAccountDTO(updatedAccountDTO);
+        await updateAccountDTO(updatedAccountDTO);
         await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxnDto.id)))
             .write(newTxnDTO.toCompanion(true));
         return unit;
@@ -132,6 +132,27 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     );
   }
 
+  TaskEither<TransactionsFailure, TransactionDTO> getTransactionById(String txnId) {
+    const currentAction = TransactionsAction.getTransactionById;
+    return TaskEither.tryCatch(
+      () async {
+        final result =
+            await (select(transactionsTable)..where((tbl) => tbl.id.equals(txnId))).getSingleOrNull();
+
+        if (result == null) {
+          throw TransactionsException(
+            stackTrace: StackTrace.current,
+            errorType: TransactionsErrorType.transactionNotFound,
+            transactionsAction: currentAction,
+          );
+        } else {
+          return result;
+        }
+      },
+      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+    );
+  }
+
   TaskEither<TransactionsFailure, List<TransactionDTO>> getAllTransactions() {
     const currentAction = TransactionsAction.getAllTransactions;
     return TaskEither.tryCatch(
@@ -145,15 +166,15 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
   // must be directly related to the database actions.
   // ********************************************************************************************************
 
-  Future<AccountDTO> _retrieveAccountById(TransactionDTO txnDto) async {
+  Future<AccountDTO> retrieveAccountById(TransactionDTO txnDto) async {
     return (select(accountsTable)..where((tbl) => tbl.id.equals(txnDto.accountId))).getSingle();
   }
 
-  Future<void> _insertTransactionToTable(TransactionDTO txnDto) async {
+  Future<void> insertTransactionToTable(TransactionDTO txnDto) async {
     await into(transactionsTable).insert(txnDto.toCompanion(false));
   }
 
-  Future<void> _updateAccountDTO(AccountDTO accountDto) async {
+  Future<void> updateAccountDTO(AccountDTO accountDto) async {
     await update(accountsTable).replace(accountDto.toCompanion(false));
   }
 
@@ -173,7 +194,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
   /// of the transaction type is inverted - debits will add to the balance,
   /// and credits will subtract. Useful when, for example, deleting a transaction.
   ///
-  /// Returns a [double] value representing the new balance of the account after
+  /// Returns an [AccountDTO] with the updated balance after
   /// the transaction has been applied (or reversed, if shouldReverseTransaction is true).
   AccountDTO _calculateBalanceByOneTransaction({
     required AccountDTO accountDto,

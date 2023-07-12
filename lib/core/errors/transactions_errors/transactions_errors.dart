@@ -15,14 +15,15 @@ part 'transactions_errors.freezed.dart';
 /// These are here because I cannot use the [TransactionsErrorType] enum to retrieve the
 /// error message and code because they are not constant.
 const unknownTransactionErrorCode = 'unknown-transaction-error';
-const unknownTransactionErrorMessage = "We're not sure what happened, please try again.";
+const unknownTransactionErrorMessage = "We're not sure what happened, please try again";
 
 enum TransactionsErrorType {
   unknown(unknownTransactionErrorCode, unknownTransactionErrorMessage),
   cannotConvertToDTO(
-      'cannot-convert-to-dto', 'Something went wrong while converting the transaction to a DTO.'),
-  sqliteException('sqlite-exception', 'Something went wrong while accessing the database.'),
-  invalidType('invalid-type', 'The transaction type is invalid');
+      'cannot-convert-to-dto', 'Something went wrong while converting the transaction to a DTO'),
+  sqliteException('sqlite-exception', 'Something went wrong while accessing the database'),
+  invalidType('invalid-type', 'The transaction type is invalid'),
+  transactionNotFound('transaction-not-found', 'The transaction was not found in the database');
 
   const TransactionsErrorType(this.code, this.message);
 
