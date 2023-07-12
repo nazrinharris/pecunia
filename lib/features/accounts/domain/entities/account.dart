@@ -47,7 +47,7 @@ class Account with _$Account {
       initialBalance: dto.initialBalance,
       balance: dto.balance,
       currency: dto.currency,
-      createdOn: dto.createdOn,
+      createdOn: dto.createdOn.toUtc(),
       description: AccountDescription(dto.description),
     );
   }
@@ -60,7 +60,7 @@ class Account with _$Account {
       initialBalance: initialBalance,
       balance: balance,
       currency: currency,
-      createdOn: createdOn,
+      createdOn: createdOn.toUtc(),
       description: description.value,
     );
   }
@@ -83,4 +83,14 @@ class AccountDescription {
     }
     return input;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AccountDescription && other.value == value;
+  }
+
+  @override
+  int get hashCode => value.hashCode;
 }

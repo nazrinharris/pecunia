@@ -31,7 +31,7 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Simple authentication and integration with `supabase`.
 - [x] Local database setup with `drift`.
 - [x] Accounts creation, deletion, editing, and viewing.
-- [ ] Transaction creation, deletion, editing and viewing.
+- [x] Transaction creation, deletion, editing and viewing.
 - [ ] Transferring funds between accounts (and multi-currency transactions).
 - [ ] Transaction categories.
 - [ ] Simple budget creation, deletion, editin, and viewing.

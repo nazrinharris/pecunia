@@ -56,7 +56,7 @@ class Transaction with _$Transaction {
         creatorUid: creatorUid,
         name: name,
         transactionDescription: transactionDescription,
-        transactionDate: transactionDate,
+        transactionDate: transactionDate.toUtc(),
         accountId: accountId,
         type: type,
         fundDetails: fundDetails,
@@ -68,7 +68,7 @@ class Transaction with _$Transaction {
       creatorUid: dto.creatorUid,
       name: dto.name,
       transactionDescription: TransactionDescription(dto.description),
-      transactionDate: dto.transactionDate,
+      transactionDate: dto.transactionDate.toUtc(),
       accountId: dto.accountId,
       type: TransactionType.fromString(dto.transactionType, action),
       fundDetails: FundDetails.fromDTO(dto),
@@ -81,7 +81,7 @@ class Transaction with _$Transaction {
       creatorUid: creatorUid,
       name: name,
       description: transactionDescription.value,
-      transactionDate: transactionDate,
+      transactionDate: transactionDate.toUtc(),
       accountId: accountId,
       transactionType: type.typeAsString,
       originalAmount: fundDetails.originalAmount,
@@ -131,4 +131,14 @@ class TransactionDescription {
     }
     return input;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TransactionDescription && other.value == value;
+  }
+
+  @override
+  int get hashCode => value.hashCode;
 }

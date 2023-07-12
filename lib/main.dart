@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_dialogs/flutter_easy_dialogs.dart';
 import 'package:full_screen_dialog_manager/full_screen_dialog_manager.dart';
@@ -61,6 +62,7 @@ class _EntryScreenState extends State<EntryScreen> {
     super.initState();
     if (isDebugMode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        print(Theme.of(context).colorScheme.background);
         context.go('/debug-login');
       });
     }
@@ -70,7 +72,7 @@ class _EntryScreenState extends State<EntryScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: CupertinoActivityIndicator(),
       ),
     );
   }
@@ -84,3 +86,4 @@ class _EntryScreenState extends State<EntryScreen> {
 /// Comment for transactions feature - transactions-feature
 /// Comment for multi-currency and transfer feature - multi-currency-and-transfer-feature
 
+/// Comment for tests for accounts and transactions
