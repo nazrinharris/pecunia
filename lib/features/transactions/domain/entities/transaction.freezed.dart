@@ -299,11 +299,11 @@ abstract class _Transaction extends Transaction {
 
 /// @nodoc
 mixin _$FundDetails {
-  double get originalAmount => throw _privateConstructorUsedError;
-  String get originalCurrency => throw _privateConstructorUsedError;
+  double get baseAmount => throw _privateConstructorUsedError;
+  String get baseCurrency => throw _privateConstructorUsedError;
   double? get exchangeRate => throw _privateConstructorUsedError;
-  double? get exchangedToAmount => throw _privateConstructorUsedError;
-  String? get exchangedToCurrency => throw _privateConstructorUsedError;
+  double? get targetAmount => throw _privateConstructorUsedError;
+  String? get targetCurrency => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FundDetailsCopyWith<FundDetails> get copyWith =>
@@ -317,11 +317,11 @@ abstract class $FundDetailsCopyWith<$Res> {
       _$FundDetailsCopyWithImpl<$Res, FundDetails>;
   @useResult
   $Res call(
-      {double originalAmount,
-      String originalCurrency,
+      {double baseAmount,
+      String baseCurrency,
       double? exchangeRate,
-      double? exchangedToAmount,
-      String? exchangedToCurrency});
+      double? targetAmount,
+      String? targetCurrency});
 }
 
 /// @nodoc
@@ -337,32 +337,32 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? originalAmount = null,
-    Object? originalCurrency = null,
+    Object? baseAmount = null,
+    Object? baseCurrency = null,
     Object? exchangeRate = freezed,
-    Object? exchangedToAmount = freezed,
-    Object? exchangedToCurrency = freezed,
+    Object? targetAmount = freezed,
+    Object? targetCurrency = freezed,
   }) {
     return _then(_value.copyWith(
-      originalAmount: null == originalAmount
-          ? _value.originalAmount
-          : originalAmount // ignore: cast_nullable_to_non_nullable
+      baseAmount: null == baseAmount
+          ? _value.baseAmount
+          : baseAmount // ignore: cast_nullable_to_non_nullable
               as double,
-      originalCurrency: null == originalCurrency
-          ? _value.originalCurrency
-          : originalCurrency // ignore: cast_nullable_to_non_nullable
+      baseCurrency: null == baseCurrency
+          ? _value.baseCurrency
+          : baseCurrency // ignore: cast_nullable_to_non_nullable
               as String,
       exchangeRate: freezed == exchangeRate
           ? _value.exchangeRate
           : exchangeRate // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToAmount: freezed == exchangedToAmount
-          ? _value.exchangedToAmount
-          : exchangedToAmount // ignore: cast_nullable_to_non_nullable
+      targetAmount: freezed == targetAmount
+          ? _value.targetAmount
+          : targetAmount // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToCurrency: freezed == exchangedToCurrency
-          ? _value.exchangedToCurrency
-          : exchangedToCurrency // ignore: cast_nullable_to_non_nullable
+      targetCurrency: freezed == targetCurrency
+          ? _value.targetCurrency
+          : targetCurrency // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -377,11 +377,11 @@ abstract class _$$_FundDetailsCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {double originalAmount,
-      String originalCurrency,
+      {double baseAmount,
+      String baseCurrency,
       double? exchangeRate,
-      double? exchangedToAmount,
-      String? exchangedToCurrency});
+      double? targetAmount,
+      String? targetCurrency});
 }
 
 /// @nodoc
@@ -395,32 +395,32 @@ class __$$_FundDetailsCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? originalAmount = null,
-    Object? originalCurrency = null,
+    Object? baseAmount = null,
+    Object? baseCurrency = null,
     Object? exchangeRate = freezed,
-    Object? exchangedToAmount = freezed,
-    Object? exchangedToCurrency = freezed,
+    Object? targetAmount = freezed,
+    Object? targetCurrency = freezed,
   }) {
     return _then(_$_FundDetails(
-      originalAmount: null == originalAmount
-          ? _value.originalAmount
-          : originalAmount // ignore: cast_nullable_to_non_nullable
+      baseAmount: null == baseAmount
+          ? _value.baseAmount
+          : baseAmount // ignore: cast_nullable_to_non_nullable
               as double,
-      originalCurrency: null == originalCurrency
-          ? _value.originalCurrency
-          : originalCurrency // ignore: cast_nullable_to_non_nullable
+      baseCurrency: null == baseCurrency
+          ? _value.baseCurrency
+          : baseCurrency // ignore: cast_nullable_to_non_nullable
               as String,
       exchangeRate: freezed == exchangeRate
           ? _value.exchangeRate
           : exchangeRate // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToAmount: freezed == exchangedToAmount
-          ? _value.exchangedToAmount
-          : exchangedToAmount // ignore: cast_nullable_to_non_nullable
+      targetAmount: freezed == targetAmount
+          ? _value.targetAmount
+          : targetAmount // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToCurrency: freezed == exchangedToCurrency
-          ? _value.exchangedToCurrency
-          : exchangedToCurrency // ignore: cast_nullable_to_non_nullable
+      targetCurrency: freezed == targetCurrency
+          ? _value.targetCurrency
+          : targetCurrency // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -430,27 +430,27 @@ class __$$_FundDetailsCopyWithImpl<$Res>
 
 class _$_FundDetails extends _FundDetails {
   const _$_FundDetails(
-      {required this.originalAmount,
-      required this.originalCurrency,
+      {required this.baseAmount,
+      required this.baseCurrency,
       this.exchangeRate,
-      this.exchangedToAmount,
-      this.exchangedToCurrency})
+      this.targetAmount,
+      this.targetCurrency})
       : super._();
 
   @override
-  final double originalAmount;
+  final double baseAmount;
   @override
-  final String originalCurrency;
+  final String baseCurrency;
   @override
   final double? exchangeRate;
   @override
-  final double? exchangedToAmount;
+  final double? targetAmount;
   @override
-  final String? exchangedToCurrency;
+  final String? targetCurrency;
 
   @override
   String toString() {
-    return 'FundDetails(originalAmount: $originalAmount, originalCurrency: $originalCurrency, exchangeRate: $exchangeRate, exchangedToAmount: $exchangedToAmount, exchangedToCurrency: $exchangedToCurrency)';
+    return 'FundDetails(baseAmount: $baseAmount, baseCurrency: $baseCurrency, exchangeRate: $exchangeRate, targetAmount: $targetAmount, targetCurrency: $targetCurrency)';
   }
 
   @override
@@ -458,21 +458,21 @@ class _$_FundDetails extends _FundDetails {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FundDetails &&
-            (identical(other.originalAmount, originalAmount) ||
-                other.originalAmount == originalAmount) &&
-            (identical(other.originalCurrency, originalCurrency) ||
-                other.originalCurrency == originalCurrency) &&
+            (identical(other.baseAmount, baseAmount) ||
+                other.baseAmount == baseAmount) &&
+            (identical(other.baseCurrency, baseCurrency) ||
+                other.baseCurrency == baseCurrency) &&
             (identical(other.exchangeRate, exchangeRate) ||
                 other.exchangeRate == exchangeRate) &&
-            (identical(other.exchangedToAmount, exchangedToAmount) ||
-                other.exchangedToAmount == exchangedToAmount) &&
-            (identical(other.exchangedToCurrency, exchangedToCurrency) ||
-                other.exchangedToCurrency == exchangedToCurrency));
+            (identical(other.targetAmount, targetAmount) ||
+                other.targetAmount == targetAmount) &&
+            (identical(other.targetCurrency, targetCurrency) ||
+                other.targetCurrency == targetCurrency));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, originalAmount, originalCurrency,
-      exchangeRate, exchangedToAmount, exchangedToCurrency);
+  int get hashCode => Object.hash(runtimeType, baseAmount, baseCurrency,
+      exchangeRate, targetAmount, targetCurrency);
 
   @JsonKey(ignore: true)
   @override
@@ -483,23 +483,23 @@ class _$_FundDetails extends _FundDetails {
 
 abstract class _FundDetails extends FundDetails {
   const factory _FundDetails(
-      {required final double originalAmount,
-      required final String originalCurrency,
+      {required final double baseAmount,
+      required final String baseCurrency,
       final double? exchangeRate,
-      final double? exchangedToAmount,
-      final String? exchangedToCurrency}) = _$_FundDetails;
+      final double? targetAmount,
+      final String? targetCurrency}) = _$_FundDetails;
   const _FundDetails._() : super._();
 
   @override
-  double get originalAmount;
+  double get baseAmount;
   @override
-  String get originalCurrency;
+  String get baseCurrency;
   @override
   double? get exchangeRate;
   @override
-  double? get exchangedToAmount;
+  double? get targetAmount;
   @override
-  String? get exchangedToCurrency;
+  String? get targetCurrency;
   @override
   @JsonKey(ignore: true)
   _$$_FundDetailsCopyWith<_$_FundDetails> get copyWith =>

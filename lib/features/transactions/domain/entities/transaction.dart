@@ -85,11 +85,11 @@ class Transaction with _$Transaction {
       accountId: accountId,
       transactionType: type.typeAsString,
       transactionAmount: fundDetails.transactionAmount,
-      originalAmount: fundDetails.originalAmount,
-      originalCurrency: fundDetails.originalCurrency,
+      baseAmount: fundDetails.baseAmount,
+      baseCurrency: fundDetails.baseCurrency,
       exchangeRate: fundDetails.exchangeRate,
-      exchangedToAmount: fundDetails.exchangedToAmount,
-      exchangedToCurrency: fundDetails.exchangedToCurrency,
+      targetAmount: fundDetails.targetAmount,
+      targetCurrency: fundDetails.targetCurrency,
     );
   }
 }
@@ -101,31 +101,31 @@ class Transaction with _$Transaction {
 @freezed
 class FundDetails with _$FundDetails {
   const factory FundDetails({
-    required double originalAmount,
-    required String originalCurrency,
+    required double baseAmount,
+    required String baseCurrency,
     double? exchangeRate,
-    double? exchangedToAmount,
-    String? exchangedToCurrency,
+    double? targetAmount,
+    String? targetCurrency,
   }) = _FundDetails; // Added transactionAmount getter
 
   factory FundDetails.fromDTO(TransactionDTO dto) {
     double? exchangedAmount;
-    if (dto.exchangeRate != null && dto.exchangedToCurrency != null) {
-      exchangedAmount = dto.originalAmount * dto.exchangeRate!;
+    if (dto.exchangeRate != null && dto.targetCurrency != null) {
+      exchangedAmount = dto.baseAmount * dto.exchangeRate!;
     }
 
     return FundDetails(
-      originalAmount: dto.originalAmount,
-      originalCurrency: dto.originalCurrency,
+      baseAmount: dto.baseAmount,
+      baseCurrency: dto.baseCurrency,
       exchangeRate: dto.exchangeRate,
-      exchangedToAmount: exchangedAmount,
-      exchangedToCurrency: dto.exchangedToCurrency,
+      targetAmount: exchangedAmount,
+      targetCurrency: dto.targetCurrency,
     );
   }
 
   const FundDetails._();
 
-  double get transactionAmount => exchangedToAmount ?? originalAmount;
+  double get transactionAmount => targetAmount ?? baseAmount;
 }
 
 /// Value object for the description of a transaction

@@ -282,7 +282,7 @@ class GetTransactionsByAccountIdProvider
   }
 }
 
-String _$editTransactionHash() => r'00eba1a7ab30d9cf416c4dfad7c27d01831bf6f1';
+String _$editTransactionHash() => r'c3f303bb491627b7884c4b7d911f47126b57a040';
 
 /// See also [EditTransaction].
 @ProviderFor(EditTransaction)

@@ -36,11 +36,11 @@ class TransactionsRepo {
     required DateTime transactionDate,
     required String accountId,
     required String type,
-    required double originalAmount,
-    required String originalCurrency,
+    required double baseAmount,
+    required String baseCurrency,
     double? exchangeRate,
-    double? exchangedToAmount,
-    String? exchangedToCurrency,
+    double? targetAmount,
+    String? targetCurrency,
     String? transactionDescription,
   }) {
     const currentAction = TransactionsAction.create;
@@ -52,11 +52,11 @@ class TransactionsRepo {
       accountId: accountId,
       type: TransactionType.fromString(type, currentAction),
       fundDetails: FundDetails(
-        originalAmount: originalAmount,
-        originalCurrency: originalCurrency,
+        baseAmount: baseAmount,
+        baseCurrency: baseCurrency,
         exchangeRate: exchangeRate,
-        exchangedToAmount: exchangedToAmount,
-        exchangedToCurrency: exchangedToCurrency,
+        targetAmount: targetAmount,
+        targetCurrency: targetCurrency,
       ),
       uuid: uuid,
     );

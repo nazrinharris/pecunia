@@ -55,7 +55,7 @@ class EditTransaction extends _$EditTransaction {
       name: txnName,
       transactionDescription: TransactionDescription(txnDescription),
       type: TransactionType.fromString(txnType, TransactionsAction.edit),
-      fundDetails: oldTxn.fundDetails.copyWith(originalAmount: txnAmount),
+      fundDetails: oldTxn.fundDetails.copyWith(baseAmount: txnAmount),
     );
 
     (await ref.read(transactionsRepoProvider).updateTransaction(newTxn: newTxn, oldTxn: oldTxn).run()).fold(

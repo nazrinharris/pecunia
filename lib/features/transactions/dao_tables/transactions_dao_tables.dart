@@ -25,11 +25,11 @@ class TransactionsTable extends Table {
 
   // These fields are kept in [FundDetails]
   RealColumn get transactionAmount => real()();
-  RealColumn get originalAmount => real()();
-  TextColumn get originalCurrency => text().withLength(min: 3, max: 3)();
+  RealColumn get baseAmount => real()();
+  TextColumn get baseCurrency => text().withLength(min: 3, max: 3)();
   RealColumn get exchangeRate => real().nullable()();
-  RealColumn get exchangedToAmount => real().nullable()();
-  TextColumn get exchangedToCurrency => text().withLength(min: 3, max: 3).nullable()();
+  RealColumn get targetAmount => real().nullable()();
+  TextColumn get targetCurrency => text().withLength(min: 3, max: 3).nullable()();
 
   /// The id of the transaction that this transaction is a transfer of.
   TextColumn get transferLinkId => text().nullable()();

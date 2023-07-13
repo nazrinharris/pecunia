@@ -47,8 +47,8 @@ class CreateTransaction extends _$CreateTransaction {
                 transactionDate: DateTime.now(),
                 accountId: accountId,
                 type: type,
-                originalAmount: amount,
-                originalCurrency: currency,
+                baseAmount: amount,
+                baseCurrency: currency,
                 transactionDescription: description,
               )
               .run())

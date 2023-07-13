@@ -47,8 +47,8 @@ void main() {
       accountId: testAccount.id,
       type: TransactionType.credit,
       fundDetails: const FundDetails(
-        originalAmount: 10,
-        originalCurrency: 'TST',
+        baseAmount: 10,
+        baseCurrency: 'TST',
       ),
     );
 
@@ -61,8 +61,8 @@ void main() {
       accountId: testAccount.id,
       type: TransactionType.debit,
       fundDetails: const FundDetails(
-        originalAmount: 10,
-        originalCurrency: 'TST',
+        baseAmount: 10,
+        baseCurrency: 'TST',
       ),
     );
   });
@@ -146,7 +146,7 @@ void main() {
           newTxnDTO: testIncomeTxn
               .copyWith(
                 name: 'updated_name',
-                fundDetails: testIncomeTxn.fundDetails.copyWith(originalAmount: 30),
+                fundDetails: testIncomeTxn.fundDetails.copyWith(baseAmount: 30),
               )
               .toDTO(),
           oldTxnDto: testIncomeTxn.toDTO(),
@@ -164,7 +164,7 @@ void main() {
           Transaction.fromDTO(dto, TransactionsAction.edit),
           equals(testIncomeTxn.copyWith(
             name: 'updated_name',
-            fundDetails: testIncomeTxn.fundDetails.copyWith(originalAmount: 30),
+            fundDetails: testIncomeTxn.fundDetails.copyWith(baseAmount: 30),
           ))),
     );
     accountResult.fold(

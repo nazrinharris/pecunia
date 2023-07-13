@@ -354,7 +354,7 @@ class BuildTxnAmountText extends ConsumerWidget {
           ),
         const SizedBox(width: 10),
         Text(
-          txn.fundDetails.originalCurrency,
+          txn.fundDetails.baseCurrency,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,
@@ -422,7 +422,10 @@ class BottomSheetContent extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: 'txn_id: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[300],
+                        ),
                     children: <TextSpan>[
                       TextSpan(text: txn.id, style: DefaultTextStyle.of(context).style),
                     ],
@@ -432,7 +435,10 @@ class BottomSheetContent extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: 'acc_id: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[300],
+                        ),
                     children: <TextSpan>[
                       TextSpan(text: txn.accountId, style: DefaultTextStyle.of(context).style),
                     ],
@@ -442,7 +448,10 @@ class BottomSheetContent extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: 'creator_id: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[300],
+                        ),
                     children: <TextSpan>[
                       TextSpan(text: txn.creatorUid, style: DefaultTextStyle.of(context).style),
                     ],
@@ -452,7 +461,10 @@ class BottomSheetContent extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: 'txn_type: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[300],
+                        ),
                     children: <TextSpan>[
                       TextSpan(text: txn.type.typeAsString, style: DefaultTextStyle.of(context).style),
                     ],
@@ -462,7 +474,10 @@ class BottomSheetContent extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: 'txn_date: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[300],
+                        ),
                     children: <TextSpan>[
                       TextSpan(
                           text: txn.transactionDate.toString(), style: DefaultTextStyle.of(context).style),
@@ -473,7 +488,10 @@ class BottomSheetContent extends ConsumerWidget {
                 RichText(
                   text: TextSpan(
                     text: 'txn_amount: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepPurple[200],
+                        ),
                     children: <TextSpan>[
                       TextSpan(
                           text: txn.fundDetails.transactionAmount.toString(),
@@ -484,58 +502,72 @@ class BottomSheetContent extends ConsumerWidget {
                 const SizedBox(height: 4),
                 RichText(
                   text: TextSpan(
-                    text: 'original_currency: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.originalCurrency, style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'original_amount: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.originalAmount.toString(),
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'exchanged_to_currency: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.exchangedToCurrency,
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'exchanged_amount: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.exchangedToAmount.toString(),
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
                     text: 'exchange_rate: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepPurple[200],
+                        ),
                     children: <TextSpan>[
                       TextSpan(
                           text: txn.fundDetails.exchangeRate.toString(),
+                          style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'base_currency: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[200],
+                        ),
+                    children: <TextSpan>[
+                      TextSpan(text: txn.fundDetails.baseCurrency, style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'base_amount: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[200],
+                        ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.baseAmount.toString(),
+                          style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'target_currency: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.pink[200],
+                        ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.targetCurrency.toString(),
+                          style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'target_amount: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.pink[200],
+                        ),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.targetAmount.toString(),
                           style: DefaultTextStyle.of(context).style),
                     ],
                   ),

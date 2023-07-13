@@ -494,17 +494,17 @@ class $TransactionsTableTable extends TransactionsTable
   late final GeneratedColumn<double> transactionAmount =
       GeneratedColumn<double>('transaction_amount', aliasedName, false,
           type: DriftSqlType.double, requiredDuringInsert: true);
-  static const VerificationMeta _originalAmountMeta =
-      const VerificationMeta('originalAmount');
+  static const VerificationMeta _baseAmountMeta =
+      const VerificationMeta('baseAmount');
   @override
-  late final GeneratedColumn<double> originalAmount = GeneratedColumn<double>(
-      'original_amount', aliasedName, false,
+  late final GeneratedColumn<double> baseAmount = GeneratedColumn<double>(
+      'base_amount', aliasedName, false,
       type: DriftSqlType.double, requiredDuringInsert: true);
-  static const VerificationMeta _originalCurrencyMeta =
-      const VerificationMeta('originalCurrency');
+  static const VerificationMeta _baseCurrencyMeta =
+      const VerificationMeta('baseCurrency');
   @override
-  late final GeneratedColumn<String> originalCurrency = GeneratedColumn<String>(
-      'original_currency', aliasedName, false,
+  late final GeneratedColumn<String> baseCurrency = GeneratedColumn<String>(
+      'base_currency', aliasedName, false,
       additionalChecks:
           GeneratedColumn.checkTextLength(minTextLength: 3, maxTextLength: 3),
       type: DriftSqlType.string,
@@ -515,21 +515,21 @@ class $TransactionsTableTable extends TransactionsTable
   late final GeneratedColumn<double> exchangeRate = GeneratedColumn<double>(
       'exchange_rate', aliasedName, true,
       type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _exchangedToAmountMeta =
-      const VerificationMeta('exchangedToAmount');
+  static const VerificationMeta _targetAmountMeta =
+      const VerificationMeta('targetAmount');
   @override
-  late final GeneratedColumn<double> exchangedToAmount =
-      GeneratedColumn<double>('exchanged_to_amount', aliasedName, true,
-          type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _exchangedToCurrencyMeta =
-      const VerificationMeta('exchangedToCurrency');
+  late final GeneratedColumn<double> targetAmount = GeneratedColumn<double>(
+      'target_amount', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _targetCurrencyMeta =
+      const VerificationMeta('targetCurrency');
   @override
-  late final GeneratedColumn<String> exchangedToCurrency =
-      GeneratedColumn<String>('exchanged_to_currency', aliasedName, true,
-          additionalChecks: GeneratedColumn.checkTextLength(
-              minTextLength: 3, maxTextLength: 3),
-          type: DriftSqlType.string,
-          requiredDuringInsert: false);
+  late final GeneratedColumn<String> targetCurrency = GeneratedColumn<String>(
+      'target_currency', aliasedName, true,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 3, maxTextLength: 3),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
   static const VerificationMeta _transferLinkIdMeta =
       const VerificationMeta('transferLinkId');
   @override
@@ -546,11 +546,11 @@ class $TransactionsTableTable extends TransactionsTable
         accountId,
         transactionType,
         transactionAmount,
-        originalAmount,
-        originalCurrency,
+        baseAmount,
+        baseCurrency,
         exchangeRate,
-        exchangedToAmount,
-        exchangedToCurrency,
+        targetAmount,
+        targetCurrency,
         transferLinkId
       ];
   @override
@@ -617,21 +617,21 @@ class $TransactionsTableTable extends TransactionsTable
     } else if (isInserting) {
       context.missing(_transactionAmountMeta);
     }
-    if (data.containsKey('original_amount')) {
+    if (data.containsKey('base_amount')) {
       context.handle(
-          _originalAmountMeta,
-          originalAmount.isAcceptableOrUnknown(
-              data['original_amount']!, _originalAmountMeta));
+          _baseAmountMeta,
+          baseAmount.isAcceptableOrUnknown(
+              data['base_amount']!, _baseAmountMeta));
     } else if (isInserting) {
-      context.missing(_originalAmountMeta);
+      context.missing(_baseAmountMeta);
     }
-    if (data.containsKey('original_currency')) {
+    if (data.containsKey('base_currency')) {
       context.handle(
-          _originalCurrencyMeta,
-          originalCurrency.isAcceptableOrUnknown(
-              data['original_currency']!, _originalCurrencyMeta));
+          _baseCurrencyMeta,
+          baseCurrency.isAcceptableOrUnknown(
+              data['base_currency']!, _baseCurrencyMeta));
     } else if (isInserting) {
-      context.missing(_originalCurrencyMeta);
+      context.missing(_baseCurrencyMeta);
     }
     if (data.containsKey('exchange_rate')) {
       context.handle(
@@ -639,17 +639,17 @@ class $TransactionsTableTable extends TransactionsTable
           exchangeRate.isAcceptableOrUnknown(
               data['exchange_rate']!, _exchangeRateMeta));
     }
-    if (data.containsKey('exchanged_to_amount')) {
+    if (data.containsKey('target_amount')) {
       context.handle(
-          _exchangedToAmountMeta,
-          exchangedToAmount.isAcceptableOrUnknown(
-              data['exchanged_to_amount']!, _exchangedToAmountMeta));
+          _targetAmountMeta,
+          targetAmount.isAcceptableOrUnknown(
+              data['target_amount']!, _targetAmountMeta));
     }
-    if (data.containsKey('exchanged_to_currency')) {
+    if (data.containsKey('target_currency')) {
       context.handle(
-          _exchangedToCurrencyMeta,
-          exchangedToCurrency.isAcceptableOrUnknown(
-              data['exchanged_to_currency']!, _exchangedToCurrencyMeta));
+          _targetCurrencyMeta,
+          targetCurrency.isAcceptableOrUnknown(
+              data['target_currency']!, _targetCurrencyMeta));
     }
     if (data.containsKey('transfer_link_id')) {
       context.handle(
@@ -682,16 +682,16 @@ class $TransactionsTableTable extends TransactionsTable
           DriftSqlType.string, data['${effectivePrefix}transaction_type'])!,
       transactionAmount: attachedDatabase.typeMapping.read(
           DriftSqlType.double, data['${effectivePrefix}transaction_amount'])!,
-      originalAmount: attachedDatabase.typeMapping.read(
-          DriftSqlType.double, data['${effectivePrefix}original_amount'])!,
-      originalCurrency: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}original_currency'])!,
+      baseAmount: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}base_amount'])!,
+      baseCurrency: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}base_currency'])!,
       exchangeRate: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}exchange_rate']),
-      exchangedToAmount: attachedDatabase.typeMapping.read(
-          DriftSqlType.double, data['${effectivePrefix}exchanged_to_amount']),
-      exchangedToCurrency: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}exchanged_to_currency']),
+      targetAmount: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}target_amount']),
+      targetCurrency: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}target_currency']),
       transferLinkId: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}transfer_link_id']),
     );
@@ -712,11 +712,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
   final String accountId;
   final String transactionType;
   final double transactionAmount;
-  final double originalAmount;
-  final String originalCurrency;
+  final double baseAmount;
+  final String baseCurrency;
   final double? exchangeRate;
-  final double? exchangedToAmount;
-  final String? exchangedToCurrency;
+  final double? targetAmount;
+  final String? targetCurrency;
 
   /// The id of the transaction that this transaction is a transfer of.
   final String? transferLinkId;
@@ -729,11 +729,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       required this.accountId,
       required this.transactionType,
       required this.transactionAmount,
-      required this.originalAmount,
-      required this.originalCurrency,
+      required this.baseAmount,
+      required this.baseCurrency,
       this.exchangeRate,
-      this.exchangedToAmount,
-      this.exchangedToCurrency,
+      this.targetAmount,
+      this.targetCurrency,
       this.transferLinkId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -748,16 +748,16 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
     map['account_id'] = Variable<String>(accountId);
     map['transaction_type'] = Variable<String>(transactionType);
     map['transaction_amount'] = Variable<double>(transactionAmount);
-    map['original_amount'] = Variable<double>(originalAmount);
-    map['original_currency'] = Variable<String>(originalCurrency);
+    map['base_amount'] = Variable<double>(baseAmount);
+    map['base_currency'] = Variable<String>(baseCurrency);
     if (!nullToAbsent || exchangeRate != null) {
       map['exchange_rate'] = Variable<double>(exchangeRate);
     }
-    if (!nullToAbsent || exchangedToAmount != null) {
-      map['exchanged_to_amount'] = Variable<double>(exchangedToAmount);
+    if (!nullToAbsent || targetAmount != null) {
+      map['target_amount'] = Variable<double>(targetAmount);
     }
-    if (!nullToAbsent || exchangedToCurrency != null) {
-      map['exchanged_to_currency'] = Variable<String>(exchangedToCurrency);
+    if (!nullToAbsent || targetCurrency != null) {
+      map['target_currency'] = Variable<String>(targetCurrency);
     }
     if (!nullToAbsent || transferLinkId != null) {
       map['transfer_link_id'] = Variable<String>(transferLinkId);
@@ -777,17 +777,17 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       accountId: Value(accountId),
       transactionType: Value(transactionType),
       transactionAmount: Value(transactionAmount),
-      originalAmount: Value(originalAmount),
-      originalCurrency: Value(originalCurrency),
+      baseAmount: Value(baseAmount),
+      baseCurrency: Value(baseCurrency),
       exchangeRate: exchangeRate == null && nullToAbsent
           ? const Value.absent()
           : Value(exchangeRate),
-      exchangedToAmount: exchangedToAmount == null && nullToAbsent
+      targetAmount: targetAmount == null && nullToAbsent
           ? const Value.absent()
-          : Value(exchangedToAmount),
-      exchangedToCurrency: exchangedToCurrency == null && nullToAbsent
+          : Value(targetAmount),
+      targetCurrency: targetCurrency == null && nullToAbsent
           ? const Value.absent()
-          : Value(exchangedToCurrency),
+          : Value(targetCurrency),
       transferLinkId: transferLinkId == null && nullToAbsent
           ? const Value.absent()
           : Value(transferLinkId),
@@ -806,13 +806,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       accountId: serializer.fromJson<String>(json['accountId']),
       transactionType: serializer.fromJson<String>(json['transactionType']),
       transactionAmount: serializer.fromJson<double>(json['transactionAmount']),
-      originalAmount: serializer.fromJson<double>(json['originalAmount']),
-      originalCurrency: serializer.fromJson<String>(json['originalCurrency']),
+      baseAmount: serializer.fromJson<double>(json['baseAmount']),
+      baseCurrency: serializer.fromJson<String>(json['baseCurrency']),
       exchangeRate: serializer.fromJson<double?>(json['exchangeRate']),
-      exchangedToAmount:
-          serializer.fromJson<double?>(json['exchangedToAmount']),
-      exchangedToCurrency:
-          serializer.fromJson<String?>(json['exchangedToCurrency']),
+      targetAmount: serializer.fromJson<double?>(json['targetAmount']),
+      targetCurrency: serializer.fromJson<String?>(json['targetCurrency']),
       transferLinkId: serializer.fromJson<String?>(json['transferLinkId']),
     );
   }
@@ -828,11 +826,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       'accountId': serializer.toJson<String>(accountId),
       'transactionType': serializer.toJson<String>(transactionType),
       'transactionAmount': serializer.toJson<double>(transactionAmount),
-      'originalAmount': serializer.toJson<double>(originalAmount),
-      'originalCurrency': serializer.toJson<String>(originalCurrency),
+      'baseAmount': serializer.toJson<double>(baseAmount),
+      'baseCurrency': serializer.toJson<String>(baseCurrency),
       'exchangeRate': serializer.toJson<double?>(exchangeRate),
-      'exchangedToAmount': serializer.toJson<double?>(exchangedToAmount),
-      'exchangedToCurrency': serializer.toJson<String?>(exchangedToCurrency),
+      'targetAmount': serializer.toJson<double?>(targetAmount),
+      'targetCurrency': serializer.toJson<String?>(targetCurrency),
       'transferLinkId': serializer.toJson<String?>(transferLinkId),
     };
   }
@@ -846,11 +844,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           String? accountId,
           String? transactionType,
           double? transactionAmount,
-          double? originalAmount,
-          String? originalCurrency,
+          double? baseAmount,
+          String? baseCurrency,
           Value<double?> exchangeRate = const Value.absent(),
-          Value<double?> exchangedToAmount = const Value.absent(),
-          Value<String?> exchangedToCurrency = const Value.absent(),
+          Value<double?> targetAmount = const Value.absent(),
+          Value<String?> targetCurrency = const Value.absent(),
           Value<String?> transferLinkId = const Value.absent()}) =>
       TransactionDTO(
         id: id ?? this.id,
@@ -861,16 +859,14 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
         accountId: accountId ?? this.accountId,
         transactionType: transactionType ?? this.transactionType,
         transactionAmount: transactionAmount ?? this.transactionAmount,
-        originalAmount: originalAmount ?? this.originalAmount,
-        originalCurrency: originalCurrency ?? this.originalCurrency,
+        baseAmount: baseAmount ?? this.baseAmount,
+        baseCurrency: baseCurrency ?? this.baseCurrency,
         exchangeRate:
             exchangeRate.present ? exchangeRate.value : this.exchangeRate,
-        exchangedToAmount: exchangedToAmount.present
-            ? exchangedToAmount.value
-            : this.exchangedToAmount,
-        exchangedToCurrency: exchangedToCurrency.present
-            ? exchangedToCurrency.value
-            : this.exchangedToCurrency,
+        targetAmount:
+            targetAmount.present ? targetAmount.value : this.targetAmount,
+        targetCurrency:
+            targetCurrency.present ? targetCurrency.value : this.targetCurrency,
         transferLinkId:
             transferLinkId.present ? transferLinkId.value : this.transferLinkId,
       );
@@ -885,11 +881,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           ..write('accountId: $accountId, ')
           ..write('transactionType: $transactionType, ')
           ..write('transactionAmount: $transactionAmount, ')
-          ..write('originalAmount: $originalAmount, ')
-          ..write('originalCurrency: $originalCurrency, ')
+          ..write('baseAmount: $baseAmount, ')
+          ..write('baseCurrency: $baseCurrency, ')
           ..write('exchangeRate: $exchangeRate, ')
-          ..write('exchangedToAmount: $exchangedToAmount, ')
-          ..write('exchangedToCurrency: $exchangedToCurrency, ')
+          ..write('targetAmount: $targetAmount, ')
+          ..write('targetCurrency: $targetCurrency, ')
           ..write('transferLinkId: $transferLinkId')
           ..write(')'))
         .toString();
@@ -905,11 +901,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       accountId,
       transactionType,
       transactionAmount,
-      originalAmount,
-      originalCurrency,
+      baseAmount,
+      baseCurrency,
       exchangeRate,
-      exchangedToAmount,
-      exchangedToCurrency,
+      targetAmount,
+      targetCurrency,
       transferLinkId);
   @override
   bool operator ==(Object other) =>
@@ -923,11 +919,11 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           other.accountId == this.accountId &&
           other.transactionType == this.transactionType &&
           other.transactionAmount == this.transactionAmount &&
-          other.originalAmount == this.originalAmount &&
-          other.originalCurrency == this.originalCurrency &&
+          other.baseAmount == this.baseAmount &&
+          other.baseCurrency == this.baseCurrency &&
           other.exchangeRate == this.exchangeRate &&
-          other.exchangedToAmount == this.exchangedToAmount &&
-          other.exchangedToCurrency == this.exchangedToCurrency &&
+          other.targetAmount == this.targetAmount &&
+          other.targetCurrency == this.targetCurrency &&
           other.transferLinkId == this.transferLinkId);
 }
 
@@ -940,11 +936,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
   final Value<String> accountId;
   final Value<String> transactionType;
   final Value<double> transactionAmount;
-  final Value<double> originalAmount;
-  final Value<String> originalCurrency;
+  final Value<double> baseAmount;
+  final Value<String> baseCurrency;
   final Value<double?> exchangeRate;
-  final Value<double?> exchangedToAmount;
-  final Value<String?> exchangedToCurrency;
+  final Value<double?> targetAmount;
+  final Value<String?> targetCurrency;
   final Value<String?> transferLinkId;
   final Value<int> rowid;
   const TransactionsTableCompanion({
@@ -956,11 +952,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     this.accountId = const Value.absent(),
     this.transactionType = const Value.absent(),
     this.transactionAmount = const Value.absent(),
-    this.originalAmount = const Value.absent(),
-    this.originalCurrency = const Value.absent(),
+    this.baseAmount = const Value.absent(),
+    this.baseCurrency = const Value.absent(),
     this.exchangeRate = const Value.absent(),
-    this.exchangedToAmount = const Value.absent(),
-    this.exchangedToCurrency = const Value.absent(),
+    this.targetAmount = const Value.absent(),
+    this.targetCurrency = const Value.absent(),
     this.transferLinkId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -973,11 +969,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     required String accountId,
     required String transactionType,
     required double transactionAmount,
-    required double originalAmount,
-    required String originalCurrency,
+    required double baseAmount,
+    required String baseCurrency,
     this.exchangeRate = const Value.absent(),
-    this.exchangedToAmount = const Value.absent(),
-    this.exchangedToCurrency = const Value.absent(),
+    this.targetAmount = const Value.absent(),
+    this.targetCurrency = const Value.absent(),
     this.transferLinkId = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
@@ -987,8 +983,8 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
         accountId = Value(accountId),
         transactionType = Value(transactionType),
         transactionAmount = Value(transactionAmount),
-        originalAmount = Value(originalAmount),
-        originalCurrency = Value(originalCurrency);
+        baseAmount = Value(baseAmount),
+        baseCurrency = Value(baseCurrency);
   static Insertable<TransactionDTO> custom({
     Expression<String>? id,
     Expression<String>? creatorUid,
@@ -998,11 +994,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     Expression<String>? accountId,
     Expression<String>? transactionType,
     Expression<double>? transactionAmount,
-    Expression<double>? originalAmount,
-    Expression<String>? originalCurrency,
+    Expression<double>? baseAmount,
+    Expression<String>? baseCurrency,
     Expression<double>? exchangeRate,
-    Expression<double>? exchangedToAmount,
-    Expression<String>? exchangedToCurrency,
+    Expression<double>? targetAmount,
+    Expression<String>? targetCurrency,
     Expression<String>? transferLinkId,
     Expression<int>? rowid,
   }) {
@@ -1015,12 +1011,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       if (accountId != null) 'account_id': accountId,
       if (transactionType != null) 'transaction_type': transactionType,
       if (transactionAmount != null) 'transaction_amount': transactionAmount,
-      if (originalAmount != null) 'original_amount': originalAmount,
-      if (originalCurrency != null) 'original_currency': originalCurrency,
+      if (baseAmount != null) 'base_amount': baseAmount,
+      if (baseCurrency != null) 'base_currency': baseCurrency,
       if (exchangeRate != null) 'exchange_rate': exchangeRate,
-      if (exchangedToAmount != null) 'exchanged_to_amount': exchangedToAmount,
-      if (exchangedToCurrency != null)
-        'exchanged_to_currency': exchangedToCurrency,
+      if (targetAmount != null) 'target_amount': targetAmount,
+      if (targetCurrency != null) 'target_currency': targetCurrency,
       if (transferLinkId != null) 'transfer_link_id': transferLinkId,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1035,11 +1030,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       Value<String>? accountId,
       Value<String>? transactionType,
       Value<double>? transactionAmount,
-      Value<double>? originalAmount,
-      Value<String>? originalCurrency,
+      Value<double>? baseAmount,
+      Value<String>? baseCurrency,
       Value<double?>? exchangeRate,
-      Value<double?>? exchangedToAmount,
-      Value<String?>? exchangedToCurrency,
+      Value<double?>? targetAmount,
+      Value<String?>? targetCurrency,
       Value<String?>? transferLinkId,
       Value<int>? rowid}) {
     return TransactionsTableCompanion(
@@ -1051,11 +1046,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       accountId: accountId ?? this.accountId,
       transactionType: transactionType ?? this.transactionType,
       transactionAmount: transactionAmount ?? this.transactionAmount,
-      originalAmount: originalAmount ?? this.originalAmount,
-      originalCurrency: originalCurrency ?? this.originalCurrency,
+      baseAmount: baseAmount ?? this.baseAmount,
+      baseCurrency: baseCurrency ?? this.baseCurrency,
       exchangeRate: exchangeRate ?? this.exchangeRate,
-      exchangedToAmount: exchangedToAmount ?? this.exchangedToAmount,
-      exchangedToCurrency: exchangedToCurrency ?? this.exchangedToCurrency,
+      targetAmount: targetAmount ?? this.targetAmount,
+      targetCurrency: targetCurrency ?? this.targetCurrency,
       transferLinkId: transferLinkId ?? this.transferLinkId,
       rowid: rowid ?? this.rowid,
     );
@@ -1088,21 +1083,20 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     if (transactionAmount.present) {
       map['transaction_amount'] = Variable<double>(transactionAmount.value);
     }
-    if (originalAmount.present) {
-      map['original_amount'] = Variable<double>(originalAmount.value);
+    if (baseAmount.present) {
+      map['base_amount'] = Variable<double>(baseAmount.value);
     }
-    if (originalCurrency.present) {
-      map['original_currency'] = Variable<String>(originalCurrency.value);
+    if (baseCurrency.present) {
+      map['base_currency'] = Variable<String>(baseCurrency.value);
     }
     if (exchangeRate.present) {
       map['exchange_rate'] = Variable<double>(exchangeRate.value);
     }
-    if (exchangedToAmount.present) {
-      map['exchanged_to_amount'] = Variable<double>(exchangedToAmount.value);
+    if (targetAmount.present) {
+      map['target_amount'] = Variable<double>(targetAmount.value);
     }
-    if (exchangedToCurrency.present) {
-      map['exchanged_to_currency'] =
-          Variable<String>(exchangedToCurrency.value);
+    if (targetCurrency.present) {
+      map['target_currency'] = Variable<String>(targetCurrency.value);
     }
     if (transferLinkId.present) {
       map['transfer_link_id'] = Variable<String>(transferLinkId.value);
@@ -1124,11 +1118,11 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
           ..write('accountId: $accountId, ')
           ..write('transactionType: $transactionType, ')
           ..write('transactionAmount: $transactionAmount, ')
-          ..write('originalAmount: $originalAmount, ')
-          ..write('originalCurrency: $originalCurrency, ')
+          ..write('baseAmount: $baseAmount, ')
+          ..write('baseCurrency: $baseCurrency, ')
           ..write('exchangeRate: $exchangeRate, ')
-          ..write('exchangedToAmount: $exchangedToAmount, ')
-          ..write('exchangedToCurrency: $exchangedToCurrency, ')
+          ..write('targetAmount: $targetAmount, ')
+          ..write('targetCurrency: $targetCurrency, ')
           ..write('transferLinkId: $transferLinkId, ')
           ..write('rowid: $rowid')
           ..write(')'))
