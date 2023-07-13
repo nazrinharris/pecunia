@@ -56,9 +56,9 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
         for (final txn in txnList) {
           final type = TransactionType.fromString(txn.transactionType, TransactionsAction.unknown);
           if (type == TransactionType.credit) {
-            newBalance += txn.originalAmount;
+            newBalance += txn.transactionAmount;
           } else if (type == TransactionType.debit) {
-            newBalance -= txn.originalAmount;
+            newBalance -= txn.transactionAmount;
           } else {
             throw ArgumentError('Invalid transaction type: ${txn.transactionType}');
           }
@@ -87,9 +87,9 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
         for (final txn in txnList) {
           final type = TransactionType.fromString(txn.transactionType, TransactionsAction.unknown);
           if (type == TransactionType.credit) {
-            calculatedBalance += txn.originalAmount;
+            calculatedBalance += txn.transactionAmount;
           } else if (type == TransactionType.debit) {
-            calculatedBalance -= txn.originalAmount;
+            calculatedBalance -= txn.transactionAmount;
           } else {
             throw ArgumentError('Invalid transaction type: ${txn.transactionType}');
           }
@@ -109,8 +109,6 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
     await into(accountsTable).insert(account.toCompanion(false));
   }
 
-  /// Deletes the account by the [id] from the [AccountDTO], may be changed in the future
-  /// so that we can just supply the [id], but I'll keep it as is for now.
   Future<void> deleteAccount(AccountDTO account) async {
     await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
   }

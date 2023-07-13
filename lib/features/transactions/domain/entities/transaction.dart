@@ -84,6 +84,7 @@ class Transaction with _$Transaction {
       transactionDate: transactionDate.toUtc(),
       accountId: accountId,
       transactionType: type.typeAsString,
+      transactionAmount: fundDetails.transactionAmount,
       originalAmount: fundDetails.originalAmount,
       originalCurrency: fundDetails.originalCurrency,
       exchangeRate: fundDetails.exchangeRate,
@@ -93,6 +94,10 @@ class Transaction with _$Transaction {
   }
 }
 
+/// Value object for the details of a transaction
+///
+/// Note: You should NOT use the fields of this class directly. When the transaction is required for
+/// calculations, use [transactionAmount]
 @freezed
 class FundDetails with _$FundDetails {
   const factory FundDetails({
@@ -101,17 +106,26 @@ class FundDetails with _$FundDetails {
     double? exchangeRate,
     double? exchangedToAmount,
     String? exchangedToCurrency,
-  }) = _FundDetails;
+  }) = _FundDetails; // Added transactionAmount getter
 
   factory FundDetails.fromDTO(TransactionDTO dto) {
+    double? exchangedAmount;
+    if (dto.exchangeRate != null && dto.exchangedToCurrency != null) {
+      exchangedAmount = dto.originalAmount * dto.exchangeRate!;
+    }
+
     return FundDetails(
       originalAmount: dto.originalAmount,
       originalCurrency: dto.originalCurrency,
       exchangeRate: dto.exchangeRate,
-      exchangedToAmount: dto.exchangedToAmount,
+      exchangedToAmount: exchangedAmount,
       exchangedToCurrency: dto.exchangedToCurrency,
     );
   }
+
+  const FundDetails._();
+
+  double get transactionAmount => exchangedToAmount ?? originalAmount;
 }
 
 /// Value object for the description of a transaction

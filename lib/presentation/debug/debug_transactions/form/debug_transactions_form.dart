@@ -69,7 +69,7 @@ FormGroup editTransactionForm(
         ],
       ),
       'amount': FormControl<String>(
-        value: txn.fundDetails.originalAmount.toString(),
+        value: txn.fundDetails.transactionAmount.toString(),
         validators: [
           Validators.required,
           const NumberValidator(),

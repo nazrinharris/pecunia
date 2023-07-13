@@ -62,7 +62,6 @@ class _EntryScreenState extends State<EntryScreen> {
     super.initState();
     if (isDebugMode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        print(Theme.of(context).colorScheme.background);
         context.go('/debug-login');
       });
     }

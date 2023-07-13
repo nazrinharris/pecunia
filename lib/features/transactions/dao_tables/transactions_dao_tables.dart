@@ -24,6 +24,7 @@ class TransactionsTable extends Table {
   TextColumn get transactionType => text()();
 
   // These fields are kept in [FundDetails]
+  RealColumn get transactionAmount => real()();
   RealColumn get originalAmount => real()();
   TextColumn get originalCurrency => text().withLength(min: 3, max: 3)();
   RealColumn get exchangeRate => real().nullable()();
@@ -205,12 +206,12 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     double newBalance;
     if (txnType == TransactionType.credit) {
       newBalance = shouldReverseTransaction
-          ? accountDto.balance - txnDto.originalAmount
-          : accountDto.balance + txnDto.originalAmount;
+          ? accountDto.balance - txnDto.transactionAmount
+          : accountDto.balance + txnDto.transactionAmount;
     } else {
       newBalance = shouldReverseTransaction
-          ? accountDto.balance + txnDto.originalAmount
-          : accountDto.balance - txnDto.originalAmount;
+          ? accountDto.balance + txnDto.transactionAmount
+          : accountDto.balance - txnDto.transactionAmount;
     }
     return accountDto.copyWith(balance: newBalance);
   }

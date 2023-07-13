@@ -336,7 +336,7 @@ class BuildTxnAmountText extends ConsumerWidget {
       children: [
         if (isCredit)
           Text(
-            '+${txn.fundDetails.originalAmount}',
+            '+${txn.fundDetails.transactionAmount}',
             style: TextStyle(
               color: Colors.green[300],
               fontSize: 14,
@@ -345,7 +345,7 @@ class BuildTxnAmountText extends ConsumerWidget {
           ),
         if (!isCredit)
           Text(
-            '-${txn.fundDetails.originalAmount}',
+            '-${txn.fundDetails.transactionAmount}',
             style: TextStyle(
               color: Colors.red[300],
               fontSize: 14,
@@ -466,6 +466,18 @@ class BottomSheetContent extends ConsumerWidget {
                     children: <TextSpan>[
                       TextSpan(
                           text: txn.transactionDate.toString(), style: DefaultTextStyle.of(context).style),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: 'txn_amount: ',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: txn.fundDetails.transactionAmount.toString(),
+                          style: DefaultTextStyle.of(context).style),
                     ],
                   ),
                 ),

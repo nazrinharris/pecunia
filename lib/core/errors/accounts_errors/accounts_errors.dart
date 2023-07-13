@@ -82,10 +82,8 @@ class AccountsFailure with _$AccountsFailure implements Failure {
 /// * Helpers
 /// ****************************************************************
 
-AccountsFailure mapDriftToAccountsFailure<T extends Failure>(
+AccountsFailure mapDriftToAccountsFailure(
     AccountsAction accountsAction, Object error, StackTrace stackTrace) {
-  assert(T is AccountsFailure, 'This [mapDriftToFailure] is used out of where its supposed to.');
-
   switch (error) {
     case DriftRemoteException(remoteCause: SqliteException):
       final cause = error.remoteCause as SqliteException;

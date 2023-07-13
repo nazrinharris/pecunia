@@ -121,7 +121,7 @@ class CreateTransactionFormProvider extends AutoDisposeProvider<FormGroup> {
 }
 
 String _$editTransactionFormHash() =>
-    r'35141888201d69ee4c89f99545f6cf923b167971';
+    r'dbdc1e5f4994ecbbe9417588199ac6992f4ea743';
 typedef EditTransactionFormRef = AutoDisposeProviderRef<FormGroup>;
 
 /// See also [editTransactionForm].

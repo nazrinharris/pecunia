@@ -488,6 +488,12 @@ class $TransactionsTableTable extends TransactionsTable
   late final GeneratedColumn<String> transactionType = GeneratedColumn<String>(
       'transaction_type', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _transactionAmountMeta =
+      const VerificationMeta('transactionAmount');
+  @override
+  late final GeneratedColumn<double> transactionAmount =
+      GeneratedColumn<double>('transaction_amount', aliasedName, false,
+          type: DriftSqlType.double, requiredDuringInsert: true);
   static const VerificationMeta _originalAmountMeta =
       const VerificationMeta('originalAmount');
   @override
@@ -539,6 +545,7 @@ class $TransactionsTableTable extends TransactionsTable
         transactionDate,
         accountId,
         transactionType,
+        transactionAmount,
         originalAmount,
         originalCurrency,
         exchangeRate,
@@ -601,6 +608,14 @@ class $TransactionsTableTable extends TransactionsTable
               data['transaction_type']!, _transactionTypeMeta));
     } else if (isInserting) {
       context.missing(_transactionTypeMeta);
+    }
+    if (data.containsKey('transaction_amount')) {
+      context.handle(
+          _transactionAmountMeta,
+          transactionAmount.isAcceptableOrUnknown(
+              data['transaction_amount']!, _transactionAmountMeta));
+    } else if (isInserting) {
+      context.missing(_transactionAmountMeta);
     }
     if (data.containsKey('original_amount')) {
       context.handle(
@@ -665,6 +680,8 @@ class $TransactionsTableTable extends TransactionsTable
           .read(DriftSqlType.string, data['${effectivePrefix}account_id'])!,
       transactionType: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}transaction_type'])!,
+      transactionAmount: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}transaction_amount'])!,
       originalAmount: attachedDatabase.typeMapping.read(
           DriftSqlType.double, data['${effectivePrefix}original_amount'])!,
       originalCurrency: attachedDatabase.typeMapping.read(
@@ -694,6 +711,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
   final DateTime transactionDate;
   final String accountId;
   final String transactionType;
+  final double transactionAmount;
   final double originalAmount;
   final String originalCurrency;
   final double? exchangeRate;
@@ -710,6 +728,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       required this.transactionDate,
       required this.accountId,
       required this.transactionType,
+      required this.transactionAmount,
       required this.originalAmount,
       required this.originalCurrency,
       this.exchangeRate,
@@ -728,6 +747,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
     map['transaction_date'] = Variable<DateTime>(transactionDate);
     map['account_id'] = Variable<String>(accountId);
     map['transaction_type'] = Variable<String>(transactionType);
+    map['transaction_amount'] = Variable<double>(transactionAmount);
     map['original_amount'] = Variable<double>(originalAmount);
     map['original_currency'] = Variable<String>(originalCurrency);
     if (!nullToAbsent || exchangeRate != null) {
@@ -756,6 +776,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       transactionDate: Value(transactionDate),
       accountId: Value(accountId),
       transactionType: Value(transactionType),
+      transactionAmount: Value(transactionAmount),
       originalAmount: Value(originalAmount),
       originalCurrency: Value(originalCurrency),
       exchangeRate: exchangeRate == null && nullToAbsent
@@ -784,6 +805,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       transactionDate: serializer.fromJson<DateTime>(json['transactionDate']),
       accountId: serializer.fromJson<String>(json['accountId']),
       transactionType: serializer.fromJson<String>(json['transactionType']),
+      transactionAmount: serializer.fromJson<double>(json['transactionAmount']),
       originalAmount: serializer.fromJson<double>(json['originalAmount']),
       originalCurrency: serializer.fromJson<String>(json['originalCurrency']),
       exchangeRate: serializer.fromJson<double?>(json['exchangeRate']),
@@ -805,6 +827,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       'transactionDate': serializer.toJson<DateTime>(transactionDate),
       'accountId': serializer.toJson<String>(accountId),
       'transactionType': serializer.toJson<String>(transactionType),
+      'transactionAmount': serializer.toJson<double>(transactionAmount),
       'originalAmount': serializer.toJson<double>(originalAmount),
       'originalCurrency': serializer.toJson<String>(originalCurrency),
       'exchangeRate': serializer.toJson<double?>(exchangeRate),
@@ -822,6 +845,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           DateTime? transactionDate,
           String? accountId,
           String? transactionType,
+          double? transactionAmount,
           double? originalAmount,
           String? originalCurrency,
           Value<double?> exchangeRate = const Value.absent(),
@@ -836,6 +860,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
         transactionDate: transactionDate ?? this.transactionDate,
         accountId: accountId ?? this.accountId,
         transactionType: transactionType ?? this.transactionType,
+        transactionAmount: transactionAmount ?? this.transactionAmount,
         originalAmount: originalAmount ?? this.originalAmount,
         originalCurrency: originalCurrency ?? this.originalCurrency,
         exchangeRate:
@@ -859,6 +884,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           ..write('transactionDate: $transactionDate, ')
           ..write('accountId: $accountId, ')
           ..write('transactionType: $transactionType, ')
+          ..write('transactionAmount: $transactionAmount, ')
           ..write('originalAmount: $originalAmount, ')
           ..write('originalCurrency: $originalCurrency, ')
           ..write('exchangeRate: $exchangeRate, ')
@@ -878,6 +904,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       transactionDate,
       accountId,
       transactionType,
+      transactionAmount,
       originalAmount,
       originalCurrency,
       exchangeRate,
@@ -895,6 +922,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           other.transactionDate == this.transactionDate &&
           other.accountId == this.accountId &&
           other.transactionType == this.transactionType &&
+          other.transactionAmount == this.transactionAmount &&
           other.originalAmount == this.originalAmount &&
           other.originalCurrency == this.originalCurrency &&
           other.exchangeRate == this.exchangeRate &&
@@ -911,6 +939,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
   final Value<DateTime> transactionDate;
   final Value<String> accountId;
   final Value<String> transactionType;
+  final Value<double> transactionAmount;
   final Value<double> originalAmount;
   final Value<String> originalCurrency;
   final Value<double?> exchangeRate;
@@ -926,6 +955,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     this.transactionDate = const Value.absent(),
     this.accountId = const Value.absent(),
     this.transactionType = const Value.absent(),
+    this.transactionAmount = const Value.absent(),
     this.originalAmount = const Value.absent(),
     this.originalCurrency = const Value.absent(),
     this.exchangeRate = const Value.absent(),
@@ -942,6 +972,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     required DateTime transactionDate,
     required String accountId,
     required String transactionType,
+    required double transactionAmount,
     required double originalAmount,
     required String originalCurrency,
     this.exchangeRate = const Value.absent(),
@@ -955,6 +986,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
         transactionDate = Value(transactionDate),
         accountId = Value(accountId),
         transactionType = Value(transactionType),
+        transactionAmount = Value(transactionAmount),
         originalAmount = Value(originalAmount),
         originalCurrency = Value(originalCurrency);
   static Insertable<TransactionDTO> custom({
@@ -965,6 +997,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     Expression<DateTime>? transactionDate,
     Expression<String>? accountId,
     Expression<String>? transactionType,
+    Expression<double>? transactionAmount,
     Expression<double>? originalAmount,
     Expression<String>? originalCurrency,
     Expression<double>? exchangeRate,
@@ -981,6 +1014,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       if (transactionDate != null) 'transaction_date': transactionDate,
       if (accountId != null) 'account_id': accountId,
       if (transactionType != null) 'transaction_type': transactionType,
+      if (transactionAmount != null) 'transaction_amount': transactionAmount,
       if (originalAmount != null) 'original_amount': originalAmount,
       if (originalCurrency != null) 'original_currency': originalCurrency,
       if (exchangeRate != null) 'exchange_rate': exchangeRate,
@@ -1000,6 +1034,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       Value<DateTime>? transactionDate,
       Value<String>? accountId,
       Value<String>? transactionType,
+      Value<double>? transactionAmount,
       Value<double>? originalAmount,
       Value<String>? originalCurrency,
       Value<double?>? exchangeRate,
@@ -1015,6 +1050,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       transactionDate: transactionDate ?? this.transactionDate,
       accountId: accountId ?? this.accountId,
       transactionType: transactionType ?? this.transactionType,
+      transactionAmount: transactionAmount ?? this.transactionAmount,
       originalAmount: originalAmount ?? this.originalAmount,
       originalCurrency: originalCurrency ?? this.originalCurrency,
       exchangeRate: exchangeRate ?? this.exchangeRate,
@@ -1048,6 +1084,9 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     }
     if (transactionType.present) {
       map['transaction_type'] = Variable<String>(transactionType.value);
+    }
+    if (transactionAmount.present) {
+      map['transaction_amount'] = Variable<double>(transactionAmount.value);
     }
     if (originalAmount.present) {
       map['original_amount'] = Variable<double>(originalAmount.value);
@@ -1084,6 +1123,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
           ..write('transactionDate: $transactionDate, ')
           ..write('accountId: $accountId, ')
           ..write('transactionType: $transactionType, ')
+          ..write('transactionAmount: $transactionAmount, ')
           ..write('originalAmount: $originalAmount, ')
           ..write('originalCurrency: $originalCurrency, ')
           ..write('exchangeRate: $exchangeRate, ')

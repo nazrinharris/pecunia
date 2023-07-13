@@ -205,7 +205,11 @@ void main() {
           'returns [AccountsFailure] with [AccountsAction.updateAccountDetails] and correct [AccountsErrorType] when updating account is unsuccessful',
           () async {
         // Arrange
-        when(() => mockAccountsDAO.updateAccount(any())).thenThrow(Exception());
+        when(() => mockAccountsDAO.updateAccount(any())).thenReturn(TaskEither.left(AccountsFailure.unknown(
+          stackTrace: StackTrace.empty,
+          message: AccountsErrorType.unknown.toString(),
+          accountsAction: AccountsAction.updateAccountDetails,
+        )));
 
         // Act
         final result = await accountsLocalDS.updateAccountDetails(updatedAccountDTO).run();
@@ -246,8 +250,8 @@ void main() {
         );
 
         // Verify that deleteAccount was called
-        var captured = verify(() => mockAccountsDAO.deleteAccount(captureAny())).captured;
-        var capturedDTO = captured[0] as AccountDTO;
+        final captured = verify(() => mockAccountsDAO.deleteAccount(captureAny())).captured;
+        final capturedDTO = captured[0] as AccountDTO;
         expect(capturedDTO, accountToDelete);
       });
 

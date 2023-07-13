@@ -428,13 +428,14 @@ class __$$_FundDetailsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FundDetails implements _FundDetails {
+class _$_FundDetails extends _FundDetails {
   const _$_FundDetails(
       {required this.originalAmount,
       required this.originalCurrency,
       this.exchangeRate,
       this.exchangedToAmount,
-      this.exchangedToCurrency});
+      this.exchangedToCurrency})
+      : super._();
 
   @override
   final double originalAmount;
@@ -480,13 +481,14 @@ class _$_FundDetails implements _FundDetails {
       __$$_FundDetailsCopyWithImpl<_$_FundDetails>(this, _$identity);
 }
 
-abstract class _FundDetails implements FundDetails {
+abstract class _FundDetails extends FundDetails {
   const factory _FundDetails(
       {required final double originalAmount,
       required final String originalCurrency,
       final double? exchangeRate,
       final double? exchangedToAmount,
       final String? exchangedToCurrency}) = _$_FundDetails;
+  const _FundDetails._() : super._();
 
   @override
   double get originalAmount;
