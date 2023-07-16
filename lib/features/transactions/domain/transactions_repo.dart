@@ -22,6 +22,9 @@ enum TransactionsAction {
   getTransactionById,
   getAllTransactions,
   unknown,
+
+  getTransactionAmount,
+  fundDetailsFromDTO
 }
 
 class TransactionsRepo {
@@ -38,10 +41,10 @@ class TransactionsRepo {
     required String type,
     required double baseAmount,
     required String baseCurrency,
-    double? exchangeRate,
-    double? targetAmount,
-    String? targetCurrency,
-    String? transactionDescription,
+    required double? exchangeRate,
+    required double? targetAmount,
+    required String? targetCurrency,
+    required String? transactionDescription,
   }) {
     const currentAction = TransactionsAction.create;
     final txn = Transaction.newTransaction(
@@ -50,8 +53,8 @@ class TransactionsRepo {
       transactionDescription: TransactionDescription(transactionDescription),
       transactionDate: transactionDate,
       accountId: accountId,
-      type: TransactionType.fromString(type, currentAction),
       fundDetails: FundDetails(
+        transactionType: TransactionType.fromString(type, currentAction),
         baseAmount: baseAmount,
         baseCurrency: baseCurrency,
         exchangeRate: exchangeRate,

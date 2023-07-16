@@ -282,7 +282,7 @@ class GetTransactionsByAccountIdProvider
   }
 }
 
-String _$editTransactionHash() => r'c3f303bb491627b7884c4b7d911f47126b57a040';
+String _$editTransactionHash() => r'03148ed3f73d58f99759f78078ebe38f63574c8f';
 
 /// See also [EditTransaction].
 @ProviderFor(EditTransaction)
@@ -298,4 +298,146 @@ final editTransactionProvider =
 );
 
 typedef _$EditTransaction = AutoDisposeAsyncNotifier<Option<Unit>>;
+String _$isCurrencyExchangeEnabledHash() =>
+    r'b837d7a33d2be701c26897ef2cc6211b0e25b3d5';
+
+/// See also [IsCurrencyExchangeEnabled].
+@ProviderFor(IsCurrencyExchangeEnabled)
+final isCurrencyExchangeEnabledProvider =
+    AutoDisposeNotifierProvider<IsCurrencyExchangeEnabled, bool>.internal(
+  IsCurrencyExchangeEnabled.new,
+  name: r'isCurrencyExchangeEnabledProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$isCurrencyExchangeEnabledHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$IsCurrencyExchangeEnabled = AutoDisposeNotifier<bool>;
+String _$fundDetailsStateHash() => r'706582867712735c3985753d6a2834bdd888117c';
+
+/// See also [FundDetailsState].
+@ProviderFor(FundDetailsState)
+final fundDetailsStateProvider = AutoDisposeNotifierProvider<FundDetailsState,
+    FundDetailsFieldState>.internal(
+  FundDetailsState.new,
+  name: r'fundDetailsStateProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fundDetailsStateHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FundDetailsState = AutoDisposeNotifier<FundDetailsFieldState>;
+String _$fundDetailsControllerHash() =>
+    r'fe01c64198699354eefd9dc8180a36f12141dea8';
+
+abstract class _$FundDetailsController
+    extends BuildlessAutoDisposeNotifier<FundDetailsFieldState> {
+  late final FormGroup form;
+
+  FundDetailsFieldState build(
+    FormGroup form,
+  );
+}
+
+/// See [createTransactionForm]
+///
+/// Copied from [FundDetailsController].
+@ProviderFor(FundDetailsController)
+const fundDetailsControllerProvider = FundDetailsControllerFamily();
+
+/// See [createTransactionForm]
+///
+/// Copied from [FundDetailsController].
+class FundDetailsControllerFamily extends Family<FundDetailsFieldState> {
+  /// See [createTransactionForm]
+  ///
+  /// Copied from [FundDetailsController].
+  const FundDetailsControllerFamily();
+
+  /// See [createTransactionForm]
+  ///
+  /// Copied from [FundDetailsController].
+  FundDetailsControllerProvider call(
+    FormGroup form,
+  ) {
+    return FundDetailsControllerProvider(
+      form,
+    );
+  }
+
+  @override
+  FundDetailsControllerProvider getProviderOverride(
+    covariant FundDetailsControllerProvider provider,
+  ) {
+    return call(
+      provider.form,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'fundDetailsControllerProvider';
+}
+
+/// See [createTransactionForm]
+///
+/// Copied from [FundDetailsController].
+class FundDetailsControllerProvider extends AutoDisposeNotifierProviderImpl<
+    FundDetailsController, FundDetailsFieldState> {
+  /// See [createTransactionForm]
+  ///
+  /// Copied from [FundDetailsController].
+  FundDetailsControllerProvider(
+    this.form,
+  ) : super.internal(
+          () => FundDetailsController()..form = form,
+          from: fundDetailsControllerProvider,
+          name: r'fundDetailsControllerProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$fundDetailsControllerHash,
+          dependencies: FundDetailsControllerFamily._dependencies,
+          allTransitiveDependencies:
+              FundDetailsControllerFamily._allTransitiveDependencies,
+        );
+
+  final FormGroup form;
+
+  @override
+  bool operator ==(Object other) {
+    return other is FundDetailsControllerProvider && other.form == form;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, form.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+
+  @override
+  FundDetailsFieldState runNotifierBuild(
+    covariant FundDetailsController notifier,
+  ) {
+    return notifier.build(
+      form,
+    );
+  }
+}
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

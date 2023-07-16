@@ -7,7 +7,7 @@ part of 'debug_transactions_form.dart';
 // **************************************************************************
 
 String _$createTransactionFormHash() =>
-    r'8833b6e859330961adb3ab524065734752518c36';
+    r'0c092e7e3b326e5c41c3dd9ca4b8a68154b25721';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -121,7 +121,7 @@ class CreateTransactionFormProvider extends AutoDisposeProvider<FormGroup> {
 }
 
 String _$editTransactionFormHash() =>
-    r'dbdc1e5f4994ecbbe9417588199ac6992f4ea743';
+    r'36ad8b315f1da75560b9cc4dc8bd0f12ea33d649';
 typedef EditTransactionFormRef = AutoDisposeProviderRef<FormGroup>;
 
 /// See also [editTransactionForm].

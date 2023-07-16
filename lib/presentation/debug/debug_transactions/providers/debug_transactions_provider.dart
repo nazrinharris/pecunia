@@ -20,10 +20,13 @@ class CreateTransaction extends _$CreateTransaction {
   Future<void> createTransaction({
     required String name,
     required String? description,
-    required double amount,
-    required String currency,
     required String accountId,
-    required String type,
+    required String transactionType,
+    required double? baseAmount,
+    required String baseCurrency,
+    required double? exchangeRate,
+    required String? targetCurrency,
+    required double? targetAmount,
   }) async {
     state = const AsyncValue.loading();
 
@@ -37,28 +40,54 @@ class CreateTransaction extends _$CreateTransaction {
       (pecuniaUser) => pecuniaUser,
     );
 
+    double actualBaseAmount;
+
+    // ! Temporary Workaround. Remove this when we have a proper way to handle this.
+    if (baseAmount == null) {
+      actualBaseAmount = targetAmount! / exchangeRate!;
+    } else {
+      actualBaseAmount = baseAmount;
+    }
+
     if (pecuniaUser != null) {
       debugPrint('user exists, creating transaction...');
-      (await ref
-              .read(transactionsRepoProvider)
-              .createTransaction(
-                name: name,
-                creatorUid: pecuniaUser.uid,
-                transactionDate: DateTime.now(),
-                accountId: accountId,
-                type: type,
-                baseAmount: amount,
-                baseCurrency: currency,
-                transactionDescription: description,
-              )
-              .run())
-          .fold(
-        (l) => state = AsyncError(l, l.stackTrace),
-        (r) {
-          ref.invalidate(getAllTransactionsProvider);
-          state = AsyncData(Option.of(r));
-        },
-      );
+      // (await ref
+      //         .read(transactionsRepoProvider)
+      //         .createTransaction(
+      //           name: name,
+      //           creatorUid: pecuniaUser.uid,
+      //           transactionDate: DateTime.now(),
+      //           accountId: accountId,
+      //           type: transactionType,
+      //           baseAmount: actualBaseAmount,
+      //           baseCurrency: baseCurrency,
+      //           transactionDescription: description,
+      //           exchangeRate: exchangeRate,
+      //           targetCurrency: targetCurrency,
+      //           targetAmount: targetAmount,
+      //         )
+      //         .run())
+      //     .fold(
+      //   (l) => state = AsyncError(l, l.stackTrace),
+      //   (r) {
+      //     ref.invalidate(getAllTransactionsProvider);
+      //     state = AsyncData(Option.of(r));
+      //   },
+      // );
+      debugPrint('''
+      name: $name,
+      creatorUid: ${pecuniaUser.uid},
+      transactionDate: ${DateTime.now()},
+      accountId: $accountId,
+      type: $transactionType,
+      baseAmount: $baseAmount,
+      actualBaseAmount: $actualBaseAmount,
+      baseCurrency: $baseCurrency,
+      transactionDescription: $description,
+      exchangeRate: $exchangeRate,
+      targetCurrency: $targetCurrency,
+      targetAmount: $targetAmount,
+''');
     }
   }
 }

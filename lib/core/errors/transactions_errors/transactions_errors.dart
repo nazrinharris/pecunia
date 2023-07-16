@@ -23,7 +23,11 @@ enum TransactionsErrorType {
       'cannot-convert-to-dto', 'Something went wrong while converting the transaction to a DTO'),
   sqliteException('sqlite-exception', 'Something went wrong while accessing the database'),
   invalidType('invalid-type', 'The transaction type is invalid'),
-  transactionNotFound('transaction-not-found', 'The transaction was not found in the database');
+  transactionNotFound('transaction-not-found', 'The transaction was not found in the database'),
+  invalidMultiCurrencyFields('invalid-multi-currency-fields',
+      'Exchange rate, target amount, and target currency must all be provided or all be null.'),
+  invalidExchangedAmount('invalid-exchanged-amount',
+      'The provided target amount does not match the computed target amount based on the provided base amount and exchange rate.');
 
   const TransactionsErrorType(this.code, this.message);
 

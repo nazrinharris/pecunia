@@ -35,7 +35,6 @@ class Transaction with _$Transaction {
     required TransactionDescription transactionDescription,
     required DateTime transactionDate,
     required String accountId,
-    required TransactionType type,
     required FundDetails fundDetails,
   }) = _Transaction;
 
@@ -47,7 +46,6 @@ class Transaction with _$Transaction {
     required TransactionDescription transactionDescription,
     required DateTime transactionDate,
     required String accountId,
-    required TransactionType type,
     required FundDetails fundDetails,
     required Uuid uuid,
   }) =>
@@ -58,7 +56,6 @@ class Transaction with _$Transaction {
         transactionDescription: transactionDescription,
         transactionDate: transactionDate.toUtc(),
         accountId: accountId,
-        type: type,
         fundDetails: fundDetails,
       );
 
@@ -70,7 +67,6 @@ class Transaction with _$Transaction {
       transactionDescription: TransactionDescription(dto.description),
       transactionDate: dto.transactionDate.toUtc(),
       accountId: dto.accountId,
-      type: TransactionType.fromString(dto.transactionType, action),
       fundDetails: FundDetails.fromDTO(dto),
     );
   }
@@ -83,7 +79,7 @@ class Transaction with _$Transaction {
       description: transactionDescription.value,
       transactionDate: transactionDate.toUtc(),
       accountId: accountId,
-      transactionType: type.typeAsString,
+      transactionType: fundDetails.transactionType.typeAsString,
       transactionAmount: fundDetails.transactionAmount,
       baseAmount: fundDetails.baseAmount,
       baseCurrency: fundDetails.baseCurrency,
@@ -103,29 +99,64 @@ class FundDetails with _$FundDetails {
   const factory FundDetails({
     required double baseAmount,
     required String baseCurrency,
-    double? exchangeRate,
-    double? targetAmount,
-    String? targetCurrency,
-  }) = _FundDetails; // Added transactionAmount getter
+    required TransactionType transactionType,
+    required double? exchangeRate,
+    required double? targetAmount,
+    required String? targetCurrency,
+  }) = _FundDetails;
 
   factory FundDetails.fromDTO(TransactionDTO dto) {
-    double? exchangedAmount;
-    if (dto.exchangeRate != null && dto.targetCurrency != null) {
-      exchangedAmount = dto.baseAmount * dto.exchangeRate!;
+    if ((dto.exchangeRate != null || dto.targetAmount != null || dto.targetCurrency != null) &&
+        !(dto.exchangeRate != null && dto.targetAmount != null && dto.targetCurrency != null)) {
+      throw TransactionsException(
+        stackTrace: StackTrace.current,
+        errorType: TransactionsErrorType.invalidMultiCurrencyFields,
+        transactionsAction: TransactionsAction.fundDetailsFromDTO,
+      );
+    }
+
+    if (dto.exchangeRate != null && dto.targetAmount != null) {
+      final computedTargetAmount = dto.baseAmount * dto.exchangeRate!;
+      const epsilon = 1e-6; // Small tolerance to handle potential floating point errors
+
+      if ((computedTargetAmount - dto.targetAmount!).abs() > epsilon) {
+        throw TransactionsException(
+          stackTrace: StackTrace.current,
+          errorType: TransactionsErrorType.invalidExchangedAmount,
+          transactionsAction: TransactionsAction.fundDetailsFromDTO,
+        );
+      }
     }
 
     return FundDetails(
       baseAmount: dto.baseAmount,
       baseCurrency: dto.baseCurrency,
       exchangeRate: dto.exchangeRate,
-      targetAmount: exchangedAmount,
+      targetAmount: dto.targetAmount,
       targetCurrency: dto.targetCurrency,
+      transactionType: TransactionType.fromString(dto.transactionType, TransactionsAction.unknown),
     );
   }
 
   const FundDetails._();
 
-  double get transactionAmount => targetAmount ?? baseAmount;
+  double get transactionAmount {
+    // Determine if this is a credit or debit transaction
+    if (transactionType == TransactionType.debit) {
+      // For debit transactions, the transaction amount is always the baseAmount
+      return baseAmount;
+    } else if (transactionType == TransactionType.credit) {
+      // For credit transactions, the transaction amount is the targetAmount
+      // If targetAmount is not set (e.g., in single currency transactions), it is the baseAmount
+      return targetAmount ?? baseAmount;
+    } else {
+      throw TransactionsException(
+        stackTrace: StackTrace.current,
+        errorType: TransactionsErrorType.invalidType,
+        transactionsAction: TransactionsAction.getTransactionAmount,
+      );
+    }
+  }
 }
 
 /// Value object for the description of a transaction

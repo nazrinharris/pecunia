@@ -23,7 +23,6 @@ mixin _$Transaction {
       throw _privateConstructorUsedError;
   DateTime get transactionDate => throw _privateConstructorUsedError;
   String get accountId => throw _privateConstructorUsedError;
-  TransactionType get type => throw _privateConstructorUsedError;
   FundDetails get fundDetails => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -44,7 +43,6 @@ abstract class $TransactionCopyWith<$Res> {
       TransactionDescription transactionDescription,
       DateTime transactionDate,
       String accountId,
-      TransactionType type,
       FundDetails fundDetails});
 
   $FundDetailsCopyWith<$Res> get fundDetails;
@@ -69,7 +67,6 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     Object? transactionDescription = null,
     Object? transactionDate = null,
     Object? accountId = null,
-    Object? type = null,
     Object? fundDetails = null,
   }) {
     return _then(_value.copyWith(
@@ -97,10 +94,6 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
           ? _value.accountId
           : accountId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as TransactionType,
       fundDetails: null == fundDetails
           ? _value.fundDetails
           : fundDetails // ignore: cast_nullable_to_non_nullable
@@ -132,7 +125,6 @@ abstract class _$$_TransactionCopyWith<$Res>
       TransactionDescription transactionDescription,
       DateTime transactionDate,
       String accountId,
-      TransactionType type,
       FundDetails fundDetails});
 
   @override
@@ -156,7 +148,6 @@ class __$$_TransactionCopyWithImpl<$Res>
     Object? transactionDescription = null,
     Object? transactionDate = null,
     Object? accountId = null,
-    Object? type = null,
     Object? fundDetails = null,
   }) {
     return _then(_$_Transaction(
@@ -184,10 +175,6 @@ class __$$_TransactionCopyWithImpl<$Res>
           ? _value.accountId
           : accountId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as TransactionType,
       fundDetails: null == fundDetails
           ? _value.fundDetails
           : fundDetails // ignore: cast_nullable_to_non_nullable
@@ -206,7 +193,6 @@ class _$_Transaction extends _Transaction {
       required this.transactionDescription,
       required this.transactionDate,
       required this.accountId,
-      required this.type,
       required this.fundDetails})
       : super._();
 
@@ -223,13 +209,11 @@ class _$_Transaction extends _Transaction {
   @override
   final String accountId;
   @override
-  final TransactionType type;
-  @override
   final FundDetails fundDetails;
 
   @override
   String toString() {
-    return 'Transaction(id: $id, creatorUid: $creatorUid, name: $name, transactionDescription: $transactionDescription, transactionDate: $transactionDate, accountId: $accountId, type: $type, fundDetails: $fundDetails)';
+    return 'Transaction(id: $id, creatorUid: $creatorUid, name: $name, transactionDescription: $transactionDescription, transactionDate: $transactionDate, accountId: $accountId, fundDetails: $fundDetails)';
   }
 
   @override
@@ -247,14 +231,13 @@ class _$_Transaction extends _Transaction {
                 other.transactionDate == transactionDate) &&
             (identical(other.accountId, accountId) ||
                 other.accountId == accountId) &&
-            (identical(other.type, type) || other.type == type) &&
             (identical(other.fundDetails, fundDetails) ||
                 other.fundDetails == fundDetails));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, id, creatorUid, name,
-      transactionDescription, transactionDate, accountId, type, fundDetails);
+      transactionDescription, transactionDate, accountId, fundDetails);
 
   @JsonKey(ignore: true)
   @override
@@ -271,7 +254,6 @@ abstract class _Transaction extends Transaction {
       required final TransactionDescription transactionDescription,
       required final DateTime transactionDate,
       required final String accountId,
-      required final TransactionType type,
       required final FundDetails fundDetails}) = _$_Transaction;
   const _Transaction._() : super._();
 
@@ -288,8 +270,6 @@ abstract class _Transaction extends Transaction {
   @override
   String get accountId;
   @override
-  TransactionType get type;
-  @override
   FundDetails get fundDetails;
   @override
   @JsonKey(ignore: true)
@@ -301,6 +281,7 @@ abstract class _Transaction extends Transaction {
 mixin _$FundDetails {
   double get baseAmount => throw _privateConstructorUsedError;
   String get baseCurrency => throw _privateConstructorUsedError;
+  TransactionType get transactionType => throw _privateConstructorUsedError;
   double? get exchangeRate => throw _privateConstructorUsedError;
   double? get targetAmount => throw _privateConstructorUsedError;
   String? get targetCurrency => throw _privateConstructorUsedError;
@@ -319,6 +300,7 @@ abstract class $FundDetailsCopyWith<$Res> {
   $Res call(
       {double baseAmount,
       String baseCurrency,
+      TransactionType transactionType,
       double? exchangeRate,
       double? targetAmount,
       String? targetCurrency});
@@ -339,6 +321,7 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
   $Res call({
     Object? baseAmount = null,
     Object? baseCurrency = null,
+    Object? transactionType = null,
     Object? exchangeRate = freezed,
     Object? targetAmount = freezed,
     Object? targetCurrency = freezed,
@@ -352,6 +335,10 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
           ? _value.baseCurrency
           : baseCurrency // ignore: cast_nullable_to_non_nullable
               as String,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionType,
       exchangeRate: freezed == exchangeRate
           ? _value.exchangeRate
           : exchangeRate // ignore: cast_nullable_to_non_nullable
@@ -379,6 +366,7 @@ abstract class _$$_FundDetailsCopyWith<$Res>
   $Res call(
       {double baseAmount,
       String baseCurrency,
+      TransactionType transactionType,
       double? exchangeRate,
       double? targetAmount,
       String? targetCurrency});
@@ -397,6 +385,7 @@ class __$$_FundDetailsCopyWithImpl<$Res>
   $Res call({
     Object? baseAmount = null,
     Object? baseCurrency = null,
+    Object? transactionType = null,
     Object? exchangeRate = freezed,
     Object? targetAmount = freezed,
     Object? targetCurrency = freezed,
@@ -410,6 +399,10 @@ class __$$_FundDetailsCopyWithImpl<$Res>
           ? _value.baseCurrency
           : baseCurrency // ignore: cast_nullable_to_non_nullable
               as String,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionType,
       exchangeRate: freezed == exchangeRate
           ? _value.exchangeRate
           : exchangeRate // ignore: cast_nullable_to_non_nullable
@@ -432,15 +425,18 @@ class _$_FundDetails extends _FundDetails {
   const _$_FundDetails(
       {required this.baseAmount,
       required this.baseCurrency,
-      this.exchangeRate,
-      this.targetAmount,
-      this.targetCurrency})
+      required this.transactionType,
+      required this.exchangeRate,
+      required this.targetAmount,
+      required this.targetCurrency})
       : super._();
 
   @override
   final double baseAmount;
   @override
   final String baseCurrency;
+  @override
+  final TransactionType transactionType;
   @override
   final double? exchangeRate;
   @override
@@ -450,7 +446,7 @@ class _$_FundDetails extends _FundDetails {
 
   @override
   String toString() {
-    return 'FundDetails(baseAmount: $baseAmount, baseCurrency: $baseCurrency, exchangeRate: $exchangeRate, targetAmount: $targetAmount, targetCurrency: $targetCurrency)';
+    return 'FundDetails(baseAmount: $baseAmount, baseCurrency: $baseCurrency, transactionType: $transactionType, exchangeRate: $exchangeRate, targetAmount: $targetAmount, targetCurrency: $targetCurrency)';
   }
 
   @override
@@ -462,6 +458,8 @@ class _$_FundDetails extends _FundDetails {
                 other.baseAmount == baseAmount) &&
             (identical(other.baseCurrency, baseCurrency) ||
                 other.baseCurrency == baseCurrency) &&
+            (identical(other.transactionType, transactionType) ||
+                other.transactionType == transactionType) &&
             (identical(other.exchangeRate, exchangeRate) ||
                 other.exchangeRate == exchangeRate) &&
             (identical(other.targetAmount, targetAmount) ||
@@ -472,7 +470,7 @@ class _$_FundDetails extends _FundDetails {
 
   @override
   int get hashCode => Object.hash(runtimeType, baseAmount, baseCurrency,
-      exchangeRate, targetAmount, targetCurrency);
+      transactionType, exchangeRate, targetAmount, targetCurrency);
 
   @JsonKey(ignore: true)
   @override
@@ -485,15 +483,18 @@ abstract class _FundDetails extends FundDetails {
   const factory _FundDetails(
       {required final double baseAmount,
       required final String baseCurrency,
-      final double? exchangeRate,
-      final double? targetAmount,
-      final String? targetCurrency}) = _$_FundDetails;
+      required final TransactionType transactionType,
+      required final double? exchangeRate,
+      required final double? targetAmount,
+      required final String? targetCurrency}) = _$_FundDetails;
   const _FundDetails._() : super._();
 
   @override
   double get baseAmount;
   @override
   String get baseCurrency;
+  @override
+  TransactionType get transactionType;
   @override
   double? get exchangeRate;
   @override

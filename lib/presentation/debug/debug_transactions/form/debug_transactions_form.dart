@@ -6,33 +6,87 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'debug_transactions_form.g.dart';
 
+enum FundDetailsFieldState {
+  baseAndTarget,
+  baseAndExchange,
+  targetAndExchange,
+  notSet,
+}
+
+class CreateFields {
+  static const name = 'name';
+  static const description = 'description';
+  static const type = 'type';
+  static const account = 'account';
+  static const baseAmount = 'baseAmount';
+  static const baseCurrency = 'baseCurrency';
+  static const exchangeRate = 'exchangeRate';
+  static const targetAmount = 'targetAmount';
+  static const targetCurrency = 'targetCurrency';
+
+  static final baseAmountValidators = [
+    Validators.required,
+    const CurrencyNumberValidator(),
+  ];
+
+  static final exchangeRateValidators = [
+    const DoubleValidator(),
+  ];
+
+  static final targetAmountValidators = [
+    Validators.required,
+    const CurrencyNumberValidator(),
+  ];
+}
+
 @riverpod
 FormGroup createTransactionForm(CreateTransactionFormRef ref, {String? typeDefault, String? accountId}) =>
     FormGroup({
-      'txnName': FormControl<String>(validators: [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(50),
-      ]),
-      'description': FormControl<String>(validators: [
-        Validators.maxLength(500),
-      ]),
-      'type': FormControl<String>(
+      CreateFields.name: FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(50),
+        ],
+      ),
+      CreateFields.description: FormControl<String>(
+        validators: [
+          Validators.maxLength(500),
+        ],
+      ),
+      CreateFields.type: FormControl<String>(
         value: typeDefault,
         validators: [
           Validators.required,
         ],
       ),
-      'account': FormControl<String>(
+      CreateFields.account: FormControl<String>(
         value: accountId,
         validators: [
           Validators.required,
         ],
       ),
-      'amount': FormControl<String>(validators: [
-        Validators.required,
-        const NumberValidator(),
-      ]),
+      CreateFields.baseAmount: FormControl<String>(
+        validators: CreateFields.baseAmountValidators,
+      ),
+      CreateFields.baseCurrency: FormControl<String>(
+        validators: [
+          Validators.minLength(3),
+          Validators.maxLength(3),
+        ],
+      ),
+      CreateFields.exchangeRate: FormControl<String>(
+        validators: CreateFields.exchangeRateValidators,
+      ),
+      CreateFields.targetAmount: FormControl<String>(
+        validators: CreateFields.targetAmountValidators,
+      ),
+      CreateFields.targetCurrency: FormControl<String>(
+        validators: [
+          Validators.minLength(3),
+          Validators.maxLength(3),
+        ],
+      ),
     });
 
 @riverpod
@@ -57,7 +111,7 @@ FormGroup editTransactionForm(
         ],
       ),
       'type': FormControl<String>(
-        value: txn.type.typeAsString,
+        value: txn.fundDetails.transactionType.typeAsString,
         validators: [
           Validators.required,
         ],
@@ -72,7 +126,7 @@ FormGroup editTransactionForm(
         value: txn.fundDetails.transactionAmount.toString(),
         validators: [
           Validators.required,
-          const NumberValidator(),
+          const CurrencyNumberValidator(),
         ],
       ),
     });

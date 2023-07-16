@@ -195,11 +195,14 @@ class CreateTransactionForm extends ConsumerWidget {
                         ? () {
                             ref.read(createTransactionProvider.notifier).createTransaction(
                                   name: form.value['txnName']! as String,
-                                  description: form.value['description'] as String?,
-                                  amount: double.parse(form.value['amount']! as String),
-                                  currency: ref.watch(chosenAccountProvider).toNullable()!.currency,
                                   accountId: ref.watch(chosenAccountProvider).toNullable()!.id,
-                                  type: form.value['type']! as String,
+                                  description: form.value['description'] as String?,
+                                  transactionType: form.value['type']! as String,
+                                  baseAmount: double.parse(form.value['amount']! as String),
+                                  baseCurrency: ref.watch(chosenAccountProvider).toNullable()!.currency,
+                                  exchangeRate: null,
+                                  targetCurrency: null,
+                                  targetAmount: null,
                                 );
                             form.unfocus();
                           }
@@ -330,7 +333,7 @@ class BuildTxnAmountText extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isCredit = txn.type == TransactionType.credit;
+    final isCredit = txn.fundDetails.transactionType == TransactionType.credit;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -466,7 +469,9 @@ class BottomSheetContent extends ConsumerWidget {
                           color: Colors.orange[300],
                         ),
                     children: <TextSpan>[
-                      TextSpan(text: txn.type.typeAsString, style: DefaultTextStyle.of(context).style),
+                      TextSpan(
+                          text: txn.fundDetails.transactionType.typeAsString,
+                          style: DefaultTextStyle.of(context).style),
                     ],
                   ),
                 ),

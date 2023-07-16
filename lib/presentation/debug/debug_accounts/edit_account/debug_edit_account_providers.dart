@@ -70,13 +70,13 @@ FormGroup editAccountForm(
         value: initialBalance,
         validators: [
           Validators.required,
-          const NumberValidator(),
+          const CurrencyNumberValidator(),
         ],
       ),
     });
 
-class NumberValidator extends Validator<dynamic> {
-  const NumberValidator() : super();
+class CurrencyNumberValidator extends Validator<dynamic> {
+  const CurrencyNumberValidator() : super();
 
   @override
   Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
@@ -88,5 +88,29 @@ class NumberValidator extends Validator<dynamic> {
             double.parse(control.value.toString()) >= 0
         ? null
         : {'currency': true};
+  }
+}
+
+class DoubleValidator extends Validator<dynamic> {
+  const DoubleValidator() : super();
+
+  @override
+  Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
+    final value = control.value;
+    // Check for null, empty, or blank string.
+    if (value == null || value.toString().isEmpty || value.toString().trim() == '') {
+      return {'double': true};
+    }
+
+    // Try parsing the value to a double.
+    final doubleValue = double.tryParse(value.toString());
+
+    // If it can't be parsed to a double, return error.
+    if (doubleValue == null) {
+      return {'double': true};
+    }
+
+    // If everything checks out, return null (no error).
+    return null;
   }
 }
