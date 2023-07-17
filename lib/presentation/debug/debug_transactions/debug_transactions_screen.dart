@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/form/debug_transactions_form.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
@@ -76,16 +78,16 @@ class DebugTransactionsScreen extends ConsumerWidget {
   }
 }
 
-class CreateTransactionForm extends ConsumerWidget {
+class CreateTransactionForm extends HookConsumerWidget {
   const CreateTransactionForm({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formGroup = ref.watch(createTransactionFormProvider());
+    final formGroup = useState(createTransactionForm());
     final accountsList = ref.watch(getAllAccountsProvider);
     return accountsList.when(
       data: (accounts) => ReactiveForm(
-        formGroup: formGroup,
+        formGroup: formGroup.value,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Column(
@@ -93,7 +95,7 @@ class CreateTransactionForm extends ConsumerWidget {
               ReactiveTextField<String>(
                 formControlName: 'txnName',
                 textInputAction: TextInputAction.next,
-                onSubmitted: (_) => formGroup.focus('description'),
+                onSubmitted: (_) => formGroup.value.focus('description'),
                 decoration: const InputDecoration(
                   labelText: 'Transaction Name',
                   hintText: 'Give a short name for this transaction',
@@ -103,10 +105,10 @@ class CreateTransactionForm extends ConsumerWidget {
                 formControlName: 'description',
                 textInputAction: TextInputAction.next,
                 onSubmitted: (_) {
-                  if (formGroup.value['description'] == '') {
-                    formGroup.value['description'] = null;
+                  if (formGroup.value.value['description'] == '') {
+                    formGroup.value.value['description'] = null;
                   }
-                  formGroup.focus('currency');
+                  formGroup.value.focus('currency');
                 },
                 decoration: const InputDecoration(
                   labelText: 'Description',
@@ -116,7 +118,7 @@ class CreateTransactionForm extends ConsumerWidget {
               ReactiveDropdownField<String>(
                 formControlName: 'type',
                 isExpanded: true,
-                onChanged: (formControl) => formGroup.focus('account'),
+                onChanged: (formControl) => formGroup.value.focus('account'),
                 decoration: const InputDecoration(
                   labelText: 'Transaction Type',
                   hintText: 'Is this an income or an expense?',
@@ -144,7 +146,7 @@ class CreateTransactionForm extends ConsumerWidget {
                   ),
                   onChanged: (control) {
                     ref.watch(chosenAccountProvider.notifier).updateChosenAccount(accounts, control.value!);
-                    formGroup.focus('amount');
+                    formGroup.value.focus('amount');
                   },
                   selectedItemBuilder: (context) {
                     return accounts.map((account) {
@@ -197,7 +199,8 @@ class CreateTransactionForm extends ConsumerWidget {
                                   name: form.value['txnName']! as String,
                                   accountId: ref.watch(chosenAccountProvider).toNullable()!.id,
                                   description: form.value['description'] as String?,
-                                  transactionType: form.value['type']! as String,
+                                  transactionType: TransactionType.fromString(
+                                      form.value['type']! as String, TransactionsAction.create),
                                   baseAmount: double.parse(form.value['amount']! as String),
                                   baseCurrency: ref.watch(chosenAccountProvider).toNullable()!.currency,
                                   exchangeRate: null,
@@ -357,7 +360,7 @@ class BuildTxnAmountText extends ConsumerWidget {
           ),
         const SizedBox(width: 10),
         Text(
-          txn.fundDetails.baseCurrency,
+          txn.fundDetails.transactionCurrency,
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 14,

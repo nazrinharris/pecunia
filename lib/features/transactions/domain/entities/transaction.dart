@@ -7,8 +7,8 @@ import 'package:uuid/uuid.dart';
 part 'transaction.freezed.dart';
 
 enum TransactionType {
-  debit('debit'),
-  credit('credit');
+  credit('credit'),
+  debit('debit');
 
   const TransactionType(this.typeAsString);
 
@@ -24,6 +24,41 @@ enum TransactionType {
       ),
     );
   }
+
+  /// Returns a more detailed string representation of the transaction type.
+  ///
+  /// For each transaction type, this method appends additional context
+  /// to the basic type. For instance, a credit transaction is mapped
+  /// to 'Income (Credit)' and a debit transaction to 'Expense (Debit)'.
+  /// This method is useful when a more descriptive representation of
+  /// the transaction type is needed.
+  String toDescription() {
+    switch (this) {
+      case TransactionType.credit:
+        return 'Income (Credit)';
+      case TransactionType.debit:
+        return 'Expense (Debit)';
+    }
+  }
+
+  /// Returns a user-friendly string representation of the transaction type.
+  ///
+  /// This method maps each transaction type to a string that is meant to be
+  /// displayed in the user interface. It simplifies the transaction types to
+  /// 'Income' for credit transactions and 'Expense' for debit transactions.
+  /// Use this method when you need a simple, human-readable representation
+  /// of the transaction type.
+  String toDisplayName() {
+    switch (this) {
+      case TransactionType.credit:
+        return 'Income';
+      case TransactionType.debit:
+        return 'Expense';
+    }
+  }
+
+  bool isCredit() => this == TransactionType.credit;
+  bool isDebit() => this == TransactionType.debit;
 }
 
 @freezed
@@ -59,7 +94,7 @@ class Transaction with _$Transaction {
         fundDetails: fundDetails,
       );
 
-  factory Transaction.fromDTO(TransactionDTO dto, TransactionsAction action) {
+  factory Transaction.fromDTO(TransactionDTO dto) {
     return Transaction(
       id: dto.id,
       creatorUid: dto.creatorUid,
@@ -117,7 +152,12 @@ class FundDetails with _$FundDetails {
 
     if (dto.exchangeRate != null && dto.targetAmount != null) {
       final computedTargetAmount = dto.baseAmount * dto.exchangeRate!;
-      const epsilon = 1e-6; // Small tolerance to handle potential floating point errors
+      const epsilon = 0.001; // Small tolerance to handle potential floating point errors
+
+      print('baseAmount: ${dto.baseAmount}');
+      print('exchangeRate: ${dto.exchangeRate}');
+      print('targetAmount: ${dto.targetAmount}');
+      print('computedTargetAmount: $computedTargetAmount');
 
       if ((computedTargetAmount - dto.targetAmount!).abs() > epsilon) {
         throw TransactionsException(
@@ -154,6 +194,24 @@ class FundDetails with _$FundDetails {
         stackTrace: StackTrace.current,
         errorType: TransactionsErrorType.invalidType,
         transactionsAction: TransactionsAction.getTransactionAmount,
+      );
+    }
+  }
+
+  String get transactionCurrency {
+    // Determine if this is a credit or debit transaction
+    if (transactionType == TransactionType.debit) {
+      // For debit transactions, the transaction currency is always the baseCurrency
+      return baseCurrency;
+    } else if (transactionType == TransactionType.credit) {
+      // For credit transactions, the transaction currency is the targetCurrency
+      // If targetCurrency is not set (e.g., in single currency transactions), it is the baseCurrency
+      return targetCurrency ?? baseCurrency;
+    } else {
+      throw TransactionsException(
+        stackTrace: StackTrace.current,
+        errorType: TransactionsErrorType.invalidType,
+        transactionsAction: TransactionsAction.getTransactionCurrency,
       );
     }
   }

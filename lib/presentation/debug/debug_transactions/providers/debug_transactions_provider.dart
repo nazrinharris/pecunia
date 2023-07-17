@@ -21,7 +21,7 @@ class CreateTransaction extends _$CreateTransaction {
     required String name,
     required String? description,
     required String accountId,
-    required String transactionType,
+    required TransactionType transactionType,
     required double? baseAmount,
     required String baseCurrency,
     required double? exchangeRate,
@@ -51,29 +51,29 @@ class CreateTransaction extends _$CreateTransaction {
 
     if (pecuniaUser != null) {
       debugPrint('user exists, creating transaction...');
-      // (await ref
-      //         .read(transactionsRepoProvider)
-      //         .createTransaction(
-      //           name: name,
-      //           creatorUid: pecuniaUser.uid,
-      //           transactionDate: DateTime.now(),
-      //           accountId: accountId,
-      //           type: transactionType,
-      //           baseAmount: actualBaseAmount,
-      //           baseCurrency: baseCurrency,
-      //           transactionDescription: description,
-      //           exchangeRate: exchangeRate,
-      //           targetCurrency: targetCurrency,
-      //           targetAmount: targetAmount,
-      //         )
-      //         .run())
-      //     .fold(
-      //   (l) => state = AsyncError(l, l.stackTrace),
-      //   (r) {
-      //     ref.invalidate(getAllTransactionsProvider);
-      //     state = AsyncData(Option.of(r));
-      //   },
-      // );
+      (await ref
+              .read(transactionsRepoProvider)
+              .createTransaction(
+                name: name,
+                creatorUid: pecuniaUser.uid,
+                transactionDate: DateTime.now(),
+                accountId: accountId,
+                type: transactionType.typeAsString,
+                baseAmount: actualBaseAmount,
+                baseCurrency: baseCurrency,
+                transactionDescription: description,
+                exchangeRate: exchangeRate,
+                targetCurrency: targetCurrency,
+                targetAmount: targetAmount,
+              )
+              .run())
+          .fold(
+        (l) => state = AsyncError(l, l.stackTrace),
+        (r) {
+          ref.invalidate(getAllTransactionsProvider);
+          state = AsyncData(Option.of(r));
+        },
+      );
       debugPrint('''
       name: $name,
       creatorUid: ${pecuniaUser.uid},

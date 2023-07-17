@@ -298,47 +298,18 @@ final editTransactionProvider =
 );
 
 typedef _$EditTransaction = AutoDisposeAsyncNotifier<Option<Unit>>;
-String _$isCurrencyExchangeEnabledHash() =>
-    r'b837d7a33d2be701c26897ef2cc6211b0e25b3d5';
-
-/// See also [IsCurrencyExchangeEnabled].
-@ProviderFor(IsCurrencyExchangeEnabled)
-final isCurrencyExchangeEnabledProvider =
-    AutoDisposeNotifierProvider<IsCurrencyExchangeEnabled, bool>.internal(
-  IsCurrencyExchangeEnabled.new,
-  name: r'isCurrencyExchangeEnabledProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$isCurrencyExchangeEnabledHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$IsCurrencyExchangeEnabled = AutoDisposeNotifier<bool>;
-String _$fundDetailsStateHash() => r'706582867712735c3985753d6a2834bdd888117c';
-
-/// See also [FundDetailsState].
-@ProviderFor(FundDetailsState)
-final fundDetailsStateProvider = AutoDisposeNotifierProvider<FundDetailsState,
-    FundDetailsFieldState>.internal(
-  FundDetailsState.new,
-  name: r'fundDetailsStateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fundDetailsStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$FundDetailsState = AutoDisposeNotifier<FundDetailsFieldState>;
 String _$fundDetailsControllerHash() =>
-    r'fe01c64198699354eefd9dc8180a36f12141dea8';
+    r'7fddd22af4e35082d4acb70a8af620349784b5b6';
 
-abstract class _$FundDetailsController
-    extends BuildlessAutoDisposeNotifier<FundDetailsFieldState> {
+abstract class _$FundDetailsController extends BuildlessAutoDisposeNotifier<
+    ({
+      CurrencyState currencyState,
+      FundDetailsFieldState fundDetailsFieldState
+    })> {
   late final FormGroup form;
 
-  FundDetailsFieldState build(
+  ({CurrencyState currencyState, FundDetailsFieldState fundDetailsFieldState})
+      build(
     FormGroup form,
   );
 }
@@ -352,7 +323,11 @@ const fundDetailsControllerProvider = FundDetailsControllerFamily();
 /// See [createTransactionForm]
 ///
 /// Copied from [FundDetailsController].
-class FundDetailsControllerFamily extends Family<FundDetailsFieldState> {
+class FundDetailsControllerFamily extends Family<
+    ({
+      CurrencyState currencyState,
+      FundDetailsFieldState fundDetailsFieldState
+    })> {
   /// See [createTransactionForm]
   ///
   /// Copied from [FundDetailsController].
@@ -397,7 +372,11 @@ class FundDetailsControllerFamily extends Family<FundDetailsFieldState> {
 ///
 /// Copied from [FundDetailsController].
 class FundDetailsControllerProvider extends AutoDisposeNotifierProviderImpl<
-    FundDetailsController, FundDetailsFieldState> {
+    FundDetailsController,
+    ({
+      CurrencyState currencyState,
+      FundDetailsFieldState fundDetailsFieldState
+    })> {
   /// See [createTransactionForm]
   ///
   /// Copied from [FundDetailsController].
@@ -432,7 +411,8 @@ class FundDetailsControllerProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  FundDetailsFieldState runNotifierBuild(
+  ({CurrencyState currencyState, FundDetailsFieldState fundDetailsFieldState})
+      runNotifierBuild(
     covariant FundDetailsController notifier,
   ) {
     return notifier.build(

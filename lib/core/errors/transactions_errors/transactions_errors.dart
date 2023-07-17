@@ -21,6 +21,8 @@ enum TransactionsErrorType {
   unknown(unknownTransactionErrorCode, unknownTransactionErrorMessage),
   cannotConvertToDTO(
       'cannot-convert-to-dto', 'Something went wrong while converting the transaction to a DTO'),
+  cannotConvertFromDTO(
+      'cannot-convert-from-dto', 'Something went wrong while converting the DTO to a transaction'),
   sqliteException('sqlite-exception', 'Something went wrong while accessing the database'),
   invalidType('invalid-type', 'The transaction type is invalid'),
   transactionNotFound('transaction-not-found', 'The transaction was not found in the database'),
@@ -59,6 +61,7 @@ class TransactionsException with _$TransactionsException implements Exception {
   factory TransactionsException.unknown({
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
+    @Default(TransactionsAction.unknown) TransactionsAction transactionsAction,
   }) = _UnknownTransactionsException;
 
   factory TransactionsException.fromFailure(TransactionsFailure failure) {
@@ -93,6 +96,16 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
     @Default(TransactionsErrorType.unknown) TransactionsErrorType errorType,
     Object? rawException,
   }) = _UnknownTransactionsFailure;
+
+  factory TransactionsFailure.fromException(TransactionsException exception) {
+    return TransactionsFailure(
+      stackTrace: exception.stackTrace,
+      errorType: exception.errorType,
+      message: exception.errorType.message,
+      transactionsAction: exception.transactionsAction,
+      rawException: exception,
+    );
+  }
 
   @override
   List<Object> get props => [message, stackTrace];

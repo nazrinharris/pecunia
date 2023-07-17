@@ -18,13 +18,17 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TransactionsException {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   TransactionsErrorType get errorType => throw _privateConstructorUsedError;
+  TransactionsAction get transactionsAction =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
             TransactionsAction transactionsAction)
         $default, {
     required TResult Function(
-            StackTrace stackTrace, TransactionsErrorType errorType)
+            StackTrace stackTrace,
+            TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)
         unknown,
   }) =>
       throw _privateConstructorUsedError;
@@ -33,7 +37,8 @@ mixin _$TransactionsException {
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
             TransactionsAction transactionsAction)?
         $default, {
-    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
         unknown,
   }) =>
       throw _privateConstructorUsedError;
@@ -42,7 +47,8 @@ mixin _$TransactionsException {
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
             TransactionsAction transactionsAction)?
         $default, {
-    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
         unknown,
     required TResult orElse(),
   }) =>
@@ -78,7 +84,10 @@ abstract class $TransactionsExceptionCopyWith<$Res> {
           $Res Function(TransactionsException) then) =
       _$TransactionsExceptionCopyWithImpl<$Res, TransactionsException>;
   @useResult
-  $Res call({StackTrace stackTrace, TransactionsErrorType errorType});
+  $Res call(
+      {StackTrace stackTrace,
+      TransactionsErrorType errorType,
+      TransactionsAction transactionsAction});
 }
 
 /// @nodoc
@@ -97,6 +106,7 @@ class _$TransactionsExceptionCopyWithImpl<$Res,
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
+    Object? transactionsAction = null,
   }) {
     return _then(_value.copyWith(
       stackTrace: null == stackTrace
@@ -107,6 +117,10 @@ class _$TransactionsExceptionCopyWithImpl<$Res,
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as TransactionsErrorType,
+      transactionsAction: null == transactionsAction
+          ? _value.transactionsAction
+          : transactionsAction // ignore: cast_nullable_to_non_nullable
+              as TransactionsAction,
     ) as $Val);
   }
 }
@@ -209,7 +223,9 @@ class _$_TransactionsException extends _TransactionsException {
             TransactionsAction transactionsAction)
         $default, {
     required TResult Function(
-            StackTrace stackTrace, TransactionsErrorType errorType)
+            StackTrace stackTrace,
+            TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)
         unknown,
   }) {
     return $default(stackTrace, errorType, transactionsAction);
@@ -221,7 +237,8 @@ class _$_TransactionsException extends _TransactionsException {
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
             TransactionsAction transactionsAction)?
         $default, {
-    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
         unknown,
   }) {
     return $default?.call(stackTrace, errorType, transactionsAction);
@@ -233,7 +250,8 @@ class _$_TransactionsException extends _TransactionsException {
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
             TransactionsAction transactionsAction)?
         $default, {
-    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
         unknown,
     required TResult orElse(),
   }) {
@@ -287,6 +305,7 @@ abstract class _TransactionsException extends TransactionsException {
   StackTrace get stackTrace;
   @override
   TransactionsErrorType get errorType;
+  @override
   TransactionsAction get transactionsAction;
   @override
   @JsonKey(ignore: true)
@@ -303,7 +322,10 @@ abstract class _$$_UnknownTransactionsExceptionCopyWith<$Res>
       __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({StackTrace stackTrace, TransactionsErrorType errorType});
+  $Res call(
+      {StackTrace stackTrace,
+      TransactionsErrorType errorType,
+      TransactionsAction transactionsAction});
 }
 
 /// @nodoc
@@ -321,6 +343,7 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
+    Object? transactionsAction = null,
   }) {
     return _then(_$_UnknownTransactionsException(
       stackTrace: null == stackTrace
@@ -331,6 +354,10 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as TransactionsErrorType,
+      transactionsAction: null == transactionsAction
+          ? _value.transactionsAction
+          : transactionsAction // ignore: cast_nullable_to_non_nullable
+              as TransactionsAction,
     ));
   }
 }
@@ -339,17 +366,22 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
 
 class _$_UnknownTransactionsException extends _UnknownTransactionsException {
   _$_UnknownTransactionsException(
-      {required this.stackTrace, required this.errorType})
+      {required this.stackTrace,
+      required this.errorType,
+      this.transactionsAction = TransactionsAction.unknown})
       : super._();
 
   @override
   final StackTrace stackTrace;
   @override
   final TransactionsErrorType errorType;
+  @override
+  @JsonKey()
+  final TransactionsAction transactionsAction;
 
   @override
   String toString() {
-    return 'TransactionsException.unknown(stackTrace: $stackTrace, errorType: $errorType)';
+    return 'TransactionsException.unknown(stackTrace: $stackTrace, errorType: $errorType, transactionsAction: $transactionsAction)';
   }
 
   @override
@@ -360,11 +392,14 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
-                other.errorType == errorType));
+                other.errorType == errorType) &&
+            (identical(other.transactionsAction, transactionsAction) ||
+                other.transactionsAction == transactionsAction));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, stackTrace, errorType);
+  int get hashCode =>
+      Object.hash(runtimeType, stackTrace, errorType, transactionsAction);
 
   @JsonKey(ignore: true)
   @override
@@ -380,10 +415,12 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
             TransactionsAction transactionsAction)
         $default, {
     required TResult Function(
-            StackTrace stackTrace, TransactionsErrorType errorType)
+            StackTrace stackTrace,
+            TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)
         unknown,
   }) {
-    return unknown(stackTrace, errorType);
+    return unknown(stackTrace, errorType, transactionsAction);
   }
 
   @override
@@ -392,10 +429,11 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
             TransactionsAction transactionsAction)?
         $default, {
-    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+    TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
         unknown,
   }) {
-    return unknown?.call(stackTrace, errorType);
+    return unknown?.call(stackTrace, errorType, transactionsAction);
   }
 
   @override
@@ -404,12 +442,13 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
             TransactionsAction transactionsAction)?
         $default, {
-    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType)?
+    TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
+            TransactionsAction transactionsAction)?
         unknown,
     required TResult orElse(),
   }) {
     if (unknown != null) {
-      return unknown(stackTrace, errorType);
+      return unknown(stackTrace, errorType, transactionsAction);
     }
     return orElse();
   }
@@ -449,7 +488,8 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
 abstract class _UnknownTransactionsException extends TransactionsException {
   factory _UnknownTransactionsException(
           {required final StackTrace stackTrace,
-          required final TransactionsErrorType errorType}) =
+          required final TransactionsErrorType errorType,
+          final TransactionsAction transactionsAction}) =
       _$_UnknownTransactionsException;
   _UnknownTransactionsException._() : super._();
 
@@ -457,6 +497,8 @@ abstract class _UnknownTransactionsException extends TransactionsException {
   StackTrace get stackTrace;
   @override
   TransactionsErrorType get errorType;
+  @override
+  TransactionsAction get transactionsAction;
   @override
   @JsonKey(ignore: true)
   _$$_UnknownTransactionsExceptionCopyWith<_$_UnknownTransactionsException>

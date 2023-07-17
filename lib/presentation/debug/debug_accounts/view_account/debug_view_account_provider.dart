@@ -3,7 +3,8 @@ import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/form/debug_transactions_form.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/create_txn_form_widget.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -72,36 +73,30 @@ class EditTransaction extends _$EditTransaction {
   }
 }
 
-@riverpod
-class IsCurrencyExchangeEnabled extends _$IsCurrencyExchangeEnabled {
-  @override
-  bool build() {
-    return false;
-  }
-
-  void setValue(bool value) {
-    state = value;
-  }
-}
-
-@riverpod
-class FundDetailsState extends _$FundDetailsState {
-  @override
-  FundDetailsFieldState build() {
-    return FundDetailsFieldState.baseAndTarget;
-  }
-
-  void setFormState(FundDetailsFieldState formState) {
-    state = formState;
-  }
+FormGroup createTransactionForm({TransactionType? typeDefault, String? accountId}) {
+  return fb.group({
+    CreateFields.name:
+        fb.control('', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
+    CreateFields.description: fb.control<String>('', [Validators.maxLength(500)]),
+    CreateFields.type: fb.control<String>(typeDefault?.typeAsString ?? '', [Validators.required]),
+    CreateFields.account: fb.control<String>(accountId ?? '', [Validators.required]),
+    CreateFields.baseAmount: fb.control<String>('', CreateFields.baseAmountValidators),
+    CreateFields.baseCurrency: fb.control<String>('', CreateFields.baseCurrencyValidators),
+    CreateFields.exchangeRate: fb.control<String>('', CreateFields.exchangeRateValidators),
+    CreateFields.targetAmount: fb.control<String>('', CreateFields.targetAmountValidators),
+    CreateFields.targetCurrency: fb.control<String>('', CreateFields.targetCurrencyValidators),
+  });
 }
 
 /// See [createTransactionForm]
 @riverpod
 class FundDetailsController extends _$FundDetailsController {
   @override
-  FundDetailsFieldState build(FormGroup form) {
-    return FundDetailsFieldState.notSet;
+  ({FundDetailsFieldState fundDetailsFieldState, CurrencyState currencyState}) build(FormGroup form) {
+    return (
+      fundDetailsFieldState: FundDetailsFieldState.baseAndTarget,
+      currencyState: form.value[CreateFields.type] == 'income' ? CurrencyState.income : CurrencyState.expense
+    );
   }
 
   final Map<String, List<Validator<dynamic>>> _formValidators = {
@@ -144,12 +139,12 @@ class FundDetailsController extends _$FundDetailsController {
 
   /// Sets the form state and updates the fields.
   ///
-  /// The form state is set to [formState].
+  /// The form state is set to [fundDetailsFieldState].
   /// Each field in [_allFields] is updated based on whether its name is in [enabledFields].
   /// If a field's name is in [enabledFields], the field is enabled and its validators are set.
   /// If a field's name is not in [enabledFields], the field is disabled, its validators are cleared, and its value is set to null.
   ///
-  /// [formState] is the form state to be set.
+  /// [fundDetailsFieldState] is the form state to be set.
   /// [enabledFields] is a list of field names that should be enabled.
   ///
   /// Example usage:
@@ -165,8 +160,9 @@ class FundDetailsController extends _$FundDetailsController {
   ///  );
   /// }
   /// ```
-  void _setForStateAndUpdateFields(FundDetailsFieldState formState, List<String> enabledFields) {
-    state = formState;
+  void _setForStateAndUpdateFields(FundDetailsFieldState fundDetailsFieldState, List<String> enabledFields) {
+    state = (fundDetailsFieldState: fundDetailsFieldState, currencyState: state.currencyState);
+    print(state);
 
     for (final fieldName in _allFields) {
       _setFormControlState(form.control(fieldName), enabledFields.contains(fieldName),
@@ -213,8 +209,9 @@ class FundDetailsController extends _$FundDetailsController {
     return operation(value1, value2);
   }
 
-  void onAnyFieldSubmitted() {
-    switch (state) {
+  void onAnyFieldChanged() {
+    print('state on change: $state');
+    switch (state.fundDetailsFieldState) {
       case FundDetailsFieldState.baseAndTarget:
         if (!_validateFields([CreateFields.baseAmount, CreateFields.targetAmount])) {
           return;

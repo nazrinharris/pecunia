@@ -10,10 +10,12 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/edit_account/debug_edit_account_providers.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/form/debug_transactions_form.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -174,7 +176,7 @@ class AccountDetails extends ConsumerWidget {
                       alignment: Alignment.center,
                       child: RichText(
                           text: TextSpan(
-                        text: account.balance.toString(),
+                        text: account.balance.toStringAsFixed(2),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
@@ -360,6 +362,12 @@ class TransactionsList extends ConsumerWidget {
         );
       },
       error: (e, stack) {
+        if (e is Failure) {
+          return Center(
+            child: Text(e.message),
+          );
+        }
+
         return Center(
           child: Text(e.toString()),
         );
@@ -530,20 +538,66 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
       isScrollControlled: true,
       context: context,
       showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
       builder: (context) {
         return SizedBox(
-          height: 750,
+          height: 700,
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             child: Column(
               children: [
-                CreateTransactionForm(account, isCredit),
+                CreateTxnForm(
+                  account: account,
+                  initialTransactionType: isCredit ? TransactionType.credit : TransactionType.debit,
+                ),
+                //CreateTransactionForm(account, isCredit),
                 const SizedBox(height: 64),
               ],
             ),
           ),
         );
       });
+}
+
+class CreateFields {
+  // Transaction Info
+  static const name = 'name';
+  static const description = 'description';
+  static const type = 'type';
+  static const account = 'account';
+
+  // Fund Details
+  static const baseAmount = 'baseAmount';
+  static const baseCurrency = 'baseCurrency';
+  static const exchangeRate = 'exchangeRate';
+  static const targetAmount = 'targetAmount';
+  static const targetCurrency = 'targetCurrency';
+
+  static final baseAmountValidators = [
+    Validators.required,
+    const CurrencyNumberValidator(),
+  ];
+
+  static final baseCurrencyValidators = [
+    Validators.minLength(3),
+    Validators.maxLength(3),
+  ];
+
+  static final exchangeRateValidators = [
+    const DoubleValidator(),
+  ];
+
+  static final targetAmountValidators = [
+    Validators.required,
+    const CurrencyNumberValidator(),
+  ];
+
+  static final targetCurrencyValidators = [
+    Validators.minLength(3),
+    Validators.maxLength(3),
+  ];
 }
 
 class CreateTransactionForm extends HookConsumerWidget {
@@ -571,409 +625,344 @@ class CreateTransactionForm extends HookConsumerWidget {
           ..invalidate(getAccountByIdProvider(account.id));
       }
     });
-    final typeDefault = isCredit ? 'credit' : 'debit';
-    final formGroup =
-        ref.watch(createTransactionFormProvider(typeDefault: typeDefault, accountId: account.id));
 
-    final isIncome = useState(formGroup.value['type'] == 'credit');
-    final isIncomeText = isIncome.value ? 'Income' : 'Expense';
-    final isIncomeTextColor = isIncome.value ? Colors.green[100] : Colors.red[100];
+    final txnType = useState(isCredit ? TransactionType.credit : TransactionType.debit);
+    final isCurrencyExchangeEnabled = useState(false);
+    final fundDetailsState = useState(FundDetailsFieldState.baseAndTarget);
+    final formGroup = useState(createTransactionForm(typeDefault: txnType.value, accountId: account.id));
 
-    return ReactiveForm(
-      formGroup: formGroup,
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: isIncome.value ? Colors.green[900]!.withOpacity(0.1) : Colors.red[900]!.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                  color: isIncome.value
-                      ? Colors.green[100]!.withOpacity(0.3)
-                      : Colors.red[100]!.withOpacity(0.3)),
-            ),
-            alignment: Alignment.center,
-            child: Align(
-              child: RichText(
-                  text: TextSpan(
-                text: isIncomeText,
-                style: TextStyle(
-                  color: isIncomeTextColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-                children: [
-                  TextSpan(
-                    text: ' Transaction',
-                    style: TextStyle(
-                      color: isIncomeTextColor,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              )),
-            ),
-          ),
-          CreateTransactionFormFields(
-            account,
-            formGroup,
-            isIncome,
-          ),
-          const SizedBox(height: 200),
-        ],
-      ),
-    );
-  }
-}
-
-class CreateTransactionFormFields extends HookConsumerWidget {
-  const CreateTransactionFormFields(
-    this.account,
-    this.formGroup,
-    this.isIncome, {
-    super.key,
-  });
-
-  final Account account;
-  final FormGroup formGroup;
-  final ValueNotifier<bool> isIncome;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(fundDetailsControllerProvider(formGroup));
-
-    final isCurrencyExchangeEnabled = ref.watch(isCurrencyExchangeEnabledProvider);
-    formGroup.control(CreateFields.targetCurrency).value = account.currency;
+    final isIncome = txnType.value == TransactionType.credit;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Column(
-        children: [
-          ReactiveTextField<String>(
-            formControlName: CreateFields.name,
-            textInputAction: TextInputAction.next,
-            onSubmitted: (_) => formGroup.focus('description'),
-            decoration: const InputDecoration(
-              labelText: 'Transaction Name',
-              hintText: 'Give a short name for this transaction',
-            ),
-          ),
-          ReactiveTextField<String>(
-            formControlName: CreateFields.description,
-            textInputAction: TextInputAction.next,
-            onSubmitted: (_) {
-              if (formGroup.value['description'] == '') {
-                formGroup.value['description'] = null;
-              }
-              formGroup.focus('currency');
-            },
-            decoration: const InputDecoration(
-              labelText: 'Description',
-              hintText: 'You could also leave this empty.',
-            ),
-          ),
-          ReactiveDropdownField<String>(
-            formControlName: CreateFields.type,
-            isExpanded: true,
-            onChanged: (formControl) {
-              isIncome.value = formControl.value == 'credit';
-              formGroup.focus('account');
-            },
-            decoration: const InputDecoration(
-              labelText: 'Transaction Type',
-              hintText: 'Is this an income or an expense?',
-            ),
-            items: [
-              DropdownMenuItem<String>(
-                value: TransactionType.credit.typeAsString,
-                child: const Text('Income (or known as credit)'),
+      child: ReactiveForm(
+        formGroup: formGroup.value,
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: isIncome ? Colors.green[900]!.withOpacity(0.1) : Colors.red[900]!.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                    color:
+                        isIncome ? Colors.green[100]!.withOpacity(0.3) : Colors.red[100]!.withOpacity(0.3)),
               ),
-              DropdownMenuItem<String>(
-                value: TransactionType.debit.typeAsString,
-                child: const Text('Expense (or known as debit)'),
+              alignment: Alignment.center,
+              child: Align(
+                child: RichText(
+                    text: TextSpan(
+                  text: isIncome ? 'Income' : 'Expense',
+                  style: TextStyle(
+                    color: isIncome ? Colors.green[100] : Colors.red[100],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: ' Transaction',
+                      style: TextStyle(
+                        color: isIncome ? Colors.green[100] : Colors.red[100],
+                        fontWeight: FontWeight.normal,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                )),
               ),
-            ],
-          ),
-          SizedBox(
-            height: 75,
-            width: double.infinity,
-            child: ReactiveDropdownField<String>(
+            ),
+            ReactiveTextField<String>(
+              key: const Key(CreateFields.name),
+              formControlName: CreateFields.name,
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) => formGroup.value.focus(CreateFields.description),
+              decoration: const InputDecoration(
+                labelText: 'Transaction Name',
+                hintText: 'Give a short name for this transaction',
+              ),
+            ),
+            ReactiveTextField<String>(
+              key: const Key(CreateFields.description),
+              formControlName: CreateFields.description,
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) => formGroup.value.focus(CreateFields.type),
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                hintText: 'You could also leave this empty.',
+              ),
+            ),
+            ReactiveDropdownField<String>(
+              key: const Key(CreateFields.type),
+              formControlName: CreateFields.type,
               isExpanded: true,
-              readOnly: true,
-              formControlName: CreateFields.account,
-              decoration: InputDecoration(
-                labelText: account.name,
-                hintText: 'Choose an account',
-              ),
-              onChanged: (control) {
-                formGroup.focus('amount');
-              },
-              selectedItemBuilder: (context) {
-                return [Text(account.name)];
-              },
               items: [
                 DropdownMenuItem<String>(
-                  value: account.id,
-                  child: Text(
-                    account.name,
-                    overflow: TextOverflow.ellipsis,
+                  value: TransactionType.credit.typeAsString,
+                  child: const Text('Income (or known as credit)'),
+                ),
+                DropdownMenuItem<String>(
+                  value: TransactionType.debit.typeAsString,
+                  child: const Text('Expense (or known as debit)'),
+                ),
+              ],
+              onChanged: (control) {
+                if (control.value == 'credit') {
+                  txnType.value = TransactionType.credit;
+                } else {
+                  txnType.value = TransactionType.debit;
+                }
+                formGroup.value.focus(CreateFields.account);
+              },
+              decoration: const InputDecoration(
+                labelText: 'Transaction Type',
+                hintText: 'Is this an income or an expense?',
+              ),
+            ),
+            SizedBox(
+              height: 75,
+              width: double.infinity,
+              child: ReactiveDropdownField<String>(
+                key: const Key(CreateFields.account),
+                formControlName: CreateFields.account,
+                isExpanded: true,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: account.name,
+                  hintText: 'Choose an account',
+                ),
+                selectedItemBuilder: (context) {
+                  return [Text(account.name)];
+                },
+                items: [
+                  DropdownMenuItem<String>(
+                    value: account.id,
+                    child: Text(
+                      account.name,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
+                ],
+                onChanged: (control) {
+                  formGroup.value.focus(CreateFields.baseAmount);
+                },
+              ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 14),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.purple[900]!.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.purple[100]!.withOpacity(0.2)),
+            Container(
+              margin: const EdgeInsets.only(top: 14, left: 14, right: 14),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.purple[900]!.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.purple[100]!.withOpacity(0.2)),
+              ),
+              alignment: Alignment.center,
+              child: const Text(
+                'Fund Details',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
-            alignment: Alignment.center,
-            child: const Text(
-              'Fund Details',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 14),
-          SwitchListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.monetization_on_outlined),
-                const Icon(Icons.swap_horiz),
-                const SizedBox(width: 8),
-                Text(
-                  'Enable currency exchange',
-                  style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            value: ref.watch(isCurrencyExchangeEnabledProvider),
-            onChanged: (val) {
-              ref.read(isCurrencyExchangeEnabledProvider.notifier).setValue(val);
-
-              if (val == false) {
-                ref.read(fundDetailsControllerProvider(formGroup).notifier).disableCurrencyExchange();
-              } else {
-                ref.read(fundDetailsStateProvider.notifier).setFormState(FundDetailsFieldState.baseAndTarget);
-                ref.read(fundDetailsControllerProvider(formGroup).notifier).setForBaseAndTarget();
-                formGroup.control(CreateFields.baseCurrency).value = 'XXX';
-              }
-            },
-          ),
-          const SizedBox(height: 14),
-          if (ref.watch(isCurrencyExchangeEnabledProvider))
-            DropdownButtonFormField<FundDetailsFieldState>(
-              isExpanded: true,
-              hint: const Text('Choose how you want to enter the amounts'),
-              value: ref.watch(fundDetailsStateProvider),
-              items: [
-                const DropdownMenuItem(
-                  value: FundDetailsFieldState.baseAndExchange,
-                  child: Text("I'll set the Base Amount and Exchange Rate"),
-                ),
-                const DropdownMenuItem(
-                  value: FundDetailsFieldState.baseAndTarget,
-                  child: Text("I'll set the Base Amount and Target Amount"),
-                ),
-                const DropdownMenuItem(
-                  value: FundDetailsFieldState.targetAndExchange,
-                  child: Text("I'll set the Target Amount and Exchange Rate"),
-                ),
-              ],
+            const SizedBox(height: 14),
+            SwitchListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.monetization_on_outlined),
+                  const Icon(Icons.swap_horiz),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Enable currency exchange',
+                    style: DefaultTextStyle.of(context).style.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              value: isCurrencyExchangeEnabled.value,
               onChanged: (val) {
-                ref.read(fundDetailsStateProvider.notifier).setFormState(val!);
+                isCurrencyExchangeEnabled.value = val;
 
-                switch (ref.watch(fundDetailsStateProvider)) {
-                  case FundDetailsFieldState.baseAndTarget:
-                    ref.read(fundDetailsControllerProvider(formGroup).notifier).setForBaseAndTarget();
-                  case FundDetailsFieldState.baseAndExchange:
-                    ref.read(fundDetailsControllerProvider(formGroup).notifier).setForBaseAndExchange();
-                  case FundDetailsFieldState.targetAndExchange:
-                    ref.read(fundDetailsControllerProvider(formGroup).notifier).setForTargetAndExchange();
-                  case FundDetailsFieldState.notSet:
-                    throw UnimplementedError();
+                if (val == false) {
+                  ref.read(fundDetailsControllerProvider(formGroup.value).notifier).disableCurrencyExchange();
+                } else {
+                  fundDetailsState.value = FundDetailsFieldState.baseAndTarget;
+                  ref.read(fundDetailsControllerProvider(formGroup.value).notifier).setForBaseAndTarget();
+                  formGroup.value.control(CreateFields.baseCurrency).value = 'XXX';
                 }
               },
             ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              BuildBaseAmountCurrency(isCurrencyExchangeEnabled, account, formGroup),
-              const SizedBox(width: 10),
-              Flexible(
-                flex: 3,
-                child: ReactiveTextField<String>(
-                  key: const Key(CreateFields.baseAmount),
-                  formControlName: CreateFields.baseAmount,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    labelText: isCurrencyExchangeEnabled ? 'Base Amount' : 'Amount',
-                    hintText: 'Couple bucks? A few hundred?',
+            if (isCurrencyExchangeEnabled.value)
+              DropdownButtonFormField<FundDetailsFieldState>(
+                isExpanded: true,
+                hint: const Text('Choose how you want to enter the amounts'),
+                value: fundDetailsState.value,
+                items: [
+                  const DropdownMenuItem(
+                    value: FundDetailsFieldState.baseAndExchange,
+                    child: Text("I'll set the Base Amount and Exchange Rate"),
                   ),
-                  onChanged: (control) {
-                    if (isCurrencyExchangeEnabled) {
-                      ref.read(fundDetailsControllerProvider(formGroup).notifier).onAnyFieldSubmitted();
-                    }
-                  },
-                ),
+                  const DropdownMenuItem(
+                    value: FundDetailsFieldState.baseAndTarget,
+                    child: Text("I'll set the Base Amount and Target Amount"),
+                  ),
+                  const DropdownMenuItem(
+                    value: FundDetailsFieldState.targetAndExchange,
+                    child: Text("I'll set the Target Amount and Exchange Rate"),
+                  ),
+                ],
+                onChanged: (val) {
+                  fundDetailsState.value = val!;
+
+                  switch (fundDetailsState.value) {
+                    case FundDetailsFieldState.baseAndTarget:
+                      ref.read(fundDetailsControllerProvider(formGroup.value).notifier).setForBaseAndTarget();
+                    case FundDetailsFieldState.baseAndExchange:
+                      ref
+                          .read(fundDetailsControllerProvider(formGroup.value).notifier)
+                          .setForBaseAndExchange();
+                    case FundDetailsFieldState.targetAndExchange:
+                      ref
+                          .read(fundDetailsControllerProvider(formGroup.value).notifier)
+                          .setForTargetAndExchange();
+                    case FundDetailsFieldState.notSet:
+                      throw UnimplementedError();
+                  }
+                },
               ),
-            ],
-          ),
-          if (isCurrencyExchangeEnabled) ...[
-            ReactiveTextField<String>(
-                key: const Key(CreateFields.exchangeRate),
-                formControlName: CreateFields.exchangeRate,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.swap_horiz),
-                  labelText: 'Exchange Rate (optional)',
-                  hintText: 'You can just enter the base and target amount.',
-                ),
-                onChanged: (control) {
-                  ref.read(fundDetailsControllerProvider(formGroup).notifier).onAnyFieldSubmitted();
-                }),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    // alignment: Alignment.center,
-                    child: ReactiveDropdownField(
-                      isExpanded: true,
-                      readOnly: true,
-                      borderRadius: BorderRadius.circular(14),
-                      formControlName: CreateFields.targetCurrency,
-                      decoration: const InputDecoration(border: InputBorder.none),
-                      items: [
-                        DropdownMenuItem(
-                          value: account.currency,
-                          child: Center(
-                            child: Text(
-                              account.currency,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                BuildBaseAmountCurrencyField(
+                    formGroup.value, account, isCurrencyExchangeEnabled.value, fundDetailsState.value),
                 const SizedBox(width: 10),
-                Flexible(
-                  flex: 3,
-                  child: ReactiveTextField<String>(
-                    key: const Key(CreateFields.targetAmount),
-                    formControlName: CreateFields.targetAmount,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    textInputAction: TextInputAction.done,
-                    decoration: const InputDecoration(
-                      labelText: 'Target Amount',
-                      hintText: 'Couple bucks? A few hundred?',
-                    ),
-                    onChanged: (control) =>
-                        ref.read(fundDetailsControllerProvider(formGroup).notifier).onAnyFieldSubmitted(),
-                  ),
-                ),
+                BuildBaseAmountField(formGroup.value, isCurrencyExchangeEnabled.value),
               ],
             ),
-          ],
-          const SizedBox(height: 24),
-          ReactiveFormConsumer(
-            builder: (context, form, child) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
+            if (isCurrencyExchangeEnabled.value) ...[
+              Column(
                 children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      print(ref.read(fundDetailsControllerProvider(formGroup)));
-                      print(form.value);
-                    },
-                    child: const Text('Debug'),
-                  ),
-                  const SizedBox(width: 14),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.disabled)) {
-                            return Colors.grey[800]!; // the color when button is disabled
-                          }
-                          return Colors.purple[900]!; // the color when button is enabled
-                        },
-                      ),
-                    ),
-                    onPressed: form.valid
-                        ? () {
-                            final name = form.value[CreateFields.name]!;
-                            final description = form.value[CreateFields.description];
-                            final baseAmount = form.value[CreateFields.baseAmount];
-                            final baseCurrency = form.value[CreateFields.baseCurrency]!;
-                            final type = form.value[CreateFields.type]!;
-                            final exchangeRate = form.value[CreateFields.exchangeRate];
-                            final targetAmount = form.value[CreateFields.targetAmount];
-                            final targetCurrency = form.value[CreateFields.targetCurrency];
-
-                            ref.read(createTransactionProvider.notifier).createTransaction(
-                                  name: name as String,
-                                  description: description as String?,
-                                  baseAmount: baseAmount == null ? null : double.parse(baseAmount as String),
-                                  baseCurrency: baseCurrency as String,
-                                  accountId: account.id,
-                                  transactionType: type as String,
-                                  exchangeRate:
-                                      exchangeRate == null ? null : double.parse(exchangeRate as String),
-                                  targetAmount:
-                                      targetAmount == null ? null : double.parse(targetAmount as String),
-                                  targetCurrency: targetCurrency as String?,
-                                );
-                            form.unfocus();
-                          }
-                        : null,
-                    child: const Text('Create Transaction'),
-                  ),
+                  BuildExchangeRateField(formGroup.value),
+                  BuildTargetAmountField(formGroup.value, account),
                 ],
-              );
-            },
-          )
-        ],
+              )
+            ],
+            const SizedBox(height: 24),
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        print(ref.read(fundDetailsControllerProvider(formGroup.value)));
+                        print(form.value);
+                      },
+                      child: const Text('Debug'),
+                    ),
+                    const SizedBox(width: 14),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return Colors.grey[800]!; // the color when button is disabled
+                            }
+                            return Colors.purple[900]!; // the color when button is enabled
+                          },
+                        ),
+                      ),
+                      onPressed: form.valid
+                          ? () {
+                              final name = form.value[CreateFields.name]!;
+                              final description = form.value[CreateFields.description];
+                              final baseAmount = form.value[CreateFields.baseAmount];
+                              final baseCurrency = form.value[CreateFields.baseCurrency]!;
+                              final type = form.value[CreateFields.type]!;
+                              final exchangeRate = form.value[CreateFields.exchangeRate];
+                              final targetAmount = form.value[CreateFields.targetAmount];
+                              final targetCurrency = form.value[CreateFields.targetCurrency];
+
+                              ref.read(createTransactionProvider.notifier).createTransaction(
+                                    name: name as String,
+                                    description: description as String?,
+                                    baseAmount:
+                                        baseAmount == null ? null : double.parse(baseAmount as String),
+                                    baseCurrency: baseCurrency as String,
+                                    accountId: account.id,
+                                    transactionType:
+                                        TransactionType.fromString(type as String, TransactionsAction.create),
+                                    exchangeRate:
+                                        exchangeRate == null ? null : double.parse(exchangeRate as String),
+                                    targetAmount:
+                                        targetAmount == null ? null : double.parse(targetAmount as String),
+                                    targetCurrency: targetCurrency as String?,
+                                  );
+                              form.unfocus();
+                            }
+                          : null,
+                      child: const Text('Create Transaction'),
+                    ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 200),
+          ],
+        ),
       ),
     );
   }
 }
 
-class BuildBaseAmountCurrency extends ConsumerStatefulWidget {
-  const BuildBaseAmountCurrency(
-    this.isCurrencyExchangeEnabled,
+class BuildBaseAmountField extends ConsumerWidget {
+  const BuildBaseAmountField(this.formGroup, this.isCurrencyExchangeEnabled, {super.key});
+
+  final FormGroup formGroup;
+  final bool isCurrencyExchangeEnabled;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Flexible(
+      flex: 3,
+      child: ReactiveTextField<String>(
+        key: const Key(CreateFields.baseAmount),
+        formControlName: CreateFields.baseAmount,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          labelText: isCurrencyExchangeEnabled ? 'Base Amount' : 'Amount',
+          hintText: 'Couple bucks? A few hundred?',
+        ),
+        onChanged: (control) {
+          if (isCurrencyExchangeEnabled) {
+            ref.read(fundDetailsControllerProvider(formGroup).notifier).onAnyFieldChanged();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class BuildBaseAmountCurrencyField extends ConsumerStatefulWidget {
+  const BuildBaseAmountCurrencyField(
+    this.formGroup,
     this.account,
-    this.formGroup, {
+    this.isCurrencyExchangeEnabled,
+    this.fundDetailsFieldState, {
     super.key,
   });
 
   final bool isCurrencyExchangeEnabled;
   final FormGroup formGroup;
   final Account account;
+  final FundDetailsFieldState fundDetailsFieldState;
 
   @override
-  ConsumerState<BuildBaseAmountCurrency> createState() => _BuildBaseAmountCurrencyState();
+  ConsumerState<BuildBaseAmountCurrencyField> createState() => _BuildBaseAmountCurrencyState();
 }
 
-class _BuildBaseAmountCurrencyState extends ConsumerState<BuildBaseAmountCurrency> {
+class _BuildBaseAmountCurrencyState extends ConsumerState<BuildBaseAmountCurrencyField> {
   String selectedCurrencyCode = 'XXX';
 
   @override
@@ -1051,5 +1040,103 @@ class _BuildBaseAmountCurrencyState extends ConsumerState<BuildBaseAmountCurrenc
         ),
       );
     }
+  }
+}
+
+class BuildExchangeRateField extends ConsumerWidget {
+  const BuildExchangeRateField(this.formGroup, {super.key});
+
+  final FormGroup formGroup;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ReactiveTextField<String>(
+        key: const Key(CreateFields.exchangeRate),
+        formControlName: CreateFields.exchangeRate,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        textInputAction: TextInputAction.done,
+        decoration: const InputDecoration(
+          icon: Icon(Icons.swap_horiz),
+          labelText: 'Exchange Rate (optional)',
+          hintText: 'You can just enter the base and target amount.',
+        ),
+        onChanged: (control) {
+          ref.read(fundDetailsControllerProvider(formGroup).notifier).onAnyFieldChanged();
+        });
+  }
+}
+
+class BuildTargetAmountField extends ConsumerWidget {
+  const BuildTargetAmountField(
+    this.formGroup,
+    this.account, {
+    super.key,
+  });
+
+  final FormGroup formGroup;
+  final Account account;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        BuildTargetAmountCurrencyField(account),
+        const SizedBox(width: 10),
+        Flexible(
+          flex: 3,
+          child: ReactiveTextField<String>(
+            key: const Key(CreateFields.targetAmount),
+            formControlName: CreateFields.targetAmount,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration(
+              labelText: 'Target Amount',
+              hintText: 'Couple bucks? A few hundred?',
+            ),
+            onChanged: (control) =>
+                ref.read(fundDetailsControllerProvider(formGroup).notifier).onAnyFieldChanged(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class BuildTargetAmountCurrencyField extends ConsumerWidget {
+  const BuildTargetAmountCurrencyField(this.account, {super.key});
+
+  final Account account;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Flexible(
+      fit: FlexFit.tight,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        // alignment: Alignment.center,
+        child: ReactiveDropdownField(
+          isExpanded: true,
+          readOnly: true,
+          borderRadius: BorderRadius.circular(14),
+          formControlName: CreateFields.targetCurrency,
+          decoration: const InputDecoration(border: InputBorder.none),
+          items: [
+            DropdownMenuItem(
+              value: account.currency,
+              child: Center(
+                child: Text(
+                  account.currency,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

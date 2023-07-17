@@ -6,8 +6,8 @@ part of 'debug_transactions_form.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createTransactionFormHash() =>
-    r'0c092e7e3b326e5c41c3dd9ca4b8a68154b25721';
+String _$editTransactionFormHash() =>
+    r'36ad8b315f1da75560b9cc4dc8bd0f12ea33d649';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,98 +30,6 @@ class _SystemHash {
   }
 }
 
-typedef CreateTransactionFormRef = AutoDisposeProviderRef<FormGroup>;
-
-/// See also [createTransactionForm].
-@ProviderFor(createTransactionForm)
-const createTransactionFormProvider = CreateTransactionFormFamily();
-
-/// See also [createTransactionForm].
-class CreateTransactionFormFamily extends Family<FormGroup> {
-  /// See also [createTransactionForm].
-  const CreateTransactionFormFamily();
-
-  /// See also [createTransactionForm].
-  CreateTransactionFormProvider call({
-    String? typeDefault,
-    String? accountId,
-  }) {
-    return CreateTransactionFormProvider(
-      typeDefault: typeDefault,
-      accountId: accountId,
-    );
-  }
-
-  @override
-  CreateTransactionFormProvider getProviderOverride(
-    covariant CreateTransactionFormProvider provider,
-  ) {
-    return call(
-      typeDefault: provider.typeDefault,
-      accountId: provider.accountId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'createTransactionFormProvider';
-}
-
-/// See also [createTransactionForm].
-class CreateTransactionFormProvider extends AutoDisposeProvider<FormGroup> {
-  /// See also [createTransactionForm].
-  CreateTransactionFormProvider({
-    this.typeDefault,
-    this.accountId,
-  }) : super.internal(
-          (ref) => createTransactionForm(
-            ref,
-            typeDefault: typeDefault,
-            accountId: accountId,
-          ),
-          from: createTransactionFormProvider,
-          name: r'createTransactionFormProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$createTransactionFormHash,
-          dependencies: CreateTransactionFormFamily._dependencies,
-          allTransitiveDependencies:
-              CreateTransactionFormFamily._allTransitiveDependencies,
-        );
-
-  final String? typeDefault;
-  final String? accountId;
-
-  @override
-  bool operator ==(Object other) {
-    return other is CreateTransactionFormProvider &&
-        other.typeDefault == typeDefault &&
-        other.accountId == accountId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, typeDefault.hashCode);
-    hash = _SystemHash.combine(hash, accountId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-String _$editTransactionFormHash() =>
-    r'36ad8b315f1da75560b9cc4dc8bd0f12ea33d649';
 typedef EditTransactionFormRef = AutoDisposeProviderRef<FormGroup>;
 
 /// See also [editTransactionForm].
