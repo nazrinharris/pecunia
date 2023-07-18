@@ -6,22 +6,6 @@ part of 'debug_transactions_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createTransactionHash() => r'15193e7457b7557309e304991badafa54b5f141a';
-
-/// See also [CreateTransaction].
-@ProviderFor(CreateTransaction)
-final createTransactionProvider =
-    AutoDisposeAsyncNotifierProvider<CreateTransaction, Option<Unit>>.internal(
-  CreateTransaction.new,
-  name: r'createTransactionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$createTransactionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$CreateTransaction = AutoDisposeAsyncNotifier<Option<Unit>>;
 String _$deleteTransactionHash() => r'82bf45e658fe725498fdff2580cd84f134e3018c';
 
 /// See also [DeleteTransaction].

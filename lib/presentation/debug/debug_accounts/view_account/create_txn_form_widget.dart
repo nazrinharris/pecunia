@@ -7,21 +7,96 @@ import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-enum FundDetailsFieldState {
-  baseAndTarget,
-  baseAndExchange,
-  targetAndExchange,
-  notSet,
-}
+part 'create_txn_form_widget.g.dart';
 
-enum CurrencyState {
-  income,
-  expense,
+@riverpod
+class CreateTransaction extends _$CreateTransaction {
+  @override
+  Future<Option<Unit>> build() async {
+    return const Option.none();
+  }
+
+  Future<void> createTransaction({
+    required String name,
+    required String? description,
+    required String accountId,
+    required TransactionType transactionType,
+    required double? baseAmount,
+    required String baseCurrency,
+    required double? exchangeRate,
+    required String? targetCurrency,
+    required double? targetAmount,
+  }) async {
+    state = const AsyncValue.loading();
+
+    debugPrint('retrieving logged in user...');
+    final failureOrPecuniaUser = await ref.read(authRepoProvider).getLoggedInUser().run();
+
+    final pecuniaUser = failureOrPecuniaUser.fold(
+      (failure) {
+        state = AsyncValue.error(failure, failure.stackTrace);
+      },
+      (pecuniaUser) => pecuniaUser,
+    );
+
+    double actualBaseAmount;
+
+    // ! Temporary Workaround. Remove this when we have a proper way to handle this.
+    if (baseAmount == null) {
+      actualBaseAmount = targetAmount! / exchangeRate!;
+    } else {
+      actualBaseAmount = baseAmount;
+    }
+
+    if (pecuniaUser != null) {
+      debugPrint('user exists, creating transaction...');
+      (await ref
+              .read(transactionsRepoProvider)
+              .createTransaction(
+                name: name,
+                creatorUid: pecuniaUser.uid,
+                transactionDate: DateTime.now(),
+                accountId: accountId,
+                type: transactionType.typeAsString,
+                baseAmount: actualBaseAmount,
+                baseCurrency: baseCurrency,
+                transactionDescription: description,
+                exchangeRate: exchangeRate,
+                targetCurrency: targetCurrency,
+                targetAmount: targetAmount,
+              )
+              .run())
+          .fold(
+        (l) => state = AsyncError(l, l.stackTrace),
+        (r) {
+          ref.invalidate(getAllTransactionsProvider);
+          state = AsyncData(Option.of(r));
+        },
+      );
+      debugPrint('''
+      name: $name,
+      creatorUid: ${pecuniaUser.uid},
+      transactionDate: ${DateTime.now()},
+      accountId: $accountId,
+      type: $transactionType,
+      baseAmount: $baseAmount,
+      actualBaseAmount: $actualBaseAmount,
+      baseCurrency: $baseCurrency,
+      transactionDescription: $description,
+      exchangeRate: $exchangeRate,
+      targetCurrency: $targetCurrency,
+      targetAmount: $targetAmount,
+''');
+    }
+  }
 }
 
 class CreateTxnFields {
@@ -85,16 +160,24 @@ class CreateTxnFields {
 
 class CreateTxnForm extends HookConsumerWidget {
   const CreateTxnForm({
-    required this.account,
     required this.initialTransactionType,
+    this.account,
+    this.accountsList,
+    this.disableCloseButton = false,
     super.key,
-  });
+  }) : assert(
+            (account == null) != (accountsList == null), // either account or accountsList, but not both
+            'Either account or accountsList must be provided, but not both.');
 
-  final Account account;
+  final Account? account;
+  final List<Account>? accountsList;
   final TransactionType initialTransactionType;
+  final bool disableCloseButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final chosenAccount = useState(account ?? accountsList!.first);
+
     ref.listen(createTransactionProvider, (prev, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
@@ -108,8 +191,8 @@ class CreateTxnForm extends HookConsumerWidget {
               title: 'Transaction created successfully!',
             );
         ref
-          ..invalidate(getTransactionsByAccountIdProvider(account.id))
-          ..invalidate(getAccountByIdProvider(account.id));
+          ..invalidate(getTransactionsByAccountIdProvider(chosenAccount.value.id))
+          ..invalidate(getAccountByIdProvider(chosenAccount.value.id));
       }
     });
 
@@ -123,11 +206,17 @@ class CreateTxnForm extends HookConsumerWidget {
     final exchangeRateController = useTextEditingController();
     final targetAmountController = useTextEditingController();
 
-    final baseCurrency = useState(account.currency);
-    final targetCurrency = useState(account.currency);
+    final baseCurrency = useState(chosenAccount.value.currency);
+    final targetCurrency = useState(chosenAccount.value.currency);
 
     final nameNode = useFocusNode();
     final descriptionNode = useFocusNode();
+
+    useEffect(() {
+      baseCurrency.value = chosenAccount.value.currency;
+      targetCurrency.value = chosenAccount.value.currency;
+      return null;
+    }, [chosenAccount.value]);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -147,7 +236,8 @@ class CreateTxnForm extends HookConsumerWidget {
                       color: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
                     ),
                   ),
-                  IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))
+                  if (!disableCloseButton)
+                    IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))
                 ],
               ),
             ),
@@ -172,6 +262,8 @@ class CreateTxnForm extends HookConsumerWidget {
                 hintText: 'Enter a description for your transaction',
               ),
             ),
+            const SizedBox(height: 8),
+            ChooseAccountField(chosenAccount: chosenAccount, accountsList: accountsList),
             const SizedBox(height: 14),
             Column(
               children: TransactionType.values.map((type) {
@@ -240,7 +332,7 @@ class CreateTxnForm extends HookConsumerWidget {
                 Flexible(
                   flex: 3,
                   child: BaseCurrencyField(
-                    account,
+                    chosenAccount.value,
                     baseCurrency,
                     txnType,
                     isCurrencyExchangeEnabled,
@@ -283,7 +375,7 @@ class CreateTxnForm extends HookConsumerWidget {
                   Flexible(
                     flex: 3,
                     child: TargetCurrencyField(
-                      account,
+                      chosenAccount.value,
                       targetCurrency,
                       txnType,
                       isCurrencyExchangeEnabled,
@@ -316,7 +408,7 @@ class CreateTxnForm extends HookConsumerWidget {
                   await ref.read(createTransactionProvider.notifier).createTransaction(
                         name: nameController.text,
                         description: descriptionController.text,
-                        accountId: account.id,
+                        accountId: chosenAccount.value.id,
                         transactionType: txnType.value,
                         baseAmount: double.tryParse(baseAmountController.text),
                         baseCurrency: baseCurrency.value,
@@ -336,6 +428,48 @@ class CreateTxnForm extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class ChooseAccountField extends HookConsumerWidget {
+  const ChooseAccountField({
+    required this.chosenAccount,
+    this.accountsList,
+    super.key,
+  });
+
+  final ValueNotifier<Account> chosenAccount;
+  final List<Account>? accountsList;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DropdownButtonFormField<Account>(
+      value: chosenAccount.value,
+      items: items,
+      onChanged: accountsList == null
+          ? null
+          : (val) {
+              chosenAccount.value = val!;
+            },
+    );
+  }
+
+  List<DropdownMenuItem<Account>> get items {
+    if (accountsList != null) {
+      return accountsList!.map((account) {
+        return DropdownMenuItem<Account>(
+          value: account,
+          child: Text(account.name),
+        );
+      }).toList();
+    } else {
+      return [
+        DropdownMenuItem(
+          value: chosenAccount.value,
+          child: Text(chosenAccount.value.name),
+        ),
+      ];
+    }
   }
 }
 

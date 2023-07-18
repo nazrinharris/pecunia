@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -8,7 +7,7 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/form/debug_transactions_form.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
@@ -83,140 +82,12 @@ class CreateTransactionForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formGroup = useState(createTransactionForm());
     final accountsList = ref.watch(getAllAccountsProvider);
     return accountsList.when(
-      data: (accounts) => ReactiveForm(
-        formGroup: formGroup.value,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Column(
-            children: [
-              ReactiveTextField<String>(
-                formControlName: 'txnName',
-                textInputAction: TextInputAction.next,
-                onSubmitted: (_) => formGroup.value.focus('description'),
-                decoration: const InputDecoration(
-                  labelText: 'Transaction Name',
-                  hintText: 'Give a short name for this transaction',
-                ),
-              ),
-              ReactiveTextField<String>(
-                formControlName: 'description',
-                textInputAction: TextInputAction.next,
-                onSubmitted: (_) {
-                  if (formGroup.value.value['description'] == '') {
-                    formGroup.value.value['description'] = null;
-                  }
-                  formGroup.value.focus('currency');
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'You could also leave this empty.',
-                ),
-              ),
-              ReactiveDropdownField<String>(
-                formControlName: 'type',
-                isExpanded: true,
-                onChanged: (formControl) => formGroup.value.focus('account'),
-                decoration: const InputDecoration(
-                  labelText: 'Transaction Type',
-                  hintText: 'Is this an income or an expense?',
-                ),
-                items: [
-                  DropdownMenuItem<String>(
-                    value: TransactionType.credit.typeAsString,
-                    child: const Text('Income (or known as credit)'),
-                  ),
-                  DropdownMenuItem<String>(
-                    value: TransactionType.debit.typeAsString,
-                    child: const Text('Expense (or known as debit)'),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 90,
-                width: double.infinity,
-                child: ReactiveDropdownField<String>(
-                  isExpanded: true,
-                  formControlName: 'account',
-                  decoration: const InputDecoration(
-                    labelText: 'Account',
-                    hintText: 'Choose an account',
-                  ),
-                  onChanged: (control) {
-                    ref.watch(chosenAccountProvider.notifier).updateChosenAccount(accounts, control.value!);
-                    formGroup.value.focus('amount');
-                  },
-                  selectedItemBuilder: (context) {
-                    return accounts.map((account) {
-                      return Text(account.name, overflow: TextOverflow.ellipsis);
-                    }).toList();
-                  },
-                  items: buildAccountsDropdown(accounts),
-                ),
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 14, right: 14),
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.2),
-                        // border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        ref.watch(chosenAccountProvider).toNullable()?.currency ?? '-',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: ReactiveTextField<String>(
-                      formControlName: 'amount',
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      textInputAction: TextInputAction.done,
-                      decoration: const InputDecoration(
-                        labelText: 'Amount',
-                        hintText: 'Couple bucks? A few hundred?',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              ReactiveFormConsumer(
-                builder: (context, form, child) {
-                  return ElevatedButton(
-                    onPressed: form.valid
-                        ? () {
-                            ref.read(createTransactionProvider.notifier).createTransaction(
-                                  name: form.value['txnName']! as String,
-                                  accountId: ref.watch(chosenAccountProvider).toNullable()!.id,
-                                  description: form.value['description'] as String?,
-                                  transactionType: TransactionType.fromString(
-                                      form.value['type']! as String, TransactionsAction.create),
-                                  baseAmount: double.parse(form.value['amount']! as String),
-                                  baseCurrency: ref.watch(chosenAccountProvider).toNullable()!.currency,
-                                  exchangeRate: null,
-                                  targetCurrency: null,
-                                  targetAmount: null,
-                                );
-                            form.unfocus();
-                          }
-                        : null,
-                    child: const Text('Create Transaction'),
-                  );
-                },
-              )
-            ],
-          ),
-        ),
+      data: (accounts) => CreateTxnForm(
+        accountsList: accounts,
+        initialTransactionType: TransactionType.credit,
+        disableCloseButton: true,
       ),
       error: (f, stack) {
         final failure = f as Failure;
