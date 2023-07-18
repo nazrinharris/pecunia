@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
@@ -32,8 +34,16 @@ class AccountsTable extends Table {
 class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
   AccountsDAO(super.db);
 
-  Future<List<AccountDTO>> getAllAccounts() async {
-    return select(accountsTable).get();
+  TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {
+    const currentAction = AccountsAction.getAccounts;
+    return TaskEither.tryCatch(
+      () async => (select(accountsTable)
+            ..orderBy([
+              (tbl) => OrderingTerm(expression: tbl.name),
+            ]))
+          .get(),
+      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
+    );
   }
 
   TaskEither<AccountsFailure, AccountDTO> getAccountById(String id) {
@@ -101,15 +111,41 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
     );
   }
 
-  Stream<List<AccountDTO>> watchAllAccounts() {
-    return select(accountsTable).watch();
+  Stream<Either<AccountsFailure, List<AccountDTO>>> watchAllAccounts() {
+    const currentAction = AccountsAction.watchAccounts;
+    return select(accountsTable).watch().transform(StreamTransformer.fromHandlers(
+          handleData: (listOfDTOs, sink) {
+            sink.add(
+              right(listOfDTOs),
+            );
+          },
+          handleError: (error, stackTrace, sink) {
+            sink.add(
+              left(mapDriftToAccountsFailure(currentAction, error, stackTrace)),
+            );
+          },
+        ));
   }
 
-  Future<void> insertAccount(AccountDTO account) async {
-    await into(accountsTable).insert(account.toCompanion(false));
+  TaskEither<AccountsFailure, Unit> insertAccount(AccountDTO account) {
+    const currentAction = AccountsAction.createAccount;
+    return TaskEither.tryCatch(
+      () async {
+        await into(accountsTable).insert(account.toCompanion(false));
+        return unit;
+      },
+      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
+    );
   }
 
-  Future<void> deleteAccount(AccountDTO account) async {
-    await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
+  TaskEither<AccountsFailure, Unit> deleteAccount(AccountDTO account) {
+    const currentAction = AccountsAction.deleteAccount;
+    return TaskEither.tryCatch(
+      () async {
+        await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
+        return unit;
+      },
+      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
+    );
   }
 }

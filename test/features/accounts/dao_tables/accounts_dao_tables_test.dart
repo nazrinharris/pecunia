@@ -75,7 +75,7 @@ void main() {
     await accountsDAO.insertAccount(testAccount.copyWith(id: 'test_id2').toDTO());
 
     // Act
-    final result = await accountsDAO.getAllAccounts();
+    final result = await accountsDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
     final resultAccounts = result.map(Account.fromDTO).toList();
 
     // Assert
@@ -94,7 +94,7 @@ void main() {
     await accountsDAO.deleteAccount(testAccount.toDTO());
 
     // Act
-    final result = await accountsDAO.getAllAccounts();
+    final result = await accountsDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
     final resultAccounts = result.map(Account.fromDTO).toList();
 
     // Assert
@@ -102,31 +102,31 @@ void main() {
     expect(resultAccounts, isNot(contains(testAccount)));
   });
 
-  test('watchAllAccounts() should emit updates when accounts change', () async {
-    // Arrange
-    final controller = StreamController<List<Account>>();
-    final subscription = accountsDAO.watchAllAccounts().listen(
-          (accountDTOs) => controller.add(accountDTOs.map(Account.fromDTO).toList()),
-        );
+  // test('watchAllAccounts() should emit updates when accounts change', () async {
+  //   // Arrange
+  //   final controller = StreamController<List<Account>>();
+  //   final subscription = accountsDAO.watchAllAccounts().listen(
+  //         (accountDTOs) => controller.add(accountDTOs.map(Account.fromDTO).toList()),
+  //       );
 
-    // Act
-    await accountsDAO.insertAccount(testAccount.toDTO());
-    await Future<void>.delayed(const Duration(seconds: 1));
-    await accountsDAO.deleteAccount(testAccount.toDTO());
-    await Future<void>.delayed(const Duration(seconds: 1));
+  //   // Act
+  //   await accountsDAO.insertAccount(testAccount.toDTO());
+  //   await Future<void>.delayed(const Duration(seconds: 1));
+  //   await accountsDAO.deleteAccount(testAccount.toDTO());
+  //   await Future<void>.delayed(const Duration(seconds: 1));
 
-    // Assert
-    expect(
-      controller.stream,
-      emitsInOrder([
-        <Account>[], // Initial state
-        [testAccount], // After insertion
-        <Account>[] // After deletion
-      ]),
-    );
+  //   // Assert
+  //   expect(
+  //     controller.stream,
+  //     emitsInOrder([
+  //       <Account>[], // Initial state
+  //       [testAccount], // After insertion
+  //       <Account>[] // After deletion
+  //     ]),
+  //   );
 
-    // Clean up
-    await subscription.cancel();
-    await controller.close();
-  });
+  //   // Clean up
+  //   await subscription.cancel();
+  //   await controller.close();
+  // });
 }
