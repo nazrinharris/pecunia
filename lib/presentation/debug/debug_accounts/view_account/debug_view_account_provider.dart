@@ -43,24 +43,31 @@ class EditTransaction extends _$EditTransaction {
   }
 
   Future<void> editTransaction({
+    required String name,
+    required String? description,
+    required TransactionType transactionType,
+    required double baseAmount,
+    required String baseCurrency,
+    required double? exchangeRate,
+    required String? targetCurrency,
+    required double? targetAmount,
     required Transaction oldTxn,
-    required String txnName,
-    required String? txnDescription,
-    required String txnType,
     //  required String txnAccount, Commented out, because as of now, can't change account of a transaction
-    required double txnAmount,
   }) async {
     state = const AsyncLoading();
     final newTxn = oldTxn.copyWith(
-      name: txnName,
-      transactionDescription: TransactionDescription(txnDescription),
-      fundDetails: oldTxn.fundDetails.copyWith(
-        baseAmount: txnAmount,
-        transactionType: TransactionType.fromString(txnType, TransactionsAction.edit),
-      ),
-    );
+        name: name,
+        transactionDescription: TransactionDescription(description),
+        fundDetails: oldTxn.fundDetails.copyWith(
+          transactionType: transactionType,
+          baseAmount: baseAmount,
+          baseCurrency: baseCurrency,
+          exchangeRate: exchangeRate,
+          targetAmount: targetAmount,
+          targetCurrency: targetCurrency,
+        ));
 
-    (await ref.read(transactionsRepoProvider).updateTransaction(newTxn: newTxn, oldTxn: oldTxn).run()).fold(
+    (await ref.read(transactionsRepoProvider).editTransaction(newTxn: newTxn, oldTxn: oldTxn).run()).fold(
       (l) => state = AsyncError(l, l.stackTrace),
       (r) {
         ref.invalidate(getTransactionsByAccountIdProvider(oldTxn.accountId));

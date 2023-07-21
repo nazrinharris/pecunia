@@ -82,11 +82,11 @@ class TransactionsRepo {
         .flatMap(_helper.mapDTOListToTransactionList);
   }
 
-  TaskEither<TransactionsFailure, Unit> updateTransaction({
+  TaskEither<TransactionsFailure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
   }) {
-    return transactionsLocalDS.updateTransaction(newTxnDTO: newTxn.toDTO(), oldTxnDto: oldTxn.toDTO());
+    return transactionsLocalDS.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
   }
 
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {

@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
+import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transactions_local_ds.g.dart';
@@ -13,9 +14,9 @@ TransactionsLocalDS transactionsLocalDS(TransactionsLocalDSRef ref) =>
 abstract interface class TransactionsLocalDS {
   TaskEither<TransactionsFailure, Unit> createTransaction(TransactionDTO transaction);
   TaskEither<TransactionsFailure, Unit> deleteTransaction(TransactionDTO transaction);
-  TaskEither<TransactionsFailure, Unit> updateTransaction({
-    required TransactionDTO newTxnDTO,
-    required TransactionDTO oldTxnDto,
+  TaskEither<TransactionsFailure, Unit> editTransaction({
+    required Transaction newTxn,
+    required Transaction oldTxn,
   });
 
   TaskEither<TransactionsFailure, List<TransactionDTO>> getTransactionsByAccount(String accountId);
@@ -50,8 +51,8 @@ class TransactionsLocalDSImpl implements TransactionsLocalDS {
   }
 
   @override
-  TaskEither<TransactionsFailure, Unit> updateTransaction(
-      {required TransactionDTO newTxnDTO, required TransactionDTO oldTxnDto}) {
-    return transactionsDAO.editTransaction(newTxnDTO: newTxnDTO, oldTxnDto: oldTxnDto);
+  TaskEither<TransactionsFailure, Unit> editTransaction(
+      {required Transaction newTxn, required Transaction oldTxn}) {
+    return transactionsDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
   }
 }

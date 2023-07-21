@@ -226,6 +226,8 @@ class FundDetails with _$FundDetails {
         return targetCurrency ?? baseCurrency;
     }
   }
+
+  bool get isMultiCurrency => exchangeRate != null && targetAmount != null && targetCurrency != null;
 }
 
 /// Value object for the description of a transaction

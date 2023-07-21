@@ -29,7 +29,7 @@ class CreateTransaction extends _$CreateTransaction {
     required String? description,
     required String accountId,
     required TransactionType transactionType,
-    required double? baseAmount,
+    required double baseAmount,
     required String baseCurrency,
     required double? exchangeRate,
     required String? targetCurrency,
@@ -47,14 +47,13 @@ class CreateTransaction extends _$CreateTransaction {
       (pecuniaUser) => pecuniaUser,
     );
 
-    double actualBaseAmount;
-
-    // ! Temporary Workaround. Remove this when we have a proper way to handle this.
-    if (baseAmount == null) {
-      actualBaseAmount = targetAmount! / exchangeRate!;
-    } else {
-      actualBaseAmount = baseAmount;
-    }
+    // // ! Temporary Workaround. Remove this when we have a proper way to handle this.
+    // double actualBaseAmount;
+    // if (baseAmount == null) {
+    //   actualBaseAmount = targetAmount! / exchangeRate!;
+    // } else {
+    //   actualBaseAmount = baseAmount;
+    // }
 
     if (pecuniaUser != null) {
       debugPrint('user exists, creating transaction...');
@@ -66,7 +65,7 @@ class CreateTransaction extends _$CreateTransaction {
                 transactionDate: DateTime.now(),
                 accountId: accountId,
                 type: transactionType.typeAsString,
-                baseAmount: actualBaseAmount,
+                baseAmount: baseAmount,
                 baseCurrency: baseCurrency,
                 transactionDescription: description,
                 exchangeRate: exchangeRate,
@@ -88,7 +87,6 @@ class CreateTransaction extends _$CreateTransaction {
       accountId: $accountId,
       type: $transactionType,
       baseAmount: $baseAmount,
-      actualBaseAmount: $actualBaseAmount,
       baseCurrency: $baseCurrency,
       transactionDescription: $description,
       exchangeRate: $exchangeRate,
@@ -410,7 +408,7 @@ class CreateTxnForm extends HookConsumerWidget {
                         description: descriptionController.text,
                         accountId: chosenAccount.value.id,
                         transactionType: txnType.value,
-                        baseAmount: double.tryParse(baseAmountController.text),
+                        baseAmount: double.parse(baseAmountController.text),
                         baseCurrency: baseCurrency.value,
                         exchangeRate: exchangeRateInput,
                         targetCurrency: targetCurrencyInput,
