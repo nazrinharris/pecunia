@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
@@ -34,6 +35,7 @@ class TransactionsRepo {
   TransactionsRepo(this.transactionsLocalDS, this.uuid);
 
   final TransactionsLocalDS transactionsLocalDS;
+  final TransactionsRepoHelper _helper = TransactionsRepoHelper();
   final Uuid uuid;
 
   TaskEither<TransactionsFailure, Unit> createTransaction({
@@ -71,15 +73,13 @@ class TransactionsRepo {
   }
 
   TaskEither<TransactionsFailure, List<Transaction>> getAllTransactions() {
-    return transactionsLocalDS
-        .getAllTransactions()
-        .flatMap(TransactionsRepoHelper().mapDTOListToTransactionList);
+    return transactionsLocalDS.getAllTransactions().flatMap(_helper.mapDTOListToTransactionList);
   }
 
   TaskEither<TransactionsFailure, List<Transaction>> getTrasactionsByAccount(String accountId) {
     return transactionsLocalDS
         .getTransactionsByAccount(accountId)
-        .flatMap(TransactionsRepoHelper().mapDTOListToTransactionList);
+        .flatMap(_helper.mapDTOListToTransactionList);
   }
 
   TaskEither<TransactionsFailure, Unit> updateTransaction({
@@ -101,6 +101,7 @@ class TransactionsRepo {
 ///
 /// It is designed to keep the code in [TransactionsRepo] more clean and readable
 /// by abstracting away some of the lower-level operations related to account data conversion.
+@visibleForTesting
 class TransactionsRepoHelper {
   /// Converts an [Transaction] object to an [TransactionDTO] object.
   ///

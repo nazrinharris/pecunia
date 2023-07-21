@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/dao_tables/accounts_dao_tables.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
@@ -33,7 +37,7 @@ void main() {
 
   test('insertAccount() and getAccountById() should insert and retrieve correctly', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
 
     // Act
     final result = await accountsDAO.getAccountById(testAccount.id).run();
@@ -45,12 +49,12 @@ void main() {
     );
 
     // Clean up
-    await accountsDAO.deleteAccount(testAccount.toDTO());
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('updateAccount() should update correctly', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
     final updatedAccount = testAccount.copyWith(name: 'updated_name');
 
     // Act
@@ -64,13 +68,13 @@ void main() {
     );
 
     // Clean up
-    await accountsDAO.deleteAccount(updatedAccount.toDTO());
+    await accountsDAO.deleteAccount(updatedAccount.toDTO()).run();
   });
 
   test('getAllAccounts() should retrieve all accounts', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO());
-    await accountsDAO.insertAccount(testAccount.copyWith(id: 'test_id2').toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
+    await accountsDAO.insertAccount(testAccount.copyWith(id: 'test_id2').toDTO()).run();
 
     // Act
     final result = await accountsDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
@@ -82,14 +86,14 @@ void main() {
     expect(resultAccounts, contains(testAccount.copyWith(id: 'test_id2')));
 
     // Clean up
-    await accountsDAO.deleteAccount(testAccount.toDTO());
-    await accountsDAO.deleteAccount(testAccount.copyWith(id: 'test_id2').toDTO());
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.copyWith(id: 'test_id2').toDTO()).run();
   });
 
   test('deleteAccount() should remove the account from database', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO());
-    await accountsDAO.deleteAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
 
     // Act
     final result = await accountsDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
@@ -100,31 +104,41 @@ void main() {
     expect(resultAccounts, isNot(contains(testAccount)));
   });
 
-  // test('watchAllAccounts() should emit updates when accounts change', () async {
-  //   // Arrange
-  //   final controller = StreamController<List<Account>>();
-  //   final subscription = accountsDAO.watchAllAccounts().listen(
-  //         (accountDTOs) => controller.add(accountDTOs.map(Account.fromDTO).toList()),
-  //       );
+  test('watchAllAccounts() should emit updates when accounts change', () async {
+    // Arrange
+    final controller = StreamController<Either<AccountsFailure, List<Account>>>();
+    final expectedStream = controller.stream;
+    final subscription = accountsDAO.watchAllAccounts().listen(
+      (failureOrDTOList) {
+        controller.add(
+          failureOrDTOList.map((dtoList) => dtoList.map(Account.fromDTO).toList()),
+        );
+      },
+    );
 
-  //   // Act
-  //   await accountsDAO.insertAccount(testAccount.toDTO());
-  //   await Future<void>.delayed(const Duration(seconds: 1));
-  //   await accountsDAO.deleteAccount(testAccount.toDTO());
-  //   await Future<void>.delayed(const Duration(seconds: 1));
+    // final debug = controller.stream.listen((a) => print('Debug: $a'));
 
-  //   // Assert
-  //   expect(
-  //     controller.stream,
-  //     emitsInOrder([
-  //       <Account>[], // Initial state
-  //       [testAccount], // After insertion
-  //       <Account>[] // After deletion
-  //     ]),
-  //   );
+    // Act
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
+    await Future<void>.delayed(const Duration(seconds: 1));
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await Future<void>.delayed(const Duration(seconds: 1));
 
-  //   // Clean up
-  //   await subscription.cancel();
-  //   await controller.close();
-  // });
+    await pumpEventQueue();
+
+    // Assert
+    expect(
+      expectedStream,
+      emitsInOrder([
+        right<AccountsFailure, List<Account>>([]), // Initial state
+        right<AccountsFailure, List<Account>>([testAccount]), // After insertion
+        right<AccountsFailure, List<Account>>([]), // After deletion
+      ]),
+    );
+
+    // Clean up
+    await subscription.cancel();
+    // await debug.cancel();
+    await controller.close();
+  });
 }

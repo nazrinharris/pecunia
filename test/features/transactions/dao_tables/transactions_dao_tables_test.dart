@@ -102,13 +102,13 @@ void main() {
 
     // Clean up
     await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO());
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('deleteTransaction() should delete a transaction and update the account balance correctly', () async {
     // Arrange
     // Create a transaction
-    await accountsDAO.insertAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
     await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
 
     // Act
@@ -136,13 +136,13 @@ void main() {
     );
 
     // Clean up
-    await accountsDAO.deleteAccount(testAccount.toDTO());
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('editTransaction() should update a transaction and adjust the account balance correctly', () async {
     // Arrange
     // Create a transaction
-    await accountsDAO.insertAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
     await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
 
     // Act
@@ -180,14 +180,14 @@ void main() {
 
     // Clean up
     await transactionsDAO.deleteTransaction(testIncomeTxn.copyWith(name: 'updated_name').toDTO()).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO());
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('getTransactionsByAccount() should retrieve all transactions associated with a specific account',
       () async {
     // Arrange
     // Create multiple transactions for multiple accounts
-    await accountsDAO.insertAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
     await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
     await transactionsDAO.createTransaction(testExpenseTxn.toDTO()).run();
 
@@ -209,13 +209,13 @@ void main() {
     // Clean up
     await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
     await transactionsDAO.deleteTransaction(testExpenseTxn.toDTO()).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO());
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('getAllTransactions() should retrieve all transactions', () async {
     // Arrange
     // Create multiple transactions for multiple accounts
-    await accountsDAO.insertAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
     await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
     await transactionsDAO.createTransaction(testExpenseTxn.toDTO()).run();
 
@@ -237,6 +237,6 @@ void main() {
     // Clean up
     await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
     await transactionsDAO.deleteTransaction(testExpenseTxn.toDTO()).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO());
+    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 }
