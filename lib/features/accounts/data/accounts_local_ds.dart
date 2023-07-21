@@ -56,12 +56,6 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
 
   /// ******************************************************************************************************
   /// [watchAccounts]
-  ///
-  /// This honestly feels like a frankensteins job. I'm not sure if this is the
-  /// right way to do it. But it works. So I'm going to leave it as is for now.
-  ///
-  /// Another solution is to simply return the pure stream, though I'm not sure
-  /// on how I'd handle the errors in that case.
   /// ******************************************************************************************************
   @override
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts() {

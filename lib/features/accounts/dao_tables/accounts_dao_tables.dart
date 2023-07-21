@@ -111,6 +111,11 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
     );
   }
 
+  /// This honestly feels like a frankensteins job. I'm not sure if this is the
+  /// right way to do it. But it works. So I'm going to leave it as is for now.
+  ///
+  /// Another solution is to simply return the pure stream, though I'm not sure
+  /// on how I'd handle the errors in that case.
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAllAccounts() {
     const currentAction = AccountsAction.watchAccounts;
     return select(accountsTable).watch().transform(StreamTransformer.fromHandlers(
@@ -142,8 +147,12 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
     const currentAction = AccountsAction.deleteAccount;
     return TaskEither.tryCatch(
       () async {
-        await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
-        return unit;
+        return transaction(() async {
+          await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
+          await (delete(transactionsTable)..where((tbl) => tbl.accountId.equals(account.id))).go();
+
+          return unit;
+        });
       },
       (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
     );
