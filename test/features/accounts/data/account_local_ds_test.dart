@@ -1,5 +1,4 @@
 import 'package:clock/clock.dart';
-import 'package:drift/isolate.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
@@ -51,7 +50,7 @@ void main() {
     group('getAccounts()', () {
       test('returns a list of [AccountDTO] when the call to accountsDAO is successful', () async {
         // Arrange
-        when(() => mockAccountsDAO.getAllAccounts()).thenAnswer((_) => Future.value(testAccountsDTOList));
+        when(() => mockAccountsDAO.getAccounts()).thenAnswer((_) => TaskEither.right(testAccountsDTOList));
 
         // Act
         final result = await accountsLocalDS.getAccounts().run();
@@ -68,7 +67,11 @@ void main() {
           'returns an [AccountsFailure] with [AccountsAction.getAccounts] with the correct [AccountsErrorType] when the call to accountsDAO throws an error',
           () async {
         // Arrange
-        when(() => mockAccountsDAO.getAllAccounts()).thenThrow(DriftRemoteException);
+        when(() => mockAccountsDAO.getAccounts()).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
+              stackTrace: StackTrace.empty,
+              message: AccountsErrorType.unknown.toString(),
+              accountsAction: AccountsAction.getAccounts,
+            )));
 
         // Act
         final result = await accountsLocalDS.getAccounts().run();
@@ -86,7 +89,7 @@ void main() {
       test('returns a stream of [Right<AccountsFailure, List<AccountDTO>>] on successful data fetch', () {
         // Arrange
         when(() => mockAccountsDAO.watchAllAccounts())
-            .thenAnswer((_) => Stream.fromIterable([testAccountsDTOList]));
+            .thenAnswer((_) => Stream.fromIterable([right(testAccountsDTOList)]));
 
         // Act
         final result = accountsLocalDS.watchAccounts();
@@ -103,7 +106,13 @@ void main() {
 
       test('returns a stream of [Left<AccountsFailure, List<AccountDTO>>] on data fetch error', () {
         // Arrange
-        when(() => mockAccountsDAO.watchAllAccounts()).thenAnswer((_) => Stream.error(Exception()));
+        when(() => mockAccountsDAO.watchAllAccounts()).thenAnswer((_) => Stream.fromIterable([
+              left(AccountsFailure.unknown(
+                stackTrace: StackTrace.current,
+                message: AccountsErrorType.unknown.message,
+                accountsAction: AccountsAction.watchAccounts,
+              ))
+            ]));
 
         // Act
         final result = accountsLocalDS.watchAccounts();
@@ -111,13 +120,13 @@ void main() {
         // Assert
         // ignore: cascade_invocations
         result.listen(
-          (either) {
+          expectAsync1((either) {
             expect(either.isLeft(), isTrue);
             either.fold(
-              (l) => isAccountsFailure(AccountsErrorType.unknown, AccountsAction.watchAccounts),
+              (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown, AccountsAction.watchAccounts)),
               (r) => fail('Operation succeeded with value: $r'),
             );
-          },
+          }),
           onError: (_) {},
         );
       });
@@ -126,7 +135,7 @@ void main() {
     group('createAccount()', () {
       test('returns [Unit] when creating account is successful', () async {
         // Arrange
-        when(() => mockAccountsDAO.insertAccount(any())).thenAnswer((_) async {});
+        when(() => mockAccountsDAO.insertAccount(any())).thenReturn(TaskEither.right(unit));
         when(() => mockUuid.v4()).thenReturn('testId');
 
         // Act
@@ -154,7 +163,11 @@ void main() {
           'returns [AccountsFailure] with [AccountsAction.createAccount] and correct [AccountsErrorType] when creating account is unsuccessful',
           () async {
         // Arrange
-        when(() => mockAccountsDAO.insertAccount(any())).thenThrow(Exception());
+        when(() => mockAccountsDAO.insertAccount(any())).thenReturn(TaskEither.left(AccountsFailure.unknown(
+          stackTrace: StackTrace.empty,
+          message: AccountsErrorType.unknown.toString(),
+          accountsAction: AccountsAction.createAccount,
+        )));
         when(() => mockUuid.v4()).thenReturn('testId');
 
         // Act
@@ -237,7 +250,7 @@ void main() {
 
       test('returns [Unit] when deleting account is successful', () async {
         // Arrange
-        when(() => mockAccountsDAO.deleteAccount(any())).thenAnswer((_) async => 1);
+        when(() => mockAccountsDAO.deleteAccount(any())).thenAnswer((_) => TaskEither.right(unit));
 
         // Act
         final result = await accountsLocalDS.deleteAccount(accountToDelete).run();
@@ -259,7 +272,11 @@ void main() {
           'returns [AccountsFailure] with [AccountsAction.deleteAccount] and correct [AccountsErrorType] when deleting account is unsuccessful',
           () async {
         // Arrange
-        when(() => mockAccountsDAO.deleteAccount(any())).thenThrow(Exception());
+        when(() => mockAccountsDAO.deleteAccount(any())).thenReturn(TaskEither.left(AccountsFailure.unknown(
+          stackTrace: StackTrace.current,
+          message: AccountsErrorType.unknown.message,
+          accountsAction: AccountsAction.deleteAccount,
+        )));
 
         // Act
         final result = await accountsLocalDS.deleteAccount(accountToDelete).run();

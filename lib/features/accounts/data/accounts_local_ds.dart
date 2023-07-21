@@ -65,7 +65,7 @@ class AccountsLocalDSImpl implements AccountsLocalDS {
   /// ******************************************************************************************************
   @override
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts() {
-    return watchAccounts();
+    return accountsDAO.watchAllAccounts();
   }
 
   /// ******************************************************************************************************

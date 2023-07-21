@@ -45,10 +45,13 @@ void main() {
       transactionDescription: TransactionDescription('input'),
       transactionDate: clock.now().toUtc(),
       accountId: testAccount.id,
-      type: TransactionType.credit,
       fundDetails: const FundDetails(
+        transactionType: TransactionType.credit,
         baseAmount: 10,
         baseCurrency: 'TST',
+        exchangeRate: null,
+        targetAmount: null,
+        targetCurrency: null,
       ),
     );
 
@@ -59,10 +62,13 @@ void main() {
       transactionDescription: TransactionDescription('input'),
       transactionDate: clock.now().toUtc(),
       accountId: testAccount.id,
-      type: TransactionType.debit,
       fundDetails: const FundDetails(
+        transactionType: TransactionType.debit,
         baseAmount: 10,
         baseCurrency: 'TST',
+        exchangeRate: null,
+        targetAmount: null,
+        targetCurrency: null,
       ),
     );
   });
@@ -74,7 +80,7 @@ void main() {
     // Arrange
     // First, create an account with a certain balance
     // Then, prepare a transaction for this account
-    await accountsDAO.insertAccount(testAccount.toDTO());
+    await accountsDAO.insertAccount(testAccount.toDTO()).run();
 
     // Act
     // Run createTransaction()
@@ -87,7 +93,7 @@ void main() {
     // Check if the account balance is updated correctly
     txnResult.fold(
       (l) => fail('Operation failed with error: $l'),
-      (dto) => expect(Transaction.fromDTO(dto, TransactionsAction.create), equals(testIncomeTxn)),
+      (dto) => expect(Transaction.fromDTO(dto), equals(testIncomeTxn)),
     );
     accountResult.fold(
       (l) => fail('Operation failed with error: $l'),
@@ -161,7 +167,7 @@ void main() {
     txnResult.fold(
       (l) => fail('Operation failed with error: $l'),
       (dto) => expect(
-          Transaction.fromDTO(dto, TransactionsAction.edit),
+          Transaction.fromDTO(dto),
           equals(testIncomeTxn.copyWith(
             name: 'updated_name',
             fundDetails: testIncomeTxn.fundDetails.copyWith(baseAmount: 30),
@@ -194,8 +200,7 @@ void main() {
     result.fold(
       (l) => fail('Operation failed with error: $l'),
       (list) {
-        final expectedList =
-            list.map((dto) => Transaction.fromDTO(dto, TransactionsAction.getTransactionsByAccount)).toList();
+        final expectedList = list.map(Transaction.fromDTO).toList();
         expect(expectedList, contains(testIncomeTxn));
         expect(expectedList, contains(testExpenseTxn));
       },
@@ -223,8 +228,7 @@ void main() {
     result.fold(
       (l) => fail('Operation failed with error: $l'),
       (list) {
-        final expectedList =
-            list.map((dto) => Transaction.fromDTO(dto, TransactionsAction.getAllTransactions)).toList();
+        final expectedList = list.map(Transaction.fromDTO).toList();
         expect(expectedList, contains(testIncomeTxn));
         expect(expectedList, contains(testExpenseTxn));
       },
