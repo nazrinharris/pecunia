@@ -7,8 +7,8 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/create_txn_form_widget.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/edit_txn_form_widget.dart';
+import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
+import 'package:pecunia/presentation/debug/debug_forms/edit_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
@@ -206,36 +206,76 @@ class BuildTxnAmountText extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isCredit = txn.fundDetails.transactionType == TransactionType.credit;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    final isMultiCurrency = txn.fundDetails.isMultiCurrency;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (isCredit)
-          Text(
-            '+${txn.fundDetails.transactionAmount}',
-            style: TextStyle(
-              color: Colors.green[300],
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isCredit)
+              Text(
+                '+${txn.fundDetails.transactionAmount}',
+                style: TextStyle(
+                  color: Colors.green[300],
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            if (!isCredit)
+              Text(
+                '-${txn.fundDetails.transactionAmount}',
+                style: TextStyle(
+                  color: Colors.red[300],
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            const SizedBox(width: 10),
+            Text(
+              txn.fundDetails.transactionCurrency,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        if (!isCredit)
-          Text(
-            '-${txn.fundDetails.transactionAmount}',
-            style: TextStyle(
-              color: Colors.red[300],
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        const SizedBox(width: 10),
-        Text(
-          txn.fundDetails.transactionCurrency,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
+          ],
         ),
+        if (isMultiCurrency) const SizedBox(height: 4),
+        if (isMultiCurrency)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isCredit)
+                Text(
+                  '+${txn.fundDetails.exchangedAmount}',
+                  style: TextStyle(
+                    color: Colors.green[300]!.withOpacity(0.3),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              if (!isCredit)
+                Text(
+                  '-${txn.fundDetails.exchangedAmount}',
+                  style: TextStyle(
+                    color: Colors.red[300]!.withOpacity(0.3),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              const SizedBox(width: 10),
+              Text(
+                txn.fundDetails.exchangedCurrency,
+                style: TextStyle(
+                  color: Colors.grey[600]!.withOpacity(0.3),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }

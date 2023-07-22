@@ -6,7 +6,7 @@ part of 'create_txn_form_widget.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createTransactionHash() => r'15193e7457b7557309e304991badafa54b5f141a';
+String _$createTransactionHash() => r'1ecc0ccb4b1ebb8ff7599704b410e988cfc56a49';
 
 /// See also [CreateTransaction].
 @ProviderFor(CreateTransaction)

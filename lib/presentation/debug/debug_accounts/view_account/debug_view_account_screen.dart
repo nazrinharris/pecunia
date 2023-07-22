@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/create_txn_form_widget.dart';
+import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';

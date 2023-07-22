@@ -215,6 +215,32 @@ class FundDetails with _$FundDetails {
     }
   }
 
+  /// The amount that was either received or paid out in the transaction.
+  /// For debit transactions, this is the `targetAmount`.
+  /// For credit transactions, this is the `baseAmount`.
+  /// In single currency transactions, it's the `baseAmount` in all cases.
+  double get exchangedAmount {
+    switch (transactionType) {
+      case TransactionType.debit:
+        return targetAmount ?? baseAmount;
+      case TransactionType.credit:
+        return baseAmount;
+    }
+  }
+
+  /// The currency that was either received or paid out in the transaction.
+  /// For debit transactions, this is the `targetCurrency`.
+  /// For credit transactions, this is the `baseCurrency`.
+  /// In single currency transactions, it's the `baseCurrency` in all cases.
+  String get exchangedCurrency {
+    switch (transactionType) {
+      case TransactionType.debit:
+        return targetCurrency ?? baseCurrency;
+      case TransactionType.credit:
+        return baseCurrency;
+    }
+  }
+
   String get transactionCurrency {
     switch (transactionType) {
       case TransactionType.debit:
