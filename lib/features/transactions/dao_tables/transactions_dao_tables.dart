@@ -112,7 +112,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
         // Update the account and transactions
         await updateAccountDTO(updatedAccountDTO);
         await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxn.id)))
-            .write(newTxn.toDTO().toCompanion(true));
+            .write(newTxn.toDTO().toCompanion(false));
         return unit;
       }),
       (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
