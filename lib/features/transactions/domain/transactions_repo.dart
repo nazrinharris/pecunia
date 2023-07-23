@@ -76,7 +76,7 @@ class TransactionsRepo {
     return transactionsLocalDS.getAllTransactions().flatMap(_helper.mapDTOListToTransactionList);
   }
 
-  TaskEither<TransactionsFailure, List<Transaction>> getTrasactionsByAccount(String accountId) {
+  TaskEither<TransactionsFailure, List<Transaction>> getTransactionsByAccount(String accountId) {
     return transactionsLocalDS
         .getTransactionsByAccount(accountId)
         .flatMap(_helper.mapDTOListToTransactionList);

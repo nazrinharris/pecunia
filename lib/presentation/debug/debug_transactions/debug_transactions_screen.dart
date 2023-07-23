@@ -6,10 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/get_all_transactions.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_forms/edit_txn_form_widget.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
 class DebugTransactionsScreen extends ConsumerWidget {

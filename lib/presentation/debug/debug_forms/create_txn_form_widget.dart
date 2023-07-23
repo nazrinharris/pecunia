@@ -7,95 +7,11 @@ import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
+import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'create_txn_form_widget.g.dart';
-
-@riverpod
-class CreateTransaction extends _$CreateTransaction {
-  @override
-  Future<Option<Unit>> build() async {
-    return const Option.none();
-  }
-
-  Future<void> createTransaction({
-    required String name,
-    required String? description,
-    required String accountId,
-    required TransactionType transactionType,
-    required double baseAmount,
-    required String baseCurrency,
-    required double? exchangeRate,
-    required String? targetCurrency,
-    required double? targetAmount,
-  }) async {
-    state = const AsyncValue.loading();
-
-    debugPrint('retrieving logged in user...');
-    final failureOrPecuniaUser = await ref.read(authRepoProvider).getLoggedInUser().run();
-
-    final pecuniaUser = failureOrPecuniaUser.fold(
-      (failure) {
-        state = AsyncValue.error(failure, failure.stackTrace);
-      },
-      (pecuniaUser) => pecuniaUser,
-    );
-
-    // // ! Temporary Workaround. Remove this when we have a proper way to handle this.
-    // double actualBaseAmount;
-    // if (baseAmount == null) {
-    //   actualBaseAmount = targetAmount! / exchangeRate!;
-    // } else {
-    //   actualBaseAmount = baseAmount;
-    // }
-
-    if (pecuniaUser != null) {
-      debugPrint('user exists, creating transaction...');
-      (await ref
-              .read(transactionsRepoProvider)
-              .createTransaction(
-                name: name,
-                creatorUid: pecuniaUser.uid,
-                transactionDate: DateTime.now(),
-                accountId: accountId,
-                type: transactionType.typeAsString,
-                baseAmount: baseAmount,
-                baseCurrency: baseCurrency,
-                transactionDescription: description,
-                exchangeRate: exchangeRate,
-                targetCurrency: targetCurrency,
-                targetAmount: targetAmount,
-              )
-              .run())
-          .fold(
-        (l) => state = AsyncError(l, l.stackTrace),
-        (r) {
-          ref.invalidate(getAllTransactionsProvider);
-          state = AsyncData(Option.of(r));
-        },
-      );
-      debugPrint('''
-      name: $name,
-      creatorUid: ${pecuniaUser.uid},
-      transactionDate: ${DateTime.now()},
-      accountId: $accountId,
-      type: $transactionType,
-      baseAmount: $baseAmount,
-      baseCurrency: $baseCurrency,
-      transactionDescription: $description,
-      exchangeRate: $exchangeRate,
-      targetCurrency: $targetCurrency,
-      targetAmount: $targetAmount,
-''');
-    }
-  }
-}
 
 class CreateTxnFields {
   static String? validateTxnName(String? val) {

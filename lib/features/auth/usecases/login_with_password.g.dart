@@ -1,25 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'debug_transactions_provider.dart';
+part of 'login_with_password.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chosenAccountHash() => r'07a76ac6883341355177c3e7304e26d67ef3c88c';
+String _$loginWithEmailAndPasswordHash() =>
+    r'ed430e09f99f3b981a66ed31a6cdf3a143c19053';
 
-/// See also [ChosenAccount].
-@ProviderFor(ChosenAccount)
-final chosenAccountProvider =
-    AutoDisposeNotifierProvider<ChosenAccount, Option<Account>>.internal(
-  ChosenAccount.new,
-  name: r'chosenAccountProvider',
+/// See also [LoginWithEmailAndPassword].
+@ProviderFor(LoginWithEmailAndPassword)
+final loginWithEmailAndPasswordProvider = AutoDisposeAsyncNotifierProvider<
+    LoginWithEmailAndPassword, Option<PecuniaUser>>.internal(
+  LoginWithEmailAndPassword.new,
+  name: r'loginWithEmailAndPasswordProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$chosenAccountHash,
+      : _$loginWithEmailAndPasswordHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChosenAccount = AutoDisposeNotifier<Option<Account>>;
+typedef _$LoginWithEmailAndPassword
+    = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

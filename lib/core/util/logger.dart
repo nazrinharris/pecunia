@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -37,4 +39,10 @@ class ProviderLogger extends ProviderObserver {
       debugPrint('(${provider.name}) : ${newValue.runtimeType}');
     }
   }
+}
+
+void prettyPrintJson(Map<String, dynamic> json) {
+  const encoder = JsonEncoder.withIndent('  ');
+  final prettyPrint = encoder.convert(json);
+  debugPrint(prettyPrint);
 }

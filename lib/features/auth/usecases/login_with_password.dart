@@ -4,19 +4,11 @@ import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'debug_auth_providers.g.dart';
+part 'login_with_password.g.dart';
 
 typedef LoginParams = ({
   String email,
   String password,
-  Session currentSession,
-});
-typedef RegisterParams = ({
-  String email,
-  String username,
-  String password,
-  String confirmPassword,
   Session currentSession,
 });
 
@@ -63,57 +55,6 @@ class LoginWithEmailAndPassword extends _$LoginWithEmailAndPassword {
         }
       },
       (pecuniaUser) => state = AsyncValue.data(Option.of(pecuniaUser)),
-    );
-  }
-}
-
-@riverpod
-class RegisterWithEmailAndPassword extends _$RegisterWithEmailAndPassword {
-  @override
-  FutureOr<Option<PecuniaUser>> build() {
-    return const Option.none();
-  }
-
-  Future<void> registerWithEmailAndPassword(RegisterParams registerParams) async {
-    state = const AsyncValue.loading();
-
-    final failureOrPecuniaUserAndSession = await ref
-        .read(authRepoProvider)
-        .registerWithPassword(
-          email: registerParams.email,
-          username: registerParams.username,
-          password: registerParams.confirmPassword,
-          currentSession: registerParams.currentSession,
-        )
-        .run();
-
-    return failureOrPecuniaUserAndSession.fold(
-      (failure) => state = AsyncValue.error(failure, failure.stackTrace),
-      (r) => state = AsyncValue.data(Option.of(r.pecuniaUser)),
-    );
-  }
-
-  void reset() {
-    state = const AsyncValue.data(Option.none());
-  }
-}
-
-@riverpod
-class NavigateToDebugLocalDB extends _$NavigateToDebugLocalDB {
-  @override
-  FutureOr<bool> build() {
-    return false;
-  }
-
-  Future<void> navigateToDebugLocalDB() async {
-    state = const AsyncValue.loading();
-    (await ref.read(authRepoProvider).getLoggedInUser().run()).fold(
-      (l) {
-        state = AsyncValue.error(l, l.stackTrace);
-      },
-      (r) {
-        state = const AsyncValue.data(true);
-      },
     );
   }
 }

@@ -6,11 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/features/accounts/usecases/create_account.dart';
+import 'package:pecunia/features/accounts/usecases/delete_account.dart';
+import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
+import 'package:pecunia/features/accounts/usecases/watch_accounts.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
+import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/form/debug_create_account_form.dart';
-import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

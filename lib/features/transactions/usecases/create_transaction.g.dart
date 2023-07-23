@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'debug_transactions_provider.dart';
+part of 'create_transaction.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chosenAccountHash() => r'07a76ac6883341355177c3e7304e26d67ef3c88c';
+String _$createTransactionHash() => r'1ecc0ccb4b1ebb8ff7599704b410e988cfc56a49';
 
-/// See also [ChosenAccount].
-@ProviderFor(ChosenAccount)
-final chosenAccountProvider =
-    AutoDisposeNotifierProvider<ChosenAccount, Option<Account>>.internal(
-  ChosenAccount.new,
-  name: r'chosenAccountProvider',
+/// See also [CreateTransaction].
+@ProviderFor(CreateTransaction)
+final createTransactionProvider =
+    AutoDisposeAsyncNotifierProvider<CreateTransaction, Option<Unit>>.internal(
+  CreateTransaction.new,
+  name: r'createTransactionProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$chosenAccountHash,
+      : _$createTransactionHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChosenAccount = AutoDisposeNotifier<Option<Account>>;
+typedef _$CreateTransaction = AutoDisposeAsyncNotifier<Option<Unit>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
