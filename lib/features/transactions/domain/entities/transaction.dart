@@ -107,6 +107,22 @@ class Transaction with _$Transaction {
   }
 
   TransactionDTO toDTO() {
+    if (fundDetails.exchangeRate != null && fundDetails.targetAmount != null) {
+      final computedTargetAmount = fundDetails.baseAmount * fundDetails.exchangeRate!;
+      const epsilon = 0.00001; // Small tolerance to handle potential floating point errors
+
+      final difference = (computedTargetAmount - fundDetails.targetAmount!).abs();
+
+      if (difference > epsilon) {
+        throw TransactionsException(
+            stackTrace: StackTrace.current,
+            errorType: TransactionsErrorType.invalidExchangedAmount,
+            transactionsAction: TransactionsAction.unknown,
+            message:
+                'Stored target amount (${fundDetails.targetAmount} ${fundDetails.targetCurrency}) does not match computed target amount ($computedTargetAmount ${fundDetails.targetCurrency}). \nBecause (${fundDetails.baseAmount} ${fundDetails.baseCurrency} * ${fundDetails.exchangeRate} should equal to $computedTargetAmount ${fundDetails.targetCurrency}) \nWhich has a difference of $difference, which is greater than the tolerance of $epsilon');
+      }
+    }
+
     return TransactionDTO(
       id: id,
       creatorUid: creatorUid,
@@ -171,20 +187,6 @@ class FundDetails with _$FundDetails {
         errorType: TransactionsErrorType.invalidMultiCurrencyFields,
         transactionsAction: TransactionsAction.fundDetailsFromDTO,
       );
-    }
-
-    if (dto.exchangeRate != null && dto.targetAmount != null) {
-      final computedTargetAmount = dto.baseAmount * dto.exchangeRate!;
-      const epsilon = 0.001; // Small tolerance to handle potential floating point errors
-
-      if ((computedTargetAmount - dto.targetAmount!).abs() > epsilon) {
-        throw TransactionsException(
-            stackTrace: StackTrace.current,
-            errorType: TransactionsErrorType.invalidExchangedAmount,
-            transactionsAction: TransactionsAction.fundDetailsFromDTO,
-            message:
-                'Stored target amount (${dto.targetAmount} ${dto.targetCurrency}) does not match computed target amount ($computedTargetAmount ${dto.targetCurrency}). \nBecause (${dto.baseAmount} ${dto.baseCurrency} * ${dto.exchangeRate} should equal to $computedTargetAmount ${dto.targetCurrency})');
-      }
     }
 
     return FundDetails(

@@ -438,7 +438,7 @@ class ExchangeRateField extends HookConsumerWidget {
           final targetAmount = double.parse(targetAmountController.text);
           final exchangeRate = targetAmount / baseAmount;
 
-          exchangeRateController.text = exchangeRate.toStringAsFixed(5);
+          exchangeRateController.text = exchangeRate.toString();
         }
       }
 

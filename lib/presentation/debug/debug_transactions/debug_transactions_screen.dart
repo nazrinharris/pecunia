@@ -212,6 +212,7 @@ class BuildTxnAmountText extends ConsumerWidget {
     final isMultiCurrency = txn.fundDetails.isMultiCurrency;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
