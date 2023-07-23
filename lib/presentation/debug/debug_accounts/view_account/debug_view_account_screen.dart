@@ -358,7 +358,11 @@ class TransactionsList extends ConsumerWidget {
       error: (e, stack) {
         if (e is Failure) {
           return Center(
-            child: Text(e.message),
+            child: Text(
+              e.message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.red[100]),
+            ),
           );
         }
 

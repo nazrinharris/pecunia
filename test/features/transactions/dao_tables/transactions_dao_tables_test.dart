@@ -149,13 +149,11 @@ void main() {
     // Run editTransaction() with the updated transaction data
     await transactionsDAO
         .editTransaction(
-          newTxnDTO: testIncomeTxn
-              .copyWith(
-                name: 'updated_name',
-                fundDetails: testIncomeTxn.fundDetails.copyWith(baseAmount: 30),
-              )
-              .toDTO(),
-          oldTxnDto: testIncomeTxn.toDTO(),
+          newTxn: testIncomeTxn.copyWith(
+            name: 'updated_name',
+            fundDetails: testIncomeTxn.fundDetails.copyWith(baseAmount: 30),
+          ),
+          oldTxn: testIncomeTxn,
         )
         .run();
     final txnResult = await transactionsDAO.getTransactionById(testIncomeTxn.id).run();

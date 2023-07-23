@@ -177,17 +177,13 @@ class FundDetails with _$FundDetails {
       final computedTargetAmount = dto.baseAmount * dto.exchangeRate!;
       const epsilon = 0.001; // Small tolerance to handle potential floating point errors
 
-      print('baseAmount: ${dto.baseAmount}');
-      print('exchangeRate: ${dto.exchangeRate}');
-      print('targetAmount: ${dto.targetAmount}');
-      print('computedTargetAmount: $computedTargetAmount');
-
       if ((computedTargetAmount - dto.targetAmount!).abs() > epsilon) {
         throw TransactionsException(
-          stackTrace: StackTrace.current,
-          errorType: TransactionsErrorType.invalidExchangedAmount,
-          transactionsAction: TransactionsAction.fundDetailsFromDTO,
-        );
+            stackTrace: StackTrace.current,
+            errorType: TransactionsErrorType.invalidExchangedAmount,
+            transactionsAction: TransactionsAction.fundDetailsFromDTO,
+            message:
+                'Stored target amount (${dto.targetAmount} ${dto.targetCurrency}) does not match computed target amount ($computedTargetAmount ${dto.targetCurrency}). \nBecause (${dto.baseAmount} ${dto.baseCurrency} * ${dto.exchangeRate} should equal to $computedTargetAmount ${dto.targetCurrency})');
       }
     }
 

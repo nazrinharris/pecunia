@@ -54,6 +54,7 @@ class TransactionsException with _$TransactionsException implements Exception {
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
     required TransactionsAction transactionsAction,
+    String? message,
   }) = _TransactionsException;
 
   TransactionsException._();
@@ -62,6 +63,7 @@ class TransactionsException with _$TransactionsException implements Exception {
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
     @Default(TransactionsAction.unknown) TransactionsAction transactionsAction,
+    String? message,
   }) = _UnknownTransactionsException;
 
   factory TransactionsException.fromFailure(TransactionsFailure failure) {
@@ -101,7 +103,7 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
     return TransactionsFailure(
       stackTrace: exception.stackTrace,
       errorType: exception.errorType,
-      message: exception.errorType.message,
+      message: exception.message ?? exception.errorType.message,
       transactionsAction: exception.transactionsAction,
       rawException: exception,
     );
