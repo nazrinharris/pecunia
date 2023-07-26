@@ -58,8 +58,8 @@ class EditTxnForm extends HookConsumerWidget {
     final targetAmountController = useTextEditingController(
         text: txn.fundDetails.targetAmount == null ? '' : txn.fundDetails.targetAmount!.toString());
 
-    final baseCurrency = useState(txn.fundDetails.baseCurrency);
-    final targetCurrency = useState(txn.fundDetails.targetCurrency ?? chosenAccount.value.currency);
+    final baseCurrency = useState(txn.fundDetails.baseCurrency.code);
+    final targetCurrency = useState(txn.fundDetails.targetCurrency?.code ?? chosenAccount.value.currency);
 
     final nameNode = useFocusNode();
     final descriptionNode = useFocusNode();

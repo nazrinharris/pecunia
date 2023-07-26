@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:uuid/uuid.dart';
 
@@ -133,10 +135,10 @@ class Transaction with _$Transaction {
       transactionType: fundDetails.transactionType.typeAsString,
       transactionAmount: fundDetails.transactionAmount,
       baseAmount: fundDetails.baseAmount,
-      baseCurrency: fundDetails.baseCurrency,
+      baseCurrency: fundDetails.baseCurrency.code,
       exchangeRate: fundDetails.exchangeRate,
       targetAmount: fundDetails.targetAmount,
-      targetCurrency: fundDetails.targetCurrency,
+      targetCurrency: fundDetails.targetCurrency?.code,
     );
   }
 }
@@ -172,11 +174,11 @@ class Transaction with _$Transaction {
 class FundDetails with _$FundDetails {
   const factory FundDetails({
     required double baseAmount,
-    required String baseCurrency,
+    required Currency baseCurrency,
     required TransactionType transactionType,
     required double? exchangeRate,
     required double? targetAmount,
-    required String? targetCurrency,
+    required Currency? targetCurrency,
   }) = _FundDetails;
 
   factory FundDetails.fromDTO(TransactionDTO dto) {
@@ -191,10 +193,10 @@ class FundDetails with _$FundDetails {
 
     return FundDetails(
       baseAmount: dto.baseAmount,
-      baseCurrency: dto.baseCurrency,
+      baseCurrency: PecuniaCurrencies.fromString(dto.baseCurrency),
       exchangeRate: dto.exchangeRate,
       targetAmount: dto.targetAmount,
-      targetCurrency: dto.targetCurrency,
+      targetCurrency: dto.targetCurrency == null ? null : PecuniaCurrencies.fromString(dto.targetCurrency!),
       transactionType: TransactionType.fromString(dto.transactionType, TransactionsAction.unknown),
     );
   }
@@ -230,7 +232,7 @@ class FundDetails with _$FundDetails {
   /// For debit transactions, this is the `targetCurrency`.
   /// For credit transactions, this is the `baseCurrency`.
   /// In single currency transactions, it's the `baseCurrency` in all cases.
-  String get exchangedCurrency {
+  Currency get exchangedCurrency {
     switch (transactionType) {
       case TransactionType.debit:
         return targetCurrency ?? baseCurrency;
@@ -239,7 +241,7 @@ class FundDetails with _$FundDetails {
     }
   }
 
-  String get transactionCurrency {
+  Currency get transactionCurrency {
     switch (transactionType) {
       case TransactionType.debit:
         // For debit transactions, the transaction currency is always the baseCurrency

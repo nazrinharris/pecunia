@@ -280,11 +280,11 @@ abstract class _Transaction extends Transaction {
 /// @nodoc
 mixin _$FundDetails {
   double get baseAmount => throw _privateConstructorUsedError;
-  String get baseCurrency => throw _privateConstructorUsedError;
+  Currency get baseCurrency => throw _privateConstructorUsedError;
   TransactionType get transactionType => throw _privateConstructorUsedError;
   double? get exchangeRate => throw _privateConstructorUsedError;
   double? get targetAmount => throw _privateConstructorUsedError;
-  String? get targetCurrency => throw _privateConstructorUsedError;
+  Currency? get targetCurrency => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FundDetailsCopyWith<FundDetails> get copyWith =>
@@ -299,11 +299,11 @@ abstract class $FundDetailsCopyWith<$Res> {
   @useResult
   $Res call(
       {double baseAmount,
-      String baseCurrency,
+      Currency baseCurrency,
       TransactionType transactionType,
       double? exchangeRate,
       double? targetAmount,
-      String? targetCurrency});
+      Currency? targetCurrency});
 }
 
 /// @nodoc
@@ -334,7 +334,7 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
       baseCurrency: null == baseCurrency
           ? _value.baseCurrency
           : baseCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
+              as Currency,
       transactionType: null == transactionType
           ? _value.transactionType
           : transactionType // ignore: cast_nullable_to_non_nullable
@@ -350,7 +350,7 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
       targetCurrency: freezed == targetCurrency
           ? _value.targetCurrency
           : targetCurrency // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as Currency?,
     ) as $Val);
   }
 }
@@ -365,11 +365,11 @@ abstract class _$$_FundDetailsCopyWith<$Res>
   @useResult
   $Res call(
       {double baseAmount,
-      String baseCurrency,
+      Currency baseCurrency,
       TransactionType transactionType,
       double? exchangeRate,
       double? targetAmount,
-      String? targetCurrency});
+      Currency? targetCurrency});
 }
 
 /// @nodoc
@@ -398,7 +398,7 @@ class __$$_FundDetailsCopyWithImpl<$Res>
       baseCurrency: null == baseCurrency
           ? _value.baseCurrency
           : baseCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
+              as Currency,
       transactionType: null == transactionType
           ? _value.transactionType
           : transactionType // ignore: cast_nullable_to_non_nullable
@@ -414,7 +414,7 @@ class __$$_FundDetailsCopyWithImpl<$Res>
       targetCurrency: freezed == targetCurrency
           ? _value.targetCurrency
           : targetCurrency // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as Currency?,
     ));
   }
 }
@@ -434,7 +434,7 @@ class _$_FundDetails extends _FundDetails {
   @override
   final double baseAmount;
   @override
-  final String baseCurrency;
+  final Currency baseCurrency;
   @override
   final TransactionType transactionType;
   @override
@@ -442,7 +442,7 @@ class _$_FundDetails extends _FundDetails {
   @override
   final double? targetAmount;
   @override
-  final String? targetCurrency;
+  final Currency? targetCurrency;
 
   @override
   String toString() {
@@ -482,17 +482,17 @@ class _$_FundDetails extends _FundDetails {
 abstract class _FundDetails extends FundDetails {
   const factory _FundDetails(
       {required final double baseAmount,
-      required final String baseCurrency,
+      required final Currency baseCurrency,
       required final TransactionType transactionType,
       required final double? exchangeRate,
       required final double? targetAmount,
-      required final String? targetCurrency}) = _$_FundDetails;
+      required final Currency? targetCurrency}) = _$_FundDetails;
   const _FundDetails._() : super._();
 
   @override
   double get baseAmount;
   @override
-  String get baseCurrency;
+  Currency get baseCurrency;
   @override
   TransactionType get transactionType;
   @override
@@ -500,7 +500,7 @@ abstract class _FundDetails extends FundDetails {
   @override
   double? get targetAmount;
   @override
-  String? get targetCurrency;
+  Currency? get targetCurrency;
   @override
   @JsonKey(ignore: true)
   _$$_FundDetailsCopyWith<_$_FundDetails> get copyWith =>

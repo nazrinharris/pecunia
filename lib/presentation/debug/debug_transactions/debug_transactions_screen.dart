@@ -237,7 +237,7 @@ class BuildTxnAmountText extends ConsumerWidget {
               ),
             const SizedBox(width: 10),
             Text(
-              txn.fundDetails.transactionCurrency,
+              txn.fundDetails.transactionCurrency.code,
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14,
@@ -271,7 +271,7 @@ class BuildTxnAmountText extends ConsumerWidget {
                 ),
               const SizedBox(width: 10),
               Text(
-                txn.fundDetails.exchangedCurrency,
+                txn.fundDetails.exchangedCurrency.code,
                 style: TextStyle(
                   color: Colors.grey[600]!.withOpacity(0.3),
                   fontSize: 14,
@@ -444,7 +444,8 @@ class BottomSheetContent extends ConsumerWidget {
                           color: Colors.blue[200],
                         ),
                     children: <TextSpan>[
-                      TextSpan(text: txn.fundDetails.baseCurrency, style: DefaultTextStyle.of(context).style),
+                      TextSpan(
+                          text: txn.fundDetails.baseCurrency.code, style: DefaultTextStyle.of(context).style),
                     ],
                   ),
                 ),
@@ -473,7 +474,7 @@ class BottomSheetContent extends ConsumerWidget {
                         ),
                     children: <TextSpan>[
                       TextSpan(
-                          text: txn.fundDetails.targetCurrency.toString(),
+                          text: txn.fundDetails.targetCurrency?.code ?? 'null',
                           style: DefaultTextStyle.of(context).style),
                     ],
                   ),

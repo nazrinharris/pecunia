@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_ds.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
@@ -61,10 +62,10 @@ class TransactionsRepo {
       fundDetails: FundDetails(
         transactionType: TransactionType.fromString(type, currentAction),
         baseAmount: baseAmount,
-        baseCurrency: baseCurrency,
+        baseCurrency: PecuniaCurrencies.fromString(baseCurrency),
         exchangeRate: exchangeRate,
         targetAmount: targetAmount,
-        targetCurrency: targetCurrency,
+        targetCurrency: targetCurrency == null ? null : PecuniaCurrencies.fromString(targetCurrency),
       ),
       uuid: uuid,
     );

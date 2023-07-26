@@ -279,4 +279,11 @@ class PecuniaCurrencies {
       pen,
     ];
   }
+
+  static Currency fromString(String code) {
+    return toList().firstWhere(
+      (c) => c.code == code,
+      orElse: () => throw Exception('Invalid currency code: $code'),
+    );
+  }
 }

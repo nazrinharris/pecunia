@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
@@ -32,10 +33,10 @@ class EditTransaction extends _$EditTransaction {
         fundDetails: oldTxn.fundDetails.copyWith(
           transactionType: transactionType,
           baseAmount: baseAmount,
-          baseCurrency: baseCurrency,
+          baseCurrency: PecuniaCurrencies.fromString(baseCurrency),
           exchangeRate: exchangeRate,
           targetAmount: targetAmount,
-          targetCurrency: targetCurrency,
+          targetCurrency: targetCurrency == null ? null : PecuniaCurrencies.fromString(targetCurrency),
         ));
 
     (await ref.read(transactionsRepoProvider).editTransaction(newTxn: newTxn, oldTxn: oldTxn).run()).fold(
