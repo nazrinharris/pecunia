@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
@@ -199,67 +200,7 @@ class AccountDetails extends ConsumerWidget {
             const SizedBox(height: 14),
             SafeArea(child: AccountMetadataCard(account)),
             const SizedBox(height: 4),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: Text('Add income', style: TextStyle(color: Colors.green[100])),
-                        leading: Icon(Icons.add, color: Colors.green[100]),
-                        onTap: () {
-                          showCreateTransactionBottomSheet(context, account, true);
-                        },
-                      ),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: Text('Add expense', style: TextStyle(color: Colors.red[100])),
-                        leading: Icon(Icons.remove, color: Colors.red[100]),
-                        onTap: () {
-                          showCreateTransactionBottomSheet(context, account, false);
-                        },
-                      ),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: const Text('Edit account'),
-                        leading: const Icon(Icons.edit),
-                        onTap: () {
-                          context.pushNamed('debug-edit-account', extra: account);
-                        },
-                      ),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: Text('Delete account', style: TextStyle(color: Colors.red[300])),
-                        leading: Icon(Icons.delete, color: Colors.red[300]),
-                        onTap: () {
-                          ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                              title: 'Are you sure you want to delete this account?',
-                              message: 'This is irreversible',
-                              onConfirm: () {
-                                ref.read(deleteAccountProvider.notifier).deleteAccount(account);
-                              },
-                              context: context);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            SafeArea(child: AccountActionsGrid(account)),
             SafeArea(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -560,4 +501,100 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
           ),
         );
       });
+}
+
+class AccountActionsGrid extends ConsumerWidget {
+  const AccountActionsGrid(this.account, {super.key});
+
+  final Account account;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      child: GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 5,
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.green[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                showCreateTransactionBottomSheet(context, account, true);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(HeroIcons.currency_dollar, color: Colors.green[100]),
+                  Icon(Icons.add, color: Colors.green[100]),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.red[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                showCreateTransactionBottomSheet(context, account, false);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(HeroIcons.currency_dollar, color: Colors.red[100]),
+                  Icon(Icons.remove, color: Colors.red[100]),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.blue[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(HeroIcons.currency_dollar, color: Colors.blue[100]),
+                  Icon(Icons.compare_arrows, color: Colors.blue[100]),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.purple[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                context.pushNamed('debug-edit-account', extra: account);
+              },
+              child: Icon(HeroIcons.pencil, color: Colors.purple[100]),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.red[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                    title: 'Are you sure you want to delete this account?',
+                    message: 'This is irreversible',
+                    onConfirm: () {
+                      ref.read(deleteAccountProvider.notifier).deleteAccount(account);
+                    },
+                    context: context);
+              },
+              child: Icon(HeroIcons.trash, color: Colors.red[100]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
