@@ -515,6 +515,7 @@ class AccountActionsGrid extends ConsumerWidget {
       child: GridView.count(
         shrinkWrap: true,
         crossAxisCount: 5,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),

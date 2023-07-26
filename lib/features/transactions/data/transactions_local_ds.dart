@@ -12,8 +12,8 @@ TransactionsLocalDS transactionsLocalDS(TransactionsLocalDSRef ref) =>
     TransactionsLocalDSImpl(ref.watch(transactionsDAOProvider));
 
 abstract interface class TransactionsLocalDS {
-  TaskEither<TransactionsFailure, Unit> createTransaction(TransactionDTO transaction);
-  TaskEither<TransactionsFailure, Unit> deleteTransaction(TransactionDTO transaction);
+  TaskEither<TransactionsFailure, Unit> createTransaction(Transaction transaction);
+  TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transaction);
   TaskEither<TransactionsFailure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
@@ -31,7 +31,7 @@ class TransactionsLocalDSImpl implements TransactionsLocalDS {
   TransactionsDAO transactionsDAO;
 
   @override
-  TaskEither<TransactionsFailure, Unit> createTransaction(TransactionDTO transaction) {
+  TaskEither<TransactionsFailure, Unit> createTransaction(Transaction transaction) {
     return transactionsDAO.createTransaction(transaction);
   }
 
@@ -46,7 +46,7 @@ class TransactionsLocalDSImpl implements TransactionsLocalDS {
   }
 
   @override
-  TaskEither<TransactionsFailure, Unit> deleteTransaction(TransactionDTO transaction) {
+  TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transaction) {
     return transactionsDAO.deleteTransaction(transaction);
   }
 

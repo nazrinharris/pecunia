@@ -69,7 +69,7 @@ class TransactionsRepo {
       uuid: uuid,
     );
 
-    return transactionsLocalDS.createTransaction(txn.toDTO());
+    return transactionsLocalDS.createTransaction(txn);
   }
 
   TaskEither<TransactionsFailure, List<Transaction>> getAllTransactions() {
@@ -90,7 +90,7 @@ class TransactionsRepo {
   }
 
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {
-    return transactionsLocalDS.deleteTransaction(transactionToDelete.toDTO());
+    return transactionsLocalDS.deleteTransaction(transactionToDelete);
   }
 }
 

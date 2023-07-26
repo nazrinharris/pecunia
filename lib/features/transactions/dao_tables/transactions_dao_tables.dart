@@ -45,18 +45,16 @@ class TransactionsTable extends Table {
 class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAOMixin {
   TransactionsDAO(super.db);
 
-  TaskEither<TransactionsFailure, Unit> createTransaction(TransactionDTO txnDto) {
+  TaskEither<TransactionsFailure, Unit> createTransaction(Transaction txn) {
     const currentAction = TransactionsAction.create;
     return TaskEither.tryCatch(
       () async {
         return transaction(() async {
-          await insertTransactionToTable(txnDto);
-          final accountDto = await retrieveAccountById(txnDto);
-          final txnType = TransactionType.fromString(txnDto.transactionType, currentAction);
+          await insertTransactionToTable(txn.toDTO());
+          final accountDto = await retrieveAccountById(txn.toDTO());
           final updatedAccountDTO = _calculateBalanceByOneTransaction(
             accountDto: accountDto,
-            txnDto: txnDto,
-            txnType: txnType,
+            txn: txn,
           );
           await updateAccountDTO(updatedAccountDTO);
         }).then((_) => unit);
@@ -65,21 +63,19 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     );
   }
 
-  TaskEither<TransactionsFailure, Unit> deleteTransaction(TransactionDTO txnDto) {
+  TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction txn) {
     const currentAction = TransactionsAction.delete;
     return TaskEither.tryCatch(
       () async => transaction(() async {
-        final accountDto = await retrieveAccountById(txnDto);
-        final txnType = TransactionType.fromString(txnDto.transactionType, currentAction);
+        final accountDto = await retrieveAccountById(txn.toDTO());
         final updatedAccountDTO = _calculateBalanceByOneTransaction(
           accountDto: accountDto,
-          txnDto: txnDto,
-          txnType: txnType,
+          txn: txn,
           shouldReverseTransaction: true,
         );
 
         await updateAccountDTO(updatedAccountDTO);
-        await (delete(transactionsTable)..where((tbl) => tbl.id.equals(txnDto.id))).go();
+        await (delete(transactionsTable)..where((tbl) => tbl.id.equals(txn.id))).go();
         return unit;
       }),
       (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
@@ -97,14 +93,14 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
         final accountDto = await retrieveAccountById(oldTxn.toDTO());
 
         // Remove the old transaction from the balance
-        final removedOldTxnAccountDTO = _calculateBalanceByOneTransactionFix(
+        final removedOldTxnAccountDTO = _calculateBalanceByOneTransaction(
           accountDto: accountDto,
           txn: oldTxn,
           shouldReverseTransaction: true,
         );
 
         // Add the new transaction to the balance
-        final updatedAccountDTO = _calculateBalanceByOneTransactionFix(
+        final updatedAccountDTO = _calculateBalanceByOneTransaction(
           accountDto: removedOldTxnAccountDTO,
           txn: newTxn,
         );
@@ -194,25 +190,6 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
   /// Returns an [AccountDTO] with the updated balance after
   /// the transaction has been applied (or reversed, if shouldReverseTransaction is true).
   AccountDTO _calculateBalanceByOneTransaction({
-    required AccountDTO accountDto,
-    required TransactionDTO txnDto,
-    required TransactionType txnType,
-    bool shouldReverseTransaction = false,
-  }) {
-    double newBalance;
-    if (txnType == TransactionType.credit) {
-      newBalance = shouldReverseTransaction
-          ? accountDto.balance - txnDto.transactionAmount
-          : accountDto.balance + txnDto.transactionAmount;
-    } else {
-      newBalance = shouldReverseTransaction
-          ? accountDto.balance + txnDto.transactionAmount
-          : accountDto.balance - txnDto.transactionAmount;
-    }
-    return accountDto.copyWith(balance: newBalance);
-  }
-
-  AccountDTO _calculateBalanceByOneTransactionFix({
     required AccountDTO accountDto,
     required Transaction txn,
     bool shouldReverseTransaction = false,

@@ -84,7 +84,7 @@ void main() {
 
     // Act
     // Run createTransaction()
-    await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
+    await transactionsDAO.createTransaction(testIncomeTxn).run();
     final txnResult = await transactionsDAO.getTransactionById(testIncomeTxn.id).run();
     final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
@@ -101,7 +101,7 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
+    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
@@ -109,11 +109,11 @@ void main() {
     // Arrange
     // Create a transaction
     await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
+    await transactionsDAO.createTransaction(testIncomeTxn).run();
 
     // Act
     // Run deleteTransaction()
-    await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
+    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
     final txnResult = await transactionsDAO.getTransactionById(testIncomeTxn.id).run();
     final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
@@ -143,7 +143,7 @@ void main() {
     // Arrange
     // Create a transaction
     await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
+    await transactionsDAO.createTransaction(testIncomeTxn).run();
 
     // Act
     // Run editTransaction() with the updated transaction data
@@ -177,7 +177,7 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn.copyWith(name: 'updated_name').toDTO()).run();
+    await transactionsDAO.deleteTransaction(testIncomeTxn.copyWith(name: 'updated_name')).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
@@ -186,8 +186,8 @@ void main() {
     // Arrange
     // Create multiple transactions for multiple accounts
     await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
-    await transactionsDAO.createTransaction(testExpenseTxn.toDTO()).run();
+    await transactionsDAO.createTransaction(testIncomeTxn).run();
+    await transactionsDAO.createTransaction(testExpenseTxn).run();
 
     // Act
     // Run getTransactionsByAccount() for a specific account
@@ -205,8 +205,8 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
-    await transactionsDAO.deleteTransaction(testExpenseTxn.toDTO()).run();
+    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
+    await transactionsDAO.deleteTransaction(testExpenseTxn).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
@@ -214,8 +214,8 @@ void main() {
     // Arrange
     // Create multiple transactions for multiple accounts
     await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn.toDTO()).run();
-    await transactionsDAO.createTransaction(testExpenseTxn.toDTO()).run();
+    await transactionsDAO.createTransaction(testIncomeTxn).run();
+    await transactionsDAO.createTransaction(testExpenseTxn).run();
 
     // Act
     // Run getAllTransactions()
@@ -233,8 +233,8 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn.toDTO()).run();
-    await transactionsDAO.deleteTransaction(testExpenseTxn.toDTO()).run();
+    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
+    await transactionsDAO.deleteTransaction(testExpenseTxn).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 }
