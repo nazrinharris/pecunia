@@ -294,21 +294,6 @@ class BottomSheetContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(deleteTransactionProvider, (previous, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
-              title: 'Oopsies',
-              failure: next.error as Failure?,
-            );
-      }
-      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
-              title: 'Transaction deleted succesfully!',
-            );
-      }
-    });
-
     final chosenAccount = account ?? accountsList.firstWhere((element) => element.id == txn.accountId);
 
     return Container(

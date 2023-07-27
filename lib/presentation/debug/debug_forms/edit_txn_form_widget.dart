@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
-import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
 class EditTxnForm extends HookConsumerWidget {
   const EditTxnForm({
@@ -27,24 +22,6 @@ class EditTxnForm extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chosenAccount = useState(account);
-
-    ref.listen(editTransactionProvider, (prev, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
-              title: "We couldn't edit your account.",
-              failure: next.error as Failure?,
-            );
-      }
-      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
-              title: 'Transaction edited successfully!',
-            );
-        ref
-          ..invalidate(getTransactionsByAccountIdProvider(chosenAccount.value.id))
-          ..invalidate(getAccountByIdProvider(chosenAccount.value.id));
-      }
-    });
 
     final txnType = useState(txn.fundDetails.transactionType);
     final isCurrencyExchangeEnabled = useState(txn.fundDetails.isMultiCurrency);

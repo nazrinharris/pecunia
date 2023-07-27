@@ -3,7 +3,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
-import 'package:pecunia/features/transactions/usecases/get_all_transactions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_transaction.g.dart';
@@ -58,10 +57,7 @@ class CreateTransaction extends _$CreateTransaction {
               .run())
           .fold(
         (l) => state = AsyncError(l, l.stackTrace),
-        (r) {
-          ref.invalidate(getAllTransactionsProvider);
-          state = AsyncData(Option.of(r));
-        },
+        (r) => state = AsyncData(Option.of(r)),
       );
     }
   }

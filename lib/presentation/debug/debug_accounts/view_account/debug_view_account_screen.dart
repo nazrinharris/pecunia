@@ -11,6 +11,7 @@ import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
@@ -40,15 +41,52 @@ class DebugViewAccountScreen extends ConsumerWidget {
               );
         }
       })
-      ..listen(editTransactionProvider, (previous, next) {
+      ..listen(createTransactionProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't delete your account.",
+                failure: next.error as Failure?,
+              );
+        }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transaction created successfully!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(editTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't edit your account.",
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transaction edited successfully!',
+              );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
             ..invalidate(getAccountByIdProvider(accountId));
         }
       })
       ..listen(deleteTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Oopsies',
+                failure: next.error as Failure?,
+              );
+        }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transaction deleted succesfully!',
+              );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
             ..invalidate(getAccountByIdProvider(accountId));
