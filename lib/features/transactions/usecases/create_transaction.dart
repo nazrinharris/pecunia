@@ -63,19 +63,6 @@ class CreateTransaction extends _$CreateTransaction {
           state = AsyncData(Option.of(r));
         },
       );
-      debugPrint('''
-      name: $name,
-      creatorUid: ${pecuniaUser.uid},
-      transactionDate: ${DateTime.now()},
-      accountId: $accountId,
-      type: $transactionType,
-      baseAmount: $baseAmount,
-      baseCurrency: $baseCurrency,
-      transactionDescription: $description,
-      exchangeRate: $exchangeRate,
-      targetCurrency: $targetCurrency,
-      targetAmount: $targetAmount,
-''');
     }
   }
 }

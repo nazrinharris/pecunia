@@ -3,6 +3,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/dao_tables/accounts_dao_tables.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
@@ -45,10 +46,10 @@ void main() {
       transactionDescription: TransactionDescription('input'),
       transactionDate: clock.now().toUtc(),
       accountId: testAccount.id,
-      fundDetails: const FundDetails(
+      fundDetails: FundDetails(
         transactionType: TransactionType.credit,
         baseAmount: 10,
-        baseCurrency: 'TST',
+        baseCurrency: PecuniaCurrencies.fromString('XXX'),
         exchangeRate: null,
         targetAmount: null,
         targetCurrency: null,
@@ -62,10 +63,10 @@ void main() {
       transactionDescription: TransactionDescription('input'),
       transactionDate: clock.now().toUtc(),
       accountId: testAccount.id,
-      fundDetails: const FundDetails(
+      fundDetails: FundDetails(
         transactionType: TransactionType.debit,
         baseAmount: 10,
-        baseCurrency: 'TST',
+        baseCurrency: PecuniaCurrencies.fromString('XXX'),
         exchangeRate: null,
         targetAmount: null,
         targetCurrency: null,
