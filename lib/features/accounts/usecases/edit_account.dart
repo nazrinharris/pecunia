@@ -15,7 +15,6 @@ class EditAccount extends _$EditAccount {
     required Account oldAccount,
     required String name,
     required double initialBalance,
-    required String currency,
     String? description,
   }) async {
     state = const AsyncValue.loading();
@@ -23,7 +22,6 @@ class EditAccount extends _$EditAccount {
     final newAccount = oldAccount.copyWith(
       name: name,
       initialBalance: initialBalance,
-      currency: currency,
       description: AccountDescription(description),
     );
 

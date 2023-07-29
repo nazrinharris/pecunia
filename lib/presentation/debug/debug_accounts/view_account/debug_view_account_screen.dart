@@ -5,9 +5,11 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
+import 'package:pecunia/features/accounts/usecases/edit_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
@@ -86,6 +88,24 @@ class DebugViewAccountScreen extends ConsumerWidget {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
                 title: 'Transaction deleted succesfully!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(editAccountProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Something went wrong while editing your account.',
+                failure: next.error as AccountsFailure?,
+              );
+        }
+
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Your account has been edited!',
               );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
