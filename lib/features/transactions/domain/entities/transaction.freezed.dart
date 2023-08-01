@@ -24,6 +24,7 @@ mixin _$Transaction {
   DateTime get transactionDate => throw _privateConstructorUsedError;
   String get accountId => throw _privateConstructorUsedError;
   FundDetails get fundDetails => throw _privateConstructorUsedError;
+  TransferDetails? get transferDetails => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TransactionCopyWith<Transaction> get copyWith =>
@@ -43,9 +44,11 @@ abstract class $TransactionCopyWith<$Res> {
       TransactionDescription transactionDescription,
       DateTime transactionDate,
       String accountId,
-      FundDetails fundDetails});
+      FundDetails fundDetails,
+      TransferDetails? transferDetails});
 
   $FundDetailsCopyWith<$Res> get fundDetails;
+  $TransferDetailsCopyWith<$Res>? get transferDetails;
 }
 
 /// @nodoc
@@ -68,6 +71,7 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     Object? transactionDate = null,
     Object? accountId = null,
     Object? fundDetails = null,
+    Object? transferDetails = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -98,6 +102,10 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
           ? _value.fundDetails
           : fundDetails // ignore: cast_nullable_to_non_nullable
               as FundDetails,
+      transferDetails: freezed == transferDetails
+          ? _value.transferDetails
+          : transferDetails // ignore: cast_nullable_to_non_nullable
+              as TransferDetails?,
     ) as $Val);
   }
 
@@ -106,6 +114,18 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
   $FundDetailsCopyWith<$Res> get fundDetails {
     return $FundDetailsCopyWith<$Res>(_value.fundDetails, (value) {
       return _then(_value.copyWith(fundDetails: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TransferDetailsCopyWith<$Res>? get transferDetails {
+    if (_value.transferDetails == null) {
+      return null;
+    }
+
+    return $TransferDetailsCopyWith<$Res>(_value.transferDetails!, (value) {
+      return _then(_value.copyWith(transferDetails: value) as $Val);
     });
   }
 }
@@ -125,10 +145,13 @@ abstract class _$$_TransactionCopyWith<$Res>
       TransactionDescription transactionDescription,
       DateTime transactionDate,
       String accountId,
-      FundDetails fundDetails});
+      FundDetails fundDetails,
+      TransferDetails? transferDetails});
 
   @override
   $FundDetailsCopyWith<$Res> get fundDetails;
+  @override
+  $TransferDetailsCopyWith<$Res>? get transferDetails;
 }
 
 /// @nodoc
@@ -149,6 +172,7 @@ class __$$_TransactionCopyWithImpl<$Res>
     Object? transactionDate = null,
     Object? accountId = null,
     Object? fundDetails = null,
+    Object? transferDetails = freezed,
   }) {
     return _then(_$_Transaction(
       id: null == id
@@ -179,6 +203,10 @@ class __$$_TransactionCopyWithImpl<$Res>
           ? _value.fundDetails
           : fundDetails // ignore: cast_nullable_to_non_nullable
               as FundDetails,
+      transferDetails: freezed == transferDetails
+          ? _value.transferDetails
+          : transferDetails // ignore: cast_nullable_to_non_nullable
+              as TransferDetails?,
     ));
   }
 }
@@ -193,7 +221,8 @@ class _$_Transaction extends _Transaction {
       required this.transactionDescription,
       required this.transactionDate,
       required this.accountId,
-      required this.fundDetails})
+      required this.fundDetails,
+      required this.transferDetails})
       : super._();
 
   @override
@@ -210,10 +239,12 @@ class _$_Transaction extends _Transaction {
   final String accountId;
   @override
   final FundDetails fundDetails;
+  @override
+  final TransferDetails? transferDetails;
 
   @override
   String toString() {
-    return 'Transaction(id: $id, creatorUid: $creatorUid, name: $name, transactionDescription: $transactionDescription, transactionDate: $transactionDate, accountId: $accountId, fundDetails: $fundDetails)';
+    return 'Transaction(id: $id, creatorUid: $creatorUid, name: $name, transactionDescription: $transactionDescription, transactionDate: $transactionDate, accountId: $accountId, fundDetails: $fundDetails, transferDetails: $transferDetails)';
   }
 
   @override
@@ -232,12 +263,22 @@ class _$_Transaction extends _Transaction {
             (identical(other.accountId, accountId) ||
                 other.accountId == accountId) &&
             (identical(other.fundDetails, fundDetails) ||
-                other.fundDetails == fundDetails));
+                other.fundDetails == fundDetails) &&
+            (identical(other.transferDetails, transferDetails) ||
+                other.transferDetails == transferDetails));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, creatorUid, name,
-      transactionDescription, transactionDate, accountId, fundDetails);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      creatorUid,
+      name,
+      transactionDescription,
+      transactionDate,
+      accountId,
+      fundDetails,
+      transferDetails);
 
   @JsonKey(ignore: true)
   @override
@@ -254,7 +295,8 @@ abstract class _Transaction extends Transaction {
       required final TransactionDescription transactionDescription,
       required final DateTime transactionDate,
       required final String accountId,
-      required final FundDetails fundDetails}) = _$_Transaction;
+      required final FundDetails fundDetails,
+      required final TransferDetails? transferDetails}) = _$_Transaction;
   const _Transaction._() : super._();
 
   @override
@@ -272,8 +314,155 @@ abstract class _Transaction extends Transaction {
   @override
   FundDetails get fundDetails;
   @override
+  TransferDetails? get transferDetails;
+  @override
   @JsonKey(ignore: true)
   _$$_TransactionCopyWith<_$_Transaction> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$TransferDetails {
+  String get linkedAccountId => throw _privateConstructorUsedError;
+  String get linkedTransactionId => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $TransferDetailsCopyWith<TransferDetails> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransferDetailsCopyWith<$Res> {
+  factory $TransferDetailsCopyWith(
+          TransferDetails value, $Res Function(TransferDetails) then) =
+      _$TransferDetailsCopyWithImpl<$Res, TransferDetails>;
+  @useResult
+  $Res call({String linkedAccountId, String linkedTransactionId});
+}
+
+/// @nodoc
+class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
+    implements $TransferDetailsCopyWith<$Res> {
+  _$TransferDetailsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? linkedAccountId = null,
+    Object? linkedTransactionId = null,
+  }) {
+    return _then(_value.copyWith(
+      linkedAccountId: null == linkedAccountId
+          ? _value.linkedAccountId
+          : linkedAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkedTransactionId: null == linkedTransactionId
+          ? _value.linkedTransactionId
+          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_TransferDetailsCopyWith<$Res>
+    implements $TransferDetailsCopyWith<$Res> {
+  factory _$$_TransferDetailsCopyWith(
+          _$_TransferDetails value, $Res Function(_$_TransferDetails) then) =
+      __$$_TransferDetailsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String linkedAccountId, String linkedTransactionId});
+}
+
+/// @nodoc
+class __$$_TransferDetailsCopyWithImpl<$Res>
+    extends _$TransferDetailsCopyWithImpl<$Res, _$_TransferDetails>
+    implements _$$_TransferDetailsCopyWith<$Res> {
+  __$$_TransferDetailsCopyWithImpl(
+      _$_TransferDetails _value, $Res Function(_$_TransferDetails) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? linkedAccountId = null,
+    Object? linkedTransactionId = null,
+  }) {
+    return _then(_$_TransferDetails(
+      linkedAccountId: null == linkedAccountId
+          ? _value.linkedAccountId
+          : linkedAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkedTransactionId: null == linkedTransactionId
+          ? _value.linkedTransactionId
+          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_TransferDetails extends _TransferDetails {
+  const _$_TransferDetails(
+      {required this.linkedAccountId, required this.linkedTransactionId})
+      : assert(
+            linkedAccountId != null && linkedTransactionId != null ||
+                linkedAccountId == null && linkedTransactionId == null,
+            'Either provide all fields or none'),
+        super._();
+
+  @override
+  final String linkedAccountId;
+  @override
+  final String linkedTransactionId;
+
+  @override
+  String toString() {
+    return 'TransferDetails(linkedAccountId: $linkedAccountId, linkedTransactionId: $linkedTransactionId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_TransferDetails &&
+            (identical(other.linkedAccountId, linkedAccountId) ||
+                other.linkedAccountId == linkedAccountId) &&
+            (identical(other.linkedTransactionId, linkedTransactionId) ||
+                other.linkedTransactionId == linkedTransactionId));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, linkedAccountId, linkedTransactionId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
+      __$$_TransferDetailsCopyWithImpl<_$_TransferDetails>(this, _$identity);
+}
+
+abstract class _TransferDetails extends TransferDetails {
+  const factory _TransferDetails(
+      {required final String linkedAccountId,
+      required final String linkedTransactionId}) = _$_TransferDetails;
+  const _TransferDetails._() : super._();
+
+  @override
+  String get linkedAccountId;
+  @override
+  String get linkedTransactionId;
+  @override
+  @JsonKey(ignore: true)
+  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -429,7 +618,15 @@ class _$_FundDetails extends _FundDetails {
       required this.exchangeRate,
       required this.targetAmount,
       required this.targetCurrency})
-      : super._();
+      : assert(
+            exchangeRate != null &&
+                    targetAmount != null &&
+                    targetCurrency != null ||
+                exchangeRate == null &&
+                    targetAmount == null &&
+                    targetCurrency == null,
+            'Invalid multi-currency fields. Either provide all fields or none'),
+        super._();
 
   @override
   final double baseAmount;

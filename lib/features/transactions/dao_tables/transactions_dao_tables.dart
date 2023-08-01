@@ -31,13 +31,20 @@ class TransactionsTable extends Table {
   RealColumn get targetAmount => real().nullable()();
   TextColumn get targetCurrency => text().withLength(min: 3, max: 3).nullable()();
 
-  /// The id of the transaction that this transaction is a transfer of.
-  TextColumn get transferLinkId => text().nullable()();
+  /// These fields are kept in [TransferDetails].
+  TextColumn get linkedTransactionId => text().nullable().references(TransactionsTable, #id)();
+  TextColumn get linkedAccountId => text().nullable().references(AccountsTable, #id)();
 
   @override
   Set<Column> get primaryKey => {id};
 }
 
+/// The Data Access Object for the [TransactionsTable] table.
+///
+/// Note: This DAO and the data structure assumes null means the field is empty. So if null is provided,
+/// null will be the value. Therefore, `.toCompanion(false)` must be used. This will ensure that the
+/// null fields aren't treated as "not changed". This also means that to update a field, you must first
+/// retrieve the whole row, then use the `copyWith` method.
 @DriftAccessor(tables: [
   TransactionsTable,
   AccountsTable,

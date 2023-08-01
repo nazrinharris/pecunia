@@ -67,6 +67,7 @@ class TransactionsRepo {
         targetAmount: targetAmount,
         targetCurrency: targetCurrency == null ? null : PecuniaCurrencies.fromString(targetCurrency),
       ),
+      transferDetails: null,
       uuid: uuid,
     );
 
