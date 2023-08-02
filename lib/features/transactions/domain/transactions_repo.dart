@@ -4,6 +4,7 @@ import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
+import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_ds.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,6 +20,7 @@ TransactionsRepo transactionsRepo(TransactionsRepoRef ref) => TransactionsRepo(
 
 enum TransactionsAction {
   create,
+  createTransferTransaction,
   delete,
   edit,
   getTransactionsByAccount,
@@ -72,6 +74,108 @@ class TransactionsRepo {
     );
 
     return transactionsLocalDS.createTransaction(txn);
+  }
+
+  // TODO: Consider if the checks should be put as asserts or not
+  TaskEither<TransactionsFailure, Unit> createTransferTransaction({
+    required Account sourceAccount,
+    required Account destinationAccount,
+    required double sourceTransactionAmount,
+    required double? destinationTransactionAmount,
+    required double? exchangeRate,
+    required String? transferDescription,
+  }) {
+    const currentAction = TransactionsAction.createTransferTransaction;
+    final sourceTxnId = uuid.v4();
+    final destinationTxnId = uuid.v4();
+    final reciprocalExchangeRate = exchangeRate == null ? null : 1 / exchangeRate;
+    final isMultiCurrencyTransfer = sourceAccount.currency != destinationAccount.currency;
+
+    // ! Checks that both destinationTransactionAmount and exchangeRate is null or both are not null.
+    if ((destinationTransactionAmount == null && exchangeRate != null) ||
+        (destinationTransactionAmount != null && exchangeRate == null)) {
+      return TaskEither.left(TransactionsFailure(
+        message: TransactionsErrorType.invalidMultiCurrencyFields.message,
+        errorType: TransactionsErrorType.invalidMultiCurrencyFields,
+        transactionsAction: currentAction,
+        stackTrace: StackTrace.current,
+      ));
+    }
+
+    // ! Checks that the exchangeRate isn't null if the source and destination currencies are different.
+    if (exchangeRate == null && sourceAccount.currency != destinationAccount.currency) {
+      return TaskEither.left(TransactionsFailure(
+        message: TransactionsErrorType.missingExchangeRateForDifferentCurrencies.message,
+        errorType: TransactionsErrorType.missingExchangeRateForDifferentCurrencies,
+        transactionsAction: currentAction,
+        stackTrace: StackTrace.current,
+      ));
+    }
+
+    // ! Checks whether the source and destination accounts are the same.
+    if (sourceAccount.id == destinationAccount.id) {
+      return TaskEither.left(TransactionsFailure(
+        message: TransactionsErrorType.sameSourceAndDestinationAccount.message,
+        errorType: TransactionsErrorType.sameSourceAndDestinationAccount,
+        transactionsAction: currentAction,
+        stackTrace: StackTrace.current,
+      ));
+    }
+
+    // * Sets the fields for the FundDetails of the transaction (extracted for legibility)
+    // * Note that a single-currency transaction assumes [exchangeRate], [targetAmount], and [targetCurrency] are null (and vice versa).
+    final sourceTxnFundDetails = FundDetails(
+      transactionType: TransactionType.debit,
+      baseAmount: sourceTransactionAmount,
+      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+      exchangeRate: exchangeRate,
+      targetAmount: destinationTransactionAmount,
+      targetCurrency:
+          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
+    );
+    final destinationTxnFundDetails = FundDetails(
+      transactionType: TransactionType.credit,
+      baseAmount: destinationTransactionAmount ?? sourceTransactionAmount,
+      baseCurrency: PecuniaCurrencies.fromString(destinationAccount.currency),
+      exchangeRate: reciprocalExchangeRate,
+      targetAmount: isMultiCurrencyTransfer ? sourceTransactionAmount : null,
+      targetCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+    );
+
+    final sourceTxn = Transaction(
+      id: sourceTxnId,
+      creatorUid: sourceAccount.creatorUid,
+      name: 'Transfer to ${destinationAccount.id}',
+      transactionDescription: TransactionDescription(null),
+      transactionDate: DateTime.now(),
+      accountId: sourceAccount.id,
+      fundDetails: sourceTxnFundDetails,
+      transferDetails: TransferDetails(
+        linkedTransactionId: destinationTxnId,
+        linkedAccountId: destinationAccount.id,
+        transferDescription: TransferDescription(transferDescription),
+      ),
+    );
+
+    final destinationTxn = Transaction(
+      id: destinationTxnId,
+      creatorUid: destinationAccount.creatorUid,
+      name: 'Transfer from ${sourceAccount.id}',
+      transactionDescription: TransactionDescription(null),
+      transactionDate: DateTime.now(),
+      accountId: destinationAccount.id,
+      fundDetails: destinationTxnFundDetails,
+      transferDetails: TransferDetails(
+        linkedTransactionId: sourceTxnId,
+        linkedAccountId: sourceAccount.id,
+        transferDescription: TransferDescription(transferDescription),
+      ),
+    );
+
+    return transactionsLocalDS.createTransferTransaction(
+      sourceTransaction: sourceTxn,
+      destinationTransaction: destinationTxn,
+    );
   }
 
   TaskEither<TransactionsFailure, List<Transaction>> getAllTransactions() {

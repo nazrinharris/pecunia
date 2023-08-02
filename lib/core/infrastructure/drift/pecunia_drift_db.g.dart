@@ -548,6 +548,15 @@ class $TransactionsTableTable extends TransactionsTable
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('REFERENCES accounts_table (id)'));
+  static const VerificationMeta _transferDescriptionMeta =
+      const VerificationMeta('transferDescription');
+  @override
+  late final GeneratedColumn<String> transferDescription =
+      GeneratedColumn<String>('transfer_description', aliasedName, true,
+          additionalChecks: GeneratedColumn.checkTextLength(
+              minTextLength: 1, maxTextLength: 500),
+          type: DriftSqlType.string,
+          requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -564,7 +573,8 @@ class $TransactionsTableTable extends TransactionsTable
         targetAmount,
         targetCurrency,
         linkedTransactionId,
-        linkedAccountId
+        linkedAccountId,
+        transferDescription
       ];
   @override
   String get aliasedName => _alias ?? 'transactions_table';
@@ -676,6 +686,12 @@ class $TransactionsTableTable extends TransactionsTable
           linkedAccountId.isAcceptableOrUnknown(
               data['linked_account_id']!, _linkedAccountIdMeta));
     }
+    if (data.containsKey('transfer_description')) {
+      context.handle(
+          _transferDescriptionMeta,
+          transferDescription.isAcceptableOrUnknown(
+              data['transfer_description']!, _transferDescriptionMeta));
+    }
     return context;
   }
 
@@ -715,6 +731,8 @@ class $TransactionsTableTable extends TransactionsTable
           DriftSqlType.string, data['${effectivePrefix}linked_transaction_id']),
       linkedAccountId: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}linked_account_id']),
+      transferDescription: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}transfer_description']),
     );
   }
 
@@ -742,6 +760,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
   /// These fields are kept in [TransferDetails].
   final String? linkedTransactionId;
   final String? linkedAccountId;
+  final String? transferDescription;
   const TransactionDTO(
       {required this.id,
       required this.creatorUid,
@@ -757,7 +776,8 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       this.targetAmount,
       this.targetCurrency,
       this.linkedTransactionId,
-      this.linkedAccountId});
+      this.linkedAccountId,
+      this.transferDescription});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -787,6 +807,9 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
     }
     if (!nullToAbsent || linkedAccountId != null) {
       map['linked_account_id'] = Variable<String>(linkedAccountId);
+    }
+    if (!nullToAbsent || transferDescription != null) {
+      map['transfer_description'] = Variable<String>(transferDescription);
     }
     return map;
   }
@@ -820,6 +843,9 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       linkedAccountId: linkedAccountId == null && nullToAbsent
           ? const Value.absent()
           : Value(linkedAccountId),
+      transferDescription: transferDescription == null && nullToAbsent
+          ? const Value.absent()
+          : Value(transferDescription),
     );
   }
 
@@ -843,6 +869,8 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       linkedTransactionId:
           serializer.fromJson<String?>(json['linkedTransactionId']),
       linkedAccountId: serializer.fromJson<String?>(json['linkedAccountId']),
+      transferDescription:
+          serializer.fromJson<String?>(json['transferDescription']),
     );
   }
   @override
@@ -864,6 +892,7 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       'targetCurrency': serializer.toJson<String?>(targetCurrency),
       'linkedTransactionId': serializer.toJson<String?>(linkedTransactionId),
       'linkedAccountId': serializer.toJson<String?>(linkedAccountId),
+      'transferDescription': serializer.toJson<String?>(transferDescription),
     };
   }
 
@@ -882,7 +911,8 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           Value<double?> targetAmount = const Value.absent(),
           Value<String?> targetCurrency = const Value.absent(),
           Value<String?> linkedTransactionId = const Value.absent(),
-          Value<String?> linkedAccountId = const Value.absent()}) =>
+          Value<String?> linkedAccountId = const Value.absent(),
+          Value<String?> transferDescription = const Value.absent()}) =>
       TransactionDTO(
         id: id ?? this.id,
         creatorUid: creatorUid ?? this.creatorUid,
@@ -906,6 +936,9 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
         linkedAccountId: linkedAccountId.present
             ? linkedAccountId.value
             : this.linkedAccountId,
+        transferDescription: transferDescription.present
+            ? transferDescription.value
+            : this.transferDescription,
       );
   @override
   String toString() {
@@ -924,7 +957,8 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           ..write('targetAmount: $targetAmount, ')
           ..write('targetCurrency: $targetCurrency, ')
           ..write('linkedTransactionId: $linkedTransactionId, ')
-          ..write('linkedAccountId: $linkedAccountId')
+          ..write('linkedAccountId: $linkedAccountId, ')
+          ..write('transferDescription: $transferDescription')
           ..write(')'))
         .toString();
   }
@@ -945,7 +979,8 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
       targetAmount,
       targetCurrency,
       linkedTransactionId,
-      linkedAccountId);
+      linkedAccountId,
+      transferDescription);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -964,7 +999,8 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
           other.targetAmount == this.targetAmount &&
           other.targetCurrency == this.targetCurrency &&
           other.linkedTransactionId == this.linkedTransactionId &&
-          other.linkedAccountId == this.linkedAccountId);
+          other.linkedAccountId == this.linkedAccountId &&
+          other.transferDescription == this.transferDescription);
 }
 
 class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
@@ -983,6 +1019,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
   final Value<String?> targetCurrency;
   final Value<String?> linkedTransactionId;
   final Value<String?> linkedAccountId;
+  final Value<String?> transferDescription;
   final Value<int> rowid;
   const TransactionsTableCompanion({
     this.id = const Value.absent(),
@@ -1000,6 +1037,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     this.targetCurrency = const Value.absent(),
     this.linkedTransactionId = const Value.absent(),
     this.linkedAccountId = const Value.absent(),
+    this.transferDescription = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TransactionsTableCompanion.insert({
@@ -1018,6 +1056,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     this.targetCurrency = const Value.absent(),
     this.linkedTransactionId = const Value.absent(),
     this.linkedAccountId = const Value.absent(),
+    this.transferDescription = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         creatorUid = Value(creatorUid),
@@ -1044,6 +1083,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     Expression<String>? targetCurrency,
     Expression<String>? linkedTransactionId,
     Expression<String>? linkedAccountId,
+    Expression<String>? transferDescription,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1063,6 +1103,8 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       if (linkedTransactionId != null)
         'linked_transaction_id': linkedTransactionId,
       if (linkedAccountId != null) 'linked_account_id': linkedAccountId,
+      if (transferDescription != null)
+        'transfer_description': transferDescription,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1083,6 +1125,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       Value<String?>? targetCurrency,
       Value<String?>? linkedTransactionId,
       Value<String?>? linkedAccountId,
+      Value<String?>? transferDescription,
       Value<int>? rowid}) {
     return TransactionsTableCompanion(
       id: id ?? this.id,
@@ -1100,6 +1143,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
       targetCurrency: targetCurrency ?? this.targetCurrency,
       linkedTransactionId: linkedTransactionId ?? this.linkedTransactionId,
       linkedAccountId: linkedAccountId ?? this.linkedAccountId,
+      transferDescription: transferDescription ?? this.transferDescription,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1153,6 +1197,9 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
     if (linkedAccountId.present) {
       map['linked_account_id'] = Variable<String>(linkedAccountId.value);
     }
+    if (transferDescription.present) {
+      map['transfer_description'] = Variable<String>(transferDescription.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1177,6 +1224,7 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
           ..write('targetCurrency: $targetCurrency, ')
           ..write('linkedTransactionId: $linkedTransactionId, ')
           ..write('linkedAccountId: $linkedAccountId, ')
+          ..write('transferDescription: $transferDescription, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();

@@ -34,6 +34,7 @@ class TransactionsTable extends Table {
   /// These fields are kept in [TransferDetails].
   TextColumn get linkedTransactionId => text().nullable().references(TransactionsTable, #id)();
   TextColumn get linkedAccountId => text().nullable().references(AccountsTable, #id)();
+  TextColumn get transferDescription => text().withLength(min: 1, max: 500).nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -66,6 +67,37 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           await updateAccountDTO(updatedAccountDTO);
         }).then((_) => unit);
       },
+      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+    );
+  }
+
+  TaskEither<TransactionsFailure, Unit> createTransferTransaction({
+    required Transaction sourceTxn,
+    required Transaction destinationTxn,
+  }) {
+    const currentAction = TransactionsAction.createTransferTransaction;
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        // Settle the [sourceTxn]
+        await insertTransactionToTable(sourceTxn.toDTO());
+        final sourceAccountDTO = await retrieveAccountById(sourceTxn.toDTO());
+        final updatedSourceAccountDTO = _calculateBalanceByOneTransaction(
+          accountDto: sourceAccountDTO,
+          txn: sourceTxn,
+        );
+        await updateAccountDTO(updatedSourceAccountDTO);
+
+        // Settle the [destinationTxn]
+        await insertTransactionToTable(destinationTxn.toDTO());
+        final destinationAccountDTO = await retrieveAccountById(destinationTxn.toDTO());
+        final updatedDestinationAccountDTO = _calculateBalanceByOneTransaction(
+          accountDto: destinationAccountDTO,
+          txn: destinationTxn,
+        );
+        await updateAccountDTO(updatedDestinationAccountDTO);
+
+        return unit;
+      }),
       (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
     );
   }

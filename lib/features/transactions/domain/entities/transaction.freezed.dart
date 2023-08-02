@@ -325,6 +325,8 @@ abstract class _Transaction extends Transaction {
 mixin _$TransferDetails {
   String get linkedAccountId => throw _privateConstructorUsedError;
   String get linkedTransactionId => throw _privateConstructorUsedError;
+  TransferDescription get transferDescription =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TransferDetailsCopyWith<TransferDetails> get copyWith =>
@@ -337,7 +339,10 @@ abstract class $TransferDetailsCopyWith<$Res> {
           TransferDetails value, $Res Function(TransferDetails) then) =
       _$TransferDetailsCopyWithImpl<$Res, TransferDetails>;
   @useResult
-  $Res call({String linkedAccountId, String linkedTransactionId});
+  $Res call(
+      {String linkedAccountId,
+      String linkedTransactionId,
+      TransferDescription transferDescription});
 }
 
 /// @nodoc
@@ -355,6 +360,7 @@ class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
   $Res call({
     Object? linkedAccountId = null,
     Object? linkedTransactionId = null,
+    Object? transferDescription = null,
   }) {
     return _then(_value.copyWith(
       linkedAccountId: null == linkedAccountId
@@ -365,6 +371,10 @@ class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
           ? _value.linkedTransactionId
           : linkedTransactionId // ignore: cast_nullable_to_non_nullable
               as String,
+      transferDescription: null == transferDescription
+          ? _value.transferDescription
+          : transferDescription // ignore: cast_nullable_to_non_nullable
+              as TransferDescription,
     ) as $Val);
   }
 }
@@ -377,7 +387,10 @@ abstract class _$$_TransferDetailsCopyWith<$Res>
       __$$_TransferDetailsCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String linkedAccountId, String linkedTransactionId});
+  $Res call(
+      {String linkedAccountId,
+      String linkedTransactionId,
+      TransferDescription transferDescription});
 }
 
 /// @nodoc
@@ -393,6 +406,7 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
   $Res call({
     Object? linkedAccountId = null,
     Object? linkedTransactionId = null,
+    Object? transferDescription = null,
   }) {
     return _then(_$_TransferDetails(
       linkedAccountId: null == linkedAccountId
@@ -403,6 +417,10 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
           ? _value.linkedTransactionId
           : linkedTransactionId // ignore: cast_nullable_to_non_nullable
               as String,
+      transferDescription: null == transferDescription
+          ? _value.transferDescription
+          : transferDescription // ignore: cast_nullable_to_non_nullable
+              as TransferDescription,
     ));
   }
 }
@@ -411,7 +429,9 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
 
 class _$_TransferDetails extends _TransferDetails {
   const _$_TransferDetails(
-      {required this.linkedAccountId, required this.linkedTransactionId})
+      {required this.linkedAccountId,
+      required this.linkedTransactionId,
+      required this.transferDescription})
       : assert(
             linkedAccountId != null && linkedTransactionId != null ||
                 linkedAccountId == null && linkedTransactionId == null,
@@ -422,10 +442,12 @@ class _$_TransferDetails extends _TransferDetails {
   final String linkedAccountId;
   @override
   final String linkedTransactionId;
+  @override
+  final TransferDescription transferDescription;
 
   @override
   String toString() {
-    return 'TransferDetails(linkedAccountId: $linkedAccountId, linkedTransactionId: $linkedTransactionId)';
+    return 'TransferDetails(linkedAccountId: $linkedAccountId, linkedTransactionId: $linkedTransactionId, transferDescription: $transferDescription)';
   }
 
   @override
@@ -436,12 +458,14 @@ class _$_TransferDetails extends _TransferDetails {
             (identical(other.linkedAccountId, linkedAccountId) ||
                 other.linkedAccountId == linkedAccountId) &&
             (identical(other.linkedTransactionId, linkedTransactionId) ||
-                other.linkedTransactionId == linkedTransactionId));
+                other.linkedTransactionId == linkedTransactionId) &&
+            (identical(other.transferDescription, transferDescription) ||
+                other.transferDescription == transferDescription));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, linkedAccountId, linkedTransactionId);
+  int get hashCode => Object.hash(
+      runtimeType, linkedAccountId, linkedTransactionId, transferDescription);
 
   @JsonKey(ignore: true)
   @override
@@ -452,14 +476,18 @@ class _$_TransferDetails extends _TransferDetails {
 
 abstract class _TransferDetails extends TransferDetails {
   const factory _TransferDetails(
-      {required final String linkedAccountId,
-      required final String linkedTransactionId}) = _$_TransferDetails;
+          {required final String linkedAccountId,
+          required final String linkedTransactionId,
+          required final TransferDescription transferDescription}) =
+      _$_TransferDetails;
   const _TransferDetails._() : super._();
 
   @override
   String get linkedAccountId;
   @override
   String get linkedTransactionId;
+  @override
+  TransferDescription get transferDescription;
   @override
   @JsonKey(ignore: true)
   _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
