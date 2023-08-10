@@ -285,6 +285,8 @@ class CreateTxnForm extends HookConsumerWidget {
             const SizedBox(height: 28),
             ElevatedButton(
               onPressed: () async {
+                FocusScope.of(context).unfocus();
+
                 if (formKey.value.currentState!.validate()) {
                   double? exchangeRateInput;
                   double? targetAmountInput;

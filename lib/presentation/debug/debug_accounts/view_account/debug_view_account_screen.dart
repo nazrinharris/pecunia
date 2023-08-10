@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/edit_account.dart';
@@ -14,6 +15,7 @@ import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
@@ -107,6 +109,24 @@ class DebugViewAccountScreen extends ConsumerWidget {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
                 title: 'Your account has been edited!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(createTransferTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Unable to create transfer transaction.',
+                failure: next.error as TransactionsFailure?,
+              );
+        }
+
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transfer transaction created successfully!',
               );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
@@ -543,17 +563,16 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
         borderRadius: BorderRadius.circular(44),
       ),
       builder: (context) {
-        return SizedBox(
-          height: 700,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 CreateTxnForm(
                   account: account,
                   initialTransactionType: isCredit ? TransactionType.credit : TransactionType.debit,
                 ),
-                //CreateTransactionForm(account, isCredit),
                 const SizedBox(height: 64),
               ],
             ),
@@ -571,11 +590,12 @@ void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
         borderRadius: BorderRadius.circular(44),
       ),
       builder: (context) {
-        return SizedBox(
-          height: 700,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 CreateTransferTxnForm(
                   defaultSourceAccount: account,

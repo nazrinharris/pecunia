@@ -139,7 +139,7 @@ class TransactionsRepo {
       baseCurrency: PecuniaCurrencies.fromString(destinationAccount.currency),
       exchangeRate: reciprocalExchangeRate,
       targetAmount: isMultiCurrencyTransfer ? sourceTransactionAmount : null,
-      targetCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+      targetCurrency: isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(sourceAccount.currency) : null,
     );
 
     final sourceTxn = Transaction(
@@ -171,6 +171,16 @@ class TransactionsRepo {
         transferDescription: TransferDescription(transferDescription),
       ),
     );
+
+    // print('sourceTxn: $sourceTxn');
+    // print('destinationTxn: $destinationTxn');
+
+    // return TaskEither.left(TransactionsFailure(
+    //   message: 'Not implemented',
+    //   errorType: TransactionsErrorType.unknown,
+    //   transactionsAction: currentAction,
+    //   stackTrace: StackTrace.current,
+    // ));
 
     return transactionsLocalDS.createTransferTransaction(
       sourceTransaction: sourceTxn,

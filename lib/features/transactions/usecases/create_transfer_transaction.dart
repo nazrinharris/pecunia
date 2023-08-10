@@ -18,8 +18,8 @@ class CreateTransferTransaction extends _$CreateTransferTransaction {
     required Account sourceAccount,
     required Account destinationAccount,
     required double sourceTransactionAmount,
-    required double destinationTransactionAmount,
-    required double exchangeRate,
+    required double? destinationTransactionAmount,
+    required double? exchangeRate,
     required String transferDescription,
   }) async {
     state = const AsyncLoading();
