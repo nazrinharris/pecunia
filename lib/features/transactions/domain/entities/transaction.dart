@@ -103,15 +103,14 @@ class Transaction with _$Transaction {
 
   factory Transaction.fromDTO(TransactionDTO dto) {
     return Transaction(
-      id: dto.id,
-      creatorUid: dto.creatorUid,
-      name: dto.name,
-      transactionDescription: TransactionDescription(dto.description),
-      transactionDate: dto.transactionDate.toUtc(),
-      accountId: dto.accountId,
-      fundDetails: FundDetails.fromDTO(dto),
-      transferDetails: TransferDetails.fromDTO(dto),
-    );
+        id: dto.id,
+        creatorUid: dto.creatorUid,
+        name: dto.name,
+        transactionDescription: TransactionDescription(dto.description),
+        transactionDate: dto.transactionDate.toUtc(),
+        accountId: dto.accountId,
+        fundDetails: FundDetails.fromDTO(dto),
+        transferDetails: TransferDetails.isTransfer(dto) ? TransferDetails.fromDTO(dto) : null);
   }
 
   TransactionDTO toDTO() {

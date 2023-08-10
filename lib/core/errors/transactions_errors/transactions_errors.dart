@@ -43,6 +43,10 @@ enum TransactionsErrorType {
     'invalid-multi-currency-fields',
     'Exchange rate, target amount, and target currency must all be provided or all be null.',
   ),
+  invalidTransferFields(
+    'invalid-transfer-fields',
+    'Linked transaction ID and linked account ID must both be provided or both be null.',
+  ),
   invalidExchangedAmount(
     'invalid-exchanged-amount',
     'The provided target amount does not match the computed target amount based on the provided base amount and exchange rate.',

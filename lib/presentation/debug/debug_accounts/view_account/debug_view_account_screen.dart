@@ -17,6 +17,7 @@ import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
+import 'package:pecunia/presentation/debug/debug_forms/create_transfer_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
@@ -561,6 +562,33 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
       });
 }
 
+void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SizedBox(
+          height: 700,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            child: Column(
+              children: [
+                CreateTransferTxnForm(
+                  defaultSourceAccount: account,
+                  accountsList: [account],
+                ),
+                const SizedBox(height: 64),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
 class AccountActionsGrid extends ConsumerWidget {
   const AccountActionsGrid(this.account, {super.key});
 
@@ -614,7 +642,9 @@ class AccountActionsGrid extends ConsumerWidget {
             color: Colors.blue[900]!.withOpacity(0.1),
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
-              onTap: () {},
+              onTap: () {
+                showCreateTransferTxnBottomSheet(context, account);
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

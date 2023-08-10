@@ -21,6 +21,10 @@ class TransferDetails with _$TransferDetails {
       transferDescription: TransferDescription(dto.transferDescription),
     );
   }
+
+  static bool isTransfer(TransactionDTO dto) {
+    return dto.linkedAccountId != null && dto.linkedTransactionId != null;
+  }
 }
 
 /// Value object for the description of a transaction
