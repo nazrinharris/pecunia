@@ -88,7 +88,6 @@ class TransactionsRepo {
     const currentAction = TransactionsAction.createTransferTransaction;
     final sourceTxnId = uuid.v4();
     final destinationTxnId = uuid.v4();
-    final reciprocalExchangeRate = exchangeRate == null ? null : 1 / exchangeRate;
     final isMultiCurrencyTransfer = sourceAccount.currency != destinationAccount.currency;
 
     // ! Checks that both destinationTransactionAmount and exchangeRate is null or both are not null.
@@ -135,11 +134,12 @@ class TransactionsRepo {
     );
     final destinationTxnFundDetails = FundDetails(
       transactionType: TransactionType.credit,
-      baseAmount: destinationTransactionAmount ?? sourceTransactionAmount,
-      baseCurrency: PecuniaCurrencies.fromString(destinationAccount.currency),
-      exchangeRate: reciprocalExchangeRate,
-      targetAmount: isMultiCurrencyTransfer ? sourceTransactionAmount : null,
-      targetCurrency: isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(sourceAccount.currency) : null,
+      baseAmount: sourceTransactionAmount,
+      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+      exchangeRate: exchangeRate,
+      targetAmount: isMultiCurrencyTransfer ? destinationTransactionAmount : null,
+      targetCurrency:
+          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
     );
 
     final sourceTxn = Transaction(
@@ -171,16 +171,6 @@ class TransactionsRepo {
         transferDescription: TransferDescription(transferDescription),
       ),
     );
-
-    // print('sourceTxn: $sourceTxn');
-    // print('destinationTxn: $destinationTxn');
-
-    // return TaskEither.left(TransactionsFailure(
-    //   message: 'Not implemented',
-    //   errorType: TransactionsErrorType.unknown,
-    //   transactionsAction: currentAction,
-    //   stackTrace: StackTrace.current,
-    // ));
 
     return transactionsLocalDS.createTransferTransaction(
       sourceTransaction: sourceTxn,

@@ -207,7 +207,8 @@ class TransferFormContent extends HookConsumerWidget {
               )),
               onPressed: () async {
                 FocusScope.of(context).unfocus();
-                if (formKey.value.currentState!.validate() && chosenDestinationAccount.value != null) {
+
+                if (formKey.value.currentState!.validate()) {
                   double? destinationAmountInput;
 
                   if (isDifferentCurrency) {
@@ -451,6 +452,7 @@ class DestinationAccountDropdown extends HookConsumerWidget {
         );
       }).toList(),
       hint: Text('Select Destination Account'),
+      validator: (value) => value == null ? 'Please select an account' : null,
     );
   }
 }
