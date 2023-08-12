@@ -58,7 +58,9 @@ enum TransactionsErrorType {
   missingExchangeRateForDifferentCurrencies(
     'missing-exchange-rate-for-different-currencies',
     'Exchange rate is missing for a transfer between different currencies.',
-  );
+  ),
+  notATransferTransaction('not-a-transfer-transaction',
+      'Deletion of a transfer transaction failed because the provided transaction is not a transfer transaction.');
 
   const TransactionsErrorType(this.code, this.message);
 

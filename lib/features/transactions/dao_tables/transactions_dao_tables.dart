@@ -121,6 +121,43 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     );
   }
 
+  TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
+    const currentAction = TransactionsAction.deleteTransferTransaction;
+    return TaskEither.tryCatch(
+      () => transaction(() async {
+        // Ensure that the transaction is a transfer
+        if (!transferTxnToDelete.isTransferTransaction) {
+          throw TransactionsException(
+            stackTrace: StackTrace.current,
+            errorType: TransactionsErrorType.notATransferTransaction,
+            transactionsAction: currentAction,
+          );
+        }
+
+        // Get the transaction, if an error occurs, this database transaction should fail
+        final linkedTxn =
+            (await getTransactionById(transferTxnToDelete.transferDetails!.linkedTransactionId).run()).fold(
+          (l) => throw TransactionsException.fromFailure(l),
+          Transaction.fromDTO,
+        );
+
+        // Delete the source and destination transactions, if an error occurs, this database transaction should fail
+        // (do it here)
+        (await deleteTransaction(transferTxnToDelete).run()).fold(
+          (l) => throw TransactionsException.fromFailure(l),
+          (r) => unit,
+        );
+        (await deleteTransaction(linkedTxn).run()).fold(
+          (l) => throw TransactionsException.fromFailure(l),
+          (r) => unit,
+        );
+
+        return unit;
+      }),
+      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+    );
+  }
+
   TaskEither<TransactionsFailure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
@@ -200,6 +237,10 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
 
   Future<AccountDTO> retrieveAccountById(TransactionDTO txnDto) async {
     return (select(accountsTable)..where((tbl) => tbl.id.equals(txnDto.accountId))).getSingle();
+  }
+
+  Future<TransactionDTO> retrieveTransactionById(String id) async {
+    return (select(transactionsTable)..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
   Future<void> insertTransactionToTable(TransactionDTO txnDto) async {

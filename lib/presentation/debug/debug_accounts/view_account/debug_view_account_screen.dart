@@ -20,9 +20,10 @@ import 'package:pecunia/features/transactions/usecases/create_transfer_transacti
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_transfer_txn_form_widget.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
 class DebugViewAccountScreen extends ConsumerWidget {
@@ -330,7 +331,7 @@ class TransactionsList extends ConsumerWidget {
                   ? TransferTransactionListTile(
                       account: account,
                       txn: txn,
-                      isFirst: index == 0,
+                      enableTopDivider: index == 0,
                     )
                   : TransactionListTile(account: account, txn: txn, isFirst: index == 0);
             },
@@ -428,7 +429,7 @@ class TransactionListTile extends StatelessWidget {
                     height: 550,
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                      child: BottomSheetContent(txn, [], account),
+                      child: TxnBottomSheet(txn, account),
                     ),
                   );
                 });
@@ -444,33 +445,32 @@ class TransferTransactionListTile extends ConsumerWidget {
   const TransferTransactionListTile({
     required this.account,
     required this.txn,
-    this.isFirst = false,
+    this.enableTopDivider = false,
+    this.enableBottomDivider = true,
     super.key,
   });
 
   final Account account;
   final Transaction txn;
-  final bool isFirst;
+  final bool enableTopDivider;
+  final bool enableBottomDivider;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final linkedAccountValue = ref.watch(getAccountByIdProvider(
-      txn.transferDetails!.linkedAccountId,
-      debugReturnError: true,
-    ));
+    final linkedAccountValue = ref.watch(getAccountByIdProvider(txn.transferDetails!.linkedAccountId));
     final toOrFromText = txn.fundDetails.transactionType == TransactionType.credit ? 'From' : 'To';
 
     return switch (linkedAccountValue) {
       AsyncLoading() => Column(
           children: [
-            if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+            if (enableTopDivider) Divider(color: Colors.grey.withOpacity(0.1)),
             const ListTile(title: CupertinoActivityIndicator()),
-            Divider(color: Colors.grey.withOpacity(0.1)),
+            if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
           ],
         ),
       AsyncData(value: final Account linkedAccount) => Column(
           children: [
-            if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+            if (enableTopDivider) Divider(color: Colors.grey.withOpacity(0.1)),
             ListTile(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               title: Column(
@@ -516,18 +516,18 @@ class TransferTransactionListTile extends ConsumerWidget {
                         height: 550,
                         child: SingleChildScrollView(
                           physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                          child: BottomSheetContent(txn, [], account),
+                          child: TransferTxnBottomSheet(txn, account: account, linkedAccount: linkedAccount),
                         ),
                       );
                     });
               },
             ),
-            Divider(color: Colors.grey.withOpacity(0.1)),
+            if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
           ],
         ),
       AsyncError(:final Failure error) => Column(
           children: [
-            if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+            if (enableTopDivider) Divider(color: Colors.grey.withOpacity(0.1)),
             ListTile(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               title: Column(
@@ -545,8 +545,6 @@ class TransferTransactionListTile extends ConsumerWidget {
               ),
               subtitle: Text(
                 error.message,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.white.withOpacity(0.3)),
               ),
               leading: Container(
@@ -554,9 +552,10 @@ class TransferTransactionListTile extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.red[100]!.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(12),
+                  // border: Border.all(color: Colors.red[900]!, width: 2),
                 ),
                 child: Icon(
-                  Icons.report,
+                  Icons.report_problem_outlined,
                   color: Colors.red[900],
                 ),
               ),
@@ -570,13 +569,13 @@ class TransferTransactionListTile extends ConsumerWidget {
                         height: 550,
                         child: SingleChildScrollView(
                           physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                          child: BottomSheetContent(txn, [], account),
+                          child: TxnBottomSheet(txn, account),
                         ),
                       );
                     });
               },
             ),
-            Divider(color: Colors.grey.withOpacity(0.1)),
+            if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
           ],
         ),
       _ => const Center(child: Text('Something went wrong')),

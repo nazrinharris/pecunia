@@ -18,6 +18,7 @@ abstract interface class TransactionsLocalDS {
     required Transaction destinationTransaction,
   });
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transaction);
+  TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete);
   TaskEither<TransactionsFailure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
@@ -69,5 +70,10 @@ class TransactionsLocalDSImpl implements TransactionsLocalDS {
       sourceTxn: sourceTransaction,
       destinationTxn: destinationTransaction,
     );
+  }
+
+  @override
+  TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
+    return transactionsDAO.deleteTransferTransaction(transferTxnToDelete);
   }
 }

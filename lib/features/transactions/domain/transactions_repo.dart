@@ -22,6 +22,7 @@ enum TransactionsAction {
   create,
   createTransferTransaction,
   delete,
+  deleteTransferTransaction,
   edit,
   getTransactionsByAccount,
   getTransactionById,
@@ -197,6 +198,10 @@ class TransactionsRepo {
 
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {
     return transactionsLocalDS.deleteTransaction(transactionToDelete);
+  }
+
+  TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
+    return transactionsLocalDS.deleteTransferTransaction(transferTxnToDelete);
   }
 }
 
