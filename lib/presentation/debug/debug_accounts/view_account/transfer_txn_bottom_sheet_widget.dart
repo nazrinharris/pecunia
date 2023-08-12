@@ -5,6 +5,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
@@ -140,10 +141,10 @@ class TransferTxnBottomSheet extends ConsumerWidget {
                     onTap: () {
                       // TODO: Make transfer txn deletion work
                       ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                            title: 'Delete transaction?',
-                            message: "This isn't a reversible action, think twice.",
+                            title: 'Delete transfer transaction?',
+                            message: "You can't undo this, so be careful!",
                             onConfirm: () {
-                              ref.read(deleteTransactionProvider.notifier).deleteTransaction(txn);
+                              ref.read(deleteTransferTransactionProvider.notifier).deleteTransaction(txn);
                             },
                             context: context,
                           );

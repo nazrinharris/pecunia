@@ -18,6 +18,7 @@ import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_bottom_sheet_widget.dart';
@@ -129,6 +130,24 @@ class DebugViewAccountScreen extends ConsumerWidget {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
                 title: 'Transfer transaction created successfully!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(deleteTransferTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Unable to create transfer transaction.',
+                failure: next.error as TransactionsFailure?,
+              );
+        }
+
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transfer transaction deleted successfully!',
               );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
