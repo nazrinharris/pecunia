@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
@@ -89,7 +88,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          TransferTransactionListTile(
+          TransferTxnListTile(
             account: account,
             txn: txn,
             enableTopDivider: true,
@@ -179,292 +178,320 @@ class TransferTxnBottomSheet extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 14),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Card(
-              elevation: 0,
-              clipBehavior: Clip.antiAlias,
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ExpansionTile(
-                  collapsedShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  leading: const Icon(HeroIcons.credit_card),
-                  title: const Text(
-                    'Transaction Metadata',
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'txn_id: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(text: txn.id, style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'acc_id: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(text: txn.accountId, style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'creator_id: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(text: txn.creatorUid, style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'txn_type: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.fundDetails.transactionType.typeAsString,
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'txn_date: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.transactionDate.toString(),
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'txn_amount: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.deepPurple[200],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.fundDetails.transactionAmount.toString(),
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'exchange_rate: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.deepPurple[200],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.fundDetails.exchangeRate.toString(),
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'base_currency: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue[200],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.fundDetails.baseCurrency.code,
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'base_amount: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue[200],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.fundDetails.baseAmount.toString(),
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'target_currency: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.pink[200],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.fundDetails.targetCurrency?.code ?? 'null',
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'target_amount: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.pink[200],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.fundDetails.targetAmount.toString(),
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                        ],
-                      ),
-                    ),
-                  ]),
-            ),
-          ),
+          ExpandableTxnMetadata(txn, account),
           const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Card(
-              elevation: 0,
-              clipBehavior: Clip.antiAlias,
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ExpansionTile(
-                  collapsedShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  leading: const Icon(Icons.compare_arrows),
-                  title: const Text(
-                    'Transfer Details Metadata',
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'linked_account_id: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.transferDetails!.linkedAccountId,
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'linked_account_name: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(text: linkedAccount.name, style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'linked_transaction_id: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.transferDetails!.linkedTransactionId,
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                            text: TextSpan(
-                              text: 'transfer_description: ',
-                              style: DefaultTextStyle.of(context).style.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange[300],
-                                  ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: txn.transferDetails!.transferDescription.value ?? 'null',
-                                    style: DefaultTextStyle.of(context).style),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                        ],
-                      ),
-                    ),
-                  ]),
-            ),
-          ),
+          ExpandableTransferDetailsMetadata(txn: txn, linkedAccount: linkedAccount),
           const SizedBox(height: 64)
         ],
+      ),
+    );
+  }
+}
+
+class ExpandableTxnMetadata extends ConsumerWidget {
+  const ExpandableTxnMetadata(this.txn, this.account, {super.key});
+
+  final Transaction txn;
+  final Account account;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Card(
+        elevation: 0,
+        clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ExpansionTile(
+            collapsedShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            leading: const Icon(HeroIcons.credit_card),
+            title: const Text(
+              'Transaction Metadata',
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: 'txn_id: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(text: txn.id, style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'acc_id: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(text: txn.accountId, style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'creator_id: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(text: txn.creatorUid, style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'txn_type: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.fundDetails.transactionType.typeAsString,
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'txn_date: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.transactionDate.toString(),
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'txn_amount: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.deepPurple[200],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.fundDetails.transactionAmount.toString(),
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'exchange_rate: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.deepPurple[200],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.fundDetails.exchangeRate.toString(),
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'base_currency: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[200],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.fundDetails.baseCurrency.code,
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'base_amount: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[200],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.fundDetails.baseAmount.toString(),
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'target_currency: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.pink[200],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.fundDetails.targetCurrency?.code ?? 'null',
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'target_amount: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.pink[200],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.fundDetails.targetAmount.toString(),
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ]),
+      ),
+    );
+  }
+}
+
+class ExpandableTransferDetailsMetadata extends ConsumerWidget {
+  const ExpandableTransferDetailsMetadata({
+    required this.txn,
+    required this.linkedAccount,
+    super.key,
+  });
+
+  final Transaction txn;
+  final Account linkedAccount;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Card(
+        elevation: 0,
+        clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ExpansionTile(
+            collapsedShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            leading: const Icon(Icons.compare_arrows),
+            title: const Text(
+              'Transfer Details Metadata',
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: 'linked_account_id: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.transferDetails!.linkedAccountId,
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'linked_account_name: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(text: linkedAccount.name, style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'linked_transaction_id: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.transferDetails!.linkedTransactionId,
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'transfer_description: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: txn.transferDetails!.transferDescription.value ?? 'null',
+                              style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ]),
       ),
     );
   }

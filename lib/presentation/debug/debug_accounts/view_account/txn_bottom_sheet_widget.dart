@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/debug/debug_forms/edit_txn_form_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
@@ -15,215 +18,142 @@ class TxnBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final sign = txn.fundDetails.transactionType == TransactionType.credit ? '+' : '-';
+
     return Container(
       padding: const EdgeInsets.only(top: 14, bottom: 14),
       child: Column(
         children: [
-          ListTile(
-            title: Text(
-              txn.name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: txn.transactionDescription.value == null
-                ? null
-                : Text(
-                    txn.transactionDescription.value!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-            trailing: BuildTxnAmountText(txn),
-          ),
-          const Divider(),
-          Container(
-            alignment: Alignment.centerLeft,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: TextSpan(
-                    text: 'txn_id: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange[300],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(text: txn.id, style: DefaultTextStyle.of(context).style),
-                    ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: RichText(
+                      textAlign: TextAlign.left,
+                      text: TextSpan(
+                        text: txn.name,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        children: [
+                          TextSpan(
+                            text: '\nwith amount of ',
+                            style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  color: Colors.white.withOpacity(0.4),
+                                ),
+                          ),
+                          TextSpan(
+                            text: '$sign${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}',
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: txn.fundDetails.transactionType == TransactionType.credit
+                                      ? Colors.green[300]
+                                      : Colors.red[300],
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'acc_id: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange[300],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(text: txn.accountId, style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'creator_id: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange[300],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(text: txn.creatorUid, style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'txn_type: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange[300],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.transactionType.typeAsString,
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'txn_date: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange[300],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.transactionDate.toString(), style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'txn_amount: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple[200],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.transactionAmount.toString(),
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'exchange_rate: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.deepPurple[200],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.exchangeRate.toString(),
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'base_currency: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue[200],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.baseCurrency.code, style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'base_amount: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue[200],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.baseAmount.toString(),
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'target_currency: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.pink[200],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.targetCurrency?.code ?? 'null',
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                RichText(
-                  text: TextSpan(
-                    text: 'target_amount: ',
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.pink[200],
-                        ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: txn.fundDetails.targetAmount.toString(),
-                          style: DefaultTextStyle.of(context).style),
-                    ],
-                  ),
-                ),
+                IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))
               ],
             ),
           ),
-          const Divider(),
-          ListTile(
-            title: const Text('Edit'),
-            leading: const Icon(Icons.edit),
-            onTap: () {
-              context.pop();
-              showEditTransactionBottomSheet(context, txn, account);
-            },
+          const SizedBox(height: 8),
+          TxnListTile(
+            account: account,
+            txn: txn,
+            hideAccountName: true,
+            enableTopDivider: true,
+            onTap: () {},
           ),
-          ListTile(
-            title: Text('Delete', style: TextStyle(color: Colors.red[300])),
-            leading: Icon(Icons.delete, color: Colors.red[300]),
-            onTap: () {
-              ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                    title: 'Delete transaction?',
-                    message: "This isn't a reversible action, think twice.",
-                    onConfirm: () {
-                      ref.read(deleteTransactionProvider.notifier).deleteTransaction(txn);
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      showEditTransactionBottomSheet(context, txn, account);
                     },
-                    context: context,
-                  );
-            },
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.purple[900]!.withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Edit',
+                              style: TextStyle(
+                                color: Colors.purple[100],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Icon(HeroIcons.pencil, color: Colors.purple[100]),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                            title: 'Delete transaction?',
+                            message: "This isn't a reversible action, think twice.",
+                            onConfirm: () {
+                              ref.read(deleteTransactionProvider.notifier).deleteTransaction(txn);
+                            },
+                            context: context,
+                          );
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      color: Colors.red[900]!.withOpacity(0.1),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                color: Colors.red[100],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Icon(HeroIcons.trash, color: Colors.red[100]),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
+          const SizedBox(height: 14),
+          ExpandableTxnMetadata(txn, account),
+          const SizedBox(height: 64)
         ],
       ),
     );

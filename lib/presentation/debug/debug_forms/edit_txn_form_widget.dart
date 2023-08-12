@@ -54,10 +54,9 @@ class EditTxnForm extends HookConsumerWidget {
                 children: [
                   Text(
                     '${txnType.value.toDisplayName()} Transaction',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
-                    ),
+                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          color: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
+                        ),
                   ),
                   if (!disableCloseButton)
                     IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))

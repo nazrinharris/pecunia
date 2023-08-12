@@ -347,12 +347,12 @@ class TransactionsList extends ConsumerWidget {
               final txn = transactions[index];
 
               return txn.isTransferTransaction
-                  ? TransferTransactionListTile(
+                  ? TransferTxnListTile(
                       account: account,
                       txn: txn,
                       enableTopDivider: index == 0,
                     )
-                  : TransactionListTile(account: account, txn: txn, isFirst: index == 0);
+                  : TxnListTile(account: account, txn: txn, enableTopDivider: index == 0);
             },
           ),
         );
@@ -386,35 +386,42 @@ class TransactionsList extends ConsumerWidget {
   }
 }
 
-class TransactionListTile extends StatelessWidget {
-  const TransactionListTile({
+class TxnListTile extends StatelessWidget {
+  const TxnListTile({
     required this.account,
     required this.txn,
-    this.isFirst = false,
+    this.enableTopDivider = false,
+    this.enableBottomDivider = true,
+    this.hideAccountName = false,
+    this.onTap,
     super.key,
   });
 
   final Account account;
   final Transaction txn;
-  final bool isFirst;
+  final bool enableTopDivider;
+  final bool enableBottomDivider;
+  final bool hideAccountName;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+        if (enableTopDivider) Divider(color: Colors.grey.withOpacity(0.1)),
         ListTile(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                account.name,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+              if (!hideAccountName)
+                Text(
+                  account.name,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               const SizedBox(width: 8),
               Text(
                 txn.name,
@@ -438,33 +445,31 @@ class TransactionListTile extends StatelessWidget {
             ),
             child: Icon(Icons.question_mark, color: Colors.grey[100]),
           ),
-          onTap: () {
-            showModalBottomSheet<void>(
-                isScrollControlled: true,
-                context: context,
-                showDragHandle: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(44),
-                ),
-                builder: (context) {
-                  return SizedBox(
-                    height: 550,
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                      child: TxnBottomSheet(txn, account),
+          onTap: onTap ??
+              () {
+                showModalBottomSheet<void>(
+                    isScrollControlled: true,
+                    context: context,
+                    showDragHandle: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(44),
                     ),
-                  );
-                });
-          },
+                    builder: (context) {
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: TxnBottomSheet(txn, account),
+                      );
+                    });
+              },
         ),
-        Divider(color: Colors.grey.withOpacity(0.1)),
+        if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
       ],
     );
   }
 }
 
-class TransferTransactionListTile extends ConsumerWidget {
-  const TransferTransactionListTile({
+class TransferTxnListTile extends ConsumerWidget {
+  const TransferTxnListTile({
     required this.account,
     required this.txn,
     this.enableTopDivider = false,
