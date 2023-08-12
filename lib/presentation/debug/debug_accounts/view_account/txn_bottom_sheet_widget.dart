@@ -235,11 +235,14 @@ void showTransactionBottomSheet(BuildContext context, Transaction txn, Account a
       isScrollControlled: true,
       context: context,
       showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
       builder: (context) {
         return SizedBox(
           height: 550,
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(),
             child: TxnBottomSheet(txn, account),
           ),
         );
@@ -251,16 +254,16 @@ void showEditTransactionBottomSheet(BuildContext context, Transaction txn, Accou
       isScrollControlled: true,
       context: context,
       showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
       builder: (context) {
-        return SizedBox(
-          height: 700,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            child: Column(
-              children: [
-                EditTxnForm(txn: txn, account: account),
-              ],
-            ),
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              EditTxnForm(txn: txn, account: account),
+            ],
           ),
         );
       });

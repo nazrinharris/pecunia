@@ -424,6 +424,9 @@ class TransactionListTile extends StatelessWidget {
                 isScrollControlled: true,
                 context: context,
                 showDragHandle: true,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(44),
+                ),
                 builder: (context) {
                   return SizedBox(
                     height: 550,
@@ -447,6 +450,7 @@ class TransferTransactionListTile extends ConsumerWidget {
     required this.txn,
     this.enableTopDivider = false,
     this.enableBottomDivider = true,
+    this.onTap,
     super.key,
   });
 
@@ -454,6 +458,7 @@ class TransferTransactionListTile extends ConsumerWidget {
   final Transaction txn;
   final bool enableTopDivider;
   final bool enableBottomDivider;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -506,21 +511,23 @@ class TransferTransactionListTile extends ConsumerWidget {
                       : Colors.red[200],
                 ),
               ),
-              onTap: () {
-                showModalBottomSheet<void>(
-                    isScrollControlled: true,
-                    context: context,
-                    showDragHandle: true,
-                    builder: (context) {
-                      return SizedBox(
-                        height: 550,
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                          child: TransferTxnBottomSheet(txn, account: account, linkedAccount: linkedAccount),
+              onTap: onTap ??
+                  () {
+                    showModalBottomSheet<void>(
+                        isScrollControlled: true,
+                        context: context,
+                        showDragHandle: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(44),
                         ),
-                      );
-                    });
-              },
+                        builder: (context) {
+                          return SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            child:
+                                TransferTxnBottomSheet(txn, account: account, linkedAccount: linkedAccount),
+                          );
+                        });
+                  },
             ),
             if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
           ],
@@ -559,21 +566,22 @@ class TransferTransactionListTile extends ConsumerWidget {
                   color: Colors.red[900],
                 ),
               ),
-              onTap: () {
-                showModalBottomSheet<void>(
-                    isScrollControlled: true,
-                    context: context,
-                    showDragHandle: true,
-                    builder: (context) {
-                      return SizedBox(
-                        height: 550,
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                          child: TxnBottomSheet(txn, account),
+              onTap: onTap ??
+                  () {
+                    showModalBottomSheet<void>(
+                        isScrollControlled: true,
+                        context: context,
+                        showDragHandle: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(44),
                         ),
-                      );
-                    });
-              },
+                        builder: (context) {
+                          return SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            child: TxnBottomSheet(txn, account),
+                          );
+                        });
+                  },
             ),
             if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
           ],
