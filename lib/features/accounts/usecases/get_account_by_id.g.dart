@@ -6,7 +6,7 @@ part of 'get_account_by_id.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAccountByIdHash() => r'7a55f8fb20a48ba0ecc8f61f96d2cffa1502e498';
+String _$getAccountByIdHash() => r'26748c466800e764f9e55f5ed05373f46260afe0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -42,10 +42,12 @@ class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
 
   /// See also [getAccountById].
   GetAccountByIdProvider call(
-    String accountId,
-  ) {
+    String accountId, {
+    bool? debugReturnError,
+  }) {
     return GetAccountByIdProvider(
       accountId,
+      debugReturnError: debugReturnError,
     );
   }
 
@@ -55,6 +57,7 @@ class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
   ) {
     return call(
       provider.accountId,
+      debugReturnError: provider.debugReturnError,
     );
   }
 
@@ -77,11 +80,13 @@ class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
 class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
   /// See also [getAccountById].
   GetAccountByIdProvider(
-    this.accountId,
-  ) : super.internal(
+    this.accountId, {
+    this.debugReturnError,
+  }) : super.internal(
           (ref) => getAccountById(
             ref,
             accountId,
+            debugReturnError: debugReturnError,
           ),
           from: getAccountByIdProvider,
           name: r'getAccountByIdProvider',
@@ -95,16 +100,20 @@ class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
         );
 
   final String accountId;
+  final bool? debugReturnError;
 
   @override
   bool operator ==(Object other) {
-    return other is GetAccountByIdProvider && other.accountId == accountId;
+    return other is GetAccountByIdProvider &&
+        other.accountId == accountId &&
+        other.debugReturnError == debugReturnError;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, accountId.hashCode);
+    hash = _SystemHash.combine(hash, debugReturnError.hashCode);
 
     return _SystemHash.finish(hash);
   }

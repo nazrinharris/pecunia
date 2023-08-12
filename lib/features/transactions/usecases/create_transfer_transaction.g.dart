@@ -7,7 +7,7 @@ part of 'create_transfer_transaction.dart';
 // **************************************************************************
 
 String _$createTransferTransactionHash() =>
-    r'fb8afbf7bc362214b8902cdf9bbb69c639846688';
+    r'33efca2a7c91169810c040f7ade8c9605b7a297e';
 
 /// See also [CreateTransferTransaction].
 @ProviderFor(CreateTransferTransaction)

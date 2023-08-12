@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
@@ -138,7 +139,7 @@ class DebugViewAccountScreen extends ConsumerWidget {
 
     switch (acc) {
       case AsyncLoading():
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: CupertinoActivityIndicator());
       case AsyncError():
         return const Center(child: Text('Error loading account'));
       case AsyncData():
@@ -325,55 +326,13 @@ class TransactionsList extends ConsumerWidget {
             itemBuilder: (context, index) {
               final txn = transactions[index];
 
-              return Column(
-                children: [
-                  if (index == 0) Divider(color: Colors.grey.withOpacity(0.1)),
-                  ListTile(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          account.name,
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          txn.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    subtitle: txn.transactionDescription.value == null
-                        ? null
-                        : Text(
-                            txn.transactionDescription.value!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                    trailing: BuildTxnAmountText(txn),
-                    onTap: () {
-                      showModalBottomSheet<void>(
-                          isScrollControlled: true,
-                          context: context,
-                          showDragHandle: true,
-                          builder: (context) {
-                            return SizedBox(
-                              height: 550,
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                                child: BottomSheetContent(txn, [], account),
-                              ),
-                            );
-                          });
-                    },
-                  ),
-                  Divider(color: Colors.grey.withOpacity(0.1)),
-                ],
-              );
+              return txn.isTransferTransaction
+                  ? TransferTransactionListTile(
+                      account: account,
+                      txn: txn,
+                      isFirst: index == 0,
+                    )
+                  : TransactionListTile(account: account, txn: txn, isFirst: index == 0);
             },
           ),
         );
@@ -404,6 +363,224 @@ class TransactionsList extends ConsumerWidget {
 
     final account = accounts.firstWhere((element) => element.id == accountId);
     return account.name;
+  }
+}
+
+class TransactionListTile extends StatelessWidget {
+  const TransactionListTile({
+    required this.account,
+    required this.txn,
+    this.isFirst = false,
+    super.key,
+  });
+
+  final Account account;
+  final Transaction txn;
+  final bool isFirst;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+        ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                account.name,
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                txn.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          subtitle: txn.transactionDescription.value == null
+              ? null
+              : Text(
+                  txn.transactionDescription.value!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+          trailing: BuildTxnAmountText(txn),
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.question_mark, color: Colors.grey[100]),
+          ),
+          onTap: () {
+            showModalBottomSheet<void>(
+                isScrollControlled: true,
+                context: context,
+                showDragHandle: true,
+                builder: (context) {
+                  return SizedBox(
+                    height: 550,
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                      child: BottomSheetContent(txn, [], account),
+                    ),
+                  );
+                });
+          },
+        ),
+        Divider(color: Colors.grey.withOpacity(0.1)),
+      ],
+    );
+  }
+}
+
+class TransferTransactionListTile extends ConsumerWidget {
+  const TransferTransactionListTile({
+    required this.account,
+    required this.txn,
+    this.isFirst = false,
+    super.key,
+  });
+
+  final Account account;
+  final Transaction txn;
+  final bool isFirst;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final linkedAccountValue = ref.watch(getAccountByIdProvider(
+      txn.transferDetails!.linkedAccountId,
+      debugReturnError: true,
+    ));
+    final toOrFromText = txn.fundDetails.transactionType == TransactionType.credit ? 'From' : 'To';
+
+    return switch (linkedAccountValue) {
+      AsyncLoading() => Column(
+          children: [
+            if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+            const ListTile(title: CupertinoActivityIndicator()),
+            Divider(color: Colors.grey.withOpacity(0.1)),
+          ],
+        ),
+      AsyncData(value: final Account linkedAccount) => Column(
+          children: [
+            if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+            ListTile(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$toOrFromText ${linkedAccount.name}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              subtitle: txn.transactionDescription.value == null
+                  ? null
+                  : Text(
+                      txn.transactionDescription.value!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+              trailing: BuildTxnAmountText(txn),
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: txn.fundDetails.transactionType == TransactionType.credit
+                      ? Colors.green[900]!.withOpacity(0.3)
+                      : Colors.red[900]!.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.compare_arrows,
+                  color: txn.fundDetails.transactionType == TransactionType.credit
+                      ? Colors.green[100]
+                      : Colors.red[200],
+                ),
+              ),
+              onTap: () {
+                showModalBottomSheet<void>(
+                    isScrollControlled: true,
+                    context: context,
+                    showDragHandle: true,
+                    builder: (context) {
+                      return SizedBox(
+                        height: 550,
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                          child: BottomSheetContent(txn, [], account),
+                        ),
+                      );
+                    });
+              },
+            ),
+            Divider(color: Colors.grey.withOpacity(0.1)),
+          ],
+        ),
+      AsyncError(:final Failure error) => Column(
+          children: [
+            if (isFirst) Divider(color: Colors.grey.withOpacity(0.1)),
+            ListTile(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Couldn't load linked account",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red[200],
+                    ),
+                  ),
+                ],
+              ),
+              subtitle: Text(
+                error.message,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white.withOpacity(0.3)),
+              ),
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red[100]!.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.report,
+                  color: Colors.red[900],
+                ),
+              ),
+              onTap: () {
+                showModalBottomSheet<void>(
+                    isScrollControlled: true,
+                    context: context,
+                    showDragHandle: true,
+                    builder: (context) {
+                      return SizedBox(
+                        height: 550,
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+                          child: BottomSheetContent(txn, [], account),
+                        ),
+                      );
+                    });
+              },
+            ),
+            Divider(color: Colors.grey.withOpacity(0.1)),
+          ],
+        ),
+      _ => const Center(child: Text('Something went wrong')),
+    };
   }
 }
 
@@ -564,6 +741,7 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
       ),
       builder: (context) {
         return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
@@ -591,7 +769,7 @@ void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
       ),
       builder: (context) {
         return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
