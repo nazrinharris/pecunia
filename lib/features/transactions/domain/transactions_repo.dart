@@ -189,6 +189,10 @@ class TransactionsRepo {
         .flatMap(_helper.mapDTOListToTransactionList);
   }
 
+  TaskEither<TransactionsFailure, Transaction> getTransactionById(String txnId) {
+    return transactionsLocalDS.getTransactionById(txnId).map(Transaction.fromDTO);
+  }
+
   TaskEither<TransactionsFailure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,

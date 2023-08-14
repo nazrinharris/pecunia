@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_account_by_id.dart';
+part of 'get_transaction_by_id.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAccountByIdHash() => r'c42c5db981a3cbad9c50b87f52c7d397d522b62b';
+String _$getTransactionByIdHash() =>
+    r'fbe7c053f9572faf27d718ad67f81e83b0c63815';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,34 +30,34 @@ class _SystemHash {
   }
 }
 
-typedef GetAccountByIdRef = AutoDisposeFutureProviderRef<Account>;
+typedef GetTransactionByIdRef = AutoDisposeFutureProviderRef<Transaction>;
 
-/// See also [getAccountById].
-@ProviderFor(getAccountById)
-const getAccountByIdProvider = GetAccountByIdFamily();
+/// See also [getTransactionById].
+@ProviderFor(getTransactionById)
+const getTransactionByIdProvider = GetTransactionByIdFamily();
 
-/// See also [getAccountById].
-class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
-  /// See also [getAccountById].
-  const GetAccountByIdFamily();
+/// See also [getTransactionById].
+class GetTransactionByIdFamily extends Family<AsyncValue<Transaction>> {
+  /// See also [getTransactionById].
+  const GetTransactionByIdFamily();
 
-  /// See also [getAccountById].
-  GetAccountByIdProvider call(
-    String accountId, {
+  /// See also [getTransactionById].
+  GetTransactionByIdProvider call(
+    String txnId, {
     bool? debugReturnError,
   }) {
-    return GetAccountByIdProvider(
-      accountId,
+    return GetTransactionByIdProvider(
+      txnId,
       debugReturnError: debugReturnError,
     );
   }
 
   @override
-  GetAccountByIdProvider getProviderOverride(
-    covariant GetAccountByIdProvider provider,
+  GetTransactionByIdProvider getProviderOverride(
+    covariant GetTransactionByIdProvider provider,
   ) {
     return call(
-      provider.accountId,
+      provider.txnId,
       debugReturnError: provider.debugReturnError,
     );
   }
@@ -73,46 +74,47 @@ class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getAccountByIdProvider';
+  String? get name => r'getTransactionByIdProvider';
 }
 
-/// See also [getAccountById].
-class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
-  /// See also [getAccountById].
-  GetAccountByIdProvider(
-    this.accountId, {
+/// See also [getTransactionById].
+class GetTransactionByIdProvider
+    extends AutoDisposeFutureProvider<Transaction> {
+  /// See also [getTransactionById].
+  GetTransactionByIdProvider(
+    this.txnId, {
     this.debugReturnError,
   }) : super.internal(
-          (ref) => getAccountById(
+          (ref) => getTransactionById(
             ref,
-            accountId,
+            txnId,
             debugReturnError: debugReturnError,
           ),
-          from: getAccountByIdProvider,
-          name: r'getAccountByIdProvider',
+          from: getTransactionByIdProvider,
+          name: r'getTransactionByIdProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getAccountByIdHash,
-          dependencies: GetAccountByIdFamily._dependencies,
+                  : _$getTransactionByIdHash,
+          dependencies: GetTransactionByIdFamily._dependencies,
           allTransitiveDependencies:
-              GetAccountByIdFamily._allTransitiveDependencies,
+              GetTransactionByIdFamily._allTransitiveDependencies,
         );
 
-  final String accountId;
+  final String txnId;
   final bool? debugReturnError;
 
   @override
   bool operator ==(Object other) {
-    return other is GetAccountByIdProvider &&
-        other.accountId == accountId &&
+    return other is GetTransactionByIdProvider &&
+        other.txnId == txnId &&
         other.debugReturnError == debugReturnError;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, accountId.hashCode);
+    hash = _SystemHash.combine(hash, txnId.hashCode);
     hash = _SystemHash.combine(hash, debugReturnError.hashCode);
 
     return _SystemHash.finish(hash);

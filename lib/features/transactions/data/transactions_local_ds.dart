@@ -25,6 +25,7 @@ abstract interface class TransactionsLocalDS {
   });
 
   TaskEither<TransactionsFailure, List<TransactionDTO>> getTransactionsByAccount(String accountId);
+  TaskEither<TransactionsFailure, TransactionDTO> getTransactionById(String txnId);
   TaskEither<TransactionsFailure, List<TransactionDTO>> getAllTransactions();
 }
 
@@ -48,6 +49,11 @@ class TransactionsLocalDSImpl implements TransactionsLocalDS {
   @override
   TaskEither<TransactionsFailure, List<TransactionDTO>> getTransactionsByAccount(String accountId) {
     return transactionsDAO.getTransactionsByAccount(accountId);
+  }
+
+  @override
+  TaskEither<TransactionsFailure, TransactionDTO> getTransactionById(String txnId) {
+    return transactionsDAO.getTransactionById(txnId);
   }
 
   @override

@@ -11,14 +11,16 @@ import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
 // TODO: Make transfer txn UI more "transfer transaction"-like
 class TransferTxnBottomSheet extends ConsumerWidget {
-  const TransferTxnBottomSheet(
-    this.txn, {
+  const TransferTxnBottomSheet({
+    required this.txn,
+    required this.linkedTxn,
     required this.account,
     required this.linkedAccount,
     super.key,
   });
 
   final Transaction txn;
+  final Transaction linkedTxn;
   final Account account;
   final Account linkedAccount;
 
@@ -93,6 +95,14 @@ class TransferTxnBottomSheet extends ConsumerWidget {
             txn: txn,
             enableTopDivider: true,
             onTap: () {},
+            debugReturnErrorTransaction: true,
+          ),
+          TransferTxnListTile(
+            account: linkedAccount,
+            txn: linkedTxn,
+            onTap: () {},
+            debugReturnErrorAccount: true,
+            debugReturnErrorTransaction: true,
           ),
           const SizedBox(height: 8),
           Padding(
@@ -138,7 +148,6 @@ class TransferTxnBottomSheet extends ConsumerWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      // TODO: Make transfer txn deletion work
                       ref.read(pecuniaDialogsProvider).showConfirmationDialog(
                             title: 'Delete transfer transaction?',
                             message: "You can't undo this, so be careful!",
