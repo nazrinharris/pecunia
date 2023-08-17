@@ -580,3 +580,524 @@ abstract class _UnknownAccountsFailure extends AccountsFailure {
   _$$_UnknownAccountsFailureCopyWith<_$_UnknownAccountsFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+/// @nodoc
+mixin _$AccountsException {
+  StackTrace get stackTrace => throw _privateConstructorUsedError;
+  AccountsErrorType get errorType => throw _privateConstructorUsedError;
+  AccountsAction get accountsAction => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)
+        $default, {
+    required TResult Function(
+            StackTrace stackTrace,
+            AccountsErrorType errorType,
+            AccountsAction accountsAction,
+            String? message)
+        unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        $default, {
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        unknown,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_AccountsException value) $default, {
+    required TResult Function(_UnknownAccountsException value) unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_AccountsException value)? $default, {
+    TResult? Function(_UnknownAccountsException value)? unknown,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_AccountsException value)? $default, {
+    TResult Function(_UnknownAccountsException value)? unknown,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $AccountsExceptionCopyWith<AccountsException> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AccountsExceptionCopyWith<$Res> {
+  factory $AccountsExceptionCopyWith(
+          AccountsException value, $Res Function(AccountsException) then) =
+      _$AccountsExceptionCopyWithImpl<$Res, AccountsException>;
+  @useResult
+  $Res call(
+      {StackTrace stackTrace,
+      AccountsErrorType errorType,
+      AccountsAction accountsAction,
+      String? message});
+}
+
+/// @nodoc
+class _$AccountsExceptionCopyWithImpl<$Res, $Val extends AccountsException>
+    implements $AccountsExceptionCopyWith<$Res> {
+  _$AccountsExceptionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? errorType = null,
+    Object? accountsAction = null,
+    Object? message = freezed,
+  }) {
+    return _then(_value.copyWith(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      errorType: null == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as AccountsErrorType,
+      accountsAction: null == accountsAction
+          ? _value.accountsAction
+          : accountsAction // ignore: cast_nullable_to_non_nullable
+              as AccountsAction,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_AccountsExceptionCopyWith<$Res>
+    implements $AccountsExceptionCopyWith<$Res> {
+  factory _$$_AccountsExceptionCopyWith(_$_AccountsException value,
+          $Res Function(_$_AccountsException) then) =
+      __$$_AccountsExceptionCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {StackTrace stackTrace,
+      AccountsErrorType errorType,
+      AccountsAction accountsAction,
+      String? message});
+}
+
+/// @nodoc
+class __$$_AccountsExceptionCopyWithImpl<$Res>
+    extends _$AccountsExceptionCopyWithImpl<$Res, _$_AccountsException>
+    implements _$$_AccountsExceptionCopyWith<$Res> {
+  __$$_AccountsExceptionCopyWithImpl(
+      _$_AccountsException _value, $Res Function(_$_AccountsException) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? errorType = null,
+    Object? accountsAction = null,
+    Object? message = freezed,
+  }) {
+    return _then(_$_AccountsException(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      errorType: null == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as AccountsErrorType,
+      accountsAction: null == accountsAction
+          ? _value.accountsAction
+          : accountsAction // ignore: cast_nullable_to_non_nullable
+              as AccountsAction,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_AccountsException extends _AccountsException {
+  _$_AccountsException(
+      {required this.stackTrace,
+      required this.errorType,
+      required this.accountsAction,
+      this.message})
+      : super._();
+
+  @override
+  final StackTrace stackTrace;
+  @override
+  final AccountsErrorType errorType;
+  @override
+  final AccountsAction accountsAction;
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'AccountsException(stackTrace: $stackTrace, errorType: $errorType, accountsAction: $accountsAction, message: $message)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_AccountsException &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace) &&
+            (identical(other.errorType, errorType) ||
+                other.errorType == errorType) &&
+            (identical(other.accountsAction, accountsAction) ||
+                other.accountsAction == accountsAction) &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, stackTrace, errorType, accountsAction, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_AccountsExceptionCopyWith<_$_AccountsException> get copyWith =>
+      __$$_AccountsExceptionCopyWithImpl<_$_AccountsException>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)
+        $default, {
+    required TResult Function(
+            StackTrace stackTrace,
+            AccountsErrorType errorType,
+            AccountsAction accountsAction,
+            String? message)
+        unknown,
+  }) {
+    return $default(stackTrace, errorType, accountsAction, message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        unknown,
+  }) {
+    return $default?.call(stackTrace, errorType, accountsAction, message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        $default, {
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        unknown,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(stackTrace, errorType, accountsAction, message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_AccountsException value) $default, {
+    required TResult Function(_UnknownAccountsException value) unknown,
+  }) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_AccountsException value)? $default, {
+    TResult? Function(_UnknownAccountsException value)? unknown,
+  }) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_AccountsException value)? $default, {
+    TResult Function(_UnknownAccountsException value)? unknown,
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _AccountsException extends AccountsException {
+  factory _AccountsException(
+      {required final StackTrace stackTrace,
+      required final AccountsErrorType errorType,
+      required final AccountsAction accountsAction,
+      final String? message}) = _$_AccountsException;
+  _AccountsException._() : super._();
+
+  @override
+  StackTrace get stackTrace;
+  @override
+  AccountsErrorType get errorType;
+  @override
+  AccountsAction get accountsAction;
+  @override
+  String? get message;
+  @override
+  @JsonKey(ignore: true)
+  _$$_AccountsExceptionCopyWith<_$_AccountsException> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_UnknownAccountsExceptionCopyWith<$Res>
+    implements $AccountsExceptionCopyWith<$Res> {
+  factory _$$_UnknownAccountsExceptionCopyWith(
+          _$_UnknownAccountsException value,
+          $Res Function(_$_UnknownAccountsException) then) =
+      __$$_UnknownAccountsExceptionCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {StackTrace stackTrace,
+      AccountsErrorType errorType,
+      AccountsAction accountsAction,
+      String? message});
+}
+
+/// @nodoc
+class __$$_UnknownAccountsExceptionCopyWithImpl<$Res>
+    extends _$AccountsExceptionCopyWithImpl<$Res, _$_UnknownAccountsException>
+    implements _$$_UnknownAccountsExceptionCopyWith<$Res> {
+  __$$_UnknownAccountsExceptionCopyWithImpl(_$_UnknownAccountsException _value,
+      $Res Function(_$_UnknownAccountsException) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? errorType = null,
+    Object? accountsAction = null,
+    Object? message = freezed,
+  }) {
+    return _then(_$_UnknownAccountsException(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      errorType: null == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as AccountsErrorType,
+      accountsAction: null == accountsAction
+          ? _value.accountsAction
+          : accountsAction // ignore: cast_nullable_to_non_nullable
+              as AccountsAction,
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_UnknownAccountsException extends _UnknownAccountsException {
+  _$_UnknownAccountsException(
+      {required this.stackTrace,
+      required this.errorType,
+      this.accountsAction = AccountsAction.unknown,
+      this.message})
+      : super._();
+
+  @override
+  final StackTrace stackTrace;
+  @override
+  final AccountsErrorType errorType;
+  @override
+  @JsonKey()
+  final AccountsAction accountsAction;
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'AccountsException.unknown(stackTrace: $stackTrace, errorType: $errorType, accountsAction: $accountsAction, message: $message)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_UnknownAccountsException &&
+            (identical(other.stackTrace, stackTrace) ||
+                other.stackTrace == stackTrace) &&
+            (identical(other.errorType, errorType) ||
+                other.errorType == errorType) &&
+            (identical(other.accountsAction, accountsAction) ||
+                other.accountsAction == accountsAction) &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, stackTrace, errorType, accountsAction, message);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_UnknownAccountsExceptionCopyWith<_$_UnknownAccountsException>
+      get copyWith => __$$_UnknownAccountsExceptionCopyWithImpl<
+          _$_UnknownAccountsException>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)
+        $default, {
+    required TResult Function(
+            StackTrace stackTrace,
+            AccountsErrorType errorType,
+            AccountsAction accountsAction,
+            String? message)
+        unknown,
+  }) {
+    return unknown(stackTrace, errorType, accountsAction, message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        unknown,
+  }) {
+    return unknown?.call(stackTrace, errorType, accountsAction, message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        $default, {
+    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
+            AccountsAction accountsAction, String? message)?
+        unknown,
+    required TResult orElse(),
+  }) {
+    if (unknown != null) {
+      return unknown(stackTrace, errorType, accountsAction, message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_AccountsException value) $default, {
+    required TResult Function(_UnknownAccountsException value) unknown,
+  }) {
+    return unknown(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_AccountsException value)? $default, {
+    TResult? Function(_UnknownAccountsException value)? unknown,
+  }) {
+    return unknown?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_AccountsException value)? $default, {
+    TResult Function(_UnknownAccountsException value)? unknown,
+    required TResult orElse(),
+  }) {
+    if (unknown != null) {
+      return unknown(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UnknownAccountsException extends AccountsException {
+  factory _UnknownAccountsException(
+      {required final StackTrace stackTrace,
+      required final AccountsErrorType errorType,
+      final AccountsAction accountsAction,
+      final String? message}) = _$_UnknownAccountsException;
+  _UnknownAccountsException._() : super._();
+
+  @override
+  StackTrace get stackTrace;
+  @override
+  AccountsErrorType get errorType;
+  @override
+  AccountsAction get accountsAction;
+  @override
+  String? get message;
+  @override
+  @JsonKey(ignore: true)
+  _$$_UnknownAccountsExceptionCopyWith<_$_UnknownAccountsException>
+      get copyWith => throw _privateConstructorUsedError;
+}

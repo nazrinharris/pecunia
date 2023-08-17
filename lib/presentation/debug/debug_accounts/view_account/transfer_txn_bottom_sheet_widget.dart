@@ -487,19 +487,6 @@ class ExpandableTransferDetailsMetadata extends ConsumerWidget {
                     const SizedBox(height: 4),
                     RichText(
                       text: TextSpan(
-                        text: 'linked_account_name: ',
-                        style: DefaultTextStyle.of(context).style.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange[300],
-                            ),
-                        children: <TextSpan>[
-                          TextSpan(text: linkedAccount.name, style: DefaultTextStyle.of(context).style),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    RichText(
-                      text: TextSpan(
                         text: 'linked_transaction_id: ',
                         style: DefaultTextStyle.of(context).style.copyWith(
                               fontWeight: FontWeight.bold,
@@ -524,6 +511,19 @@ class ExpandableTransferDetailsMetadata extends ConsumerWidget {
                           TextSpan(
                               text: txn.transferDetails!.transferDescription.value ?? 'null',
                               style: DefaultTextStyle.of(context).style),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        text: 'linked_account_name: ',
+                        style: DefaultTextStyle.of(context).style.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.pink[300],
+                            ),
+                        children: <TextSpan>[
+                          TextSpan(text: linkedAccount.name, style: DefaultTextStyle.of(context).style),
                         ],
                       ),
                     ),

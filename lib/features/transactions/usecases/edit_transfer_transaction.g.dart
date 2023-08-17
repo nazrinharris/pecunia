@@ -7,7 +7,7 @@ part of 'edit_transfer_transaction.dart';
 // **************************************************************************
 
 String _$editTransferTransactionHash() =>
-    r'0fba52074276a994a0b5a0442b832216a17d3cd9';
+    r'368e6caa86b212ee51e9288fd42315ef0b0e79c0';
 
 /// See also [EditTransferTransaction].
 @ProviderFor(EditTransferTransaction)

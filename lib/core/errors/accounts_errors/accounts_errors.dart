@@ -79,6 +79,45 @@ class AccountsFailure with _$AccountsFailure implements Failure {
 }
 
 /// ****************************************************************
+/// * AccountsException
+/// ****************************************************************
+
+@freezed
+class AccountsException with _$AccountsException implements Exception {
+  factory AccountsException({
+    required StackTrace stackTrace,
+    required AccountsErrorType errorType,
+    required AccountsAction accountsAction,
+    String? message,
+  }) = _AccountsException;
+
+  AccountsException._();
+
+  factory AccountsException.unknown({
+    required StackTrace stackTrace,
+    required AccountsErrorType errorType,
+    @Default(AccountsAction.unknown) AccountsAction accountsAction,
+    String? message,
+  }) = _UnknownAccountsException;
+
+  factory AccountsException.fromFailure(AccountsFailure failure) {
+    return AccountsException(
+      stackTrace: failure.stackTrace,
+      errorType: failure.errorType,
+      accountsAction: failure.accountsAction,
+    );
+  }
+
+  factory AccountsException.fromGenericFailure(Failure failure) {
+    return AccountsException(
+      stackTrace: failure.stackTrace,
+      errorType: AccountsErrorType.unknown,
+      accountsAction: AccountsAction.unknown,
+    );
+  }
+}
+
+/// ****************************************************************
 /// * Helpers
 /// ****************************************************************
 

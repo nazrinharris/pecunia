@@ -213,7 +213,7 @@ class __$$_TransactionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Transaction extends _Transaction {
+class _$_Transaction extends _Transaction with DiagnosticableTreeMixin {
   const _$_Transaction(
       {required this.id,
       required this.creatorUid,
@@ -243,8 +243,24 @@ class _$_Transaction extends _Transaction {
   final TransferDetails? transferDetails;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'Transaction(id: $id, creatorUid: $creatorUid, name: $name, transactionDescription: $transactionDescription, transactionDate: $transactionDate, accountId: $accountId, fundDetails: $fundDetails, transferDetails: $transferDetails)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'Transaction'))
+      ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('creatorUid', creatorUid))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(
+          DiagnosticsProperty('transactionDescription', transactionDescription))
+      ..add(DiagnosticsProperty('transactionDate', transactionDate))
+      ..add(DiagnosticsProperty('accountId', accountId))
+      ..add(DiagnosticsProperty('fundDetails', fundDetails))
+      ..add(DiagnosticsProperty('transferDetails', transferDetails));
   }
 
   @override
@@ -427,7 +443,7 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TransferDetails extends _TransferDetails {
+class _$_TransferDetails extends _TransferDetails with DiagnosticableTreeMixin {
   const _$_TransferDetails(
       {required this.linkedAccountId,
       required this.linkedTransactionId,
@@ -446,8 +462,18 @@ class _$_TransferDetails extends _TransferDetails {
   final TransferDescription transferDescription;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'TransferDetails(linkedAccountId: $linkedAccountId, linkedTransactionId: $linkedTransactionId, transferDescription: $transferDescription)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'TransferDetails'))
+      ..add(DiagnosticsProperty('linkedAccountId', linkedAccountId))
+      ..add(DiagnosticsProperty('linkedTransactionId', linkedTransactionId))
+      ..add(DiagnosticsProperty('transferDescription', transferDescription));
   }
 
   @override
@@ -638,7 +664,7 @@ class __$$_FundDetailsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FundDetails extends _FundDetails {
+class _$_FundDetails extends _FundDetails with DiagnosticableTreeMixin {
   const _$_FundDetails(
       {required this.baseAmount,
       required this.baseCurrency,
@@ -670,8 +696,21 @@ class _$_FundDetails extends _FundDetails {
   final Currency? targetCurrency;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'FundDetails(baseAmount: $baseAmount, baseCurrency: $baseCurrency, transactionType: $transactionType, exchangeRate: $exchangeRate, targetAmount: $targetAmount, targetCurrency: $targetCurrency)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FundDetails'))
+      ..add(DiagnosticsProperty('baseAmount', baseAmount))
+      ..add(DiagnosticsProperty('baseCurrency', baseCurrency))
+      ..add(DiagnosticsProperty('transactionType', transactionType))
+      ..add(DiagnosticsProperty('exchangeRate', exchangeRate))
+      ..add(DiagnosticsProperty('targetAmount', targetAmount))
+      ..add(DiagnosticsProperty('targetCurrency', targetCurrency));
   }
 
   @override

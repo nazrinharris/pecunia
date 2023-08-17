@@ -148,8 +148,25 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
     return TaskEither.tryCatch(
       () async {
         return transaction(() async {
-          await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
+          // Delete linked transactions
+          final linkedTxnList =
+              await (select(transactionsTable)..where((tbl) => tbl.linkedAccountId.equals(account.id))).get();
+
+          if (linkedTxnList.isNotEmpty) {
+            for (final linkedTxn in linkedTxnList) {
+              print('This is supposed to delete');
+              (await db.transactionsDAO.deleteTransferTransaction(Transaction.fromDTO(linkedTxn)).run()).fold(
+                (l) => throw AccountsException.fromGenericFailure(l),
+                (r) => unit,
+              );
+            }
+          }
+
+          // Delete this account's transactions
           await (delete(transactionsTable)..where((tbl) => tbl.accountId.equals(account.id))).go();
+
+          // Delete this account
+          await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
 
           return unit;
         });
