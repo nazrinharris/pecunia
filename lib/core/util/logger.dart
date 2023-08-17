@@ -7,6 +7,7 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
+import 'package:pecunia/core/util/extensions.dart';
 
 final logger = Logger(printer: PrettyPrinter());
 
@@ -32,14 +33,14 @@ class ProviderLogger extends ProviderObserver {
         return;
       } else if (newValue.error is Failure) {
         final failure = newValue.error as Failure;
-        debugPrint('(${provider.name}) : ${failure.toVerboseString()}');
+        debugPrint('(${provider.name}) : $failure');
         return;
       } else {
         debugPrint('(${provider.name}) : ${newValue.error.runtimeType}');
         return;
       }
     } else if (newValue is AsyncData) {
-      debugPrint('(${provider.name}) : $newValue');
+      debugPrint('(${provider.name}) : ${newValue.toString().truncate()}...');
     } else {
       debugPrint('(${provider.name}) : ${newValue.runtimeType}');
     }

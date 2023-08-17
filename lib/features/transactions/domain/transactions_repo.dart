@@ -24,6 +24,7 @@ enum TransactionsAction {
   delete,
   deleteTransferTransaction,
   edit,
+  editTransferTxn,
   getTransactionsByAccount,
   getTransactionById,
   getAllTransactions,
@@ -85,99 +86,22 @@ class TransactionsRepo {
     required double? destinationTransactionAmount,
     required double? exchangeRate,
     required String? transferDescription,
-  }) {
-    const currentAction = TransactionsAction.createTransferTransaction;
-    final sourceTxnId = uuid.v4();
-    final destinationTxnId = uuid.v4();
-    final isMultiCurrencyTransfer = sourceAccount.currency != destinationAccount.currency;
-
-    // ! Checks that both destinationTransactionAmount and exchangeRate is null or both are not null.
-    if ((destinationTransactionAmount == null && exchangeRate != null) ||
-        (destinationTransactionAmount != null && exchangeRate == null)) {
-      return TaskEither.left(TransactionsFailure(
-        message: TransactionsErrorType.invalidMultiCurrencyFields.message,
-        errorType: TransactionsErrorType.invalidMultiCurrencyFields,
-        transactionsAction: currentAction,
-        stackTrace: StackTrace.current,
-      ));
-    }
-
-    // ! Checks that the exchangeRate isn't null if the source and destination currencies are different.
-    if (exchangeRate == null && sourceAccount.currency != destinationAccount.currency) {
-      return TaskEither.left(TransactionsFailure(
-        message: TransactionsErrorType.missingExchangeRateForDifferentCurrencies.message,
-        errorType: TransactionsErrorType.missingExchangeRateForDifferentCurrencies,
-        transactionsAction: currentAction,
-        stackTrace: StackTrace.current,
-      ));
-    }
-
-    // ! Checks whether the source and destination accounts are the same.
-    if (sourceAccount.id == destinationAccount.id) {
-      return TaskEither.left(TransactionsFailure(
-        message: TransactionsErrorType.sameSourceAndDestinationAccount.message,
-        errorType: TransactionsErrorType.sameSourceAndDestinationAccount,
-        transactionsAction: currentAction,
-        stackTrace: StackTrace.current,
-      ));
-    }
-
-    // * Sets the fields for the FundDetails of the transaction (extracted for legibility)
-    // * Note that a single-currency transaction assumes [exchangeRate], [targetAmount], and [targetCurrency] are null (and vice versa).
-    final sourceTxnFundDetails = FundDetails(
-      transactionType: TransactionType.debit,
-      baseAmount: sourceTransactionAmount,
-      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
-      exchangeRate: exchangeRate,
-      targetAmount: destinationTransactionAmount,
-      targetCurrency:
-          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
-    );
-    final destinationTxnFundDetails = FundDetails(
-      transactionType: TransactionType.credit,
-      baseAmount: sourceTransactionAmount,
-      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
-      exchangeRate: exchangeRate,
-      targetAmount: isMultiCurrencyTransfer ? destinationTransactionAmount : null,
-      targetCurrency:
-          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
-    );
-
-    final sourceTxn = Transaction(
-      id: sourceTxnId,
-      creatorUid: sourceAccount.creatorUid,
-      name: 'Transfer to ${destinationAccount.id}',
-      transactionDescription: TransactionDescription(null),
-      transactionDate: DateTime.now(),
-      accountId: sourceAccount.id,
-      fundDetails: sourceTxnFundDetails,
-      transferDetails: TransferDetails(
-        linkedTransactionId: destinationTxnId,
-        linkedAccountId: destinationAccount.id,
-        transferDescription: TransferDescription(transferDescription),
-      ),
-    );
-
-    final destinationTxn = Transaction(
-      id: destinationTxnId,
-      creatorUid: destinationAccount.creatorUid,
-      name: 'Transfer from ${sourceAccount.id}',
-      transactionDescription: TransactionDescription(null),
-      transactionDate: DateTime.now(),
-      accountId: destinationAccount.id,
-      fundDetails: destinationTxnFundDetails,
-      transferDetails: TransferDetails(
-        linkedTransactionId: sourceTxnId,
-        linkedAccountId: sourceAccount.id,
-        transferDescription: TransferDescription(transferDescription),
-      ),
-    );
-
-    return transactionsLocalDS.createTransferTransaction(
-      sourceTransaction: sourceTxn,
-      destinationTransaction: destinationTxn,
-    );
-  }
+  }) =>
+      Transaction.generateTransferTxnPair(
+        sourceAccount: sourceAccount,
+        destinationAccount: destinationAccount,
+        sourceTransactionAmount: sourceTransactionAmount,
+        destinationTransactionAmount: destinationTransactionAmount,
+        exchangeRate: exchangeRate,
+        transferDescription: transferDescription,
+        uuid: uuid,
+        currentAction: TransactionsAction.createTransferTransaction,
+        defaultSourceTxnId: null,
+        defaultDestinationTxnId: null,
+      ).toTaskEither().flatMap(
+            (txns) => transactionsLocalDS.createTransferTransaction(
+                sourceTransaction: txns.sourceTxn, destinationTransaction: txns.destinationTxn),
+          );
 
   TaskEither<TransactionsFailure, List<Transaction>> getAllTransactions() {
     return transactionsLocalDS.getAllTransactions().flatMap(_helper.mapDTOListToTransactionList);
@@ -198,6 +122,20 @@ class TransactionsRepo {
     required Transaction oldTxn,
   }) {
     return transactionsLocalDS.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
+  }
+
+  TaskEither<TransactionsFailure, Unit> editTransferTransaction({
+    required Transaction oldSourceTxn,
+    required Transaction oldDestinationTxn,
+    required Transaction newSourceTxn,
+    required Transaction newDestinationTxn,
+  }) {
+    return transactionsLocalDS.editTransferTxn(
+      oldSourceTxn: oldSourceTxn,
+      oldDestinationTxn: oldDestinationTxn,
+      sourceTransaction: newSourceTxn,
+      destinationTransaction: newDestinationTxn,
+    );
   }
 
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {

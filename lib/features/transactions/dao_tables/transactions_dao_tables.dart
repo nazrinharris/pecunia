@@ -86,6 +86,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           txn: sourceTxn,
         );
         await updateAccountDTO(updatedSourceAccountDTO);
+        await _validateAccountBalance(sourceTxn.accountId);
 
         // Settle the [destinationTxn]
         await insertTransactionToTable(destinationTxn.toDTO());
@@ -95,6 +96,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
           txn: destinationTxn,
         );
         await updateAccountDTO(updatedDestinationAccountDTO);
+        await _validateAccountBalance(destinationTxn.accountId);
 
         return unit;
       }),
@@ -121,6 +123,7 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
     );
   }
 
+  /// This method will delete both the provided [transferTxnToDelete] as well as its `linkedTxn`
   TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
     const currentAction = TransactionsAction.deleteTransferTransaction;
     return TaskEither.tryCatch(
@@ -142,15 +145,17 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
         );
 
         // Delete the source and destination transactions, if an error occurs, this database transaction should fail
-        // (do it here)
         (await deleteTransaction(transferTxnToDelete).run()).fold(
           (l) => throw TransactionsException.fromFailure(l),
           (r) => unit,
         );
+        await _validateAccountBalance(transferTxnToDelete.accountId);
+
         (await deleteTransaction(linkedTxn).run()).fold(
           (l) => throw TransactionsException.fromFailure(l),
           (r) => unit,
         );
+        await _validateAccountBalance(linkedTxn.accountId);
 
         return unit;
       }),
@@ -185,6 +190,37 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
         await updateAccountDTO(updatedAccountDTO);
         await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxn.id)))
             .write(newTxn.toDTO().toCompanion(false));
+        return unit;
+      }),
+      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+    );
+  }
+
+  TaskEither<TransactionsFailure, Unit> editTransferTxn({
+    required Transaction oldSourceTxn,
+    required Transaction oldDestinationTxn,
+    required Transaction newSourceTxn,
+    required Transaction newDestinationTxn,
+  }) {
+    const currentAction = TransactionsAction.editTransferTxn;
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        // Delete both transactions
+        (await deleteTransferTransaction(oldSourceTxn).run()).fold(
+          (l) => throw TransactionsException.fromFailure(l),
+          (r) => r,
+        );
+
+        // Create both transactions
+        (await createTransferTransaction(
+          sourceTxn: newSourceTxn,
+          destinationTxn: newDestinationTxn,
+        ).run())
+            .fold(
+          (l) => throw TransactionsException.fromFailure(l),
+          (r) => r,
+        );
+
         return unit;
       }),
       (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
@@ -249,6 +285,36 @@ class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAO
 
   Future<void> updateAccountDTO(AccountDTO accountDto) async {
     await update(accountsTable).replace(accountDto.toCompanion(false));
+  }
+
+  Future<(bool isValid, double actualBalance)> _validateAccountBalance(String accountId) async {
+    final account = await (select(accountsTable)..where((tbl) => tbl.id.equals(accountId))).getSingle();
+
+    // Get all transactions for this account
+    final txnList = await (select(transactionsTable)..where((tbl) => tbl.accountId.equals(account.id))).get();
+
+    // Calculate the new balance
+    var calculatedBalance = account.initialBalance;
+    for (final txn in txnList) {
+      final type = TransactionType.fromString(txn.transactionType, TransactionsAction.unknown);
+      if (type == TransactionType.credit) {
+        calculatedBalance += txn.transactionAmount;
+      } else if (type == TransactionType.debit) {
+        calculatedBalance -= txn.transactionAmount;
+      } else {
+        throw ArgumentError('Invalid transaction type: ${txn.transactionType}');
+      }
+    }
+
+    if (calculatedBalance != account.balance) {
+      throw TransactionsException(
+        stackTrace: StackTrace.current,
+        errorType: TransactionsErrorType.mismatchAccountBalance,
+        transactionsAction: TransactionsAction.unknown,
+      );
+    }
+
+    return (calculatedBalance == account.balance, calculatedBalance);
   }
 
   // ********************************************************************************************************

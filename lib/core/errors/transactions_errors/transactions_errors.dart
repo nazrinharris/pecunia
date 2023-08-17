@@ -35,6 +35,10 @@ enum TransactionsErrorType {
     'invalid-type',
     'The transaction type is invalid',
   ),
+  mismatchAccountBalance(
+    'mismatch-account-balance',
+    'Reported account balance is not the same as actual account balance',
+  ),
   transactionNotFound(
     'transaction-not-found',
     'The transaction was not found in the database',
@@ -175,11 +179,11 @@ TransactionsFailure mapDriftToTransactionsFailure(
     );
   } else if (error is TransactionsException) {
     return TransactionsFailure(
-      stackTrace: stackTrace,
-      message: error.errorType.message,
-      transactionsAction: transactionsAction,
-      errorType: error.errorType,
-    );
+        stackTrace: stackTrace,
+        message: error.errorType.message,
+        transactionsAction: transactionsAction,
+        errorType: error.errorType,
+        rawException: error);
   } else {
     return TransactionsFailure.unknown(
       stackTrace: stackTrace,

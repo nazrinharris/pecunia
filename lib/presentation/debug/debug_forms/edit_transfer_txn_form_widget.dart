@@ -6,7 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
-import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
+import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/usecases/edit_transfer_transaction.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_transfer_txn_form_widget.dart';
 import 'package:screwdriver/screwdriver.dart';
 
@@ -30,19 +31,21 @@ class EditTransferTxnFields {
   }
 }
 
-// TODO: Update the widget
 class EditTransferTxnForm extends HookConsumerWidget {
   const EditTransferTxnForm({
-    required this.defaultSourceAccount,
-    required this.accountsList,
+    required this.txn,
+    required this.linkedTxn,
     super.key,
   });
 
-  final Account? defaultSourceAccount;
-  final List<Account> accountsList;
+  final Transaction txn;
+  final Transaction linkedTxn;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final sourceTxn = txn.fundDetails.transactionType == TransactionType.debit ? txn : linkedTxn;
+    final destinationTxn = txn.fundDetails.transactionType == TransactionType.credit ? txn : linkedTxn;
+
     final accountsListValue = ref.watch(getAllAccountsProvider);
 
     return switch (accountsListValue) {
@@ -52,44 +55,51 @@ class EditTransferTxnForm extends HookConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
-              'You need at least 2 accounts to transfer money.',
+              'You need two accounts to transfer funds. How did you even get here? (seriously, please report this to me)',
               style: Theme.of(context).textTheme.headlineMedium,
               textAlign: TextAlign.center,
             ),
           ),
         ),
-      AsyncData(value: final List<Account> accountsList) => TransferFormContent(
-          defaultSourceAccount,
+      AsyncData(value: final List<Account> accountsList) => EditTransferFormContent(
           accountsList,
+          sourceTxn: sourceTxn,
+          destinationTxn: destinationTxn,
         ),
-      _ => const Center(child: Text('Something went wrong')),
+      _ => const Center(child: Text('"getAllAccounts" returned an unknown state')),
     };
   }
 }
 
-class TransferFormContent extends HookConsumerWidget {
-  const TransferFormContent(
-    this.defaultSourceAccount,
+class EditTransferFormContent extends HookConsumerWidget {
+  const EditTransferFormContent(
     this.accountsList, {
+    required this.sourceTxn,
+    required this.destinationTxn,
     super.key,
   });
 
-  final Account? defaultSourceAccount;
   final List<Account> accountsList;
+  final Transaction sourceTxn;
+  final Transaction destinationTxn;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useState(GlobalKey<FormState>());
-    final chosenSourceAccount = useState(defaultSourceAccount ?? accountsList.first);
-    final chosenDestinationAccount = useState<Account?>(null);
+    final chosenSourceAccount =
+        useState(accountsList.firstWhere((account) => account.id == sourceTxn.accountId));
+    final chosenDestinationAccount =
+        useState<Account>(accountsList.firstWhere((account) => account.id == destinationTxn.accountId));
     final exchangeRate = useState<double?>(null);
 
-    final sourceAmountController = useTextEditingController();
-    final destinationAmountController = useTextEditingController();
-    final transferDescriptionController = useTextEditingController();
+    final sourceAmountController =
+        useTextEditingController(text: sourceTxn.fundDetails.transactionAmount.toString());
+    final destinationAmountController =
+        useTextEditingController(text: destinationTxn.fundDetails.transactionAmount.toString());
+    final transferDescriptionController =
+        useTextEditingController(text: sourceTxn.transferDetails!.transferDescription.value);
 
-    final isDifferentCurrency = chosenDestinationAccount.value != null &&
-        chosenSourceAccount.value.currency != chosenDestinationAccount.value!.currency;
+    final isDifferentCurrency = chosenSourceAccount.value.currency != chosenDestinationAccount.value.currency;
 
     return Form(
       key: formKey.value,
@@ -102,7 +112,7 @@ class TransferFormContent extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Transfer Transaction',
-                      style: Theme.of(context).textTheme.headlineLarge!.copyWith(color: Colors.blue[100])),
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.blue[100])),
                   IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))
                 ],
               ),
@@ -208,17 +218,19 @@ class TransferFormContent extends HookConsumerWidget {
                     destinationAmountInput = destinationAmountController.text.toDoubleOrNull();
                   }
 
-                  await ref.read(createTransferTransactionProvider.notifier).createTransferTransaction(
+                  await ref.read(editTransferTransactionProvider.notifier).editTransferTransaction(
                         sourceAccount: chosenSourceAccount.value,
-                        destinationAccount: chosenDestinationAccount.value!,
+                        destinationAccount: chosenDestinationAccount.value,
                         sourceTransactionAmount: sourceAmountController.text.toDoubleOrNull()!,
                         destinationTransactionAmount: destinationAmountInput,
                         exchangeRate: exchangeRate.value,
                         transferDescription: transferDescriptionController.text,
+                        oldSourceTxn: sourceTxn,
+                        oldDestinationTxn: destinationTxn,
                       );
                 }
               },
-              child: const Text('Create Transfer'),
+              child: const Text('Update Transfer'),
             ),
           ],
         ),

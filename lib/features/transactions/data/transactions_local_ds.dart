@@ -23,6 +23,12 @@ abstract interface class TransactionsLocalDS {
     required Transaction newTxn,
     required Transaction oldTxn,
   });
+  TaskEither<TransactionsFailure, Unit> editTransferTxn({
+    required Transaction oldSourceTxn,
+    required Transaction oldDestinationTxn,
+    required Transaction sourceTransaction,
+    required Transaction destinationTransaction,
+  });
 
   TaskEither<TransactionsFailure, List<TransactionDTO>> getTransactionsByAccount(String accountId);
   TaskEither<TransactionsFailure, TransactionDTO> getTransactionById(String txnId);
@@ -65,6 +71,21 @@ class TransactionsLocalDSImpl implements TransactionsLocalDS {
   TaskEither<TransactionsFailure, Unit> editTransaction(
       {required Transaction newTxn, required Transaction oldTxn}) {
     return transactionsDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
+  }
+
+  @override
+  TaskEither<TransactionsFailure, Unit> editTransferTxn({
+    required Transaction oldSourceTxn,
+    required Transaction oldDestinationTxn,
+    required Transaction sourceTransaction,
+    required Transaction destinationTransaction,
+  }) {
+    return transactionsDAO.editTransferTxn(
+      oldSourceTxn: oldSourceTxn,
+      oldDestinationTxn: oldDestinationTxn,
+      newSourceTxn: sourceTransaction,
+      newDestinationTxn: destinationTransaction,
+    );
   }
 
   @override

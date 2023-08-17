@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:uuid/uuid.dart';
 
@@ -146,10 +149,131 @@ class Transaction with _$Transaction {
       targetCurrency: fundDetails.targetCurrency?.code,
       linkedAccountId: transferDetails?.linkedAccountId,
       linkedTransactionId: transferDetails?.linkedTransactionId,
+      transferDescription: transferDetails?.transferDescription.value,
     );
   }
 
   bool get isTransferTransaction => transferDetails != null;
+
+  /// Provide `null` for both [defaultSourceTxnId] and [defaultDestinationTxnId] to generate a new transfer transaction.
+  ///
+  /// To sort of update a transfer transacton, provide the [defaultSourceTxnId] and [defaultDestinationTxnId] of the transfer transaction.
+  static fp.Either<TransactionsFailure, ({Transaction sourceTxn, Transaction destinationTxn})>
+      generateTransferTxnPair({
+    required Account sourceAccount,
+    required Account destinationAccount,
+    required double sourceTransactionAmount,
+    required double? destinationTransactionAmount,
+    required double? exchangeRate,
+    required String? transferDescription,
+    required Uuid uuid,
+    required TransactionsAction currentAction,
+    required String? defaultSourceTxnId,
+    required String? defaultDestinationTxnId,
+
+    // TODO: Remove debug fields
+    Transaction? oldSourceTxn,
+    Transaction? oldDestinationTxn,
+  }) {
+    final sourceTxnId = defaultSourceTxnId ?? uuid.v4();
+    final destinationTxnId = defaultDestinationTxnId ?? uuid.v4();
+    final isMultiCurrencyTransfer = sourceAccount.currency != destinationAccount.currency;
+
+    // ! Checks that both destinationTransactionAmount and exchangeRate is null or both are not null.
+    if ((destinationTransactionAmount == null && exchangeRate != null) ||
+        (destinationTransactionAmount != null && exchangeRate == null)) {
+      return fp.Either.left(TransactionsFailure(
+        message: TransactionsErrorType.invalidMultiCurrencyFields.message,
+        errorType: TransactionsErrorType.invalidMultiCurrencyFields,
+        transactionsAction: currentAction,
+        stackTrace: StackTrace.current,
+      ));
+    }
+
+    // ! Checks that the exchangeRate isn't null if the source and destination currencies are different.
+    if (exchangeRate == null && sourceAccount.currency != destinationAccount.currency) {
+      return fp.Either.left(TransactionsFailure(
+        message: TransactionsErrorType.missingExchangeRateForDifferentCurrencies.message,
+        errorType: TransactionsErrorType.missingExchangeRateForDifferentCurrencies,
+        transactionsAction: currentAction,
+        stackTrace: StackTrace.current,
+      ));
+    }
+
+    // ! Checks whether the source and destination accounts are the same.
+    if (sourceAccount.id == destinationAccount.id) {
+      return fp.Either.left(TransactionsFailure(
+        message: TransactionsErrorType.sameSourceAndDestinationAccount.message,
+        errorType: TransactionsErrorType.sameSourceAndDestinationAccount,
+        transactionsAction: currentAction,
+        stackTrace: StackTrace.current,
+      ));
+    }
+
+    // * Sets the fields for the FundDetails of the transaction (extracted for legibility)
+    // * Note that a single-currency transaction assumes [exchangeRate], [targetAmount], and [targetCurrency] are null (and vice versa).
+    final sourceTxnFundDetails = FundDetails(
+      transactionType: TransactionType.debit,
+      baseAmount: sourceTransactionAmount,
+      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+      exchangeRate: exchangeRate,
+      targetAmount: destinationTransactionAmount,
+      targetCurrency:
+          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
+    );
+    final destinationTxnFundDetails = FundDetails(
+      transactionType: TransactionType.credit,
+      baseAmount: sourceTransactionAmount,
+      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+      exchangeRate: exchangeRate,
+      targetAmount: isMultiCurrencyTransfer ? destinationTransactionAmount : null,
+      targetCurrency:
+          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
+    );
+
+    final sourceTxn = Transaction(
+      id: sourceTxnId,
+      creatorUid: sourceAccount.creatorUid,
+      name: 'Transfer to ${destinationAccount.id}',
+      transactionDescription: TransactionDescription(null),
+      transactionDate: DateTime.now(),
+      accountId: sourceAccount.id,
+      fundDetails: sourceTxnFundDetails,
+      transferDetails: TransferDetails(
+        linkedTransactionId: destinationTxnId,
+        linkedAccountId: destinationAccount.id,
+        transferDescription: TransferDescription(transferDescription),
+      ),
+    );
+
+    final destinationTxn = Transaction(
+      id: destinationTxnId,
+      creatorUid: destinationAccount.creatorUid,
+      name: 'Transfer from ${sourceAccount.id}',
+      transactionDescription: TransactionDescription(null),
+      transactionDate: DateTime.now(),
+      accountId: destinationAccount.id,
+      fundDetails: destinationTxnFundDetails,
+      transferDetails: TransferDetails(
+        linkedTransactionId: sourceTxnId,
+        linkedAccountId: sourceAccount.id,
+        transferDescription: TransferDescription(transferDescription),
+      ),
+    );
+
+    // TODO: Remove debug print
+    debugPrint('''
+
+      -----------------------------------------------------------------------
+      newSourceTxn: ${sourceTxn.fundDetails.transactionAmount}
+      oldSourceTxn: ${oldSourceTxn?.fundDetails.transactionAmount}
+      newDestinationTxn: ${destinationTxn.fundDetails.transactionAmount}
+      oldDestinationTxn: ${oldDestinationTxn?.fundDetails.transactionAmount}
+      -----------------------------------------------------------------------
+''');
+
+    return fp.Either.right((sourceTxn: sourceTxn, destinationTxn: destinationTxn));
+  }
 }
 
 /// Value object for the description of a transaction

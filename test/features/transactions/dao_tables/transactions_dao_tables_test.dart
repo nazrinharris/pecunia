@@ -40,21 +40,21 @@ void main() {
     );
 
     testIncomeTxn = Transaction(
-      id: 'id_income',
-      creatorUid: 'creatorUid',
-      name: 'name',
-      transactionDescription: TransactionDescription('input'),
-      transactionDate: clock.now().toUtc(),
-      accountId: testAccount.id,
-      fundDetails: FundDetails(
-        transactionType: TransactionType.credit,
-        baseAmount: 10,
-        baseCurrency: PecuniaCurrencies.fromString('XXX'),
-        exchangeRate: null,
-        targetAmount: null,
-        targetCurrency: null,
-      ),
-    );
+        id: 'id_income',
+        creatorUid: 'creatorUid',
+        name: 'name',
+        transactionDescription: TransactionDescription('input'),
+        transactionDate: clock.now().toUtc(),
+        accountId: testAccount.id,
+        fundDetails: FundDetails(
+          transactionType: TransactionType.credit,
+          baseAmount: 10,
+          baseCurrency: PecuniaCurrencies.fromString('XXX'),
+          exchangeRate: null,
+          targetAmount: null,
+          targetCurrency: null,
+        ),
+        transferDetails: null);
 
     testExpenseTxn = Transaction(
       id: 'id_expense',
@@ -71,6 +71,7 @@ void main() {
         targetAmount: null,
         targetCurrency: null,
       ),
+      transferDetails: null,
     );
   });
 

@@ -122,7 +122,7 @@ class CreateTxnForm extends HookConsumerWidget {
                 children: [
                   Text(
                     '${txnType.value.toDisplayName()} Transaction',
-                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                           color: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
                         ),
                   ),

@@ -5,11 +5,10 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_list_tile_widget.dart';
+import 'package:pecunia/presentation/debug/debug_forms/edit_transfer_txn_form_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
-// TODO: Make transfer txn UI more "transfer transaction"-like
 class TransferTxnBottomSheet extends ConsumerWidget {
   const TransferTxnBottomSheet({
     required this.txn,
@@ -95,14 +94,11 @@ class TransferTxnBottomSheet extends ConsumerWidget {
             txn: txn,
             enableTopDivider: true,
             onTap: () {},
-            debugReturnErrorTransaction: true,
           ),
           TransferTxnListTile(
             account: linkedAccount,
             txn: linkedTxn,
             onTap: () {},
-            debugReturnErrorAccount: true,
-            debugReturnErrorTransaction: true,
           ),
           const SizedBox(height: 8),
           Padding(
@@ -114,8 +110,11 @@ class TransferTxnBottomSheet extends ConsumerWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-                      // TODO: Make transfer txn editing work
-                      showEditTransactionBottomSheet(context, txn, account);
+                      showEditTransferTxnBottomSheet(
+                        context,
+                        txn: txn,
+                        linkedTxn: linkedTxn,
+                      );
                     },
                     child: Card(
                       margin: EdgeInsets.zero,
@@ -195,6 +194,38 @@ class TransferTxnBottomSheet extends ConsumerWidget {
       ),
     );
   }
+}
+
+void showEditTransferTxnBottomSheet(
+  BuildContext context, {
+  required Transaction txn,
+  required Transaction linkedTxn,
+}) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                EditTransferTxnForm(
+                  txn: txn,
+                  linkedTxn: linkedTxn,
+                ),
+                const SizedBox(height: 64),
+              ],
+            ),
+          ),
+        );
+      });
 }
 
 class ExpandableTxnMetadata extends ConsumerWidget {

@@ -3,3 +3,15 @@ extension NumericExtension on String {
     return double.tryParse(this) != null;
   }
 }
+
+extension TruncateExtension on String {
+  String truncate() {
+    const maxLength = 200;
+
+    if (length <= maxLength) {
+      return this;
+    }
+
+    return '${substring(0, maxLength)}...';
+  }
+}
