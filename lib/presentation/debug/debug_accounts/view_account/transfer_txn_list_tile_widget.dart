@@ -20,6 +20,7 @@ class TransferTxnListTile extends ConsumerWidget {
     this.onTap,
     this.debugReturnErrorAccount,
     this.debugReturnErrorTransaction,
+    this.defaultLinkedAccountAndTxn,
     super.key,
   });
 
@@ -33,8 +34,22 @@ class TransferTxnListTile extends ConsumerWidget {
   final bool? debugReturnErrorAccount;
   final bool? debugReturnErrorTransaction;
 
+  final ({Account linkedAccount, Transaction linkedTransaction})? defaultLinkedAccountAndTxn;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (defaultLinkedAccountAndTxn != null) {
+      return BuildTransferTxnContent(
+        txn: txn,
+        linkedTxn: defaultLinkedAccountAndTxn!.linkedTransaction,
+        account: account,
+        linkedAccount: defaultLinkedAccountAndTxn!.linkedAccount,
+        onTap: onTap,
+        enableTopDivider: enableTopDivider,
+        enableBottomDivider: enableBottomDivider,
+      );
+    }
+
     final linkedAccountAndTxnValue = ref.watch(getLinkedAccountAndTxnProvider(
       accountId: txn.transferDetails!.linkedAccountId,
       txnId: txn.transferDetails!.linkedTransactionId,
