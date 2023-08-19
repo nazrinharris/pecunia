@@ -12,7 +12,7 @@ import 'package:pecunia/features/accounts/domain/entities/account.dart';
 
 void main() {
   late PecuniaDB db;
-  late AccountsLocalDAO accountsDAO;
+  late AccountsLocalDAO accountsLocalDAO;
 
   late Account testAccount;
 
@@ -20,7 +20,7 @@ void main() {
     final clock = Clock.fixed(DateTime.utc(2023, 0, 0));
 
     db = PecuniaDB(NativeDatabase.memory());
-    accountsDAO = AccountsLocalDAO(db);
+    accountsLocalDAO = AccountsLocalDAO(db);
 
     testAccount = Account(
       id: 'test_id',
@@ -36,12 +36,12 @@ void main() {
 
   tearDownAll(() async => db.close());
 
-  test('insertAccount() and getAccountById() should insert and retrieve correctly', () async {
+  test('createAccount() and getAccountById() should insert and retrieve correctly', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.createAccount(testAccount.toDTO()).run();
 
     // Act
-    final result = await accountsDAO.getAccountById(testAccount.id).run();
+    final result = await accountsLocalDAO.getAccountById(testAccount.id).run();
 
     // Assert
     result.fold(
@@ -50,17 +50,17 @@ void main() {
     );
 
     // Clean up
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('updateAccount() should update correctly', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.createAccount(testAccount.toDTO()).run();
     final updatedAccount = testAccount.copyWith(name: 'updated_name');
 
     // Act
-    await accountsDAO.updateAccount(updatedAccount.toDTO()).run();
-    final result = await accountsDAO.getAccountById(testAccount.id).run();
+    await accountsLocalDAO.updateAccount(updatedAccount.toDTO()).run();
+    final result = await accountsLocalDAO.getAccountById(testAccount.id).run();
 
     // Assert
     result.fold(
@@ -69,16 +69,16 @@ void main() {
     );
 
     // Clean up
-    await accountsDAO.deleteAccount(updatedAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(updatedAccount.toDTO()).run();
   });
 
   test('getAllAccounts() should retrieve all accounts', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await accountsDAO.insertAccount(testAccount.copyWith(id: 'test_id2').toDTO()).run();
+    await accountsLocalDAO.createAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.createAccount(testAccount.copyWith(id: 'test_id2').toDTO()).run();
 
     // Act
-    final result = await accountsDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
+    final result = await accountsLocalDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
     final resultAccounts = result.map(Account.fromDTO).toList();
 
     // Assert
@@ -87,17 +87,17 @@ void main() {
     expect(resultAccounts, contains(testAccount.copyWith(id: 'test_id2')));
 
     // Clean up
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
-    await accountsDAO.deleteAccount(testAccount.copyWith(id: 'test_id2').toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.copyWith(id: 'test_id2').toDTO()).run();
   });
 
   test('deleteAccount() should remove the account from database', () async {
     // Arrange
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.createAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
 
     // Act
-    final result = await accountsDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
+    final result = await accountsLocalDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
     final resultAccounts = result.map(Account.fromDTO).toList();
 
     // Assert
@@ -105,11 +105,12 @@ void main() {
     expect(resultAccounts, isNot(contains(testAccount)));
   });
 
+  // TODO: Fix this test, it doesn't seem to want to pass
   test('watchAllAccounts() should emit updates when accounts change', () async {
     // Arrange
     final controller = StreamController<Either<AccountsFailure, List<Account>>>();
     final expectedStream = controller.stream;
-    final subscription = accountsDAO.watchAllAccounts().listen(
+    final subscription = accountsLocalDAO.watchAccounts().listen(
       (failureOrDTOList) {
         controller.add(
           failureOrDTOList.map((dtoList) => dtoList.map(Account.fromDTO).toList()),
@@ -120,9 +121,9 @@ void main() {
     // final debug = controller.stream.listen((a) => print('Debug: $a'));
 
     // Act
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.createAccount(testAccount.toDTO()).run();
     await Future<void>.delayed(const Duration(seconds: 1));
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
     await Future<void>.delayed(const Duration(seconds: 1));
 
     await pumpEventQueue();

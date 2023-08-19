@@ -6,7 +6,7 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
+import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 
@@ -14,7 +14,7 @@ import '../../../matcher/transactions_matchers.dart';
 
 void main() {
   late PecuniaDB db;
-  late TransactionsDAO transactionsDAO;
+  late TransactionsLocalDAO transactionsLocalDAO;
   late AccountsLocalDAO accountsDAO;
 
   late Account testAccount;
@@ -25,7 +25,7 @@ void main() {
     final clock = Clock.fixed(DateTime.utc(2023, 0, 0));
 
     db = PecuniaDB(NativeDatabase.memory());
-    transactionsDAO = TransactionsDAO(db);
+    transactionsLocalDAO = TransactionsLocalDAO(db);
     accountsDAO = AccountsLocalDAO(db);
 
     testAccount = Account(
@@ -82,12 +82,12 @@ void main() {
     // Arrange
     // First, create an account with a certain balance
     // Then, prepare a transaction for this account
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
+    await accountsDAO.createAccount(testAccount.toDTO()).run();
 
     // Act
     // Run createTransaction()
-    await transactionsDAO.createTransaction(testIncomeTxn).run();
-    final txnResult = await transactionsDAO.getTransactionById(testIncomeTxn.id).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
+    final txnResult = await transactionsLocalDAO.getTransactionById(testIncomeTxn.id).run();
     final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
     // Assert
@@ -103,20 +103,20 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.deleteTransaction(testIncomeTxn).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('deleteTransaction() should delete a transaction and update the account balance correctly', () async {
     // Arrange
     // Create a transaction
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn).run();
+    await accountsDAO.createAccount(testAccount.toDTO()).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
 
     // Act
     // Run deleteTransaction()
-    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
-    final txnResult = await transactionsDAO.getTransactionById(testIncomeTxn.id).run();
+    await transactionsLocalDAO.deleteTransaction(testIncomeTxn).run();
+    final txnResult = await transactionsLocalDAO.getTransactionById(testIncomeTxn.id).run();
     final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
     // Assert
@@ -144,12 +144,12 @@ void main() {
   test('editTransaction() should update a transaction and adjust the account balance correctly', () async {
     // Arrange
     // Create a transaction
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn).run();
+    await accountsDAO.createAccount(testAccount.toDTO()).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
 
     // Act
     // Run editTransaction() with the updated transaction data
-    await transactionsDAO
+    await transactionsLocalDAO
         .editTransaction(
           newTxn: testIncomeTxn.copyWith(
             name: 'updated_name',
@@ -158,7 +158,7 @@ void main() {
           oldTxn: testIncomeTxn,
         )
         .run();
-    final txnResult = await transactionsDAO.getTransactionById(testIncomeTxn.id).run();
+    final txnResult = await transactionsLocalDAO.getTransactionById(testIncomeTxn.id).run();
     final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
     // Assert
@@ -179,7 +179,7 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn.copyWith(name: 'updated_name')).run();
+    await transactionsLocalDAO.deleteTransaction(testIncomeTxn.copyWith(name: 'updated_name')).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
@@ -187,13 +187,13 @@ void main() {
       () async {
     // Arrange
     // Create multiple transactions for multiple accounts
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn).run();
-    await transactionsDAO.createTransaction(testExpenseTxn).run();
+    await accountsDAO.createAccount(testAccount.toDTO()).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.createTransaction(testExpenseTxn).run();
 
     // Act
     // Run getTransactionsByAccount() for a specific account
-    final result = await transactionsDAO.getTransactionsByAccount(testAccount.id).run();
+    final result = await transactionsLocalDAO.getTransactionsByAccount(testAccount.id).run();
 
     // Assert
     // Check if the retrieved transactions match the expected set for that account
@@ -207,21 +207,21 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
-    await transactionsDAO.deleteTransaction(testExpenseTxn).run();
+    await transactionsLocalDAO.deleteTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.deleteTransaction(testExpenseTxn).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 
   test('getAllTransactions() should retrieve all transactions', () async {
     // Arrange
     // Create multiple transactions for multiple accounts
-    await accountsDAO.insertAccount(testAccount.toDTO()).run();
-    await transactionsDAO.createTransaction(testIncomeTxn).run();
-    await transactionsDAO.createTransaction(testExpenseTxn).run();
+    await accountsDAO.createAccount(testAccount.toDTO()).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.createTransaction(testExpenseTxn).run();
 
     // Act
     // Run getAllTransactions()
-    final result = await transactionsDAO.getAllTransactions().run();
+    final result = await transactionsLocalDAO.getAllTransactions().run();
 
     // Assert
     // Check if the retrieved transactions match the expected total set of transactions
@@ -235,8 +235,8 @@ void main() {
     );
 
     // Clean up
-    await transactionsDAO.deleteTransaction(testIncomeTxn).run();
-    await transactionsDAO.deleteTransaction(testExpenseTxn).run();
+    await transactionsLocalDAO.deleteTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.deleteTransaction(testExpenseTxn).run();
     await accountsDAO.deleteAccount(testAccount.toDTO()).run();
   });
 }
