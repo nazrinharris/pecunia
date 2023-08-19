@@ -3,7 +3,7 @@ import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
-import 'package:pecunia/features/accounts/data/accounts_local_ds.dart';
+import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -27,7 +27,7 @@ enum AccountsAction {
 
 @riverpod
 AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl(
-      accountsLocalDS: ref.watch(accountsLocalDSProvider),
+      accountsDAO: ref.watch(accountsLocalDAOProvider),
       uuid: ref.watch(uuidProvider),
       helper: AccountsRepoHelper(),
     );
@@ -45,7 +45,7 @@ abstract interface class AccountsRepo {
     String? desc,
   });
 
-  TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails);
+  TaskEither<AccountsFailure, Unit> updateAccount(Account newAccountDetails);
   TaskEither<AccountsFailure, (bool isValid, double calculatedAmount)> validateAccountBalance(
       Account accountToRecalculate);
 
@@ -54,12 +54,12 @@ abstract interface class AccountsRepo {
 
 class AccountsRepoImpl implements AccountsRepo {
   AccountsRepoImpl({
-    required this.accountsLocalDS,
+    required this.accountsDAO,
     required this.helper,
     required this.uuid,
   });
 
-  final AccountsLocalDS accountsLocalDS;
+  final AccountsLocalDAO accountsDAO;
   final AccountsRepoHelper helper;
   final Uuid uuid;
 
@@ -68,7 +68,7 @@ class AccountsRepoImpl implements AccountsRepo {
   /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, List<Account>> getAccounts() {
-    return accountsLocalDS.getAccounts().map((listOfDTOs) => listOfDTOs.map(Account.fromDTO).toList());
+    return accountsDAO.getAccounts().map((listOfDTOs) => listOfDTOs.map(Account.fromDTO).toList());
   }
 
   /// ******************************************************************************************************
@@ -76,7 +76,7 @@ class AccountsRepoImpl implements AccountsRepo {
   /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, Account> getAccountById(String id) {
-    return accountsLocalDS.getAccountById(id).map(Account.fromDTO);
+    return accountsDAO.getAccountById(id).map(Account.fromDTO);
   }
 
   /// ******************************************************************************************************
@@ -84,7 +84,7 @@ class AccountsRepoImpl implements AccountsRepo {
   /// ******************************************************************************************************
   @override
   Stream<Either<AccountsFailure, List<Account>>> watchAccounts() {
-    return accountsLocalDS.watchAccounts().map(
+    return accountsDAO.watchAccounts().map(
           (either) => either.fold(
             left,
             (listOfDTOs) => right(
@@ -99,7 +99,7 @@ class AccountsRepoImpl implements AccountsRepo {
   ///
   /// Using the arguments provided, we will first create the account using the [Account.newAccount] factory to
   /// essentially sanitise the data. Then we will map the [Account] to a [AccountDTO] using the [AccountsRepoHelper] class.
-  /// Finally, we will use the [AccountsLocalDS] to create the account.
+  /// Finally, we will use the [AccountsLocalDAO] to create the account.
   /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, Unit> createAccount({
@@ -119,15 +119,15 @@ class AccountsRepoImpl implements AccountsRepo {
           uuid: uuid,
           description: AccountDescription(desc),
         ))
-        .flatMap(accountsLocalDS.createAccount);
+        .flatMap(accountsDAO.createAccount);
   }
 
   /// ******************************************************************************************************
-  /// [updateAccountDetails]
+  /// [updateAccount]
   /// ******************************************************************************************************
   @override
-  TaskEither<AccountsFailure, Unit> updateAccountDetails(Account newAccountDetails) {
-    return helper.mapAccountToDTO(newAccountDetails).flatMap(accountsLocalDS.updateAccountDetails);
+  TaskEither<AccountsFailure, Unit> updateAccount(Account newAccountDetails) {
+    return helper.mapAccountToDTO(newAccountDetails).flatMap(accountsDAO.updateAccount);
   }
 
   /// ******************************************************************************************************
@@ -135,7 +135,7 @@ class AccountsRepoImpl implements AccountsRepo {
   /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, Unit> deleteAccount(Account accountToDelete) {
-    return helper.mapAccountToDTO(accountToDelete).flatMap(accountsLocalDS.deleteAccount);
+    return helper.mapAccountToDTO(accountToDelete).flatMap(accountsDAO.deleteAccount);
   }
 
   /// ******************************************************************************************************
@@ -143,7 +143,7 @@ class AccountsRepoImpl implements AccountsRepo {
   /// ******************************************************************************************************
   @override
   TaskEither<AccountsFailure, (bool, double)> validateAccountBalance(Account accountToRecalculate) {
-    return helper.mapAccountToDTO(accountToRecalculate).flatMap(accountsLocalDS.validateAccountBalance);
+    return helper.mapAccountToDTO(accountToRecalculate).flatMap(accountsDAO.validateAccountBalance);
   }
 }
 

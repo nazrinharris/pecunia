@@ -25,7 +25,7 @@ class EditAccount extends _$EditAccount {
       description: AccountDescription(description),
     );
 
-    (await ref.watch(accountsRepoProvider).updateAccountDetails(newAccount).run()).fold(
+    (await ref.watch(accountsRepoProvider).updateAccount(newAccount).run()).fold(
       (l) => state = AsyncError(l, l.stackTrace),
       (r) => state = AsyncData(Option.of(r)),
     );

@@ -10,10 +10,10 @@ import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'accounts_dao_tables.g.dart';
+part 'accounts_local_dao.g.dart';
 
 @riverpod
-AccountsDAO accountsDAO(AccountsDAORef ref) => ref.watch(pecuniaDBProvider).accountsDAO;
+AccountsLocalDAO accountsLocalDAO(AccountsLocalDAORef ref) => ref.watch(pecuniaDBProvider).accountsLocalDAO;
 
 @DataClassName('AccountDTO')
 class AccountsTable extends Table {
@@ -31,8 +31,8 @@ class AccountsTable extends Table {
 }
 
 @DriftAccessor(tables: [AccountsTable, TransactionsTable])
-class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
-  AccountsDAO(super.db);
+class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalDAOMixin {
+  AccountsLocalDAO(super.db);
 
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {
     const currentAction = AccountsAction.getAccounts;
@@ -116,7 +116,7 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
   ///
   /// Another solution is to simply return the pure stream, though I'm not sure
   /// on how I'd handle the errors in that case.
-  Stream<Either<AccountsFailure, List<AccountDTO>>> watchAllAccounts() {
+  Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts() {
     const currentAction = AccountsAction.watchAccounts;
     return select(accountsTable).watch().transform(StreamTransformer.fromHandlers(
           handleData: (listOfDTOs, sink) {
@@ -132,7 +132,7 @@ class AccountsDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsDAOMixin {
         ));
   }
 
-  TaskEither<AccountsFailure, Unit> insertAccount(AccountDTO account) {
+  TaskEither<AccountsFailure, Unit> createAccount(AccountDTO account) {
     const currentAction = AccountsAction.createAccount;
     return TaskEither.tryCatch(
       () async {

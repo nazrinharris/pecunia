@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
-import 'package:pecunia/features/accounts/dao_tables/accounts_dao_tables.dart';
+import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
@@ -15,7 +15,7 @@ import '../../../matcher/transactions_matchers.dart';
 void main() {
   late PecuniaDB db;
   late TransactionsDAO transactionsDAO;
-  late AccountsDAO accountsDAO;
+  late AccountsLocalDAO accountsDAO;
 
   late Account testAccount;
   late Transaction testIncomeTxn;
@@ -26,7 +26,7 @@ void main() {
 
     db = PecuniaDB(NativeDatabase.memory());
     transactionsDAO = TransactionsDAO(db);
-    accountsDAO = AccountsDAO(db);
+    accountsDAO = AccountsLocalDAO(db);
 
     testAccount = Account(
       id: 'test_id',
@@ -34,7 +34,7 @@ void main() {
       name: 'test_name',
       initialBalance: 0,
       balance: 0,
-      currency: 'TST',
+      currency: PecuniaCurrencies.xxx,
       createdOn: clock.now().toUtc(),
       description: AccountDescription('test_description'),
     );

@@ -1236,7 +1236,8 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
   late final $AccountsTableTable accountsTable = $AccountsTableTable(this);
   late final $TransactionsTableTable transactionsTable =
       $TransactionsTableTable(this);
-  late final AccountsDAO accountsDAO = AccountsDAO(this as PecuniaDB);
+  late final AccountsLocalDAO accountsLocalDAO =
+      AccountsLocalDAO(this as PecuniaDB);
   late final TransactionsDAO transactionsDAO =
       TransactionsDAO(this as PecuniaDB);
   @override

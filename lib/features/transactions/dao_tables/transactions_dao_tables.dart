@@ -2,7 +2,8 @@ import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
-import 'package:pecunia/features/accounts/dao_tables/accounts_dao_tables.dart';
+import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
+
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

@@ -237,7 +237,7 @@ void main() {
         ).thenAnswer((_) => TaskEither.right(unit));
 
         // Act
-        final result = await accountsRepo.updateAccountDetails(testAccount).run();
+        final result = await accountsRepo.updateAccount(testAccount).run();
 
         // Assert
         expect(result.isRight(), true);
@@ -258,7 +258,7 @@ void main() {
             )));
 
         // Act
-        final result = await accountsRepo.updateAccountDetails(testAccount).run();
+        final result = await accountsRepo.updateAccount(testAccount).run();
 
         // Assert
         expect(result.isLeft(), true);
