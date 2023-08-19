@@ -32,9 +32,10 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Local database setup with `drift`.
 - [x] Accounts creation, deletion, editing, and viewing.
 - [x] Transaction creation, deletion, editing and viewing.
-- [ ] Transferring funds between accounts (and multi-currency transactions).
+- [x] Transferring funds between accounts (and multi-currency transactions).
 - [ ] Transaction categories.
-- [ ] Simple budget creation, deletion, editin, and viewing.
+- [ ] Simple budget creation, deletion, editing, and viewing.
+- [ ] Basic UI capabilities (as in, similar looks and functionality to mockup)
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 
@@ -52,7 +53,6 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 ### 💨 Phase 4: Performance Optimization
 
 - [ ] Whatever tuning I can do from here.
-- [ ] Data aggregation for more efficient data retrieval.
 
 ### 🔥 Future Capabilities
 
@@ -62,3 +62,13 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [ ] Desktop apps? Mac and Windows or even Web?
 
 ---
+## Setup Recommendation
+Here's a couple of recommendations (my setup):
+
+1. Use `VSCode`
+2. Enabling the `File Nesting` setting (`"explorer.fileNesting.enabled": true`)
+3. Disabling auto-expand nested files (`"explorer.fileNesting.expand": false`)
+4. Setting the capture for `File Nesting` to `.freezed` and `.g` files.
+5. (Possibly) setting the capture to `*_widget.dart` files, if possible and practical
+
+> Unfortunately, it doesn't seem like I can disable auto-expand if a folder only has one file (provided that the other files in the folder is nested under one file)
