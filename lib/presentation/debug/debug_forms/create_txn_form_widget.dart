@@ -294,7 +294,7 @@ class CreateTxnForm extends HookConsumerWidget {
                   if (isCurrencyExchangeEnabled.value) {
                     exchangeRateInput = double.parse(exchangeRateController.text);
                     targetAmountInput = double.parse(targetAmountController.text);
-                    targetCurrencyInput = targetCurrency.value;
+                    targetCurrencyInput = targetCurrency.value.code;
                   }
 
                   await ref.read(createTransactionProvider.notifier).createTransaction(
@@ -303,7 +303,7 @@ class CreateTxnForm extends HookConsumerWidget {
                         accountId: chosenAccount.value.id,
                         transactionType: txnType.value,
                         baseAmount: double.parse(baseAmountController.text),
-                        baseCurrency: baseCurrency.value,
+                        baseCurrency: baseCurrency.value.code,
                         exchangeRate: exchangeRateInput,
                         targetCurrency: targetCurrencyInput,
                         targetAmount: targetAmountInput,
@@ -485,7 +485,7 @@ class BaseCurrencyField extends HookConsumerWidget {
   });
 
   final Account account;
-  final ValueNotifier<String> baseCurrency;
+  final ValueNotifier<Currency> baseCurrency;
   final ValueNotifier<TransactionType> txnType;
   final ValueNotifier<bool> isCurrencyExchangeEnabled;
 
@@ -523,17 +523,17 @@ class BaseCurrencyField extends HookConsumerWidget {
           borderRadius: BorderRadius.circular(14),
           child: Material(
             color: Colors.transparent,
-            child: PopupMenuButton<String>(
+            child: PopupMenuButton<Currency>(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               initialValue: baseCurrency.value,
-              onSelected: (String value) {
+              onSelected: (Currency value) {
                 baseCurrency.value = value;
               },
               enabled: determineIfEnabled(),
               itemBuilder: (BuildContext context) {
-                return PecuniaCurrencies.toList().map<PopupMenuItem<String>>((Currency c) {
-                  return PopupMenuItem<String>(
-                    value: c.code,
+                return PecuniaCurrencies.toList().map<PopupMenuItem<Currency>>((Currency c) {
+                  return PopupMenuItem<Currency>(
+                    value: c,
                     child: Text('${c.code} - ${c.name}', textAlign: TextAlign.center),
                   );
                 }).toList();
@@ -544,7 +544,7 @@ class BaseCurrencyField extends HookConsumerWidget {
                   children: [
                     Expanded(
                         child: Text(
-                      baseCurrency.value,
+                      baseCurrency.value.code,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -581,7 +581,7 @@ class TargetCurrencyField extends HookConsumerWidget {
   });
 
   final Account account;
-  final ValueNotifier<String> targetCurrency;
+  final ValueNotifier<Currency> targetCurrency;
   final ValueNotifier<TransactionType> txnType;
   final ValueNotifier<bool> isCurrencyExchangeEnabled;
 
@@ -619,17 +619,17 @@ class TargetCurrencyField extends HookConsumerWidget {
           borderRadius: BorderRadius.circular(14),
           child: Material(
             color: Colors.transparent,
-            child: PopupMenuButton<String>(
+            child: PopupMenuButton<Currency>(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               initialValue: targetCurrency.value,
-              onSelected: (String value) {
+              onSelected: (Currency value) {
                 targetCurrency.value = value;
               },
               enabled: determineIfEnabled(),
               itemBuilder: (BuildContext context) {
-                return PecuniaCurrencies.toList().map<PopupMenuItem<String>>((Currency c) {
-                  return PopupMenuItem<String>(
-                    value: c.code,
+                return PecuniaCurrencies.toList().map<PopupMenuItem<Currency>>((Currency c) {
+                  return PopupMenuItem<Currency>(
+                    value: c,
                     child: Text('${c.code} - ${c.name}', textAlign: TextAlign.center),
                   );
                 }).toList();
@@ -640,7 +640,7 @@ class TargetCurrencyField extends HookConsumerWidget {
                   children: [
                     Expanded(
                         child: Text(
-                      targetCurrency.value,
+                      targetCurrency.value.code,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,

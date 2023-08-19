@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:uuid/uuid.dart';
 
 part 'account.freezed.dart';
@@ -7,14 +9,14 @@ part 'account.freezed.dart';
 @freezed
 class Account with _$Account {
   const factory Account({
-    required String id, // Unique identifier for the account
-    required String creatorUid, // The uid of the user who created the account
-    required String name, // The name of the account
-    required double initialBalance, // The initial balance when the account was created
-    required double balance, // The current balance of the account
-    required String currency, // The currency used by the account
-    required DateTime createdOn, // The date when the account was created
-    required AccountDescription description, // Description of the account
+    required String id,
+    required String creatorUid,
+    required String name,
+    required double initialBalance,
+    required double balance,
+    required Currency currency,
+    required DateTime createdOn,
+    required AccountDescription description,
   }) = _Account;
 
   const Account._();
@@ -23,7 +25,7 @@ class Account with _$Account {
     required String creatorUid,
     required String name,
     required double initialBalance,
-    required String currency,
+    required Currency currency,
     required DateTime createdOn,
     required Uuid uuid,
     required AccountDescription description,
@@ -46,7 +48,7 @@ class Account with _$Account {
       name: dto.name,
       initialBalance: dto.initialBalance,
       balance: dto.balance,
-      currency: dto.currency,
+      currency: PecuniaCurrencies.fromString(dto.currency),
       createdOn: dto.createdOn.toUtc(),
       description: AccountDescription(dto.description),
     );
@@ -59,7 +61,7 @@ class Account with _$Account {
       name: name,
       initialBalance: initialBalance,
       balance: balance,
-      currency: currency,
+      currency: currency.code,
       createdOn: createdOn.toUtc(),
       description: description.value,
     );

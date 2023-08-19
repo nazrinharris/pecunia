@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_ds.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
@@ -113,7 +114,7 @@ class AccountsRepoImpl implements AccountsRepo {
           creatorUid: creatorUid,
           name: name,
           initialBalance: initialBalance,
-          currency: currency,
+          currency: PecuniaCurrencies.fromString(currency),
           createdOn: DateTime.now(),
           uuid: uuid,
           description: AccountDescription(desc),

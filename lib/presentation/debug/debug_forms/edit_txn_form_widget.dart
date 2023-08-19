@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
@@ -35,8 +36,8 @@ class EditTxnForm extends HookConsumerWidget {
     final targetAmountController = useTextEditingController(
         text: txn.fundDetails.targetAmount == null ? '' : txn.fundDetails.targetAmount!.toString());
 
-    final baseCurrency = useState(txn.fundDetails.baseCurrency.code);
-    final targetCurrency = useState(txn.fundDetails.targetCurrency?.code ?? chosenAccount.value.currency);
+    final baseCurrency = useState(txn.fundDetails.baseCurrency);
+    final targetCurrency = useState(txn.fundDetails.targetCurrency ?? chosenAccount.value.currency);
 
     final nameNode = useFocusNode();
     final descriptionNode = useFocusNode();
@@ -219,7 +220,7 @@ class EditTxnForm extends HookConsumerWidget {
                 if (formKey.value.currentState!.validate()) {
                   double? exchangeRateInput;
                   double? targetAmountInput;
-                  String? targetCurrencyInput;
+                  Currency? targetCurrencyInput;
 
                   if (isCurrencyExchangeEnabled.value) {
                     exchangeRateInput = double.parse(exchangeRateController.text);
@@ -232,9 +233,9 @@ class EditTxnForm extends HookConsumerWidget {
                         description: descriptionController.text,
                         transactionType: txnType.value,
                         baseAmount: double.parse(baseAmountController.text),
-                        baseCurrency: baseCurrency.value,
+                        baseCurrency: baseCurrency.value.code,
                         exchangeRate: exchangeRateInput,
-                        targetCurrency: targetCurrencyInput,
+                        targetCurrency: targetCurrencyInput?.code,
                         targetAmount: targetAmountInput,
                         oldTxn: txn,
                       );

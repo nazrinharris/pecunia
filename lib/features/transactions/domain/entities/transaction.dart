@@ -215,20 +215,18 @@ class Transaction with _$Transaction {
     final sourceTxnFundDetails = FundDetails(
       transactionType: TransactionType.debit,
       baseAmount: sourceTransactionAmount,
-      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+      baseCurrency: sourceAccount.currency,
       exchangeRate: exchangeRate,
       targetAmount: destinationTransactionAmount,
-      targetCurrency:
-          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
+      targetCurrency: isMultiCurrencyTransfer ? destinationAccount.currency : null,
     );
     final destinationTxnFundDetails = FundDetails(
       transactionType: TransactionType.credit,
       baseAmount: sourceTransactionAmount,
-      baseCurrency: PecuniaCurrencies.fromString(sourceAccount.currency),
+      baseCurrency: sourceAccount.currency,
       exchangeRate: exchangeRate,
       targetAmount: isMultiCurrencyTransfer ? destinationTransactionAmount : null,
-      targetCurrency:
-          isMultiCurrencyTransfer ? PecuniaCurrencies.fromString(destinationAccount.currency) : null,
+      targetCurrency: isMultiCurrencyTransfer ? destinationAccount.currency : null,
     );
 
     final sourceTxn = Transaction(

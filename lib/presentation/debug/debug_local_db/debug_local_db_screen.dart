@@ -326,7 +326,7 @@ class AccountsList extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            '${list[index].currency} ${list[index].balance}',
+                            '${list[index].currency.code} ${list[index].balance}',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,

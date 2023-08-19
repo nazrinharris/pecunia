@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/util/extensions.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
@@ -290,7 +291,7 @@ class ExchangeRateField extends HookConsumerWidget {
 class SourceAmountField extends HookConsumerWidget {
   const SourceAmountField(this.sourceCurrency, this.sourceController, this.isDifferentCurrency, {super.key});
 
-  final String sourceCurrency;
+  final Currency sourceCurrency;
   final TextEditingController sourceController;
   final bool isDifferentCurrency;
 
@@ -319,7 +320,7 @@ class SourceAmountField extends HookConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: sourceCurrency,
+                    text: sourceCurrency.code,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -371,7 +372,7 @@ class DestinationAmountField extends HookConsumerWidget {
                 children: <TextSpan>[
                   TextSpan(text: 'Amount ', style: TextStyle(fontSize: 16, color: Colors.green[100])),
                   TextSpan(
-                      text: destinationAccount?.currency ?? '---',
+                      text: destinationAccount?.currency.code ?? '---',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[100])),
                 ],
               ),

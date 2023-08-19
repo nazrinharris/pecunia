@@ -16,7 +16,7 @@ class DebugEditAccountScreen extends ConsumerWidget {
     final formGroup = ref.watch(editAccountFormProvider(
       name: account.name,
       description: account.description.value,
-      currency: account.currency,
+      currency: account.currency.code,
       initialBalance: account.initialBalance.toString(),
     ));
 

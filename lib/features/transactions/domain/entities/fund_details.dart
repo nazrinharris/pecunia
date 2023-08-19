@@ -23,10 +23,10 @@ part of 'transaction.dart';
 /// (baseAmount * exchangeRate) within a small tolerance to account for potential floating point errors.
 ///
 /// Throws [TransactionsException] if:
-/// * In a multi-currency transaction, any one or two (but not all) out of [exchangeRate], [targetAmount],
+/// - In a multi-currency transaction, any one or two (but not all) out of [exchangeRate], [targetAmount],
 ///   and [targetCurrency] are provided.
-/// * The provided target amount significantly differs from the computed target amount.
-/// * The transaction type is invalid when calling [transactionAmount] or [transactionCurrency].
+/// - The provided target amount significantly differs from the computed target amount.
+/// - The transaction type is invalid when calling [transactionAmount] or [transactionCurrency].
 @freezed
 class FundDetails with _$FundDetails {
   @Assert(
