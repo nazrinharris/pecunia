@@ -1,19 +1,32 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/accounts/usecases/delete_account.dart';
+import 'package:pecunia/features/accounts/usecases/edit_account.dart';
+import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
+import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_provider.dart';
-import 'package:pecunia/presentation/debug/debug_local_db/providers/debug_local_db_provider.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/form/debug_transactions_form.dart';
-import 'package:pecunia/presentation/debug/debug_transactions/providers/debug_transactions_provider.dart';
+import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/edit_transfer_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_list_tile_widget.dart';
+import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/debug/debug_forms/create_transfer_txn_form_widget.dart';
+import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugViewAccountScreen extends ConsumerWidget {
   const DebugViewAccountScreen(this.accountId, {super.key});
@@ -37,15 +50,127 @@ class DebugViewAccountScreen extends ConsumerWidget {
               );
         }
       })
-      ..listen(editTransactionProvider, (previous, next) {
+      ..listen(createTransactionProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't delete your account.",
+                failure: next.error as Failure?,
+              );
+        }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transaction created successfully!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(editTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "We couldn't edit your account.",
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context
+            ..pop()
+            ..pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transaction edited successfully!',
+              );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
             ..invalidate(getAccountByIdProvider(accountId));
         }
       })
       ..listen(deleteTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Oopsies',
+                failure: next.error as Failure?,
+              );
+        }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transaction deleted succesfully!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(editAccountProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Something went wrong while editing your account.',
+                failure: next.error as AccountsFailure?,
+              );
+        }
+
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Your account has been edited!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(createTransferTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Unable to create transfer transaction.',
+                failure: next.error as TransactionsFailure?,
+              );
+        }
+
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transfer transaction created successfully!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(deleteTransferTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Unable to create transfer transaction.',
+                failure: next.error as TransactionsFailure?,
+              );
+        }
+
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Transfer transaction deleted successfully!',
+              );
+          ref
+            ..invalidate(getTransactionsByAccountIdProvider(accountId))
+            ..invalidate(getAccountByIdProvider(accountId));
+        }
+      })
+      ..listen(editTransferTransactionProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: 'Unable to create transfer transaction.',
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context
+            ..pop()
+            ..pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Updated transfer transaction!',
+              );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
             ..invalidate(getAccountByIdProvider(accountId));
@@ -56,7 +181,7 @@ class DebugViewAccountScreen extends ConsumerWidget {
 
     switch (acc) {
       case AsyncLoading():
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: CupertinoActivityIndicator());
       case AsyncError():
         return const Center(child: Text('Error loading account'));
       case AsyncData():
@@ -140,7 +265,7 @@ class AccountDetails extends ConsumerWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: ' ${account.currency}',
+                            text: ' ${account.currency.code}',
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -171,14 +296,14 @@ class AccountDetails extends ConsumerWidget {
                       alignment: Alignment.center,
                       child: RichText(
                           text: TextSpan(
-                        text: account.balance.toString(),
+                        text: account.balance.toStringAsFixed(2),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
                         ),
                         children: [
                           TextSpan(
-                            text: ' ${account.currency}',
+                            text: ' ${account.currency.code}',
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -197,67 +322,7 @@ class AccountDetails extends ConsumerWidget {
             const SizedBox(height: 14),
             SafeArea(child: AccountMetadataCard(account)),
             const SizedBox(height: 4),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: Text('Add income', style: TextStyle(color: Colors.green[100])),
-                        leading: Icon(Icons.add, color: Colors.green[100]),
-                        onTap: () {
-                          showCreateTransactionBottomSheet(context, account, true);
-                        },
-                      ),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: Text('Add expense', style: TextStyle(color: Colors.red[100])),
-                        leading: Icon(Icons.remove, color: Colors.red[100]),
-                        onTap: () {
-                          showCreateTransactionBottomSheet(context, account, false);
-                        },
-                      ),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: const Text('Edit account'),
-                        leading: const Icon(Icons.edit),
-                        onTap: () {
-                          context.pushNamed('debug-edit-account', extra: account);
-                        },
-                      ),
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        title: Text('Delete account', style: TextStyle(color: Colors.red[300])),
-                        leading: Icon(Icons.delete, color: Colors.red[300]),
-                        onTap: () {
-                          ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                              title: 'Are you sure you want to delete this account?',
-                              message: 'This is irreversible',
-                              onConfirm: () {
-                                ref.read(deleteAccountProvider.notifier).deleteAccount(account);
-                              },
-                              context: context);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            SafeArea(child: AccountActionsGrid(account)),
             SafeArea(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -303,60 +368,28 @@ class TransactionsList extends ConsumerWidget {
             itemBuilder: (context, index) {
               final txn = transactions[index];
 
-              return Column(
-                children: [
-                  if (index == 0) Divider(color: Colors.grey.withOpacity(0.1)),
-                  ListTile(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          account.name,
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          txn.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    subtitle: txn.transactionDescription.value == null
-                        ? null
-                        : Text(
-                            txn.transactionDescription.value!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                    trailing: BuildTxnAmountText(txn),
-                    onTap: () {
-                      showModalBottomSheet<void>(
-                          isScrollControlled: true,
-                          context: context,
-                          showDragHandle: true,
-                          builder: (context) {
-                            return SizedBox(
-                              height: 550,
-                              child: SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(parent: NeverScrollableScrollPhysics()),
-                                child: BottomSheetContent(txn, [], account),
-                              ),
-                            );
-                          });
-                    },
-                  ),
-                  Divider(color: Colors.grey.withOpacity(0.1)),
-                ],
-              );
+              return txn.isTransferTransaction
+                  ? TransferTxnListTile(
+                      account: account,
+                      txn: txn,
+                      enableTopDivider: index == 0,
+                    )
+                  : TxnListTile(account: account, txn: txn, enableTopDivider: index == 0);
             },
           ),
         );
       },
       error: (e, stack) {
+        if (e is Failure) {
+          return Center(
+            child: Text(
+              e.message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.red[100]),
+            ),
+          );
+        }
+
         return Center(
           child: Text(e.toString()),
         );
@@ -372,6 +405,88 @@ class TransactionsList extends ConsumerWidget {
 
     final account = accounts.firstWhere((element) => element.id == accountId);
     return account.name;
+  }
+}
+
+class TxnListTile extends StatelessWidget {
+  const TxnListTile({
+    required this.account,
+    required this.txn,
+    this.enableTopDivider = false,
+    this.enableBottomDivider = true,
+    this.hideAccountName = false,
+    this.onTap,
+    super.key,
+  });
+
+  final Account account;
+  final Transaction txn;
+  final bool enableTopDivider;
+  final bool enableBottomDivider;
+  final bool hideAccountName;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (enableTopDivider) Divider(color: Colors.grey.withOpacity(0.1)),
+        ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (!hideAccountName)
+                Text(
+                  account.name,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              const SizedBox(width: 8),
+              Text(
+                txn.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          subtitle: txn.transactionDescription.value == null
+              ? null
+              : Text(
+                  txn.transactionDescription.value!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+          trailing: BuildTxnAmountText(txn),
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(Icons.question_mark, color: Colors.grey[100]),
+          ),
+          onTap: onTap ??
+              () {
+                showModalBottomSheet<void>(
+                    isScrollControlled: true,
+                    context: context,
+                    showDragHandle: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(44),
+                    ),
+                    builder: (context) {
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: TxnBottomSheet(txn, account),
+                      );
+                    });
+              },
+        ),
+        if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
+      ],
+    );
   }
 }
 
@@ -527,14 +642,21 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
       isScrollControlled: true,
       context: context,
       showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
       builder: (context) {
-        return SizedBox(
-          height: 550,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                CreateTransactionForm(account, isCredit),
+                CreateTxnForm(
+                  account: account,
+                  initialTransactionType: isCredit ? TransactionType.credit : TransactionType.debit,
+                ),
                 const SizedBox(height: 64),
               ],
             ),
@@ -543,176 +665,128 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
       });
 }
 
-class CreateTransactionForm extends ConsumerWidget {
-  const CreateTransactionForm(this.account, this.isCredit, {super.key});
+void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CreateTransferTxnForm(
+                  defaultSourceAccount: account,
+                  accountsList: [account],
+                ),
+                const SizedBox(height: 64),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
+class AccountActionsGrid extends ConsumerWidget {
+  const AccountActionsGrid(this.account, {super.key});
 
   final Account account;
-  final bool isCredit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(createTransactionProvider, (prev, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
-              title: "We couldn't delete your account.",
-              failure: next.error as Failure?,
-            );
-      }
-      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
-              title: 'Transaction created successfully!',
-            );
-        ref
-          ..invalidate(getTransactionsByAccountIdProvider(account.id))
-          ..invalidate(getAccountByIdProvider(account.id));
-      }
-    });
-    final typeDefault = isCredit ? 'credit' : 'debit';
-    final formGroup =
-        ref.watch(createTransactionFormProvider(typeDefault: typeDefault, accountId: account.id));
-
-    return ReactiveForm(
-      formGroup: formGroup,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        child: Column(
-          children: [
-            const Align(
-              child: Text(
-                'Create Transaction',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ReactiveTextField<String>(
-              formControlName: 'txnName',
-              textInputAction: TextInputAction.next,
-              onSubmitted: (_) => formGroup.focus('description'),
-              decoration: const InputDecoration(
-                labelText: 'Transaction Name',
-                hintText: 'Give a short name for this transaction',
-              ),
-            ),
-            ReactiveTextField<String>(
-              formControlName: 'description',
-              textInputAction: TextInputAction.next,
-              onSubmitted: (_) {
-                if (formGroup.value['description'] == '') {
-                  formGroup.value['description'] = null;
-                }
-                formGroup.focus('currency');
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      child: GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 5,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.green[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                showCreateTransactionBottomSheet(context, account, true);
               },
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                hintText: 'You could also leave this empty.',
-              ),
-            ),
-            ReactiveDropdownField<String>(
-              formControlName: 'type',
-              isExpanded: true,
-              onChanged: (formControl) => formGroup.focus('account'),
-              decoration: const InputDecoration(
-                labelText: 'Transaction Type',
-                hintText: 'Is this an income or an expense?',
-              ),
-              items: [
-                DropdownMenuItem<String>(
-                  value: TransactionType.credit.typeAsString,
-                  child: const Text('Income (or known as credit)'),
-                ),
-                DropdownMenuItem<String>(
-                  value: TransactionType.debit.typeAsString,
-                  child: const Text('Expense (or known as debit)'),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 90,
-              width: double.infinity,
-              child: ReactiveDropdownField<String>(
-                isExpanded: true,
-                readOnly: true,
-                formControlName: 'account',
-                decoration: InputDecoration(
-                  labelText: account.name,
-                  hintText: 'Choose an account',
-                ),
-                onChanged: (control) {
-                  formGroup.focus('amount');
-                },
-                selectedItemBuilder: (context) {
-                  return [Text(account.name)];
-                },
-                items: [
-                  DropdownMenuItem<String>(
-                    value: account.id,
-                    child: Text(
-                      account.name,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(HeroIcons.currency_dollar, color: Colors.green[100]),
+                  Icon(Icons.add, color: Colors.green[100]),
                 ],
               ),
             ),
-            Row(
-              children: [
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 14, right: 14),
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      // border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      account.currency,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 3,
-                  child: ReactiveTextField<String>(
-                    formControlName: 'amount',
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    textInputAction: TextInputAction.done,
-                    decoration: const InputDecoration(
-                      labelText: 'Amount',
-                      hintText: 'Couple bucks? A few hundred?',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ReactiveFormConsumer(
-              builder: (context, form, child) {
-                return ElevatedButton(
-                  onPressed: form.valid
-                      ? () {
-                          ref.read(createTransactionProvider.notifier).createTransaction(
-                                name: form.value['txnName']! as String,
-                                description: form.value['description'] as String?,
-                                amount: double.parse(form.value['amount']! as String),
-                                currency: account.currency,
-                                accountId: account.id,
-                                type: form.value['type']! as String,
-                              );
-                          form.unfocus();
-                        }
-                      : null,
-                  child: const Text('Create Transaction'),
-                );
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.red[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                showCreateTransactionBottomSheet(context, account, false);
               },
-            )
-          ],
-        ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(HeroIcons.currency_dollar, color: Colors.red[100]),
+                  Icon(Icons.remove, color: Colors.red[100]),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.blue[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                showCreateTransferTxnBottomSheet(context, account);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(HeroIcons.currency_dollar, color: Colors.blue[100]),
+                  Icon(Icons.compare_arrows, color: Colors.blue[100]),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.purple[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                context.pushNamed('debug-edit-account', extra: account);
+              },
+              child: Icon(HeroIcons.pencil, color: Colors.purple[100]),
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            color: Colors.red[900]!.withOpacity(0.1),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: () {
+                ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                    title: 'Are you sure you want to delete this account?',
+                    message: 'This is irreversible',
+                    onConfirm: () {
+                      ref.read(deleteAccountProvider.notifier).deleteAccount(account);
+                    },
+                    context: context);
+              },
+              child: Icon(HeroIcons.trash, color: Colors.red[100]),
+            ),
+          ),
+        ],
       ),
     );
   }

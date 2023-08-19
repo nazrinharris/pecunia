@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/accounts/usecases/edit_account.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/edit_account/debug_edit_account_providers.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugEditAccountScreen extends ConsumerWidget {
@@ -15,26 +13,10 @@ class DebugEditAccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(editAccountProvider, (prev, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
-              title: 'Something went wrong while editing your account.',
-              failure: next.error as AccountsFailure?,
-            );
-      }
-
-      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
-              title: 'Your account has been edited!',
-            );
-        context.pop();
-      }
-    });
-
     final formGroup = ref.watch(editAccountFormProvider(
       name: account.name,
       description: account.description.value,
-      currency: account.currency,
+      currency: account.currency.code,
       initialBalance: account.initialBalance.toString(),
     ));
 
@@ -73,14 +55,14 @@ class DebugEditAccountScreen extends ConsumerWidget {
                       if (formGroup.value['description'] == '') {
                         formGroup.value['description'] = null;
                       }
-                      formGroup.focus('currency');
+                      formGroup.focus('initialBalance');
                     },
                     decoration: const InputDecoration(
                         labelText: 'Description', hintText: 'You could also leave this empty.'),
                   ),
                   ReactiveDropdownField<String>(
                     formControlName: 'currency',
-                    onChanged: (_) => formGroup.focus('initialBalance'),
+                    readOnly: true,
                     decoration: const InputDecoration(
                       labelText: 'Currency',
                       hintText: 'What currency should this account use?',
@@ -115,7 +97,6 @@ class DebugEditAccountScreen extends ConsumerWidget {
                                   name: form.value['name']! as String,
                                   description: form.value['description'] as String?,
                                   initialBalance: double.parse(form.value['initialBalance']! as String),
-                                  currency: form.value['currency']! as String,
                                 )
                             : null,
                         child: const Text('Save changes'),

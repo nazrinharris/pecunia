@@ -6,7 +6,7 @@ part of 'debug_edit_account_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editAccountFormHash() => r'e39c69e0473177cba0cb83d2ea4464449889bb57';
+String _$editAccountFormHash() => r'811a32a1fbf2e83f063b19f083b8bf7a47e737f7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -134,20 +134,4 @@ class EditAccountFormProvider extends AutoDisposeProvider<FormGroup> {
     return _SystemHash.finish(hash);
   }
 }
-
-String _$editAccountHash() => r'7ea02abf350d2b056d4a91b1a7812e87eece9281';
-
-/// See also [EditAccount].
-@ProviderFor(EditAccount)
-final editAccountProvider =
-    AutoDisposeAsyncNotifierProvider<EditAccount, Option<Unit>>.internal(
-  EditAccount.new,
-  name: r'editAccountProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$editAccountHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$EditAccount = AutoDisposeAsyncNotifier<Option<Unit>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

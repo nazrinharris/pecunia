@@ -6,8 +6,10 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
-import 'package:pecunia/presentation/debug/debug_auth/form/debug_form.dart';
-import 'package:pecunia/presentation/debug/debug_auth/providers/debug_auth_providers.dart';
+import 'package:pecunia/features/auth/usecases/login_with_password.dart';
+import 'package:pecunia/features/auth/usecases/register_with_password.dart';
+import 'package:pecunia/presentation/debug/debug_auth/debug_auth_providers.dart';
+import 'package:pecunia/presentation/debug/debug_auth/debug_form.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

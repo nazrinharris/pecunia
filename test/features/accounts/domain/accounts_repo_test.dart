@@ -4,14 +4,15 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
-import 'package:pecunia/features/accounts/data/accounts_local_ds.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../matcher/accounts_matchers.dart';
 
-class MockAccountsLocalDS extends Mock implements AccountsLocalDS {}
+class MockAccountsLocalDAO extends Mock implements AccountsLocalDAO {}
 
 class MockAccountsRepoHelper extends Mock implements AccountsRepoHelper {}
 
@@ -25,7 +26,7 @@ void main() {
   late AccountsRepoImpl accountsRepo;
   late AccountsRepoHelper accountsRepoHelper;
 
-  late MockAccountsLocalDS mockAccountsLocalDS;
+  late MockAccountsLocalDAO mockAccountsLocalDAO;
   late MockAccountsRepoHelper mockAccountsRepoHelper;
   late MockAccountDescription mockAccountDescription;
   late MockAccount mockAccount;
@@ -39,7 +40,7 @@ void main() {
     final clock = Clock.fixed(DateTime.utc(2023));
 
     // Setup mocks
-    mockAccountsLocalDS = MockAccountsLocalDS();
+    mockAccountsLocalDAO = MockAccountsLocalDAO();
     mockAccountsRepoHelper = MockAccountsRepoHelper();
     mockAccountDescription = MockAccountDescription();
     mockAccount = MockAccount();
@@ -47,7 +48,7 @@ void main() {
 
     // Setup repo and helper
     accountsRepo = AccountsRepoImpl(
-      accountsLocalDS: mockAccountsLocalDS,
+      accountsLocalDAO: mockAccountsLocalDAO,
       helper: mockAccountsRepoHelper,
       uuid: mockUuid,
     );
@@ -60,7 +61,7 @@ void main() {
       name: 'testName',
       initialBalance: 0,
       balance: 0,
-      currency: 'TST',
+      currency: PecuniaCurrencies.xxx,
       createdOn: clock.now(),
       description: mockAccountDescription,
     );
@@ -71,7 +72,7 @@ void main() {
       name: 'testName',
       initialBalance: 0,
       balance: 0,
-      currency: 'TST',
+      currency: 'XXX',
       createdOn: clock.now(),
       description: 'testDescription',
     );
@@ -98,7 +99,7 @@ void main() {
       const currentAction = AccountsAction.getAccounts;
       test('returns a [List<Account>] when the call to accountsLocalDS is successful', () async {
         // Arrange
-        when(() => mockAccountsLocalDS.getAccounts()).thenAnswer(
+        when(() => mockAccountsLocalDAO.getAccounts()).thenAnswer(
           (_) => TaskEither.right(testAccountsDTOList),
         );
 
@@ -114,7 +115,7 @@ void main() {
           'returns an [AccountsFailure] with [AccountsAction.getAccounts] and correct [AccountsErrorType] when the call to accountsLocalDS is unsuccessful',
           () async {
         // Arrange
-        when(() => mockAccountsLocalDS.getAccounts()).thenAnswer(
+        when(() => mockAccountsLocalDAO.getAccounts()).thenAnswer(
           (_) => TaskEither.left(AccountsFailure.unknown(
             stackTrace: StackTrace.current,
             message: AccountsErrorType.unknown.message,
@@ -139,7 +140,7 @@ void main() {
           'returns a [Stream<Either<AccountsFailure, List<Account>>>] when the call to accountsLocalDS is successful',
           () async {
         // Arrange
-        when(() => mockAccountsLocalDS.watchAccounts()).thenAnswer(
+        when(() => mockAccountsLocalDAO.watchAccounts()).thenAnswer(
           (_) => Stream.value(
             right(testAccountsDTOList),
           ),
@@ -156,7 +157,7 @@ void main() {
           'returns a [Stream<Either<AccountsFailure, List<Account>>>] when the call to accountsLocalDS is unsuccessful',
           () async {
         // Arrange
-        when(() => mockAccountsLocalDS.watchAccounts()).thenAnswer(
+        when(() => mockAccountsLocalDAO.watchAccounts()).thenAnswer(
           (_) => Stream.value(
             left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
@@ -178,7 +179,7 @@ void main() {
       test('returns a [Unit] when the call to accountsLocalDS is successful', () async {
         // Arrange
         when(
-          () => mockAccountsLocalDS.createAccount(any<AccountDTO>()),
+          () => mockAccountsLocalDAO.createAccount(any<AccountDTO>()),
         ).thenAnswer((_) => TaskEither.right(unit));
 
         // Act
@@ -187,7 +188,7 @@ void main() {
               name: 'testName',
               creatorUid: 'testCreatorUid',
               initialBalance: 0,
-              currency: 'TST',
+              currency: 'XXX',
               desc: 'testDesc',
             )
             .run();
@@ -202,7 +203,7 @@ void main() {
           () async {
         // Arrange
         when(
-          () => mockAccountsLocalDS.createAccount(any<AccountDTO>()),
+          () => mockAccountsLocalDAO.createAccount(any<AccountDTO>()),
         ).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,
@@ -215,7 +216,7 @@ void main() {
               name: 'testName',
               creatorUid: 'testCreatorUid',
               initialBalance: 0,
-              currency: 'TST',
+              currency: 'XXX',
               desc: 'testDesc',
             )
             .run();
@@ -233,11 +234,11 @@ void main() {
       test('returns a [Unit] when the call to accountsLocalDS is successful', () async {
         // Arrange
         when(
-          () => mockAccountsLocalDS.updateAccountDetails(any()),
+          () => mockAccountsLocalDAO.updateAccount(any()),
         ).thenAnswer((_) => TaskEither.right(unit));
 
         // Act
-        final result = await accountsRepo.updateAccountDetails(testAccount).run();
+        final result = await accountsRepo.updateAccount(testAccount).run();
 
         // Assert
         expect(result.isRight(), true);
@@ -250,7 +251,7 @@ void main() {
         // Arrange
         const currentAction = AccountsAction.updateAccountDetails;
         when(
-          () => mockAccountsLocalDS.updateAccountDetails(any()),
+          () => mockAccountsLocalDAO.updateAccount(any()),
         ).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,
@@ -258,7 +259,7 @@ void main() {
             )));
 
         // Act
-        final result = await accountsRepo.updateAccountDetails(testAccount).run();
+        final result = await accountsRepo.updateAccount(testAccount).run();
 
         // Assert
         expect(result.isLeft(), true);
@@ -273,7 +274,7 @@ void main() {
       test('returns a [Unit] when the call to accountsLocalDS is successful', () async {
         // Arrange
         when(
-          () => mockAccountsLocalDS.deleteAccount(any()),
+          () => mockAccountsLocalDAO.deleteAccount(any()),
         ).thenAnswer((_) => TaskEither.right(unit));
 
         // Act
@@ -290,7 +291,7 @@ void main() {
         // Arrange
         const currentAction = AccountsAction.deleteAccount;
         when(
-          () => mockAccountsLocalDS.deleteAccount(any()),
+          () => mockAccountsLocalDAO.deleteAccount(any()),
         ).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,

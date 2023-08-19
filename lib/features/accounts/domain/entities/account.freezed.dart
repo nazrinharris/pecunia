@@ -16,20 +16,13 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Account {
-  String get id =>
-      throw _privateConstructorUsedError; // Unique identifier for the account
-  String get creatorUid =>
-      throw _privateConstructorUsedError; // The uid of the user who created the account
-  String get name =>
-      throw _privateConstructorUsedError; // The name of the account
-  double get initialBalance =>
-      throw _privateConstructorUsedError; // The initial balance when the account was created
-  double get balance =>
-      throw _privateConstructorUsedError; // The current balance of the account
-  String get currency =>
-      throw _privateConstructorUsedError; // The currency used by the account
-  DateTime get createdOn =>
-      throw _privateConstructorUsedError; // The date when the account was created
+  String get id => throw _privateConstructorUsedError;
+  String get creatorUid => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  double get initialBalance => throw _privateConstructorUsedError;
+  double get balance => throw _privateConstructorUsedError;
+  Currency get currency => throw _privateConstructorUsedError;
+  DateTime get createdOn => throw _privateConstructorUsedError;
   AccountDescription get description => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -47,7 +40,7 @@ abstract class $AccountCopyWith<$Res> {
       String name,
       double initialBalance,
       double balance,
-      String currency,
+      Currency currency,
       DateTime createdOn,
       AccountDescription description});
 }
@@ -98,7 +91,7 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
       currency: null == currency
           ? _value.currency
           : currency // ignore: cast_nullable_to_non_nullable
-              as String,
+              as Currency,
       createdOn: null == createdOn
           ? _value.createdOn
           : createdOn // ignore: cast_nullable_to_non_nullable
@@ -124,7 +117,7 @@ abstract class _$$_AccountCopyWith<$Res> implements $AccountCopyWith<$Res> {
       String name,
       double initialBalance,
       double balance,
-      String currency,
+      Currency currency,
       DateTime createdOn,
       AccountDescription description});
 }
@@ -172,7 +165,7 @@ class __$$_AccountCopyWithImpl<$Res>
       currency: null == currency
           ? _value.currency
           : currency // ignore: cast_nullable_to_non_nullable
-              as String,
+              as Currency,
       createdOn: null == createdOn
           ? _value.createdOn
           : createdOn // ignore: cast_nullable_to_non_nullable
@@ -201,25 +194,18 @@ class _$_Account extends _Account {
 
   @override
   final String id;
-// Unique identifier for the account
   @override
   final String creatorUid;
-// The uid of the user who created the account
   @override
   final String name;
-// The name of the account
   @override
   final double initialBalance;
-// The initial balance when the account was created
   @override
   final double balance;
-// The current balance of the account
   @override
-  final String currency;
-// The currency used by the account
+  final Currency currency;
   @override
   final DateTime createdOn;
-// The date when the account was created
   @override
   final AccountDescription description;
 
@@ -266,26 +252,26 @@ abstract class _Account extends Account {
       required final String name,
       required final double initialBalance,
       required final double balance,
-      required final String currency,
+      required final Currency currency,
       required final DateTime createdOn,
       required final AccountDescription description}) = _$_Account;
   const _Account._() : super._();
 
   @override
   String get id;
-  @override // Unique identifier for the account
+  @override
   String get creatorUid;
-  @override // The uid of the user who created the account
+  @override
   String get name;
-  @override // The name of the account
+  @override
   double get initialBalance;
-  @override // The initial balance when the account was created
+  @override
   double get balance;
-  @override // The current balance of the account
-  String get currency;
-  @override // The currency used by the account
+  @override
+  Currency get currency;
+  @override
   DateTime get createdOn;
-  @override // The date when the account was created
+  @override
   AccountDescription get description;
   @override
   @JsonKey(ignore: true)

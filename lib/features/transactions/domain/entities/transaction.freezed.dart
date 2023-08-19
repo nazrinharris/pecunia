@@ -23,8 +23,8 @@ mixin _$Transaction {
       throw _privateConstructorUsedError;
   DateTime get transactionDate => throw _privateConstructorUsedError;
   String get accountId => throw _privateConstructorUsedError;
-  TransactionType get type => throw _privateConstructorUsedError;
   FundDetails get fundDetails => throw _privateConstructorUsedError;
+  TransferDetails? get transferDetails => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TransactionCopyWith<Transaction> get copyWith =>
@@ -44,10 +44,11 @@ abstract class $TransactionCopyWith<$Res> {
       TransactionDescription transactionDescription,
       DateTime transactionDate,
       String accountId,
-      TransactionType type,
-      FundDetails fundDetails});
+      FundDetails fundDetails,
+      TransferDetails? transferDetails});
 
   $FundDetailsCopyWith<$Res> get fundDetails;
+  $TransferDetailsCopyWith<$Res>? get transferDetails;
 }
 
 /// @nodoc
@@ -69,8 +70,8 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     Object? transactionDescription = null,
     Object? transactionDate = null,
     Object? accountId = null,
-    Object? type = null,
     Object? fundDetails = null,
+    Object? transferDetails = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -97,14 +98,14 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
           ? _value.accountId
           : accountId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as TransactionType,
       fundDetails: null == fundDetails
           ? _value.fundDetails
           : fundDetails // ignore: cast_nullable_to_non_nullable
               as FundDetails,
+      transferDetails: freezed == transferDetails
+          ? _value.transferDetails
+          : transferDetails // ignore: cast_nullable_to_non_nullable
+              as TransferDetails?,
     ) as $Val);
   }
 
@@ -113,6 +114,18 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
   $FundDetailsCopyWith<$Res> get fundDetails {
     return $FundDetailsCopyWith<$Res>(_value.fundDetails, (value) {
       return _then(_value.copyWith(fundDetails: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TransferDetailsCopyWith<$Res>? get transferDetails {
+    if (_value.transferDetails == null) {
+      return null;
+    }
+
+    return $TransferDetailsCopyWith<$Res>(_value.transferDetails!, (value) {
+      return _then(_value.copyWith(transferDetails: value) as $Val);
     });
   }
 }
@@ -132,11 +145,13 @@ abstract class _$$_TransactionCopyWith<$Res>
       TransactionDescription transactionDescription,
       DateTime transactionDate,
       String accountId,
-      TransactionType type,
-      FundDetails fundDetails});
+      FundDetails fundDetails,
+      TransferDetails? transferDetails});
 
   @override
   $FundDetailsCopyWith<$Res> get fundDetails;
+  @override
+  $TransferDetailsCopyWith<$Res>? get transferDetails;
 }
 
 /// @nodoc
@@ -156,8 +171,8 @@ class __$$_TransactionCopyWithImpl<$Res>
     Object? transactionDescription = null,
     Object? transactionDate = null,
     Object? accountId = null,
-    Object? type = null,
     Object? fundDetails = null,
+    Object? transferDetails = freezed,
   }) {
     return _then(_$_Transaction(
       id: null == id
@@ -184,21 +199,21 @@ class __$$_TransactionCopyWithImpl<$Res>
           ? _value.accountId
           : accountId // ignore: cast_nullable_to_non_nullable
               as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as TransactionType,
       fundDetails: null == fundDetails
           ? _value.fundDetails
           : fundDetails // ignore: cast_nullable_to_non_nullable
               as FundDetails,
+      transferDetails: freezed == transferDetails
+          ? _value.transferDetails
+          : transferDetails // ignore: cast_nullable_to_non_nullable
+              as TransferDetails?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_Transaction extends _Transaction {
+class _$_Transaction extends _Transaction with DiagnosticableTreeMixin {
   const _$_Transaction(
       {required this.id,
       required this.creatorUid,
@@ -206,8 +221,8 @@ class _$_Transaction extends _Transaction {
       required this.transactionDescription,
       required this.transactionDate,
       required this.accountId,
-      required this.type,
-      required this.fundDetails})
+      required this.fundDetails,
+      required this.transferDetails})
       : super._();
 
   @override
@@ -223,13 +238,29 @@ class _$_Transaction extends _Transaction {
   @override
   final String accountId;
   @override
-  final TransactionType type;
-  @override
   final FundDetails fundDetails;
+  @override
+  final TransferDetails? transferDetails;
 
   @override
-  String toString() {
-    return 'Transaction(id: $id, creatorUid: $creatorUid, name: $name, transactionDescription: $transactionDescription, transactionDate: $transactionDate, accountId: $accountId, type: $type, fundDetails: $fundDetails)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'Transaction(id: $id, creatorUid: $creatorUid, name: $name, transactionDescription: $transactionDescription, transactionDate: $transactionDate, accountId: $accountId, fundDetails: $fundDetails, transferDetails: $transferDetails)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'Transaction'))
+      ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('creatorUid', creatorUid))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(
+          DiagnosticsProperty('transactionDescription', transactionDescription))
+      ..add(DiagnosticsProperty('transactionDate', transactionDate))
+      ..add(DiagnosticsProperty('accountId', accountId))
+      ..add(DiagnosticsProperty('fundDetails', fundDetails))
+      ..add(DiagnosticsProperty('transferDetails', transferDetails));
   }
 
   @override
@@ -247,14 +278,23 @@ class _$_Transaction extends _Transaction {
                 other.transactionDate == transactionDate) &&
             (identical(other.accountId, accountId) ||
                 other.accountId == accountId) &&
-            (identical(other.type, type) || other.type == type) &&
             (identical(other.fundDetails, fundDetails) ||
-                other.fundDetails == fundDetails));
+                other.fundDetails == fundDetails) &&
+            (identical(other.transferDetails, transferDetails) ||
+                other.transferDetails == transferDetails));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, creatorUid, name,
-      transactionDescription, transactionDate, accountId, type, fundDetails);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      creatorUid,
+      name,
+      transactionDescription,
+      transactionDate,
+      accountId,
+      fundDetails,
+      transferDetails);
 
   @JsonKey(ignore: true)
   @override
@@ -271,8 +311,8 @@ abstract class _Transaction extends Transaction {
       required final TransactionDescription transactionDescription,
       required final DateTime transactionDate,
       required final String accountId,
-      required final TransactionType type,
-      required final FundDetails fundDetails}) = _$_Transaction;
+      required final FundDetails fundDetails,
+      required final TransferDetails? transferDetails}) = _$_Transaction;
   const _Transaction._() : super._();
 
   @override
@@ -288,9 +328,9 @@ abstract class _Transaction extends Transaction {
   @override
   String get accountId;
   @override
-  TransactionType get type;
-  @override
   FundDetails get fundDetails;
+  @override
+  TransferDetails? get transferDetails;
   @override
   @JsonKey(ignore: true)
   _$$_TransactionCopyWith<_$_Transaction> get copyWith =>
@@ -298,12 +338,196 @@ abstract class _Transaction extends Transaction {
 }
 
 /// @nodoc
+mixin _$TransferDetails {
+  String get linkedAccountId => throw _privateConstructorUsedError;
+  String get linkedTransactionId => throw _privateConstructorUsedError;
+  TransferDescription get transferDescription =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $TransferDetailsCopyWith<TransferDetails> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransferDetailsCopyWith<$Res> {
+  factory $TransferDetailsCopyWith(
+          TransferDetails value, $Res Function(TransferDetails) then) =
+      _$TransferDetailsCopyWithImpl<$Res, TransferDetails>;
+  @useResult
+  $Res call(
+      {String linkedAccountId,
+      String linkedTransactionId,
+      TransferDescription transferDescription});
+}
+
+/// @nodoc
+class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
+    implements $TransferDetailsCopyWith<$Res> {
+  _$TransferDetailsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? linkedAccountId = null,
+    Object? linkedTransactionId = null,
+    Object? transferDescription = null,
+  }) {
+    return _then(_value.copyWith(
+      linkedAccountId: null == linkedAccountId
+          ? _value.linkedAccountId
+          : linkedAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkedTransactionId: null == linkedTransactionId
+          ? _value.linkedTransactionId
+          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      transferDescription: null == transferDescription
+          ? _value.transferDescription
+          : transferDescription // ignore: cast_nullable_to_non_nullable
+              as TransferDescription,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_TransferDetailsCopyWith<$Res>
+    implements $TransferDetailsCopyWith<$Res> {
+  factory _$$_TransferDetailsCopyWith(
+          _$_TransferDetails value, $Res Function(_$_TransferDetails) then) =
+      __$$_TransferDetailsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String linkedAccountId,
+      String linkedTransactionId,
+      TransferDescription transferDescription});
+}
+
+/// @nodoc
+class __$$_TransferDetailsCopyWithImpl<$Res>
+    extends _$TransferDetailsCopyWithImpl<$Res, _$_TransferDetails>
+    implements _$$_TransferDetailsCopyWith<$Res> {
+  __$$_TransferDetailsCopyWithImpl(
+      _$_TransferDetails _value, $Res Function(_$_TransferDetails) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? linkedAccountId = null,
+    Object? linkedTransactionId = null,
+    Object? transferDescription = null,
+  }) {
+    return _then(_$_TransferDetails(
+      linkedAccountId: null == linkedAccountId
+          ? _value.linkedAccountId
+          : linkedAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkedTransactionId: null == linkedTransactionId
+          ? _value.linkedTransactionId
+          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      transferDescription: null == transferDescription
+          ? _value.transferDescription
+          : transferDescription // ignore: cast_nullable_to_non_nullable
+              as TransferDescription,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_TransferDetails extends _TransferDetails with DiagnosticableTreeMixin {
+  const _$_TransferDetails(
+      {required this.linkedAccountId,
+      required this.linkedTransactionId,
+      required this.transferDescription})
+      : assert(
+            linkedAccountId != null && linkedTransactionId != null ||
+                linkedAccountId == null && linkedTransactionId == null,
+            'Either provide all fields or none'),
+        super._();
+
+  @override
+  final String linkedAccountId;
+  @override
+  final String linkedTransactionId;
+  @override
+  final TransferDescription transferDescription;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'TransferDetails(linkedAccountId: $linkedAccountId, linkedTransactionId: $linkedTransactionId, transferDescription: $transferDescription)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'TransferDetails'))
+      ..add(DiagnosticsProperty('linkedAccountId', linkedAccountId))
+      ..add(DiagnosticsProperty('linkedTransactionId', linkedTransactionId))
+      ..add(DiagnosticsProperty('transferDescription', transferDescription));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_TransferDetails &&
+            (identical(other.linkedAccountId, linkedAccountId) ||
+                other.linkedAccountId == linkedAccountId) &&
+            (identical(other.linkedTransactionId, linkedTransactionId) ||
+                other.linkedTransactionId == linkedTransactionId) &&
+            (identical(other.transferDescription, transferDescription) ||
+                other.transferDescription == transferDescription));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, linkedAccountId, linkedTransactionId, transferDescription);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
+      __$$_TransferDetailsCopyWithImpl<_$_TransferDetails>(this, _$identity);
+}
+
+abstract class _TransferDetails extends TransferDetails {
+  const factory _TransferDetails(
+          {required final String linkedAccountId,
+          required final String linkedTransactionId,
+          required final TransferDescription transferDescription}) =
+      _$_TransferDetails;
+  const _TransferDetails._() : super._();
+
+  @override
+  String get linkedAccountId;
+  @override
+  String get linkedTransactionId;
+  @override
+  TransferDescription get transferDescription;
+  @override
+  @JsonKey(ignore: true)
+  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$FundDetails {
-  double get originalAmount => throw _privateConstructorUsedError;
-  String get originalCurrency => throw _privateConstructorUsedError;
+  double get baseAmount => throw _privateConstructorUsedError;
+  Currency get baseCurrency => throw _privateConstructorUsedError;
+  TransactionType get transactionType => throw _privateConstructorUsedError;
   double? get exchangeRate => throw _privateConstructorUsedError;
-  double? get exchangedToAmount => throw _privateConstructorUsedError;
-  String? get exchangedToCurrency => throw _privateConstructorUsedError;
+  double? get targetAmount => throw _privateConstructorUsedError;
+  Currency? get targetCurrency => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FundDetailsCopyWith<FundDetails> get copyWith =>
@@ -317,11 +541,12 @@ abstract class $FundDetailsCopyWith<$Res> {
       _$FundDetailsCopyWithImpl<$Res, FundDetails>;
   @useResult
   $Res call(
-      {double originalAmount,
-      String originalCurrency,
+      {double baseAmount,
+      Currency baseCurrency,
+      TransactionType transactionType,
       double? exchangeRate,
-      double? exchangedToAmount,
-      String? exchangedToCurrency});
+      double? targetAmount,
+      Currency? targetCurrency});
 }
 
 /// @nodoc
@@ -337,33 +562,38 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? originalAmount = null,
-    Object? originalCurrency = null,
+    Object? baseAmount = null,
+    Object? baseCurrency = null,
+    Object? transactionType = null,
     Object? exchangeRate = freezed,
-    Object? exchangedToAmount = freezed,
-    Object? exchangedToCurrency = freezed,
+    Object? targetAmount = freezed,
+    Object? targetCurrency = freezed,
   }) {
     return _then(_value.copyWith(
-      originalAmount: null == originalAmount
-          ? _value.originalAmount
-          : originalAmount // ignore: cast_nullable_to_non_nullable
+      baseAmount: null == baseAmount
+          ? _value.baseAmount
+          : baseAmount // ignore: cast_nullable_to_non_nullable
               as double,
-      originalCurrency: null == originalCurrency
-          ? _value.originalCurrency
-          : originalCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
+      baseCurrency: null == baseCurrency
+          ? _value.baseCurrency
+          : baseCurrency // ignore: cast_nullable_to_non_nullable
+              as Currency,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionType,
       exchangeRate: freezed == exchangeRate
           ? _value.exchangeRate
           : exchangeRate // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToAmount: freezed == exchangedToAmount
-          ? _value.exchangedToAmount
-          : exchangedToAmount // ignore: cast_nullable_to_non_nullable
+      targetAmount: freezed == targetAmount
+          ? _value.targetAmount
+          : targetAmount // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToCurrency: freezed == exchangedToCurrency
-          ? _value.exchangedToCurrency
-          : exchangedToCurrency // ignore: cast_nullable_to_non_nullable
-              as String?,
+      targetCurrency: freezed == targetCurrency
+          ? _value.targetCurrency
+          : targetCurrency // ignore: cast_nullable_to_non_nullable
+              as Currency?,
     ) as $Val);
   }
 }
@@ -377,11 +607,12 @@ abstract class _$$_FundDetailsCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {double originalAmount,
-      String originalCurrency,
+      {double baseAmount,
+      Currency baseCurrency,
+      TransactionType transactionType,
       double? exchangeRate,
-      double? exchangedToAmount,
-      String? exchangedToCurrency});
+      double? targetAmount,
+      Currency? targetCurrency});
 }
 
 /// @nodoc
@@ -395,61 +626,91 @@ class __$$_FundDetailsCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? originalAmount = null,
-    Object? originalCurrency = null,
+    Object? baseAmount = null,
+    Object? baseCurrency = null,
+    Object? transactionType = null,
     Object? exchangeRate = freezed,
-    Object? exchangedToAmount = freezed,
-    Object? exchangedToCurrency = freezed,
+    Object? targetAmount = freezed,
+    Object? targetCurrency = freezed,
   }) {
     return _then(_$_FundDetails(
-      originalAmount: null == originalAmount
-          ? _value.originalAmount
-          : originalAmount // ignore: cast_nullable_to_non_nullable
+      baseAmount: null == baseAmount
+          ? _value.baseAmount
+          : baseAmount // ignore: cast_nullable_to_non_nullable
               as double,
-      originalCurrency: null == originalCurrency
-          ? _value.originalCurrency
-          : originalCurrency // ignore: cast_nullable_to_non_nullable
-              as String,
+      baseCurrency: null == baseCurrency
+          ? _value.baseCurrency
+          : baseCurrency // ignore: cast_nullable_to_non_nullable
+              as Currency,
+      transactionType: null == transactionType
+          ? _value.transactionType
+          : transactionType // ignore: cast_nullable_to_non_nullable
+              as TransactionType,
       exchangeRate: freezed == exchangeRate
           ? _value.exchangeRate
           : exchangeRate // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToAmount: freezed == exchangedToAmount
-          ? _value.exchangedToAmount
-          : exchangedToAmount // ignore: cast_nullable_to_non_nullable
+      targetAmount: freezed == targetAmount
+          ? _value.targetAmount
+          : targetAmount // ignore: cast_nullable_to_non_nullable
               as double?,
-      exchangedToCurrency: freezed == exchangedToCurrency
-          ? _value.exchangedToCurrency
-          : exchangedToCurrency // ignore: cast_nullable_to_non_nullable
-              as String?,
+      targetCurrency: freezed == targetCurrency
+          ? _value.targetCurrency
+          : targetCurrency // ignore: cast_nullable_to_non_nullable
+              as Currency?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_FundDetails implements _FundDetails {
+class _$_FundDetails extends _FundDetails with DiagnosticableTreeMixin {
   const _$_FundDetails(
-      {required this.originalAmount,
-      required this.originalCurrency,
-      this.exchangeRate,
-      this.exchangedToAmount,
-      this.exchangedToCurrency});
+      {required this.baseAmount,
+      required this.baseCurrency,
+      required this.transactionType,
+      required this.exchangeRate,
+      required this.targetAmount,
+      required this.targetCurrency})
+      : assert(
+            exchangeRate != null &&
+                    targetAmount != null &&
+                    targetCurrency != null ||
+                exchangeRate == null &&
+                    targetAmount == null &&
+                    targetCurrency == null,
+            'Invalid multi-currency fields. Either provide all fields or none'),
+        super._();
 
   @override
-  final double originalAmount;
+  final double baseAmount;
   @override
-  final String originalCurrency;
+  final Currency baseCurrency;
+  @override
+  final TransactionType transactionType;
   @override
   final double? exchangeRate;
   @override
-  final double? exchangedToAmount;
+  final double? targetAmount;
   @override
-  final String? exchangedToCurrency;
+  final Currency? targetCurrency;
 
   @override
-  String toString() {
-    return 'FundDetails(originalAmount: $originalAmount, originalCurrency: $originalCurrency, exchangeRate: $exchangeRate, exchangedToAmount: $exchangedToAmount, exchangedToCurrency: $exchangedToCurrency)';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'FundDetails(baseAmount: $baseAmount, baseCurrency: $baseCurrency, transactionType: $transactionType, exchangeRate: $exchangeRate, targetAmount: $targetAmount, targetCurrency: $targetCurrency)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'FundDetails'))
+      ..add(DiagnosticsProperty('baseAmount', baseAmount))
+      ..add(DiagnosticsProperty('baseCurrency', baseCurrency))
+      ..add(DiagnosticsProperty('transactionType', transactionType))
+      ..add(DiagnosticsProperty('exchangeRate', exchangeRate))
+      ..add(DiagnosticsProperty('targetAmount', targetAmount))
+      ..add(DiagnosticsProperty('targetCurrency', targetCurrency));
   }
 
   @override
@@ -457,21 +718,23 @@ class _$_FundDetails implements _FundDetails {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_FundDetails &&
-            (identical(other.originalAmount, originalAmount) ||
-                other.originalAmount == originalAmount) &&
-            (identical(other.originalCurrency, originalCurrency) ||
-                other.originalCurrency == originalCurrency) &&
+            (identical(other.baseAmount, baseAmount) ||
+                other.baseAmount == baseAmount) &&
+            (identical(other.baseCurrency, baseCurrency) ||
+                other.baseCurrency == baseCurrency) &&
+            (identical(other.transactionType, transactionType) ||
+                other.transactionType == transactionType) &&
             (identical(other.exchangeRate, exchangeRate) ||
                 other.exchangeRate == exchangeRate) &&
-            (identical(other.exchangedToAmount, exchangedToAmount) ||
-                other.exchangedToAmount == exchangedToAmount) &&
-            (identical(other.exchangedToCurrency, exchangedToCurrency) ||
-                other.exchangedToCurrency == exchangedToCurrency));
+            (identical(other.targetAmount, targetAmount) ||
+                other.targetAmount == targetAmount) &&
+            (identical(other.targetCurrency, targetCurrency) ||
+                other.targetCurrency == targetCurrency));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, originalAmount, originalCurrency,
-      exchangeRate, exchangedToAmount, exchangedToCurrency);
+  int get hashCode => Object.hash(runtimeType, baseAmount, baseCurrency,
+      transactionType, exchangeRate, targetAmount, targetCurrency);
 
   @JsonKey(ignore: true)
   @override
@@ -480,24 +743,28 @@ class _$_FundDetails implements _FundDetails {
       __$$_FundDetailsCopyWithImpl<_$_FundDetails>(this, _$identity);
 }
 
-abstract class _FundDetails implements FundDetails {
+abstract class _FundDetails extends FundDetails {
   const factory _FundDetails(
-      {required final double originalAmount,
-      required final String originalCurrency,
-      final double? exchangeRate,
-      final double? exchangedToAmount,
-      final String? exchangedToCurrency}) = _$_FundDetails;
+      {required final double baseAmount,
+      required final Currency baseCurrency,
+      required final TransactionType transactionType,
+      required final double? exchangeRate,
+      required final double? targetAmount,
+      required final Currency? targetCurrency}) = _$_FundDetails;
+  const _FundDetails._() : super._();
 
   @override
-  double get originalAmount;
+  double get baseAmount;
   @override
-  String get originalCurrency;
+  Currency get baseCurrency;
+  @override
+  TransactionType get transactionType;
   @override
   double? get exchangeRate;
   @override
-  double? get exchangedToAmount;
+  double? get targetAmount;
   @override
-  String? get exchangedToCurrency;
+  Currency? get targetCurrency;
   @override
   @JsonKey(ignore: true)
   _$$_FundDetailsCopyWith<_$_FundDetails> get copyWith =>

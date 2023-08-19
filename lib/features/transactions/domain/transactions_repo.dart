@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
-import 'package:pecunia/features/transactions/data/transactions_local_ds.dart';
+import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -10,24 +14,33 @@ part 'transactions_repo.g.dart';
 
 @riverpod
 TransactionsRepo transactionsRepo(TransactionsRepoRef ref) => TransactionsRepo(
-      ref.watch(transactionsLocalDSProvider),
+      ref.watch(transactionsLocalDAOProvider),
       ref.watch(uuidProvider),
     );
 
 enum TransactionsAction {
   create,
+  createTransferTransaction,
   delete,
+  deleteTransferTransaction,
   edit,
+  editTransferTxn,
   getTransactionsByAccount,
   getTransactionById,
   getAllTransactions,
   unknown,
+
+  getTransactionAmount,
+  getTransactionCurrency,
+  fundDetailsFromDTO,
+  mapAccountToDTO,
 }
 
 class TransactionsRepo {
-  TransactionsRepo(this.transactionsLocalDS, this.uuid);
+  TransactionsRepo(this.transactionsLocalDAO, this.uuid);
 
-  final TransactionsLocalDS transactionsLocalDS;
+  final TransactionsLocalDAO transactionsLocalDAO;
+  final TransactionsRepoHelper _helper = TransactionsRepoHelper();
   final Uuid uuid;
 
   TaskEither<TransactionsFailure, Unit> createTransaction({
@@ -36,12 +49,12 @@ class TransactionsRepo {
     required DateTime transactionDate,
     required String accountId,
     required String type,
-    required double originalAmount,
-    required String originalCurrency,
-    double? exchangeRate,
-    double? exchangedToAmount,
-    String? exchangedToCurrency,
-    String? transactionDescription,
+    required double baseAmount,
+    required String baseCurrency,
+    required double? exchangeRate,
+    required double? targetAmount,
+    required String? targetCurrency,
+    required String? transactionDescription,
   }) {
     const currentAction = TransactionsAction.create;
     final txn = Transaction.newTransaction(
@@ -50,42 +63,139 @@ class TransactionsRepo {
       transactionDescription: TransactionDescription(transactionDescription),
       transactionDate: transactionDate,
       accountId: accountId,
-      type: TransactionType.fromString(type, currentAction),
       fundDetails: FundDetails(
-        originalAmount: originalAmount,
-        originalCurrency: originalCurrency,
+        transactionType: TransactionType.fromString(type, currentAction),
+        baseAmount: baseAmount,
+        baseCurrency: PecuniaCurrencies.fromString(baseCurrency),
         exchangeRate: exchangeRate,
-        exchangedToAmount: exchangedToAmount,
-        exchangedToCurrency: exchangedToCurrency,
+        targetAmount: targetAmount,
+        targetCurrency: targetCurrency == null ? null : PecuniaCurrencies.fromString(targetCurrency),
       ),
+      transferDetails: null,
       uuid: uuid,
     );
 
-    return transactionsLocalDS.createTransaction(txn.toDTO());
+    return transactionsLocalDAO.createTransaction(txn);
   }
+
+  // TODO: Consider if the checks should be put as asserts or not
+  TaskEither<TransactionsFailure, Unit> createTransferTransaction({
+    required Account sourceAccount,
+    required Account destinationAccount,
+    required double sourceTransactionAmount,
+    required double? destinationTransactionAmount,
+    required double? exchangeRate,
+    required String? transferDescription,
+  }) =>
+      Transaction.generateTransferTxnPair(
+        sourceAccount: sourceAccount,
+        destinationAccount: destinationAccount,
+        sourceTransactionAmount: sourceTransactionAmount,
+        destinationTransactionAmount: destinationTransactionAmount,
+        exchangeRate: exchangeRate,
+        transferDescription: transferDescription,
+        uuid: uuid,
+        currentAction: TransactionsAction.createTransferTransaction,
+        defaultSourceTxnId: null,
+        defaultDestinationTxnId: null,
+      ).toTaskEither().flatMap(
+            (txns) => transactionsLocalDAO.createTransferTransaction(
+                sourceTxn: txns.sourceTxn, destinationTxn: txns.destinationTxn),
+          );
 
   TaskEither<TransactionsFailure, List<Transaction>> getAllTransactions() {
-    const currentAction = TransactionsAction.getAllTransactions;
-    return transactionsLocalDS.getAllTransactions().map((transactions) {
-      return transactions.map((txn) => Transaction.fromDTO(txn, currentAction)).toList();
-    });
+    return transactionsLocalDAO.getAllTransactions().flatMap(_helper.mapDTOListToTransactionList);
   }
 
-  TaskEither<TransactionsFailure, List<Transaction>> getTrasactionsByAccount(String accountId) {
-    const currentAction = TransactionsAction.getTransactionsByAccount;
-    return transactionsLocalDS.getTransactionsByAccount(accountId).map((transactions) {
-      return transactions.map((txn) => Transaction.fromDTO(txn, currentAction)).toList();
-    });
+  TaskEither<TransactionsFailure, List<Transaction>> getTransactionsByAccount(String accountId) {
+    return transactionsLocalDAO
+        .getTransactionsByAccount(accountId)
+        .flatMap(_helper.mapDTOListToTransactionList);
   }
 
-  TaskEither<TransactionsFailure, Unit> updateTransaction({
+  TaskEither<TransactionsFailure, Transaction> getTransactionById(String txnId) {
+    return transactionsLocalDAO.getTransactionById(txnId).map(Transaction.fromDTO);
+  }
+
+  TaskEither<TransactionsFailure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
   }) {
-    return transactionsLocalDS.updateTransaction(newTxnDTO: newTxn.toDTO(), oldTxnDto: oldTxn.toDTO());
+    return transactionsLocalDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
+  }
+
+  TaskEither<TransactionsFailure, Unit> editTransferTransaction({
+    required Transaction oldSourceTxn,
+    required Transaction oldDestinationTxn,
+    required Transaction newSourceTxn,
+    required Transaction newDestinationTxn,
+  }) {
+    return transactionsLocalDAO.editTransferTxn(
+      oldSourceTxn: oldSourceTxn,
+      oldDestinationTxn: oldDestinationTxn,
+      newSourceTxn: newSourceTxn,
+      newDestinationTxn: newDestinationTxn,
+    );
   }
 
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {
-    return transactionsLocalDS.deleteTransaction(transactionToDelete.toDTO());
+    return transactionsLocalDAO.deleteTransaction(transactionToDelete);
+  }
+
+  TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
+    return transactionsLocalDAO.deleteTransferTransaction(transferTxnToDelete);
+  }
+}
+
+/// This class provides utility methods for the [TransactionsRepo] class.
+///
+/// The [TransactionsRepoHelper] class serves to simplify the [TransactionsRepo] class by handling
+/// specific tasks, such as converting [Transaction] objects to [TransactionDTO].
+///
+/// It is designed to keep the code in [TransactionsRepo] more clean and readable
+/// by abstracting away some of the lower-level operations related to account data conversion.
+@visibleForTesting
+class TransactionsRepoHelper {
+  /// Converts an [Transaction] object to an [TransactionDTO] object.
+  ///
+  /// If the conversion is successful, it will return a [TaskEither] with the Right side containing the [TransactionDTO].
+  /// If an error occurs during the conversion, it will return a [TaskEither] with the Left side containing an [TransactionsFailure].
+  TaskEither<TransactionsFailure, TransactionDTO> mapTransactionToDTO(Transaction txn) {
+    return TaskEither.tryCatch(
+      () async => txn.toDTO(),
+      (error, stackTrace) => TransactionsFailure(
+        stackTrace: stackTrace,
+        message: TransactionsErrorType.cannotConvertToDTO.message,
+        errorType: TransactionsErrorType.cannotConvertToDTO,
+        transactionsAction: TransactionsAction.mapAccountToDTO,
+      ),
+    );
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> mapDTOListToTransactionList(
+    List<TransactionDTO> dtoList,
+  ) {
+    return TaskEither.tryCatch(() async {
+      return dtoList.map(Transaction.fromDTO).toList();
+    }, (error, stackTrace) {
+      if (error is TransactionsException) {
+        return TransactionsFailure.fromException(error);
+      }
+
+      return TransactionsFailure(
+        stackTrace: stackTrace,
+        message: TransactionsErrorType.cannotConvertFromDTO.message,
+        errorType: TransactionsErrorType.cannotConvertFromDTO,
+        transactionsAction: TransactionsAction.unknown,
+      );
+    });
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> sequenceTE(
+      List<TaskEither<TransactionsFailure, Transaction>> list) {
+    return list.fold(
+      TaskEither.right([]),
+      (previous, current) => previous.flatMap((list) => current.map((value) => list..add(value))),
+    );
   }
 }

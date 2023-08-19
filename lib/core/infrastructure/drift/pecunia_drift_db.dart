@@ -4,8 +4,8 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:pecunia/features/accounts/dao_tables/accounts_dao_tables.dart';
-import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
+import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
+import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pecunia_drift_db.g.dart';
@@ -19,8 +19,8 @@ PecuniaDB pecuniaDB(PecuniaDBRef ref) => PecuniaDB(_openConnection());
     TransactionsTable,
   ],
   daos: [
-    AccountsDAO,
-    TransactionsDAO,
+    AccountsLocalDAO,
+    TransactionsLocalDAO,
   ],
 )
 class PecuniaDB extends _$PecuniaDB {

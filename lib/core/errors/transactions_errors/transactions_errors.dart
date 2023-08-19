@@ -20,10 +20,51 @@ const unknownTransactionErrorMessage = "We're not sure what happened, please try
 enum TransactionsErrorType {
   unknown(unknownTransactionErrorCode, unknownTransactionErrorMessage),
   cannotConvertToDTO(
-      'cannot-convert-to-dto', 'Something went wrong while converting the transaction to a DTO'),
-  sqliteException('sqlite-exception', 'Something went wrong while accessing the database'),
-  invalidType('invalid-type', 'The transaction type is invalid'),
-  transactionNotFound('transaction-not-found', 'The transaction was not found in the database');
+    'cannot-convert-to-dto',
+    'Something went wrong while converting the transaction to a DTO',
+  ),
+  cannotConvertFromDTO(
+    'cannot-convert-from-dto',
+    'Something went wrong while converting the DTO to a transaction',
+  ),
+  sqliteException(
+    'sqlite-exception',
+    'Something went wrong while accessing the database',
+  ),
+  invalidType(
+    'invalid-type',
+    'The transaction type is invalid',
+  ),
+  mismatchAccountBalance(
+    'mismatch-account-balance',
+    'Reported account balance is not the same as actual account balance',
+  ),
+  transactionNotFound(
+    'transaction-not-found',
+    'The transaction was not found in the database',
+  ),
+  invalidMultiCurrencyFields(
+    'invalid-multi-currency-fields',
+    'Exchange rate, target amount, and target currency must all be provided or all be null.',
+  ),
+  invalidTransferFields(
+    'invalid-transfer-fields',
+    'Linked transaction ID and linked account ID must both be provided or both be null.',
+  ),
+  invalidExchangedAmount(
+    'invalid-exchanged-amount',
+    'The provided target amount does not match the computed target amount based on the provided base amount and exchange rate.',
+  ),
+  sameSourceAndDestinationAccount(
+    'same-source-and-destination-account',
+    'The source and destination accounts are the same.',
+  ),
+  missingExchangeRateForDifferentCurrencies(
+    'missing-exchange-rate-for-different-currencies',
+    'Exchange rate is missing for a transfer between different currencies.',
+  ),
+  notATransferTransaction('not-a-transfer-transaction',
+      'Deletion of a transfer transaction failed because the provided transaction is not a transfer transaction.');
 
   const TransactionsErrorType(this.code, this.message);
 
@@ -48,6 +89,7 @@ class TransactionsException with _$TransactionsException implements Exception {
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
     required TransactionsAction transactionsAction,
+    String? message,
   }) = _TransactionsException;
 
   TransactionsException._();
@@ -55,6 +97,8 @@ class TransactionsException with _$TransactionsException implements Exception {
   factory TransactionsException.unknown({
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
+    @Default(TransactionsAction.unknown) TransactionsAction transactionsAction,
+    String? message,
   }) = _UnknownTransactionsException;
 
   factory TransactionsException.fromFailure(TransactionsFailure failure) {
@@ -89,6 +133,16 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
     @Default(TransactionsErrorType.unknown) TransactionsErrorType errorType,
     Object? rawException,
   }) = _UnknownTransactionsFailure;
+
+  factory TransactionsFailure.fromException(TransactionsException exception) {
+    return TransactionsFailure(
+      stackTrace: exception.stackTrace,
+      errorType: exception.errorType,
+      message: exception.message ?? exception.errorType.message,
+      transactionsAction: exception.transactionsAction,
+      rawException: exception,
+    );
+  }
 
   @override
   List<Object> get props => [message, stackTrace];
@@ -125,11 +179,11 @@ TransactionsFailure mapDriftToTransactionsFailure(
     );
   } else if (error is TransactionsException) {
     return TransactionsFailure(
-      stackTrace: stackTrace,
-      message: error.errorType.message,
-      transactionsAction: transactionsAction,
-      errorType: error.errorType,
-    );
+        stackTrace: stackTrace,
+        message: error.errorType.message,
+        transactionsAction: transactionsAction,
+        errorType: error.errorType,
+        rawException: error);
   } else {
     return TransactionsFailure.unknown(
       stackTrace: stackTrace,

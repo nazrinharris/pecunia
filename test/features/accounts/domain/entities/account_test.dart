@@ -2,6 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,7 +19,7 @@ void main() {
         const name = 'Test Account';
         const initialBalance = 1000.0;
         const balance = 500.0;
-        const currency = 'USD';
+        final currency = PecuniaCurrencies.usd;
         final createdOn = clock.now();
         const description = 'Test Description';
 
@@ -68,7 +69,7 @@ void main() {
         final mockU = MockUuid();
         final clock = Clock.fixed(DateTime.utc(2023));
         const name = 'Test Account';
-        const currency = 'USD';
+        final currency = PecuniaCurrencies.usd;
 
         when(mockU.v4).thenReturn('1');
         // Act

@@ -113,41 +113,20 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Cancel'),
               ),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () {
                   onConfirm();
                   Navigator.of(context).pop();
                 },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 53, 0, 0)),
-                ),
-                child: Text(
+                icon: Icon(Icons.delete_forever, color: Colors.red[200]),
+                label: Text(
                   'Confirm',
-                  style: TextStyle(
-                    color: Colors.red[200],
-                  ),
+                  style: TextStyle(color: Colors.red[200]),
                 ),
               ),
             ],
           );
         });
-
-    // await FlutterEasyDialogs.provider.showFullScreen(
-    //   FullScreenShowParams(
-    //     content: ConfirmationDialog(
-    //       title: title,
-    //       message: message,
-    //       onConfirm: onConfirm,
-    //     ),
-    //     animationConfiguration: const EasyDialogAnimatorConfiguration(
-    //       duration: Duration(milliseconds: 200),
-    //       reverseDuration: Duration(milliseconds: 200),
-    //     ),
-    //     backgroundAnimator: FullScreenBackgroundAnimator.fade(
-    //       backgroundColor: Colors.black.withOpacity(0.8),
-    //     ),
-    //   ),
-    // );
   }
 
   @override
