@@ -8,10 +8,11 @@ import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'transactions_dao_tables.g.dart';
+part 'transactions_local_dao.g.dart';
 
 @riverpod
-TransactionsDAO transactionsDAO(TransactionsDAORef ref) => ref.watch(pecuniaDBProvider).transactionsDAO;
+TransactionsLocalDAO transactionsLocalDAO(TransactionsLocalDAORef ref) =>
+    ref.watch(pecuniaDBProvider).transactionsLocalDAO;
 
 @DataClassName('TransactionDTO')
 class TransactionsTable extends Table {
@@ -51,8 +52,8 @@ class TransactionsTable extends Table {
   TransactionsTable,
   AccountsTable,
 ])
-class TransactionsDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsDAOMixin {
-  TransactionsDAO(super.db);
+class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsLocalDAOMixin {
+  TransactionsLocalDAO(super.db);
 
   TaskEither<TransactionsFailure, Unit> createTransaction(Transaction txn) {
     const currentAction = TransactionsAction.create;

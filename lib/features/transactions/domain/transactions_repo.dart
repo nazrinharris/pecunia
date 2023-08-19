@@ -5,7 +5,7 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/transactions/data/transactions_local_ds.dart';
+import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -14,7 +14,7 @@ part 'transactions_repo.g.dart';
 
 @riverpod
 TransactionsRepo transactionsRepo(TransactionsRepoRef ref) => TransactionsRepo(
-      ref.watch(transactionsLocalDSProvider),
+      ref.watch(transactionsLocalDAOProvider),
       ref.watch(uuidProvider),
     );
 
@@ -37,9 +37,9 @@ enum TransactionsAction {
 }
 
 class TransactionsRepo {
-  TransactionsRepo(this.transactionsLocalDS, this.uuid);
+  TransactionsRepo(this.transactionsLocalDAO, this.uuid);
 
-  final TransactionsLocalDS transactionsLocalDS;
+  final TransactionsLocalDAO transactionsLocalDAO;
   final TransactionsRepoHelper _helper = TransactionsRepoHelper();
   final Uuid uuid;
 
@@ -75,7 +75,7 @@ class TransactionsRepo {
       uuid: uuid,
     );
 
-    return transactionsLocalDS.createTransaction(txn);
+    return transactionsLocalDAO.createTransaction(txn);
   }
 
   // TODO: Consider if the checks should be put as asserts or not
@@ -99,29 +99,29 @@ class TransactionsRepo {
         defaultSourceTxnId: null,
         defaultDestinationTxnId: null,
       ).toTaskEither().flatMap(
-            (txns) => transactionsLocalDS.createTransferTransaction(
-                sourceTransaction: txns.sourceTxn, destinationTransaction: txns.destinationTxn),
+            (txns) => transactionsLocalDAO.createTransferTransaction(
+                sourceTxn: txns.sourceTxn, destinationTxn: txns.destinationTxn),
           );
 
   TaskEither<TransactionsFailure, List<Transaction>> getAllTransactions() {
-    return transactionsLocalDS.getAllTransactions().flatMap(_helper.mapDTOListToTransactionList);
+    return transactionsLocalDAO.getAllTransactions().flatMap(_helper.mapDTOListToTransactionList);
   }
 
   TaskEither<TransactionsFailure, List<Transaction>> getTransactionsByAccount(String accountId) {
-    return transactionsLocalDS
+    return transactionsLocalDAO
         .getTransactionsByAccount(accountId)
         .flatMap(_helper.mapDTOListToTransactionList);
   }
 
   TaskEither<TransactionsFailure, Transaction> getTransactionById(String txnId) {
-    return transactionsLocalDS.getTransactionById(txnId).map(Transaction.fromDTO);
+    return transactionsLocalDAO.getTransactionById(txnId).map(Transaction.fromDTO);
   }
 
   TaskEither<TransactionsFailure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
   }) {
-    return transactionsLocalDS.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
+    return transactionsLocalDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
   }
 
   TaskEither<TransactionsFailure, Unit> editTransferTransaction({
@@ -130,20 +130,20 @@ class TransactionsRepo {
     required Transaction newSourceTxn,
     required Transaction newDestinationTxn,
   }) {
-    return transactionsLocalDS.editTransferTxn(
+    return transactionsLocalDAO.editTransferTxn(
       oldSourceTxn: oldSourceTxn,
       oldDestinationTxn: oldDestinationTxn,
-      sourceTransaction: newSourceTxn,
-      destinationTransaction: newDestinationTxn,
+      newSourceTxn: newSourceTxn,
+      newDestinationTxn: newDestinationTxn,
     );
   }
 
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction transactionToDelete) {
-    return transactionsLocalDS.deleteTransaction(transactionToDelete);
+    return transactionsLocalDAO.deleteTransaction(transactionToDelete);
   }
 
   TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
-    return transactionsLocalDS.deleteTransferTransaction(transferTxnToDelete);
+    return transactionsLocalDAO.deleteTransferTransaction(transferTxnToDelete);
   }
 }
 

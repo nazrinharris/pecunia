@@ -1238,8 +1238,8 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
       $TransactionsTableTable(this);
   late final AccountsLocalDAO accountsLocalDAO =
       AccountsLocalDAO(this as PecuniaDB);
-  late final TransactionsDAO transactionsDAO =
-      TransactionsDAO(this as PecuniaDB);
+  late final TransactionsLocalDAO transactionsLocalDAO =
+      TransactionsLocalDAO(this as PecuniaDB);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

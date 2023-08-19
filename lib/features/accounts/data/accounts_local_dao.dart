@@ -5,7 +5,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
-import 'package:pecunia/features/transactions/dao_tables/transactions_dao_tables.dart';
+import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -155,7 +155,8 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
           if (linkedTxnList.isNotEmpty) {
             for (final linkedTxn in linkedTxnList) {
               print('This is supposed to delete');
-              (await db.transactionsDAO.deleteTransferTransaction(Transaction.fromDTO(linkedTxn)).run()).fold(
+              (await db.transactionsLocalDAO.deleteTransferTransaction(Transaction.fromDTO(linkedTxn)).run())
+                  .fold(
                 (l) => throw AccountsException.fromGenericFailure(l),
                 (r) => unit,
               );
