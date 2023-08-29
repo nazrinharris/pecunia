@@ -1,0 +1,54 @@
+import 'package:drift/drift.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/features/categories/data/categories_local_dao.dart';
+import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
+
+part 'txn_categories_local_dao.g.dart';
+
+@DataClassName('TransactionCategoryDTO')
+class TxnCategoriesTable extends Table {
+  TextColumn get transactionId => text().references(TransactionsTable, #id)();
+  TextColumn get categoryId => text().references(CategoriesTable, #id)();
+
+  @override
+  Set<Column> get primaryKey => {transactionId, categoryId};
+}
+
+@DriftAccessor(tables: [
+  TxnCategoriesTable,
+  TransactionsTable,
+  CategoriesTable,
+])
+class TxnCategoriesLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TxnCategoriesLocalDAOMixin {
+  TxnCategoriesLocalDAO(super.db);
+
+  TaskEither<TxnCategoriesFailure, Unit> addCategoryToTxn(String transactionId, String categoryId) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        await into(txnCategoriesTable).insert(
+          TransactionCategoryDTO(
+            transactionId: transactionId,
+            categoryId: categoryId,
+          ),
+        );
+        return unit;
+      }),
+      mapDriftToTxnCategoriesFailure,
+    );
+  }
+
+  TaskEither<TxnCategoriesFailure, Unit> removeCategoryFromTxn(String transactionId, String categoryId) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        await (delete(txnCategoriesTable)
+              ..where((txnCategory) => txnCategory.transactionId.equals(transactionId))
+              ..where((txnCategory) => txnCategory.categoryId.equals(categoryId)))
+            .go();
+        return unit;
+      }),
+      mapDriftToTxnCategoriesFailure,
+    );
+  }
+}

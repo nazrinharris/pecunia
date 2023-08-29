@@ -261,7 +261,6 @@ class Transaction with _$Transaction {
 
     // TODO: Remove debug print
     debugPrint('''
-
       -----------------------------------------------------------------------
       newSourceTxn: ${sourceTxn.fundDetails.transactionAmount}
       oldSourceTxn: ${oldSourceTxn?.fundDetails.transactionAmount}
