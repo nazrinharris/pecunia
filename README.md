@@ -28,6 +28,8 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 
 ### 🏗️ Phase 1: Basic Features
 
+(`0.1.0`)
+
 - [x] Simple authentication and integration with `supabase`.
 - [x] Local database setup with `drift`.
 - [x] Accounts creation, deletion, editing, and viewing.
@@ -36,10 +38,15 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Multi-currency transactions.
 - [ ] Transaction categories.
 - [ ] Simple budget creation, deletion, editing, and viewing.
-- [ ] Basic UI capabilities (as in, similar looks and functionality to mockup)
+- [ ] Basic UI capabilities (as in, similar looks and functionality to mockup) 
+
+(`0.1.1`)
+
 - [ ] Implement new backend, `pecunia-backend`, and remove dependence on `supabase`
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
+
+(`0.2.0`)
 
 - [ ] Implementing recurring budgets.
 - [ ] Visual analytics and reports.
