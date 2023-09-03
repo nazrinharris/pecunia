@@ -2,7 +2,9 @@ import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
+import 'package:pecunia/features/categories/data/categories_local_dao.dart';
 
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
@@ -51,6 +53,8 @@ class TransactionsTable extends Table {
 @DriftAccessor(tables: [
   TransactionsTable,
   AccountsTable,
+  CategoriesTable,
+  TxnCategoriesTable,
 ])
 class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsLocalDAOMixin {
   TransactionsLocalDAO(super.db);

@@ -3,8 +3,13 @@ import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/categories_errors/categories_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'categories_local_dao.g.dart';
+
+@riverpod
+CategoriesLocalDAO categoriesLocalDAO(CategoriesLocalDAORef ref) =>
+    CategoriesLocalDAO(ref.watch(pecuniaDBProvider));
 
 @DataClassName('CategoryDTO')
 class CategoriesTable extends Table {

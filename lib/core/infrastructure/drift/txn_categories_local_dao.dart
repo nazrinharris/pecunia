@@ -3,6 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/categories/data/categories_local_dao.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 
 part 'txn_categories_local_dao.g.dart';
@@ -47,6 +48,23 @@ class TxnCategoriesLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TxnCatego
               ..where((txnCategory) => txnCategory.categoryId.equals(categoryId)))
             .go();
         return unit;
+      }),
+      mapDriftToTxnCategoriesFailure,
+    );
+  }
+
+  TaskEither<TxnCategoriesFailure, List<Category>> getCategoriesByTxnId(String txnId) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        final query = select(txnCategoriesTable).join([
+          innerJoin(transactionsTable, transactionsTable.id.equalsExp(txnCategoriesTable.transactionId)),
+          innerJoin(categoriesTable, categoriesTable.id.equalsExp(txnCategoriesTable.categoryId)),
+        ])
+          ..where(transactionsTable.id.equals(txnId));
+
+        final results = await query.get();
+
+        return results.map((result) => Category.fromDTO(result.readTable(categoriesTable))).toList();
       }),
       mapDriftToTxnCategoriesFailure,
     );

@@ -7,6 +7,9 @@ mixin _$TransactionsLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
   $TransactionsTableTable get transactionsTable =>
       attachedDatabase.transactionsTable;
+  $CategoriesTableTable get categoriesTable => attachedDatabase.categoriesTable;
+  $TxnCategoriesTableTable get txnCategoriesTable =>
+      attachedDatabase.txnCategoriesTable;
 }
 
 // **************************************************************************

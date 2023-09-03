@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:uuid/uuid.dart';
 
 part 'category.freezed.dart';
 
@@ -19,6 +20,23 @@ class Category with _$Category {
   }) = _Category;
 
   const Category._();
+
+  factory Category.newCategory({
+    required Uuid uuid,
+    required String name,
+    required String primaryColor,
+    String? description,
+    String? icon,
+    String? parentId,
+  }) =>
+      Category(
+        id: uuid.v4(),
+        parentId: parentId,
+        name: name,
+        description: CategoryDescription(description),
+        primaryColor: primaryColor,
+        icon: icon != null ? const Icon(Icons.warning) : null,
+      );
 
   factory Category.fromDTO(CategoryDTO dto) {
     return Category(

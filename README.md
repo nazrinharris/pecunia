@@ -32,18 +32,21 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Local database setup with `drift`.
 - [x] Accounts creation, deletion, editing, and viewing.
 - [x] Transaction creation, deletion, editing and viewing.
-- [x] Transferring funds between accounts (and multi-currency transactions).
+- [x] Transferring funds between accounts.
+- [x] Multi-currency transactions.
 - [ ] Transaction categories.
 - [ ] Simple budget creation, deletion, editing, and viewing.
 - [ ] Basic UI capabilities (as in, similar looks and functionality to mockup)
+- [ ] Implement new backend, `pecunia-backend`, and remove dependence on `supabase`
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 
 - [ ] Implementing recurring budgets.
 - [ ] Visual analytics and reports.
 - [ ] Sub-Budgets (Multi-category budgeting).
+- [ ] UI Upgrade! (Turn it into what it should've looked like)
 
-### 😋 Phase 3: User Experience Enhancements
+### 😋 Phase 3: Quality of Life Improvements
 
 - [ ] Fully customizable dashboard.
 - [ ] Profile page with a cool looking pseudo-3d membership card.
