@@ -15,8 +15,8 @@ CategoriesLocalDAO categoriesLocalDAO(CategoriesLocalDAORef ref) =>
 class CategoriesTable extends Table {
   // ========================= Seperation For Brevity =========================
   TextColumn get id => text()();
-  TextColumn get name => text()();
-  TextColumn get description => text().nullable()();
+  TextColumn get name => text().withLength(min: 1, max: 50)();
+  TextColumn get description => text().withLength(min: 1, max: 500).nullable()();
   TextColumn get primaryColor => text()();
   // ========================= Seperation For Brevity =========================
   TextColumn get icon => text().nullable()();

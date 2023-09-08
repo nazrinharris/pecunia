@@ -1,4 +1,4 @@
-![Pecunia Banner](/assets/readme/Banner%20V2.png)
+![Pecunia Banner](/assets/readme/banner_v2.png)
 
 # Pecunia: Personal Finance Management 💸
 
@@ -19,8 +19,8 @@ Pecunia is a cross-platform personal finance management app built with Flutter. 
 
 View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/Project-Pecunia?type=design&node-id=909%3A3488&t=yNe4EOVObaxCtKNY-1), or play around with the [Figma Prototype](https://www.figma.com/proto/eSFHv1qQIq0d7z23L45xiK/Project-Pecunia?page-id=775%3A1156&type=design&node-id=787-617&viewport=876%2C191%2C0.97&scaling=scale-down&starting-point-node-id=787%3A617) (I made sure the animations look cute).
 
-![Mockup 1](/assets/readme/Mockup%20Group%201.png)
-![Mockup 2](/assets/readme/Mockup%20Group%202.png)
+![Mockup 1](/assets/readme/mockup_grp_1.png)
+![Mockup 2](/assets/readme/mockup_grp_2.png)
 
 ---
 

@@ -65,26 +65,44 @@ class DebugLocalDBScreen extends ConsumerWidget {
             Container(
               alignment: Alignment.center,
               width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
-                    },
-                    child: const Text('Inspect DB'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
+                        },
+                        child: const Text('Inspect DB'),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
+                        ),
+                        onPressed: () {
+                          ref.watch(getAllAccountsProvider);
+                          context.pushNamed('debug-transactions');
+                        },
+                        child: const Text('Go to Debug Transactions'),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
-                    ),
-                    onPressed: () {
-                      ref.watch(getAllAccountsProvider);
-                      context.pushNamed('debug-transactions');
-                    },
-                    child: const Text('Go to Debug Transactions'),
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.brown[900]),
+                        ),
+                        onPressed: () {
+                          context.pushNamed('view-all-categories');
+                        },
+                        child: const Text('View All Categories'),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

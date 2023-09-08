@@ -13,6 +13,7 @@ class Category with _$Category {
     required String id,
     required String name,
     required CategoryDescription description,
+    // Hex Alpha Format (e.g. #FF0000FF)
     required String primaryColor,
     // ========================= Seperation For Brevity =========================
     Icon? icon,
