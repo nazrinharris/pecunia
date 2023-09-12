@@ -18,6 +18,14 @@ extension TruncateExtension on String {
   }
 }
 
+// TODO: Maybe make a whole "feature" for this?
+// TODO: Error handling?
+extension StringColorExtension on String {
+  Color toColor() {
+    return Color(int.parse(this, radix: 16));
+  }
+}
+
 extension ColorExtension on Color {
   bool useWhiteForeground() {
     // Compute the luminance of the color and determine if the color is bright or dark

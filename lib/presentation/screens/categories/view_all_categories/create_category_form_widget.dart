@@ -89,10 +89,6 @@ class CreateCategoryBottomSheet extends HookConsumerWidget {
                 FocusScope.of(context).unfocus();
 
                 if (formKey.value.currentState!.validate()) {
-                  // TODO: Implement category creation logic
-                  print(
-                      'Creating category with name: ${nameController.text},  and color: ${primaryColorController.value.hexAlpha}');
-
                   await ref.read(createCategoryProvider.notifier).createCategory(
                         name: nameController.text,
                         primaryColor: primaryColorController.value.hexAlpha,
@@ -135,6 +131,7 @@ class ColorPickerWidget extends StatelessWidget {
                   color: initialColor,
                   subheading: const Text('Shades'),
                   onColorChanged: onColorChanged,
+                  enableShadesSelection: false,
                 ),
               ),
               actions: <Widget>[
