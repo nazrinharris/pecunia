@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/categories_errors/categories_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/icon_data_converter.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,7 +20,7 @@ class CategoriesTable extends Table {
   TextColumn get description => text().withLength(min: 1, max: 500).nullable()();
   TextColumn get primaryColor => text()();
   // ========================= Seperation For Brevity =========================
-  TextColumn get icon => text().nullable()();
+  TextColumn get icon => text().map(const IconDataConverter()).nullable()();
   TextColumn get parentId => text().nullable()();
 
   @override

@@ -6,6 +6,23 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
+void showCategoryBottomSheet(BuildContext context, Category category) {
+  showModalBottomSheet<void>(
+    isScrollControlled: true,
+    context: context,
+    showDragHandle: true,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(44),
+    ),
+    builder: (context) {
+      return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: CategoryBottomSheet(category),
+      );
+    },
+  );
+}
+
 class CategoryBottomSheet extends ConsumerWidget {
   const CategoryBottomSheet(this.category, {super.key});
 

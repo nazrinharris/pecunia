@@ -19,10 +19,11 @@ mixin _$Category {
 // ========================= Seperation For Brevity =========================
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  CategoryDescription get description => throw _privateConstructorUsedError;
+  CategoryDescription get description =>
+      throw _privateConstructorUsedError; // Hex Alpha Format (e.g. #FF0000FF)
   String get primaryColor =>
       throw _privateConstructorUsedError; // ========================= Seperation For Brevity =========================
-  Icon? get icon => throw _privateConstructorUsedError;
+  IconData? get icon => throw _privateConstructorUsedError;
   String? get parentId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -40,7 +41,7 @@ abstract class $CategoryCopyWith<$Res> {
       String name,
       CategoryDescription description,
       String primaryColor,
-      Icon? icon,
+      IconData? icon,
       String? parentId});
 }
 
@@ -84,7 +85,7 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
       icon: freezed == icon
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
-              as Icon?,
+              as IconData?,
       parentId: freezed == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
@@ -105,7 +106,7 @@ abstract class _$$_CategoryCopyWith<$Res> implements $CategoryCopyWith<$Res> {
       String name,
       CategoryDescription description,
       String primaryColor,
-      Icon? icon,
+      IconData? icon,
       String? parentId});
 }
 
@@ -147,7 +148,7 @@ class __$$_CategoryCopyWithImpl<$Res>
       icon: freezed == icon
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
-              as Icon?,
+              as IconData?,
       parentId: freezed == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
@@ -175,11 +176,12 @@ class _$_Category extends _Category {
   final String name;
   @override
   final CategoryDescription description;
+// Hex Alpha Format (e.g. #FF0000FF)
   @override
   final String primaryColor;
 // ========================= Seperation For Brevity =========================
   @override
-  final Icon? icon;
+  final IconData? icon;
   @override
   final String? parentId;
 
@@ -221,7 +223,7 @@ abstract class _Category extends Category {
       required final String name,
       required final CategoryDescription description,
       required final String primaryColor,
-      final Icon? icon,
+      final IconData? icon,
       final String? parentId}) = _$_Category;
   const _Category._() : super._();
 
@@ -231,10 +233,10 @@ abstract class _Category extends Category {
   String get name;
   @override
   CategoryDescription get description;
-  @override
+  @override // Hex Alpha Format (e.g. #FF0000FF)
   String get primaryColor;
   @override // ========================= Seperation For Brevity =========================
-  Icon? get icon;
+  IconData? get icon;
   @override
   String? get parentId;
   @override

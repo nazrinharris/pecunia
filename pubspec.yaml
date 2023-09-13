@@ -57,6 +57,7 @@ dependencies:
   reactive_forms: ^15.0.0
   screwdriver: ^4.1.0
   flex_color_picker: ^3.3.0
+  flutter_iconpicker: ^3.2.4
 
   # Testing
   mocktail: ^0.3.0

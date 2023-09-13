@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
 import 'package:pecunia/features/categories/domain/categories_repo.dart';
@@ -17,7 +18,7 @@ class CreateCategory extends _$CreateCategory {
     required String name,
     required String primaryColor,
     required String? description,
-    required String? icon,
+    required IconData? icon,
     required String? parentId,
   }) async {
     state = const AsyncValue.loading();

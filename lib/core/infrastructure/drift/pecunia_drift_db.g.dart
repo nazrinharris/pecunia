@@ -1246,13 +1246,19 @@ class $CategoriesTableTable extends CategoriesTable
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 500),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
   static const VerificationMeta _primaryColorMeta =
       const VerificationMeta('primaryColor');
   @override
@@ -1261,9 +1267,10 @@ class $CategoriesTableTable extends CategoriesTable
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _iconMeta = const VerificationMeta('icon');
   @override
-  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
-      'icon', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumnWithTypeConverter<IconData?, String> icon =
+      GeneratedColumn<String>('icon', aliasedName, true,
+              type: DriftSqlType.string, requiredDuringInsert: false)
+          .withConverter<IconData?>($CategoriesTableTable.$convertericonn);
   static const VerificationMeta _parentIdMeta =
       const VerificationMeta('parentId');
   @override
@@ -1307,10 +1314,7 @@ class $CategoriesTableTable extends CategoriesTable
     } else if (isInserting) {
       context.missing(_primaryColorMeta);
     }
-    if (data.containsKey('icon')) {
-      context.handle(
-          _iconMeta, icon.isAcceptableOrUnknown(data['icon']!, _iconMeta));
-    }
+    context.handle(_iconMeta, const VerificationResult.success());
     if (data.containsKey('parent_id')) {
       context.handle(_parentIdMeta,
           parentId.isAcceptableOrUnknown(data['parent_id']!, _parentIdMeta));
@@ -1332,8 +1336,9 @@ class $CategoriesTableTable extends CategoriesTable
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
       primaryColor: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}primary_color'])!,
-      icon: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}icon']),
+      icon: $CategoriesTableTable.$convertericonn.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}icon'])),
       parentId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}parent_id']),
     );
@@ -1343,6 +1348,11 @@ class $CategoriesTableTable extends CategoriesTable
   $CategoriesTableTable createAlias(String alias) {
     return $CategoriesTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<IconData, String> $convertericon =
+      const IconDataConverter();
+  static TypeConverter<IconData?, String?> $convertericonn =
+      NullAwareTypeConverter.wrap($convertericon);
 }
 
 class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
@@ -1350,7 +1360,7 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
   final String name;
   final String? description;
   final String primaryColor;
-  final String? icon;
+  final IconData? icon;
   final String? parentId;
   const CategoryDTO(
       {required this.id,
@@ -1369,7 +1379,8 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
     }
     map['primary_color'] = Variable<String>(primaryColor);
     if (!nullToAbsent || icon != null) {
-      map['icon'] = Variable<String>(icon);
+      final converter = $CategoriesTableTable.$convertericonn;
+      map['icon'] = Variable<String>(converter.toSql(icon));
     }
     if (!nullToAbsent || parentId != null) {
       map['parent_id'] = Variable<String>(parentId);
@@ -1400,7 +1411,7 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
       name: serializer.fromJson<String>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
       primaryColor: serializer.fromJson<String>(json['primaryColor']),
-      icon: serializer.fromJson<String?>(json['icon']),
+      icon: serializer.fromJson<IconData?>(json['icon']),
       parentId: serializer.fromJson<String?>(json['parentId']),
     );
   }
@@ -1412,7 +1423,7 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
       'name': serializer.toJson<String>(name),
       'description': serializer.toJson<String?>(description),
       'primaryColor': serializer.toJson<String>(primaryColor),
-      'icon': serializer.toJson<String?>(icon),
+      'icon': serializer.toJson<IconData?>(icon),
       'parentId': serializer.toJson<String?>(parentId),
     };
   }
@@ -1422,7 +1433,7 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
           String? name,
           Value<String?> description = const Value.absent(),
           String? primaryColor,
-          Value<String?> icon = const Value.absent(),
+          Value<IconData?> icon = const Value.absent(),
           Value<String?> parentId = const Value.absent()}) =>
       CategoryDTO(
         id: id ?? this.id,
@@ -1465,7 +1476,7 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoryDTO> {
   final Value<String> name;
   final Value<String?> description;
   final Value<String> primaryColor;
-  final Value<String?> icon;
+  final Value<IconData?> icon;
   final Value<String?> parentId;
   final Value<int> rowid;
   const CategoriesTableCompanion({
@@ -1513,7 +1524,7 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoryDTO> {
       Value<String>? name,
       Value<String?>? description,
       Value<String>? primaryColor,
-      Value<String?>? icon,
+      Value<IconData?>? icon,
       Value<String?>? parentId,
       Value<int>? rowid}) {
     return CategoriesTableCompanion(
@@ -1543,7 +1554,8 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoryDTO> {
       map['primary_color'] = Variable<String>(primaryColor.value);
     }
     if (icon.present) {
-      map['icon'] = Variable<String>(icon.value);
+      final converter = $CategoriesTableTable.$convertericonn;
+      map['icon'] = Variable<String>(converter.toSql(icon.value));
     }
     if (parentId.present) {
       map['parent_id'] = Variable<String>(parentId.value);

@@ -4,10 +4,37 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/util/extensions.dart';
 import 'package:pecunia/features/categories/usecases/create_category.dart';
+
+void showCreateCategoryBottomSheet(BuildContext context) {
+  showModalBottomSheet<void>(
+    isScrollControlled: true,
+    context: context,
+    showDragHandle: true,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(44),
+    ),
+    builder: (context) {
+      return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              CreateCategoryBottomSheet(),
+              SizedBox(height: 64),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 
 class CreateCategoryBottomSheet extends HookConsumerWidget {
   const CreateCategoryBottomSheet({
@@ -23,6 +50,7 @@ class CreateCategoryBottomSheet extends HookConsumerWidget {
     final nameController = useTextEditingController();
     final descriptionController = useTextEditingController();
     final primaryColorController = useState<Color>(Theme.of(context).colorScheme.primary);
+    final iconController = useState<IconData>(Icons.question_mark);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14),
@@ -75,9 +103,26 @@ class CreateCategoryBottomSheet extends HookConsumerWidget {
               },
             ),
             const SizedBox(height: 14),
-            ColorPickerWidget(
-              initialColor: primaryColorController.value,
-              onColorChanged: (color) => primaryColorController.value = color,
+            Row(
+              children: [
+                IconPickerWidget(color: primaryColorController.value, iconController: iconController),
+                SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        height: 50,
+                        child: const Text('Tap the icon to change it'),
+                      ),
+                      ColorPickerWidget(
+                        initialColor: primaryColorController.value,
+                        onColorChanged: (color) => primaryColorController.value = color,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -93,7 +138,7 @@ class CreateCategoryBottomSheet extends HookConsumerWidget {
                         name: nameController.text,
                         primaryColor: primaryColorController.value.hexAlpha,
                         description: descriptionController.text,
-                        icon: null,
+                        icon: iconController.value,
                         parentId: null,
                       );
                 }
@@ -119,48 +164,92 @@ class ColorPickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        final newColor = await showDialog<Color>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Pick a color'),
-              content: SingleChildScrollView(
-                child: ColorPicker(
-                  color: initialColor,
-                  subheading: const Text('Shades'),
-                  onColorChanged: onColorChanged,
-                  enableShadesSelection: false,
+    return Material(
+      color: initialColor,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        splashColor: Colors.white.withOpacity(0.4),
+        highlightColor: Colors.white.withOpacity(0.2),
+        onTap: () async {
+          final newColor = await showDialog<Color>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Pick a color'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    color: initialColor,
+                    subheading: const Text('Shades'),
+                    onColorChanged: onColorChanged,
+                    enableShadesSelection: false,
+                  ),
                 ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Got it'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+          if (newColor != null) {
+            onColorChanged(newColor);
+          }
+        },
+        child: SizedBox(
+          height: 50,
+          child: Center(
+            child: Text(
+              'Tap to choose category color',
+              style: TextStyle(
+                color: initialColor.useWhiteForeground() ? const Color(0xFFFFFFFF) : const Color(0xFF000000),
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Got it'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-        if (newColor != null) {
-          onColorChanged(newColor);
-        }
-      },
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-          color: initialColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Center(
-          child: Text(
-            'Tap to choose category color',
-            style: TextStyle(
-              color: initialColor.useWhiteForeground() ? const Color(0xFFFFFFFF) : const Color(0xFF000000),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class IconPickerWidget extends HookConsumerWidget {
+  const IconPickerWidget({required this.color, required this.iconController, super.key});
+
+  final Color color;
+  final ValueNotifier<IconData> iconController;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final primarySwatch = ColorTools.createPrimarySwatch(color);
+
+    return Material(
+      borderRadius: BorderRadius.circular(28),
+      color: primarySwatch.shade500.withOpacity(0.2),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(28),
+        onTap: () async {
+          final icon = await FlutterIconPicker.showIconPicker(
+            context,
+            iconPackModes: [IconPack.material, IconPack.cupertino],
+            iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(44)),
+          );
+
+          if (icon != null) {
+            iconController.value = icon;
+          }
+        },
+        child: Container(
+          alignment: Alignment.center,
+          height: 100,
+          width: 100,
+          child: Icon(
+            iconController.value,
+            size: 52,
+            color: primarySwatch.shade500,
           ),
         ),
       ),

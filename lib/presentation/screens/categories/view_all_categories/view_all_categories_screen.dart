@@ -100,7 +100,7 @@ class CategoryListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
-          Icons.category,
+          category.icon,
           color: primarySwatch.shade500, // Use the darker shade for the icon color
         ),
       ),
@@ -112,20 +112,7 @@ class CategoryListTile extends StatelessWidget {
                 color: Colors.white.withOpacity(0.5),
               )),
       onTap: () {
-        showModalBottomSheet<void>(
-          isScrollControlled: true,
-          context: context,
-          showDragHandle: true,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(44),
-          ),
-          builder: (context) {
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: CategoryBottomSheet(category),
-            );
-          },
-        );
+        showCategoryBottomSheet(context, category);
 
         // Add your onTap functionality here
         debugPrint('Category ID: ${category.id}');
@@ -137,30 +124,4 @@ class CategoryListTile extends StatelessWidget {
       },
     );
   }
-}
-
-void showCreateCategoryBottomSheet(BuildContext context) {
-  showModalBottomSheet<void>(
-    isScrollControlled: true,
-    context: context,
-    showDragHandle: true,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(44),
-    ),
-    builder: (context) {
-      return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CreateCategoryBottomSheet(),
-              const SizedBox(height: 64),
-            ],
-          ),
-        ),
-      );
-    },
-  );
 }

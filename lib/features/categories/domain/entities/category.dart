@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
@@ -16,7 +15,7 @@ class Category with _$Category {
     // Hex Alpha Format (e.g. #FF0000FF)
     required String primaryColor,
     // ========================= Seperation For Brevity =========================
-    Icon? icon,
+    IconData? icon,
     String? parentId,
   }) = _Category;
 
@@ -27,7 +26,7 @@ class Category with _$Category {
     required String name,
     required String primaryColor,
     String? description,
-    String? icon,
+    IconData? icon,
     String? parentId,
   }) =>
       Category(
@@ -36,7 +35,7 @@ class Category with _$Category {
         name: name,
         description: CategoryDescription(description),
         primaryColor: primaryColor,
-        icon: icon != null ? const Icon(Icons.warning) : null,
+        icon: icon,
       );
 
   factory Category.fromDTO(CategoryDTO dto) {
@@ -45,7 +44,7 @@ class Category with _$Category {
       name: dto.name,
       description: CategoryDescription(dto.description),
       primaryColor: dto.primaryColor,
-      icon: dto.icon != null ? const Icon(Icons.warning) : null,
+      icon: dto.icon,
       parentId: dto.parentId,
     );
   }
@@ -56,7 +55,7 @@ class Category with _$Category {
       name: name,
       description: description.value,
       primaryColor: primaryColor,
-      icon: icon?.icon.toString(),
+      icon: icon,
       parentId: parentId,
     );
   }

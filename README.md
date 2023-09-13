@@ -48,6 +48,7 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 
 (`0.2.0`)
 
+- [ ] Nested categories
 - [ ] Implementing recurring budgets.
 - [ ] Visual analytics and reports.
 - [ ] Sub-Budgets (Multi-category budgeting).
