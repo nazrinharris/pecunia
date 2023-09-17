@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
@@ -102,7 +102,7 @@ class TxnBottomSheet extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 14),
-                            Icon(HeroIcons.pencil, color: Colors.purple[100]),
+                            Icon(CupertinoIcons.pencil, color: Colors.purple[100]),
                           ],
                         ),
                       ),
@@ -141,7 +141,7 @@ class TxnBottomSheet extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Icon(HeroIcons.trash, color: Colors.red[100]),
+                            Icon(CupertinoIcons.trash, color: Colors.red[100]),
                           ],
                         ),
                       ),

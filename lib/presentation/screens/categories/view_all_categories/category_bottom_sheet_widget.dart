@@ -1,8 +1,8 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
@@ -47,7 +47,7 @@ class CategoryBottomSheet extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
-                    Icons.category,
+                    category.icon,
                     color: primarySwatch.shade500, // Use the darker shade for the icon color
                   ),
                 ),
@@ -106,7 +106,7 @@ class CategoryBottomSheet extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 14),
-                            Icon(HeroIcons.pencil, color: Colors.purple[100]),
+                            Icon(CupertinoIcons.pencil, color: Colors.purple[100]),
                           ],
                         ),
                       ),
@@ -145,7 +145,7 @@ class CategoryBottomSheet extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Icon(HeroIcons.trash, color: Colors.red[100]),
+                            Icon(CupertinoIcons.trash, color: Colors.red[100]),
                           ],
                         ),
                       ),

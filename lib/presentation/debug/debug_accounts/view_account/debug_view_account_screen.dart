@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
@@ -718,8 +717,7 @@ class AccountActionsGrid extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(HeroIcons.currency_dollar, color: Colors.green[100]),
-                  Icon(Icons.add, color: Colors.green[100]),
+                  Icon(Icons.add, color: Colors.green[100], size: 32),
                 ],
               ),
             ),
@@ -735,8 +733,7 @@ class AccountActionsGrid extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(HeroIcons.currency_dollar, color: Colors.red[100]),
-                  Icon(Icons.remove, color: Colors.red[100]),
+                  Icon(Icons.remove, color: Colors.red[100], size: 32),
                 ],
               ),
             ),
@@ -752,8 +749,7 @@ class AccountActionsGrid extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(HeroIcons.currency_dollar, color: Colors.blue[100]),
-                  Icon(Icons.compare_arrows, color: Colors.blue[100]),
+                  Icon(Icons.compare_arrows, color: Colors.blue[100], size: 32),
                 ],
               ),
             ),
@@ -766,7 +762,7 @@ class AccountActionsGrid extends ConsumerWidget {
               onTap: () {
                 context.pushNamed('debug-edit-account', extra: account);
               },
-              child: Icon(HeroIcons.pencil, color: Colors.purple[100]),
+              child: Icon(CupertinoIcons.pencil, color: Colors.purple[100], size: 32),
             ),
           ),
           Card(
@@ -783,7 +779,7 @@ class AccountActionsGrid extends ConsumerWidget {
                     },
                     context: context);
               },
-              child: Icon(HeroIcons.trash, color: Colors.red[100]),
+              child: Icon(Icons.delete_forever, color: Colors.red[100], size: 30),
             ),
           ),
         ],
