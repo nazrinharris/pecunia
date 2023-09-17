@@ -6,7 +6,7 @@ part of 'update_category.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$updateCategoryHash() => r'387fa5dc0a772d60cc0267666f6d0b14f213f95a';
+String _$updateCategoryHash() => r'a46b0d186db471ddd5ee9ec429b7a50b5c165d26';
 
 /// See also [UpdateCategory].
 @ProviderFor(UpdateCategory)

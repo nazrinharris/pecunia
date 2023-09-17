@@ -4,6 +4,7 @@ import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -30,7 +31,7 @@ void main() {
       balance: 0,
       currency: PecuniaCurrencies.xxx,
       createdOn: clock.now().toUtc(),
-      description: AccountDescription('test_description'),
+      description: d.Description('test_description'),
     );
   });
 

@@ -8,6 +8,7 @@ import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/core/common/description.dart' as d;
 import 'package:uuid/uuid.dart';
 
 import '../../../matcher/accounts_matchers.dart';
@@ -16,7 +17,7 @@ class MockAccountsLocalDAO extends Mock implements AccountsLocalDAO {}
 
 class MockAccountsRepoHelper extends Mock implements AccountsRepoHelper {}
 
-class MockAccountDescription extends Mock implements AccountDescription {}
+class MockDescription extends Mock implements d.Description {}
 
 class MockAccount extends Mock implements Account {}
 
@@ -28,7 +29,7 @@ void main() {
 
   late MockAccountsLocalDAO mockAccountsLocalDAO;
   late MockAccountsRepoHelper mockAccountsRepoHelper;
-  late MockAccountDescription mockAccountDescription;
+  late MockDescription mockAccountDescription;
   late MockAccount mockAccount;
   late MockUuid mockUuid;
 
@@ -42,7 +43,7 @@ void main() {
     // Setup mocks
     mockAccountsLocalDAO = MockAccountsLocalDAO();
     mockAccountsRepoHelper = MockAccountsRepoHelper();
-    mockAccountDescription = MockAccountDescription();
+    mockAccountDescription = MockDescription();
     mockAccount = MockAccount();
     mockUuid = MockUuid();
 

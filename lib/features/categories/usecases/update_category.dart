@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/features/categories/domain/categories_repo.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,7 +28,7 @@ class UpdateCategory extends _$UpdateCategory {
         .updateCategory(oldCategory.copyWith(
           name: name,
           primaryColor: primaryColor,
-          description: CategoryDescription(description),
+          description: Description(description),
           // TODO: Add icon argument once icon system is implemented
           parentId: parentId,
         ))

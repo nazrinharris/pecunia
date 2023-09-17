@@ -19,8 +19,7 @@ mixin _$Transaction {
   String get id => throw _privateConstructorUsedError;
   String get creatorUid => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  TransactionDescription get transactionDescription =>
-      throw _privateConstructorUsedError;
+  Description get transactionDescription => throw _privateConstructorUsedError;
   DateTime get transactionDate => throw _privateConstructorUsedError;
   String get accountId => throw _privateConstructorUsedError;
   FundDetails get fundDetails => throw _privateConstructorUsedError;
@@ -41,7 +40,7 @@ abstract class $TransactionCopyWith<$Res> {
       {String id,
       String creatorUid,
       String name,
-      TransactionDescription transactionDescription,
+      Description transactionDescription,
       DateTime transactionDate,
       String accountId,
       FundDetails fundDetails,
@@ -89,7 +88,7 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
       transactionDescription: null == transactionDescription
           ? _value.transactionDescription
           : transactionDescription // ignore: cast_nullable_to_non_nullable
-              as TransactionDescription,
+              as Description,
       transactionDate: null == transactionDate
           ? _value.transactionDate
           : transactionDate // ignore: cast_nullable_to_non_nullable
@@ -142,7 +141,7 @@ abstract class _$$_TransactionCopyWith<$Res>
       {String id,
       String creatorUid,
       String name,
-      TransactionDescription transactionDescription,
+      Description transactionDescription,
       DateTime transactionDate,
       String accountId,
       FundDetails fundDetails,
@@ -190,7 +189,7 @@ class __$$_TransactionCopyWithImpl<$Res>
       transactionDescription: null == transactionDescription
           ? _value.transactionDescription
           : transactionDescription // ignore: cast_nullable_to_non_nullable
-              as TransactionDescription,
+              as Description,
       transactionDate: null == transactionDate
           ? _value.transactionDate
           : transactionDate // ignore: cast_nullable_to_non_nullable
@@ -232,7 +231,7 @@ class _$_Transaction extends _Transaction with DiagnosticableTreeMixin {
   @override
   final String name;
   @override
-  final TransactionDescription transactionDescription;
+  final Description transactionDescription;
   @override
   final DateTime transactionDate;
   @override
@@ -308,7 +307,7 @@ abstract class _Transaction extends Transaction {
       {required final String id,
       required final String creatorUid,
       required final String name,
-      required final TransactionDescription transactionDescription,
+      required final Description transactionDescription,
       required final DateTime transactionDate,
       required final String accountId,
       required final FundDetails fundDetails,
@@ -322,7 +321,7 @@ abstract class _Transaction extends Transaction {
   @override
   String get name;
   @override
-  TransactionDescription get transactionDescription;
+  Description get transactionDescription;
   @override
   DateTime get transactionDate;
   @override

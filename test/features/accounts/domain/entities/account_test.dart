@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
@@ -32,7 +33,7 @@ void main() {
           balance: balance,
           currency: currency,
           createdOn: createdOn,
-          description: AccountDescription(description),
+          description: d.Description(description),
         );
 
         // Assert
@@ -80,7 +81,7 @@ void main() {
           currency: currency,
           createdOn: clock.now(),
           uuid: mockU,
-          description: AccountDescription('testDescription'),
+          description: d.Description('testDescription'),
         );
 
         // Assert
@@ -95,23 +96,23 @@ void main() {
       });
     });
 
-    group('AccountDescription -', () {
+    group('Description -', () {
       test('should treat null input as no description', () {
-        final desc = AccountDescription(null);
+        final desc = d.Description(null);
 
         expect(desc.value, isNull);
         expect(desc.toString(), equals('No Description'));
       });
 
       test('should treat empty input as no description', () {
-        final desc = AccountDescription('');
+        final desc = d.Description('');
 
         expect(desc.value, isNull);
         expect(desc.toString(), equals('No Description'));
       });
 
       test('should treat whitespace-only input as no description', () {
-        final desc = AccountDescription('   ');
+        final desc = d.Description('   ');
 
         expect(desc.value, isNull);
         expect(desc.toString(), equals('No Description'));
@@ -119,7 +120,7 @@ void main() {
 
       test('should store non-empty, non-whitespace input', () {
         const input = 'Test Description';
-        final desc = AccountDescription(input);
+        final desc = d.Description(input);
 
         expect(desc.value, equals(input));
         expect(desc.toString(), equals(input));

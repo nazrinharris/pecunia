@@ -6,7 +6,7 @@ part of 'edit_transaction.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editTransactionHash() => r'0438a6692477ac5ec1852477909ae9da67edd528';
+String _$editTransactionHash() => r'46b10b519ebcec2a1c0afd02ad5d23ad2545ff4e';
 
 /// See also [EditTransaction].
 @ProviderFor(EditTransaction)

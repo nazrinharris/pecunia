@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,7 +12,7 @@ class Category with _$Category {
     // ========================= Seperation For Brevity =========================
     required String id,
     required String name,
-    required CategoryDescription description,
+    required Description description,
     // Hex Alpha Format (e.g. #FF0000FF)
     required String primaryColor,
     // ========================= Seperation For Brevity =========================
@@ -33,7 +34,7 @@ class Category with _$Category {
         id: uuid.v4(),
         parentId: parentId,
         name: name,
-        description: CategoryDescription(description),
+        description: Description(description),
         primaryColor: primaryColor,
         icon: icon,
       );
@@ -42,7 +43,7 @@ class Category with _$Category {
     return Category(
       id: dto.id,
       name: dto.name,
-      description: CategoryDescription(dto.description),
+      description: Description(dto.description),
       primaryColor: dto.primaryColor,
       icon: dto.icon,
       parentId: dto.parentId,
@@ -59,33 +60,4 @@ class Category with _$Category {
       parentId: parentId,
     );
   }
-}
-
-/// Value object for the description of a transaction
-/// The description can be null, so check for that.
-@immutable
-class CategoryDescription {
-  CategoryDescription(String? input) : value = _validateInput(input);
-
-  final String? value;
-
-  @override
-  String toString() => value ?? 'No Description';
-
-  static String? _validateInput(String? input) {
-    if (input == null || input.trim().isEmpty) {
-      return null;
-    }
-    return input;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is CategoryDescription && other.value == value;
-  }
-
-  @override
-  int get hashCode => value.hashCode;
 }

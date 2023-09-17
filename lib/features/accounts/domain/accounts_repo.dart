@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -117,7 +118,7 @@ class AccountsRepoImpl implements AccountsRepo {
           currency: PecuniaCurrencies.fromString(currency),
           createdOn: DateTime.now(),
           uuid: uuid,
-          description: AccountDescription(desc),
+          description: Description(desc),
         ))
         .flatMap(accountsLocalDAO.createAccount);
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -60,7 +61,7 @@ class TransactionsRepo {
     final txn = Transaction.newTransaction(
       creatorUid: creatorUid,
       name: name,
-      transactionDescription: TransactionDescription(transactionDescription),
+      transactionDescription: Description(transactionDescription),
       transactionDate: transactionDate,
       accountId: accountId,
       fundDetails: FundDetails(

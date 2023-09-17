@@ -6,7 +6,7 @@ part of 'edit_account.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editAccountHash() => r'034760c6e36c736816f31888102166398991b4f1';
+String _$editAccountHash() => r'82eb0225e55f820a65ab493205b0e8289c7ee789';
 
 /// See also [EditAccount].
 @ProviderFor(EditAccount)

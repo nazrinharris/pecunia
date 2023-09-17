@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
@@ -29,7 +30,7 @@ class EditTransaction extends _$EditTransaction {
 
     final newTxn = oldTxn.copyWith(
         name: name,
-        transactionDescription: TransactionDescription(description),
+        transactionDescription: Description(description),
         fundDetails: oldTxn.fundDetails.copyWith(
           transactionType: transactionType,
           baseAmount: baseAmount,

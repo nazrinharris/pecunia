@@ -19,7 +19,7 @@ mixin _$Category {
 // ========================= Seperation For Brevity =========================
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  CategoryDescription get description =>
+  Description get description =>
       throw _privateConstructorUsedError; // Hex Alpha Format (e.g. #FF0000FF)
   String get primaryColor =>
       throw _privateConstructorUsedError; // ========================= Seperation For Brevity =========================
@@ -39,7 +39,7 @@ abstract class $CategoryCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      CategoryDescription description,
+      Description description,
       String primaryColor,
       IconData? icon,
       String? parentId});
@@ -77,7 +77,7 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as CategoryDescription,
+              as Description,
       primaryColor: null == primaryColor
           ? _value.primaryColor
           : primaryColor // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ abstract class _$$_CategoryCopyWith<$Res> implements $CategoryCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      CategoryDescription description,
+      Description description,
       String primaryColor,
       IconData? icon,
       String? parentId});
@@ -140,7 +140,7 @@ class __$$_CategoryCopyWithImpl<$Res>
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as CategoryDescription,
+              as Description,
       primaryColor: null == primaryColor
           ? _value.primaryColor
           : primaryColor // ignore: cast_nullable_to_non_nullable
@@ -175,7 +175,7 @@ class _$_Category extends _Category {
   @override
   final String name;
   @override
-  final CategoryDescription description;
+  final Description description;
 // Hex Alpha Format (e.g. #FF0000FF)
   @override
   final String primaryColor;
@@ -221,7 +221,7 @@ abstract class _Category extends Category {
   const factory _Category(
       {required final String id,
       required final String name,
-      required final CategoryDescription description,
+      required final Description description,
       required final String primaryColor,
       final IconData? icon,
       final String? parentId}) = _$_Category;
@@ -232,7 +232,7 @@ abstract class _Category extends Category {
   @override
   String get name;
   @override
-  CategoryDescription get description;
+  Description get description;
   @override // Hex Alpha Format (e.g. #FF0000FF)
   String get primaryColor;
   @override // ========================= Seperation For Brevity =========================

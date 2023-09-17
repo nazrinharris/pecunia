@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -36,14 +37,14 @@ void main() {
       balance: 0,
       currency: PecuniaCurrencies.xxx,
       createdOn: clock.now().toUtc(),
-      description: AccountDescription('test_description'),
+      description: d.Description('test_description'),
     );
 
     testIncomeTxn = Transaction(
         id: 'id_income',
         creatorUid: 'creatorUid',
         name: 'name',
-        transactionDescription: TransactionDescription('input'),
+        transactionDescription: d.Description('input'),
         transactionDate: clock.now().toUtc(),
         accountId: testAccount.id,
         fundDetails: FundDetails(
@@ -60,7 +61,7 @@ void main() {
       id: 'id_expense',
       creatorUid: 'creatorUid',
       name: 'name',
-      transactionDescription: TransactionDescription('input'),
+      transactionDescription: d.Description('input'),
       transactionDate: clock.now().toUtc(),
       accountId: testAccount.id,
       fundDetails: FundDetails(

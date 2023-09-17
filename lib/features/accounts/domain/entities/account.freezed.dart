@@ -23,7 +23,7 @@ mixin _$Account {
   double get balance => throw _privateConstructorUsedError;
   Currency get currency => throw _privateConstructorUsedError;
   DateTime get createdOn => throw _privateConstructorUsedError;
-  AccountDescription get description => throw _privateConstructorUsedError;
+  Description get description => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AccountCopyWith<Account> get copyWith => throw _privateConstructorUsedError;
@@ -42,7 +42,7 @@ abstract class $AccountCopyWith<$Res> {
       double balance,
       Currency currency,
       DateTime createdOn,
-      AccountDescription description});
+      Description description});
 }
 
 /// @nodoc
@@ -99,7 +99,7 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as AccountDescription,
+              as Description,
     ) as $Val);
   }
 }
@@ -119,7 +119,7 @@ abstract class _$$_AccountCopyWith<$Res> implements $AccountCopyWith<$Res> {
       double balance,
       Currency currency,
       DateTime createdOn,
-      AccountDescription description});
+      Description description});
 }
 
 /// @nodoc
@@ -173,7 +173,7 @@ class __$$_AccountCopyWithImpl<$Res>
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as AccountDescription,
+              as Description,
     ));
   }
 }
@@ -207,7 +207,7 @@ class _$_Account extends _Account {
   @override
   final DateTime createdOn;
   @override
-  final AccountDescription description;
+  final Description description;
 
   @override
   String toString() {
@@ -254,7 +254,7 @@ abstract class _Account extends Account {
       required final double balance,
       required final Currency currency,
       required final DateTime createdOn,
-      required final AccountDescription description}) = _$_Account;
+      required final Description description}) = _$_Account;
   const _Account._() : super._();
 
   @override
@@ -272,7 +272,7 @@ abstract class _Account extends Account {
   @override
   DateTime get createdOn;
   @override
-  AccountDescription get description;
+  Description get description;
   @override
   @JsonKey(ignore: true)
   _$$_AccountCopyWith<_$_Account> get copyWith =>
