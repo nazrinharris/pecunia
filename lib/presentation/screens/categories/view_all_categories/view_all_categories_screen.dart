@@ -10,7 +10,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/categories/usecases/create_category.dart';
+import 'package:pecunia/features/categories/usecases/delete_category.dart';
 import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
+import 'package:pecunia/features/categories/usecases/update_category.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories/category_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories/create_category_form_widget.dart';
@@ -19,6 +21,53 @@ class ViewAllCategories extends HookConsumerWidget {
   const ViewAllCategories({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref
+      ..listen(createCategoryProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "Uh oh, can't create category...",
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Category created successfully!',
+              );
+          ref.invalidate(getAllCategoriesProvider);
+        }
+      })
+      ..listen(updateCategoryProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "Uh oh, can't update the category...",
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Category updated successfully!',
+              );
+          ref.invalidate(getAllCategoriesProvider);
+        }
+      })
+      ..listen(deleteCategoryProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureDialog(
+                title: "Uh oh, can't delete the category...",
+                failure: next.error as Failure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.pop();
+          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                title: 'Category deleted successfully!',
+              );
+          ref.invalidate(getAllCategoriesProvider);
+        }
+      });
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Categories'),
@@ -47,22 +96,6 @@ class CategoriesContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(createCategoryProvider, (prev, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
-              title: "Uh oh, can't create category...",
-              failure: next.error as Failure?,
-            );
-      }
-      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
-              title: 'Category created successfully!',
-            );
-        ref.invalidate(getAllCategoriesProvider);
-      }
-    });
-
     final categoriesValue = ref.watch(getAllCategoriesProvider);
     return switch (categoriesValue) {
       AsyncLoading() => const Center(child: CupertinoActivityIndicator()),

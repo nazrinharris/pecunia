@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/features/categories/domain/categories_repo.dart';
@@ -17,7 +18,7 @@ class UpdateCategory extends _$UpdateCategory {
     required String name,
     required String primaryColor,
     required String? description,
-    required String? icon,
+    required IconData? icon,
     required String? parentId,
     required Category oldCategory,
   }) async {
@@ -29,7 +30,7 @@ class UpdateCategory extends _$UpdateCategory {
           name: name,
           primaryColor: primaryColor,
           description: Description(description),
-          // TODO: Add icon argument once icon system is implemented
+          icon: icon,
           parentId: parentId,
         ))
         .run();

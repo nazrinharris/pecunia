@@ -1,10 +1,11 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
+import 'package:pecunia/features/categories/usecases/delete_category.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/screens/categories/view_all_categories/edit_category_form_widget.dart';
 
 void showCategoryBottomSheet(BuildContext context, Category category) {
   showModalBottomSheet<void>(
@@ -85,7 +86,9 @@ class CategoryBottomSheet extends ConsumerWidget {
                 Expanded(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
-                    onTap: () {},
+                    onTap: () {
+                      showEditCategoryFormWidget(context, category);
+                    },
                     child: Card(
                       margin: EdgeInsets.zero,
                       shape: RoundedRectangleBorder(
@@ -121,7 +124,7 @@ class CategoryBottomSheet extends ConsumerWidget {
                             title: 'Delete category?',
                             message: "This isn't a reversible action, think twice.",
                             onConfirm: () {
-                              context.pop();
+                              ref.read(deleteCategoryProvider.notifier).deleteCategory(id: category.id);
                             },
                             context: context,
                           );

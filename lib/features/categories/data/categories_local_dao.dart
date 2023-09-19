@@ -51,6 +51,7 @@ class CategoriesLocalDAO extends DatabaseAccessor<PecuniaDB> with _$CategoriesLo
     );
   }
 
+  // TODO: Update to take care of parent category
   TaskEither<CategoriesFailure, Unit> deleteCategory(String id) {
     return TaskEither.tryCatch(
       () async => transaction(() async {
