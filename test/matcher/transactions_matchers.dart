@@ -2,22 +2,20 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 
 /// Checks if the given [TransactionsFailure] has the expected [TransactionsErrorType] and [TransactionsAction]
-Matcher isTransactionsFailure(TransactionsErrorType expectedErrorType, TransactionsAction expectedAction) =>
-    _IsTransactionsFailure(expectedErrorType, expectedAction);
+Matcher isTransactionsFailure(TransactionsErrorType expectedErrorType) =>
+    _IsTransactionsFailure(expectedErrorType);
 
 class _IsTransactionsFailure extends CustomMatcher {
-  _IsTransactionsFailure(this.expectedErrorType, this.expectedAction)
+  _IsTransactionsFailure(this.expectedErrorType)
       : super(
-          'TransactionsFailure with $expectedErrorType and $expectedAction',
+          'TransactionsFailure with $expectedErrorType',
           'errorType and action',
           '',
         );
 
   final TransactionsErrorType expectedErrorType;
-  final TransactionsAction expectedAction;
 
   @override
   bool matches(dynamic item, Map matchState) {
@@ -27,11 +25,10 @@ class _IsTransactionsFailure extends CustomMatcher {
     }
 
     if (item is TransactionsFailure) {
-      if (item.errorType == expectedErrorType && item.transactionsAction == expectedAction) {
+      if (item.errorType == expectedErrorType) {
         return true;
       } else {
-        matchState['transactionsFailure'] =
-            'has errorType ${item.errorType} and action ${item.transactionsAction}';
+        matchState['transactionsFailure'] = 'has errorType ${item.errorType}';
         return false;
       }
     } else {

@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/errors/failures.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
@@ -48,7 +47,6 @@ class AuthException with _$AuthException implements Exception {
   factory AuthException({
     required StackTrace stackTrace,
     required AuthErrorType errorType,
-    required AuthAction authAction,
   }) = _AuthException;
 
   AuthException._();
@@ -68,7 +66,6 @@ class AuthFailure with _$AuthFailure implements Failure {
   const factory AuthFailure({
     required StackTrace stackTrace,
     required String message,
-    required AuthAction authAction,
     required AuthErrorType errorType,
     Object? rawException,
   }) = _AuthFailure;
@@ -78,7 +75,6 @@ class AuthFailure with _$AuthFailure implements Failure {
   const factory AuthFailure.noInternet({
     required StackTrace stackTrace,
     required String message,
-    @Default(AuthAction.unknown) AuthAction authAction,
     @Default(AuthErrorType.noInternet) AuthErrorType errorType,
     Object? rawException,
   }) = _NoInternetAuthFailure;
@@ -86,7 +82,6 @@ class AuthFailure with _$AuthFailure implements Failure {
   const factory AuthFailure.unknown({
     required StackTrace stackTrace,
     required String message,
-    required AuthAction authAction,
     @Default(AuthErrorType.unknown) AuthErrorType? errorType,
     Object? rawException,
   }) = _UnknownAuthFailure;
@@ -113,10 +108,9 @@ class AuthFailure with _$AuthFailure implements Failure {
 /// * Helpers
 /// ****************************************************************
 
-AuthFailure mapSupabaseToFailure(AuthAction authAction, Object error, StackTrace stackTrace) {
+AuthFailure mapSupabaseToFailure(Object error, StackTrace stackTrace) {
   if (error is AuthException) {
     return AuthFailure(
-      authAction: authAction,
       errorType: error.errorType,
       message: error.errorType.message,
       stackTrace: stackTrace,
@@ -124,7 +118,6 @@ AuthFailure mapSupabaseToFailure(AuthAction authAction, Object error, StackTrace
     );
   } else if (error is supa.AuthException) {
     return AuthFailure(
-      authAction: authAction,
       errorType: AuthErrorType.unknown,
       message: error.message,
       stackTrace: stackTrace,
@@ -132,7 +125,6 @@ AuthFailure mapSupabaseToFailure(AuthAction authAction, Object error, StackTrace
     );
   } else {
     return AuthFailure(
-      authAction: authAction,
       errorType: AuthErrorType.unknown,
       message: AuthErrorType.unknown.message,
       stackTrace: stackTrace,

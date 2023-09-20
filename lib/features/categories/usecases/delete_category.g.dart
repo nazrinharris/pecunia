@@ -6,7 +6,7 @@ part of 'delete_category.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deleteCategoryHash() => r'4455d49b8f02cd3632877de3648e5ba5f7f1f0ef';
+String _$deleteCategoryHash() => r'b920d089a73eba7e9b59ac3a20b91316c9209cfd';
 
 /// See also [DeleteCategory].
 @ProviderFor(DeleteCategory)

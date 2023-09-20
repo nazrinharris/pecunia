@@ -9,7 +9,6 @@ import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 
 import '../../../matcher/transactions_matchers.dart';
 
@@ -128,7 +127,6 @@ void main() {
         l,
         isTransactionsFailure(
           TransactionsErrorType.transactionNotFound,
-          TransactionsAction.getTransactionById,
         ),
       ),
       (dto) => fail('Transaction should have been deleted from the database'),

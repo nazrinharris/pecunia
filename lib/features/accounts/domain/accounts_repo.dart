@@ -11,21 +11,6 @@ import 'package:uuid/uuid.dart';
 
 part 'accounts_repo.g.dart';
 
-enum AccountsAction {
-  getAccounts,
-  getAccountById,
-  watchAccounts,
-  createAccount,
-  updateAccountDetails,
-  deleteAccount,
-
-  recalculateAccountBalance,
-  unknown,
-
-  /// This is a special case. This is used to map an [Account] to an [AccountDTO]
-  mapAccountToDTO,
-}
-
 @riverpod
 AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl(
       accountsLocalDAO: ref.watch(accountsLocalDAOProvider),
@@ -167,7 +152,6 @@ class AccountsRepoHelper {
         stackTrace: stackTrace,
         message: AccountsErrorType.cannotConvertToDTO.message,
         errorType: AccountsErrorType.cannotConvertToDTO,
-        accountsAction: AccountsAction.mapAccountToDTO,
       ),
     );
   }

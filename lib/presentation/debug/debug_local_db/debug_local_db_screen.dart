@@ -13,7 +13,6 @@ import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/accounts/usecases/watch_accounts.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
@@ -171,7 +170,6 @@ class DebugDialogsButtons extends ConsumerWidget {
                           failure: AuthFailure(
                         stackTrace: StackTrace.current,
                         message: AuthErrorType.unknown.message,
-                        authAction: AuthAction.unknown,
                         errorType: AuthErrorType.unknown,
                       ));
                 },

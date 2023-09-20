@@ -18,39 +18,34 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TransactionsException {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   TransactionsErrorType get errorType => throw _privateConstructorUsedError;
-  TransactionsAction get transactionsAction =>
-      throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)
-        $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            TransactionsErrorType errorType,
-            TransactionsAction transactionsAction,
             String? message)
+        $default, {
+    required TResult Function(StackTrace stackTrace,
+            TransactionsErrorType errorType, String? message)
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         $default, {
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         $default, {
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         unknown,
     required TResult orElse(),
   }) =>
@@ -89,7 +84,6 @@ abstract class $TransactionsExceptionCopyWith<$Res> {
   $Res call(
       {StackTrace stackTrace,
       TransactionsErrorType errorType,
-      TransactionsAction transactionsAction,
       String? message});
 }
 
@@ -109,7 +103,6 @@ class _$TransactionsExceptionCopyWithImpl<$Res,
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
-    Object? transactionsAction = null,
     Object? message = freezed,
   }) {
     return _then(_value.copyWith(
@@ -121,10 +114,6 @@ class _$TransactionsExceptionCopyWithImpl<$Res,
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as TransactionsErrorType,
-      transactionsAction: null == transactionsAction
-          ? _value.transactionsAction
-          : transactionsAction // ignore: cast_nullable_to_non_nullable
-              as TransactionsAction,
       message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -144,7 +133,6 @@ abstract class _$$_TransactionsExceptionCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       TransactionsErrorType errorType,
-      TransactionsAction transactionsAction,
       String? message});
 }
 
@@ -161,7 +149,6 @@ class __$$_TransactionsExceptionCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
-    Object? transactionsAction = null,
     Object? message = freezed,
   }) {
     return _then(_$_TransactionsException(
@@ -173,10 +160,6 @@ class __$$_TransactionsExceptionCopyWithImpl<$Res>
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as TransactionsErrorType,
-      transactionsAction: null == transactionsAction
-          ? _value.transactionsAction
-          : transactionsAction // ignore: cast_nullable_to_non_nullable
-              as TransactionsAction,
       message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -189,10 +172,7 @@ class __$$_TransactionsExceptionCopyWithImpl<$Res>
 
 class _$_TransactionsException extends _TransactionsException {
   _$_TransactionsException(
-      {required this.stackTrace,
-      required this.errorType,
-      required this.transactionsAction,
-      this.message})
+      {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
   @override
@@ -200,13 +180,11 @@ class _$_TransactionsException extends _TransactionsException {
   @override
   final TransactionsErrorType errorType;
   @override
-  final TransactionsAction transactionsAction;
-  @override
   final String? message;
 
   @override
   String toString() {
-    return 'TransactionsException(stackTrace: $stackTrace, errorType: $errorType, transactionsAction: $transactionsAction, message: $message)';
+    return 'TransactionsException(stackTrace: $stackTrace, errorType: $errorType, message: $message)';
   }
 
   @override
@@ -218,14 +196,11 @@ class _$_TransactionsException extends _TransactionsException {
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
                 other.errorType == errorType) &&
-            (identical(other.transactionsAction, transactionsAction) ||
-                other.transactionsAction == transactionsAction) &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, stackTrace, errorType, transactionsAction, message);
+  int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
   @JsonKey(ignore: true)
   @override
@@ -238,44 +213,41 @@ class _$_TransactionsException extends _TransactionsException {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)
-        $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            TransactionsErrorType errorType,
-            TransactionsAction transactionsAction,
             String? message)
+        $default, {
+    required TResult Function(StackTrace stackTrace,
+            TransactionsErrorType errorType, String? message)
         unknown,
   }) {
-    return $default(stackTrace, errorType, transactionsAction, message);
+    return $default(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         $default, {
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         unknown,
   }) {
-    return $default?.call(stackTrace, errorType, transactionsAction, message);
+    return $default?.call(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         $default, {
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         unknown,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(stackTrace, errorType, transactionsAction, message);
+      return $default(stackTrace, errorType, message);
     }
     return orElse();
   }
@@ -316,7 +288,6 @@ abstract class _TransactionsException extends TransactionsException {
   factory _TransactionsException(
       {required final StackTrace stackTrace,
       required final TransactionsErrorType errorType,
-      required final TransactionsAction transactionsAction,
       final String? message}) = _$_TransactionsException;
   _TransactionsException._() : super._();
 
@@ -324,8 +295,6 @@ abstract class _TransactionsException extends TransactionsException {
   StackTrace get stackTrace;
   @override
   TransactionsErrorType get errorType;
-  @override
-  TransactionsAction get transactionsAction;
   @override
   String? get message;
   @override
@@ -346,7 +315,6 @@ abstract class _$$_UnknownTransactionsExceptionCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       TransactionsErrorType errorType,
-      TransactionsAction transactionsAction,
       String? message});
 }
 
@@ -365,7 +333,6 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
-    Object? transactionsAction = null,
     Object? message = freezed,
   }) {
     return _then(_$_UnknownTransactionsException(
@@ -377,10 +344,6 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as TransactionsErrorType,
-      transactionsAction: null == transactionsAction
-          ? _value.transactionsAction
-          : transactionsAction // ignore: cast_nullable_to_non_nullable
-              as TransactionsAction,
       message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -393,10 +356,7 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
 
 class _$_UnknownTransactionsException extends _UnknownTransactionsException {
   _$_UnknownTransactionsException(
-      {required this.stackTrace,
-      required this.errorType,
-      this.transactionsAction = TransactionsAction.unknown,
-      this.message})
+      {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
   @override
@@ -404,14 +364,11 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
   @override
   final TransactionsErrorType errorType;
   @override
-  @JsonKey()
-  final TransactionsAction transactionsAction;
-  @override
   final String? message;
 
   @override
   String toString() {
-    return 'TransactionsException.unknown(stackTrace: $stackTrace, errorType: $errorType, transactionsAction: $transactionsAction, message: $message)';
+    return 'TransactionsException.unknown(stackTrace: $stackTrace, errorType: $errorType, message: $message)';
   }
 
   @override
@@ -423,14 +380,11 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
                 other.errorType == errorType) &&
-            (identical(other.transactionsAction, transactionsAction) ||
-                other.transactionsAction == transactionsAction) &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, stackTrace, errorType, transactionsAction, message);
+  int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
   @JsonKey(ignore: true)
   @override
@@ -443,44 +397,41 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)
-        $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            TransactionsErrorType errorType,
-            TransactionsAction transactionsAction,
             String? message)
+        $default, {
+    required TResult Function(StackTrace stackTrace,
+            TransactionsErrorType errorType, String? message)
         unknown,
   }) {
-    return unknown(stackTrace, errorType, transactionsAction, message);
+    return unknown(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         $default, {
     TResult? Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         unknown,
   }) {
-    return unknown?.call(stackTrace, errorType, transactionsAction, message);
+    return unknown?.call(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         $default, {
     TResult Function(StackTrace stackTrace, TransactionsErrorType errorType,
-            TransactionsAction transactionsAction, String? message)?
+            String? message)?
         unknown,
     required TResult orElse(),
   }) {
     if (unknown != null) {
-      return unknown(stackTrace, errorType, transactionsAction, message);
+      return unknown(stackTrace, errorType, message);
     }
     return orElse();
   }
@@ -521,7 +472,6 @@ abstract class _UnknownTransactionsException extends TransactionsException {
   factory _UnknownTransactionsException(
       {required final StackTrace stackTrace,
       required final TransactionsErrorType errorType,
-      final TransactionsAction transactionsAction,
       final String? message}) = _$_UnknownTransactionsException;
   _UnknownTransactionsException._() : super._();
 
@@ -529,8 +479,6 @@ abstract class _UnknownTransactionsException extends TransactionsException {
   StackTrace get stackTrace;
   @override
   TransactionsErrorType get errorType;
-  @override
-  TransactionsAction get transactionsAction;
   @override
   String? get message;
   @override
@@ -543,61 +491,35 @@ abstract class _UnknownTransactionsException extends TransactionsException {
 mixin _$TransactionsFailure {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  TransactionsAction get transactionsAction =>
-      throw _privateConstructorUsedError;
   TransactionsErrorType get errorType => throw _privateConstructorUsedError;
   Object? get rawException => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) =>
@@ -636,7 +558,6 @@ abstract class $TransactionsFailureCopyWith<$Res> {
   $Res call(
       {StackTrace stackTrace,
       String message,
-      TransactionsAction transactionsAction,
       TransactionsErrorType errorType,
       Object? rawException});
 }
@@ -656,7 +577,6 @@ class _$TransactionsFailureCopyWithImpl<$Res, $Val extends TransactionsFailure>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? transactionsAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -669,10 +589,6 @@ class _$TransactionsFailureCopyWithImpl<$Res, $Val extends TransactionsFailure>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      transactionsAction: null == transactionsAction
-          ? _value.transactionsAction
-          : transactionsAction // ignore: cast_nullable_to_non_nullable
-              as TransactionsAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -694,7 +610,6 @@ abstract class _$$_TransactionsFailureCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       String message,
-      TransactionsAction transactionsAction,
       TransactionsErrorType errorType,
       Object? rawException});
 }
@@ -712,7 +627,6 @@ class __$$_TransactionsFailureCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? transactionsAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -725,10 +639,6 @@ class __$$_TransactionsFailureCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      transactionsAction: null == transactionsAction
-          ? _value.transactionsAction
-          : transactionsAction // ignore: cast_nullable_to_non_nullable
-              as TransactionsAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -745,7 +655,6 @@ class _$_TransactionsFailure extends _TransactionsFailure {
   const _$_TransactionsFailure(
       {required this.stackTrace,
       required this.message,
-      required this.transactionsAction,
       required this.errorType,
       this.rawException})
       : super._();
@@ -754,8 +663,6 @@ class _$_TransactionsFailure extends _TransactionsFailure {
   final StackTrace stackTrace;
   @override
   final String message;
-  @override
-  final TransactionsAction transactionsAction;
   @override
   final TransactionsErrorType errorType;
   @override
@@ -771,69 +678,42 @@ class _$_TransactionsFailure extends _TransactionsFailure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)
         unknown,
   }) {
-    return $default(
-        stackTrace, message, transactionsAction, errorType, rawException);
+    return $default(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         unknown,
   }) {
-    return $default?.call(
-        stackTrace, message, transactionsAction, errorType, rawException);
+    return $default?.call(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(
-          stackTrace, message, transactionsAction, errorType, rawException);
+      return $default(stackTrace, message, errorType, rawException);
     }
     return orElse();
   }
@@ -874,7 +754,6 @@ abstract class _TransactionsFailure extends TransactionsFailure {
   const factory _TransactionsFailure(
       {required final StackTrace stackTrace,
       required final String message,
-      required final TransactionsAction transactionsAction,
       required final TransactionsErrorType errorType,
       final Object? rawException}) = _$_TransactionsFailure;
   const _TransactionsFailure._() : super._();
@@ -883,8 +762,6 @@ abstract class _TransactionsFailure extends TransactionsFailure {
   StackTrace get stackTrace;
   @override
   String get message;
-  @override
-  TransactionsAction get transactionsAction;
   @override
   TransactionsErrorType get errorType;
   @override
@@ -907,7 +784,6 @@ abstract class _$$_UnknownTransactionsFailureCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       String message,
-      TransactionsAction transactionsAction,
       TransactionsErrorType errorType,
       Object? rawException});
 }
@@ -927,7 +803,6 @@ class __$$_UnknownTransactionsFailureCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? transactionsAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -940,10 +815,6 @@ class __$$_UnknownTransactionsFailureCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      transactionsAction: null == transactionsAction
-          ? _value.transactionsAction
-          : transactionsAction // ignore: cast_nullable_to_non_nullable
-              as TransactionsAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -960,7 +831,6 @@ class _$_UnknownTransactionsFailure extends _UnknownTransactionsFailure {
   const _$_UnknownTransactionsFailure(
       {required this.stackTrace,
       required this.message,
-      required this.transactionsAction,
       this.errorType = TransactionsErrorType.unknown,
       this.rawException})
       : super._();
@@ -969,8 +839,6 @@ class _$_UnknownTransactionsFailure extends _UnknownTransactionsFailure {
   final StackTrace stackTrace;
   @override
   final String message;
-  @override
-  final TransactionsAction transactionsAction;
   @override
   @JsonKey()
   final TransactionsErrorType errorType;
@@ -987,69 +855,42 @@ class _$_UnknownTransactionsFailure extends _UnknownTransactionsFailure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)
         unknown,
   }) {
-    return unknown(
-        stackTrace, message, transactionsAction, errorType, rawException);
+    return unknown(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         unknown,
   }) {
-    return unknown?.call(
-        stackTrace, message, transactionsAction, errorType, rawException);
+    return unknown?.call(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            TransactionsAction transactionsAction,
-            TransactionsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            TransactionsErrorType errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) {
     if (unknown != null) {
-      return unknown(
-          stackTrace, message, transactionsAction, errorType, rawException);
+      return unknown(stackTrace, message, errorType, rawException);
     }
     return orElse();
   }
@@ -1090,7 +931,6 @@ abstract class _UnknownTransactionsFailure extends TransactionsFailure {
   const factory _UnknownTransactionsFailure(
       {required final StackTrace stackTrace,
       required final String message,
-      required final TransactionsAction transactionsAction,
       final TransactionsErrorType errorType,
       final Object? rawException}) = _$_UnknownTransactionsFailure;
   const _UnknownTransactionsFailure._() : super._();
@@ -1099,8 +939,6 @@ abstract class _UnknownTransactionsFailure extends TransactionsFailure {
   StackTrace get stackTrace;
   @override
   String get message;
-  @override
-  TransactionsAction get transactionsAction;
   @override
   TransactionsErrorType get errorType;
   @override

@@ -7,7 +7,6 @@ import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/categories/data/categories_local_dao.dart';
 
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transactions_local_dao.g.dart';
@@ -60,7 +59,6 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
   TransactionsLocalDAO(super.db);
 
   TaskEither<TransactionsFailure, Unit> createTransaction(Transaction txn) {
-    const currentAction = TransactionsAction.create;
     return TaskEither.tryCatch(
       () async {
         return transaction(() async {
@@ -73,7 +71,7 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
           await updateAccountDTO(updatedAccountDTO);
         }).then((_) => unit);
       },
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
@@ -81,7 +79,6 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     required Transaction sourceTxn,
     required Transaction destinationTxn,
   }) {
-    const currentAction = TransactionsAction.createTransferTransaction;
     return TaskEither.tryCatch(
       () async => transaction(() async {
         // Settle the [sourceTxn]
@@ -106,12 +103,11 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         return unit;
       }),
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
   TaskEither<TransactionsFailure, Unit> deleteTransaction(Transaction txn) {
-    const currentAction = TransactionsAction.delete;
     return TaskEither.tryCatch(
       () async => transaction(() async {
         final accountDto = await retrieveAccountById(txn.toDTO());
@@ -125,13 +121,12 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
         await (delete(transactionsTable)..where((tbl) => tbl.id.equals(txn.id))).go();
         return unit;
       }),
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
   /// This method will delete both the provided [transferTxnToDelete] as well as its `linkedTxn`
   TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
-    const currentAction = TransactionsAction.deleteTransferTransaction;
     return TaskEither.tryCatch(
       () => transaction(() async {
         // Ensure that the transaction is a transfer
@@ -139,7 +134,6 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
           throw TransactionsException(
             stackTrace: StackTrace.current,
             errorType: TransactionsErrorType.notATransferTransaction,
-            transactionsAction: currentAction,
           );
         }
 
@@ -165,7 +159,7 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         return unit;
       }),
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
@@ -173,7 +167,6 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     required Transaction newTxn,
     required Transaction oldTxn,
   }) {
-    const currentAction = TransactionsAction.edit;
     return TaskEither.tryCatch(
       () async => transaction(() async {
         // Retrieve and setup required data
@@ -198,7 +191,7 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
             .write(newTxn.toDTO().toCompanion(false));
         return unit;
       }),
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
@@ -208,7 +201,6 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     required Transaction newSourceTxn,
     required Transaction newDestinationTxn,
   }) {
-    const currentAction = TransactionsAction.editTransferTxn;
     return TaskEither.tryCatch(
       () async => transaction(() async {
         // Delete both transactions
@@ -229,22 +221,20 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         return unit;
       }),
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
   TaskEither<TransactionsFailure, List<TransactionDTO>> getTransactionsByAccount(String accountId) {
-    const currentAction = TransactionsAction.getTransactionsByAccount;
     return TaskEither.tryCatch(
       () async {
         return (select(transactionsTable)..where((tbl) => tbl.accountId.equals(accountId))).get();
       },
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
   TaskEither<TransactionsFailure, TransactionDTO> getTransactionById(String txnId) {
-    const currentAction = TransactionsAction.getTransactionById;
     return TaskEither.tryCatch(
       () async {
         final result =
@@ -254,21 +244,19 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
           throw TransactionsException(
             stackTrace: StackTrace.current,
             errorType: TransactionsErrorType.transactionNotFound,
-            transactionsAction: currentAction,
           );
         } else {
           return result;
         }
       },
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
   TaskEither<TransactionsFailure, List<TransactionDTO>> getAllTransactions() {
-    const currentAction = TransactionsAction.getAllTransactions;
     return TaskEither.tryCatch(
       () async => select(transactionsTable).get(),
-      (error, stackTrace) => mapDriftToTransactionsFailure(currentAction, error, stackTrace),
+      mapDriftToTransactionsFailure,
     );
   }
 
@@ -302,7 +290,7 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     // Calculate the new balance
     var calculatedBalance = account.initialBalance;
     for (final txn in txnList) {
-      final type = TransactionType.fromString(txn.transactionType, TransactionsAction.unknown);
+      final type = TransactionType.fromString(txn.transactionType);
       if (type == TransactionType.credit) {
         calculatedBalance += txn.transactionAmount;
       } else if (type == TransactionType.debit) {
@@ -316,7 +304,6 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
       throw TransactionsException(
         stackTrace: StackTrace.current,
         errorType: TransactionsErrorType.mismatchAccountBalance,
-        transactionsAction: TransactionsAction.unknown,
       );
     }
 

@@ -2,7 +2,6 @@ import 'package:drift/isolate.dart';
 import 'package:drift/native.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/errors/failures.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 part 'transactions_errors.freezed.dart';
@@ -88,7 +87,6 @@ class TransactionsException with _$TransactionsException implements Exception {
   factory TransactionsException({
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
-    required TransactionsAction transactionsAction,
     String? message,
   }) = _TransactionsException;
 
@@ -97,7 +95,6 @@ class TransactionsException with _$TransactionsException implements Exception {
   factory TransactionsException.unknown({
     required StackTrace stackTrace,
     required TransactionsErrorType errorType,
-    @Default(TransactionsAction.unknown) TransactionsAction transactionsAction,
     String? message,
   }) = _UnknownTransactionsException;
 
@@ -105,7 +102,6 @@ class TransactionsException with _$TransactionsException implements Exception {
     return TransactionsException(
       stackTrace: failure.stackTrace,
       errorType: failure.errorType,
-      transactionsAction: failure.transactionsAction,
     );
   }
 }
@@ -119,7 +115,6 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
   const factory TransactionsFailure({
     required StackTrace stackTrace,
     required String message,
-    required TransactionsAction transactionsAction,
     required TransactionsErrorType errorType,
     Object? rawException,
   }) = _TransactionsFailure;
@@ -129,7 +124,6 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
   const factory TransactionsFailure.unknown({
     required StackTrace stackTrace,
     required String message,
-    required TransactionsAction transactionsAction,
     @Default(TransactionsErrorType.unknown) TransactionsErrorType errorType,
     Object? rawException,
   }) = _UnknownTransactionsFailure;
@@ -139,7 +133,6 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
       stackTrace: exception.stackTrace,
       errorType: exception.errorType,
       message: exception.message ?? exception.errorType.message,
-      transactionsAction: exception.transactionsAction,
       rawException: exception,
     );
   }
@@ -166,12 +159,10 @@ class TransactionsFailure with _$TransactionsFailure implements Failure {
 /// * Helpers
 /// ****************************************************************
 
-TransactionsFailure mapDriftToTransactionsFailure(
-    TransactionsAction transactionsAction, Object error, StackTrace stackTrace) {
+TransactionsFailure mapDriftToTransactionsFailure(Object error, StackTrace stackTrace) {
   if (error is DriftRemoteException && error.remoteCause is SqliteException) {
     final cause = error.remoteCause as SqliteException;
     return TransactionsFailure(
-      transactionsAction: transactionsAction,
       errorType: TransactionsErrorType.sqliteException,
       message: '${cause.message} \n${cause.causingStatement}',
       stackTrace: stackTrace,
@@ -181,14 +172,12 @@ TransactionsFailure mapDriftToTransactionsFailure(
     return TransactionsFailure(
         stackTrace: stackTrace,
         message: error.errorType.message,
-        transactionsAction: transactionsAction,
         errorType: error.errorType,
         rawException: error);
   } else {
     return TransactionsFailure.unknown(
       stackTrace: stackTrace,
       message: TransactionsErrorType.unknown.message,
-      transactionsAction: transactionsAction,
       rawException: error,
     );
   }

@@ -19,24 +19,6 @@ TransactionsRepo transactionsRepo(TransactionsRepoRef ref) => TransactionsRepo(
       ref.watch(uuidProvider),
     );
 
-enum TransactionsAction {
-  create,
-  createTransferTransaction,
-  delete,
-  deleteTransferTransaction,
-  edit,
-  editTransferTxn,
-  getTransactionsByAccount,
-  getTransactionById,
-  getAllTransactions,
-  unknown,
-
-  getTransactionAmount,
-  getTransactionCurrency,
-  fundDetailsFromDTO,
-  mapAccountToDTO,
-}
-
 class TransactionsRepo {
   TransactionsRepo(this.transactionsLocalDAO, this.uuid);
 
@@ -57,7 +39,6 @@ class TransactionsRepo {
     required String? targetCurrency,
     required String? transactionDescription,
   }) {
-    const currentAction = TransactionsAction.create;
     final txn = Transaction.newTransaction(
       creatorUid: creatorUid,
       name: name,
@@ -65,7 +46,7 @@ class TransactionsRepo {
       transactionDate: transactionDate,
       accountId: accountId,
       fundDetails: FundDetails(
-        transactionType: TransactionType.fromString(type, currentAction),
+        transactionType: TransactionType.fromString(type),
         baseAmount: baseAmount,
         baseCurrency: PecuniaCurrencies.fromString(baseCurrency),
         exchangeRate: exchangeRate,
@@ -96,7 +77,6 @@ class TransactionsRepo {
         exchangeRate: exchangeRate,
         transferDescription: transferDescription,
         uuid: uuid,
-        currentAction: TransactionsAction.createTransferTransaction,
         defaultSourceTxnId: null,
         defaultDestinationTxnId: null,
       ).toTaskEither().flatMap(
@@ -168,7 +148,6 @@ class TransactionsRepoHelper {
         stackTrace: stackTrace,
         message: TransactionsErrorType.cannotConvertToDTO.message,
         errorType: TransactionsErrorType.cannotConvertToDTO,
-        transactionsAction: TransactionsAction.mapAccountToDTO,
       ),
     );
   }
@@ -187,7 +166,6 @@ class TransactionsRepoHelper {
         stackTrace: stackTrace,
         message: TransactionsErrorType.cannotConvertFromDTO.message,
         errorType: TransactionsErrorType.cannotConvertFromDTO,
-        transactionsAction: TransactionsAction.unknown,
       );
     });
   }

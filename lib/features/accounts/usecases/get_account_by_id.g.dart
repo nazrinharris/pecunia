@@ -6,7 +6,7 @@ part of 'get_account_by_id.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAccountByIdHash() => r'c42c5db981a3cbad9c50b87f52c7d397d522b62b';
+String _$getAccountByIdHash() => r'0ccc38f53e8a78b56bf9c4822f2993e96b510a71';
 
 /// Copied from Dart SDK
 class _SystemHash {

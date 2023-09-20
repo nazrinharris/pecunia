@@ -2,13 +2,13 @@ import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/core/common/description.dart' as d;
 import 'package:uuid/uuid.dart';
 
 import '../../../matcher/accounts_matchers.dart';
@@ -97,7 +97,6 @@ void main() {
 
   group('AccountsRepoImpl -', () {
     group('getAccounts()', () {
-      const currentAction = AccountsAction.getAccounts;
       test('returns a [List<Account>] when the call to accountsLocalDS is successful', () async {
         // Arrange
         when(() => mockAccountsLocalDAO.getAccounts()).thenAnswer(
@@ -120,7 +119,6 @@ void main() {
           (_) => TaskEither.left(AccountsFailure.unknown(
             stackTrace: StackTrace.current,
             message: AccountsErrorType.unknown.message,
-            accountsAction: currentAction,
           )),
         );
 
@@ -130,7 +128,7 @@ void main() {
         // Assert
         expect(result.isLeft(), true);
         result.fold(
-          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown, currentAction)),
+          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -163,7 +161,6 @@ void main() {
             left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,
-              accountsAction: AccountsAction.watchAccounts,
             )),
           ),
         );
@@ -208,7 +205,6 @@ void main() {
         ).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,
-              accountsAction: AccountsAction.createAccount,
             )));
 
         // Act
@@ -225,7 +221,7 @@ void main() {
         // Assert
         expect(result.isLeft(), true);
         result.fold(
-          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown, AccountsAction.createAccount)),
+          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -250,13 +246,11 @@ void main() {
           'returns an [AccountsFailure] with [AccountsAction.updateAccount] and correct [AccountsErrorType] when the call to accountsLocalDS is unsuccessful',
           () async {
         // Arrange
-        const currentAction = AccountsAction.updateAccountDetails;
         when(
           () => mockAccountsLocalDAO.updateAccount(any()),
         ).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,
-              accountsAction: currentAction,
             )));
 
         // Act
@@ -265,7 +259,7 @@ void main() {
         // Assert
         expect(result.isLeft(), true);
         result.fold(
-          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown, currentAction)),
+          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -290,13 +284,11 @@ void main() {
           'returns an [AccountsFailure] with [AccountsAction.deleteAccount] and correct [AccountsErrorType] when the call to accountsLocalDS is unsuccessful',
           () async {
         // Arrange
-        const currentAction = AccountsAction.deleteAccount;
         when(
           () => mockAccountsLocalDAO.deleteAccount(any()),
         ).thenAnswer((_) => TaskEither.left(AccountsFailure.unknown(
               stackTrace: StackTrace.current,
               message: AccountsErrorType.unknown.message,
-              accountsAction: currentAction,
             )));
 
         // Act
@@ -305,7 +297,7 @@ void main() {
         // Assert
         expect(result.isLeft(), true);
         result.fold(
-          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown, currentAction)),
+          (l) => expect(l, isAccountsFailure(AccountsErrorType.unknown)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -332,7 +324,6 @@ void main() {
           'returns an [AccountsFailure] with [AccountsAction.mapAccountToDTO] and correct [AccountsErrorType] when conversion is unsuccessfull',
           () async {
         // Arrange
-        const currentAction = AccountsAction.mapAccountToDTO;
         when(() => mockAccount.toDTO()).thenThrow(Exception());
 
         // Act
@@ -341,7 +332,7 @@ void main() {
         // Assert
 
         result.fold(
-          (l) => expect(l, isAccountsFailure(AccountsErrorType.cannotConvertToDTO, currentAction)),
+          (l) => expect(l, isAccountsFailure(AccountsErrorType.cannotConvertToDTO)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });

@@ -6,7 +6,7 @@ part of 'get_all_accounts.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAllAccountsHash() => r'cfd8e053ab67fdfb5601c3a828cfa7edf8c28323';
+String _$getAllAccountsHash() => r'8d20cbacd139c5bdfa4230dd9ed99c826c90741f';
 
 /// See also [GetAllAccounts].
 @ProviderFor(GetAllAccounts)

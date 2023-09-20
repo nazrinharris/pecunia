@@ -3,7 +3,6 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 import 'package:pecunia/core/infrastructure/supabase/pecunia_supabase.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -57,12 +56,10 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     required String password,
     required Session currentSession,
   }) {
-    const currentAction = AuthAction.login;
     return network
         .isConnected()
         .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
         .flatMap<AuthResponseAndSession>(_loginIfConnected(
-          currentAction: currentAction,
           currentSession: currentSession,
           email: email,
           password: password,
@@ -70,12 +67,10 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
         .flatMap((r) => helper.getUserFromAuthResponse(
               r.response,
               r.currentSession,
-              currentAction,
             ))
         .flatMap((r) => helper.mapSupaUserToDTOWithSession(
               r.user,
               r.newSession,
-              currentAction,
             ));
   }
 
@@ -83,7 +78,6 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     required String email,
     required String password,
     required Session currentSession,
-    required AuthAction currentAction,
   }) {
     return (isConnected) {
       return isConnected
@@ -95,10 +89,9 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
                 );
                 return (response: response, currentSession: const Session(isValid: true));
               },
-              (error, stackTrace) => mapSupabaseToFailure(currentAction, error, stackTrace),
+              mapSupabaseToFailure,
             )
           : TaskEither.left(AuthFailure.noInternet(
-              authAction: currentAction,
               message: AuthErrorType.noInternet.message,
               stackTrace: StackTrace.current,
             ));
@@ -115,25 +108,18 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     required String password,
     required Session currentSession,
   }) {
-    const currentAction = AuthAction.register;
     return network
         .isConnected()
         .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
         .flatMap<AuthResponseAndSession>(_registerIfConnected(
-            currentAction: currentAction,
-            currentSession: currentSession,
-            username: username,
-            email: email,
-            password: password))
+            currentSession: currentSession, username: username, email: email, password: password))
         .flatMap((r) => helper.getUserFromAuthResponse(
               r.response,
               r.currentSession,
-              currentAction,
             ))
         .flatMap((r) => helper.mapSupaUserToDTOWithSession(
               r.user,
               r.newSession,
-              currentAction,
             ));
   }
 
@@ -142,7 +128,6 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     required String email,
     required String password,
     required Session currentSession,
-    required AuthAction currentAction,
   }) {
     return (isConnected) {
       return isConnected
@@ -155,10 +140,9 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
                 );
                 return (response: response, currentSession: const Session(isValid: true));
               },
-              (error, stackTrace) => mapSupabaseToFailure(currentAction, error, stackTrace),
+              mapSupabaseToFailure,
             )
           : TaskEither.left(AuthFailure.noInternet(
-              authAction: currentAction,
               message: AuthErrorType.noInternet.message,
               stackTrace: StackTrace.current,
             ));
@@ -170,16 +154,14 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, Session> logout(Session currentSession) {
-    const currentAction = AuthAction.logout;
     return network
         .isConnected()
         .mapLeft(helper.mapNetworkInfoFailureToAuthFailure)
-        .flatMap<Session>(logoutIfConnected(currentSession: currentSession, currentAction: currentAction));
+        .flatMap<Session>(logoutIfConnected(currentSession: currentSession));
   }
 
   TaskEither<AuthFailure, Session> Function(bool isConnected) logoutIfConnected({
     required Session currentSession,
-    required AuthAction currentAction,
   }) {
     return (isConnected) {
       return isConnected
@@ -188,10 +170,9 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
                 await supabaseClient.auth.signOut();
                 return currentSession.copyWith(isValid: false);
               },
-              (error, stackTrace) => mapSupabaseToFailure(currentAction, error, stackTrace),
+              mapSupabaseToFailure,
             )
           : TaskEither.left(AuthFailure.noInternet(
-              authAction: currentAction,
               message: AuthErrorType.noInternet.message,
               stackTrace: StackTrace.current,
             ));
@@ -203,17 +184,15 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUserDTO> getLoggedInUser() {
-    const currentAction = AuthAction.getLoggedInUser;
     final user = supabaseClient.auth.currentUser;
     if (user == null) {
       return TaskEither.left(AuthFailure(
-        authAction: currentAction,
         errorType: AuthErrorType.noLoggedInUser,
         stackTrace: StackTrace.current,
         message: AuthErrorType.noLoggedInUser.message,
       ));
     }
-    return helper.mapSupaUserToDTO(user, currentAction);
+    return helper.mapSupaUserToDTO(user);
   }
 }
 
@@ -235,7 +214,6 @@ class AuthRemoteDSHelper {
   /// If an error occurs, it will return a Left with an AuthFailure.
   TaskEither<AuthFailure, PecuniaUserDTO> mapSupaUserToDTO(
     s.User user,
-    AuthAction authAction,
   ) =>
       TaskEither.tryCatch(
         () async {
@@ -246,14 +224,13 @@ class AuthRemoteDSHelper {
             dateCreated: DateTime.parse(user.createdAt),
           );
         },
-        (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
+        mapSupabaseToFailure,
       );
 
   /// Similar to `mapSupaUserToDTO`, but also includes the session information.
   TaskEither<AuthFailure, PecuniaUserDTOAndSession> mapSupaUserToDTOWithSession(
     s.User user,
     Session newSession,
-    AuthAction authAction,
   ) =>
       TaskEither.tryCatch(
         () async {
@@ -267,7 +244,7 @@ class AuthRemoteDSHelper {
             newSession: newSession
           );
         },
-        (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
+        mapSupabaseToFailure,
       );
 
   /// Tries to extract the user and update session information from a Supabase AuthResponse,
@@ -278,7 +255,6 @@ class AuthRemoteDSHelper {
   TaskEither<AuthFailure, SupaUserAndSession> getUserFromAuthResponse(
     s.AuthResponse response,
     Session newSession,
-    AuthAction authAction,
   ) =>
       TaskEither.tryCatch(
         () async {
@@ -286,21 +262,20 @@ class AuthRemoteDSHelper {
 
           if (user == null || user.userMetadata?['username'] == null) {
             throw AuthException(
-              authAction: authAction,
               errorType: AuthErrorType.missingUsername,
               stackTrace: StackTrace.current,
             );
           }
           return (user: user, newSession: newSession);
         },
-        (error, stackTrace) => mapSupabaseToFailure(authAction, error, stackTrace),
+        mapSupabaseToFailure,
       );
 
   /// Converts a `NetworkInfoFailure` to an `AuthFailure`.
   AuthFailure mapNetworkInfoFailureToAuthFailure(NetworkInfoFailure failure) {
     return AuthFailure.unknown(
-        stackTrace: StackTrace.current,
-        message: AuthErrorType.unknown.message,
-        authAction: AuthAction.unknown);
+      stackTrace: StackTrace.current,
+      message: AuthErrorType.unknown.message,
+    );
   }
 }

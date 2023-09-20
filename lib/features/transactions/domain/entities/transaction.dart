@@ -7,7 +7,6 @@ import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:uuid/uuid.dart';
 
 part 'transaction.freezed.dart';
@@ -22,13 +21,12 @@ enum TransactionType {
 
   final String typeAsString;
 
-  static TransactionType fromString(String inputType, TransactionsAction action) {
+  static TransactionType fromString(String inputType) {
     return TransactionType.values.firstWhere(
       (element) => element.typeAsString.toLowerCase() == inputType.toLowerCase(),
       orElse: () => throw TransactionsException(
         stackTrace: StackTrace.current,
         errorType: TransactionsErrorType.invalidType,
-        transactionsAction: action,
       ),
     );
   }
@@ -128,7 +126,6 @@ class Transaction with _$Transaction {
         throw TransactionsException(
             stackTrace: StackTrace.current,
             errorType: TransactionsErrorType.invalidExchangedAmount,
-            transactionsAction: TransactionsAction.unknown,
             message:
                 'Stored target amount (${fundDetails.targetAmount} ${fundDetails.targetCurrency}) does not match computed target amount ($computedTargetAmount ${fundDetails.targetCurrency}). \nBecause (${fundDetails.baseAmount} ${fundDetails.baseCurrency} * ${fundDetails.exchangeRate} should equal to $computedTargetAmount ${fundDetails.targetCurrency}) \nWhich has a difference of $difference, which is greater than the tolerance of $epsilon');
       }
@@ -168,7 +165,6 @@ class Transaction with _$Transaction {
     required double? exchangeRate,
     required String? transferDescription,
     required Uuid uuid,
-    required TransactionsAction currentAction,
     required String? defaultSourceTxnId,
     required String? defaultDestinationTxnId,
 
@@ -186,7 +182,6 @@ class Transaction with _$Transaction {
       return fp.Either.left(TransactionsFailure(
         message: TransactionsErrorType.invalidMultiCurrencyFields.message,
         errorType: TransactionsErrorType.invalidMultiCurrencyFields,
-        transactionsAction: currentAction,
         stackTrace: StackTrace.current,
       ));
     }
@@ -196,7 +191,6 @@ class Transaction with _$Transaction {
       return fp.Either.left(TransactionsFailure(
         message: TransactionsErrorType.missingExchangeRateForDifferentCurrencies.message,
         errorType: TransactionsErrorType.missingExchangeRateForDifferentCurrencies,
-        transactionsAction: currentAction,
         stackTrace: StackTrace.current,
       ));
     }
@@ -206,7 +200,6 @@ class Transaction with _$Transaction {
       return fp.Either.left(TransactionsFailure(
         message: TransactionsErrorType.sameSourceAndDestinationAccount.message,
         errorType: TransactionsErrorType.sameSourceAndDestinationAccount,
-        transactionsAction: currentAction,
         stackTrace: StackTrace.current,
       ));
     }

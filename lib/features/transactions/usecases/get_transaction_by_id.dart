@@ -17,7 +17,6 @@ Future<Transaction> getTransactionById(
     return Future<Transaction>.error(TransactionsFailure.unknown(
       stackTrace: StackTrace.current,
       message: 'Transaction retrieval failed',
-      transactionsAction: TransactionsAction.unknown,
     ));
   }
 
