@@ -41,9 +41,9 @@ enum TransactionType {
   String toDescription() {
     switch (this) {
       case TransactionType.credit:
-        return 'Income (Credit)';
+        return 'Income';
       case TransactionType.debit:
-        return 'Expense (Debit)';
+        return 'Expense';
     }
   }
 

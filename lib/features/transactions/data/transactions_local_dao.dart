@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
+import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
@@ -257,6 +258,16 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     return TaskEither.tryCatch(
       () async => select(transactionsTable).get(),
       mapDriftToTransactionsFailure,
+    );
+  }
+
+  TaskEither<TxnCategoriesFailure, Unit> addCategoryToTxn(String transactionId, String categoryId) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        await db.txnCategoriesLocalDAO.addCategoryToTxn(transactionId, categoryId).run();
+        return unit;
+      }),
+      mapDriftToTxnCategoriesFailure,
     );
   }
 

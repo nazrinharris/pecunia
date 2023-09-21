@@ -30,6 +30,7 @@ PecuniaDB pecuniaDB(PecuniaDBRef ref) => PecuniaDB(_openConnection());
     AccountsLocalDAO,
     TransactionsLocalDAO,
     CategoriesLocalDAO,
+    TxnCategoriesLocalDAO,
   ],
 )
 class PecuniaDB extends _$PecuniaDB {
