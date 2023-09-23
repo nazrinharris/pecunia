@@ -1,3 +1,4 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 
 extension NumericExtension on String {
@@ -23,6 +24,10 @@ extension TruncateExtension on String {
 extension StringColorExtension on String {
   Color toColor() {
     return Color(int.parse(this, radix: 16));
+  }
+
+  MaterialColor toMaterialColor() {
+    return ColorTools.createPrimarySwatch(toColor());
   }
 }
 

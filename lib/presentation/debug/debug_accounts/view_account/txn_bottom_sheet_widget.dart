@@ -3,18 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/debug/debug_forms/edit_txn_form_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/screens/categories/view_all_categories/category_bottom_sheet_widget.dart';
 
 class TxnBottomSheet extends ConsumerWidget {
-  const TxnBottomSheet(this.txn, this.account, {super.key});
+  const TxnBottomSheet({
+    required this.txn,
+    required this.account,
+    this.category,
+    super.key,
+  });
 
   final Transaction txn;
   final Account account;
+  final Category? category;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,6 +74,7 @@ class TxnBottomSheet extends ConsumerWidget {
           TxnListTile(
             account: account,
             txn: txn,
+            category: category,
             hideAccountName: true,
             enableTopDivider: true,
             onTap: () {},
@@ -153,6 +162,8 @@ class TxnBottomSheet extends ConsumerWidget {
           ),
           const SizedBox(height: 14),
           ExpandableTxnMetadata(txn, account),
+          const SizedBox(height: 7),
+          if (category != null) ExpandableCategoryMetadata(category!),
           const SizedBox(height: 64)
         ],
       ),
@@ -160,7 +171,12 @@ class TxnBottomSheet extends ConsumerWidget {
   }
 }
 
-void showTransactionBottomSheet(BuildContext context, Transaction txn, Account account) {
+void showTransactionBottomSheet(
+  BuildContext context,
+  Transaction txn,
+  Account account, {
+  Category? category,
+}) {
   showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
@@ -173,7 +189,11 @@ void showTransactionBottomSheet(BuildContext context, Transaction txn, Account a
           height: 550,
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: TxnBottomSheet(txn, account),
+            child: TxnBottomSheet(
+              txn: txn,
+              account: account,
+              category: category,
+            ),
           ),
         );
       });

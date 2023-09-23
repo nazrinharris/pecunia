@@ -11,6 +11,7 @@ import 'package:pecunia/presentation/debug/debug_accounts/view_account/providers
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
 
+/// If `onTap` is not provided, then the transaction will be displayed in a bottom sheet
 class TransferTxnListTile extends ConsumerWidget {
   const TransferTxnListTile({
     required this.account,

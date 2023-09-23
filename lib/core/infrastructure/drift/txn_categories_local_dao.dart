@@ -5,8 +5,13 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/categories/data/categories_local_dao.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'txn_categories_local_dao.g.dart';
+
+@riverpod
+TxnCategoriesLocalDAO txnCategoriesLocalDAO(TxnCategoriesLocalDAORef ref) =>
+    ref.watch(pecuniaDBProvider).txnCategoriesLocalDAO;
 
 @DataClassName('TransactionCategoryDTO')
 class TxnCategoriesTable extends Table {

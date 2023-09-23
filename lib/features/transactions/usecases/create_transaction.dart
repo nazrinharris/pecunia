@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' as f;
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,10 +25,11 @@ class CreateTransaction extends _$CreateTransaction {
     required double? exchangeRate,
     required String? targetCurrency,
     required double? targetAmount,
+    required Category? category,
   }) async {
     state = const AsyncValue.loading();
 
-    debugPrint('retrieving logged in user...');
+    f.debugPrint('retrieving logged in user...');
     final failureOrPecuniaUser = await ref.read(authRepoProvider).getLoggedInUser().run();
 
     final pecuniaUser = failureOrPecuniaUser.fold(
@@ -38,7 +40,7 @@ class CreateTransaction extends _$CreateTransaction {
     );
 
     if (pecuniaUser != null) {
-      debugPrint('user exists, creating transaction...');
+      f.debugPrint('user exists, creating transaction...');
       (await ref
               .read(transactionsRepoProvider)
               .createTransaction(
@@ -53,6 +55,7 @@ class CreateTransaction extends _$CreateTransaction {
                 exchangeRate: exchangeRate,
                 targetCurrency: targetCurrency,
                 targetAmount: targetAmount,
+                category: category,
               )
               .run())
           .fold(

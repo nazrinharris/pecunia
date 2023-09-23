@@ -50,6 +50,14 @@ class TxnCategoriesException with _$TxnCategoriesException implements Exception 
     @Default(TxnCategoriesErrorType.unknown) TxnCategoriesErrorType errorType,
     String? message,
   }) = _UnknownTxnCategoriesException;
+
+  factory TxnCategoriesException.fromFailure(TxnCategoriesFailure failure) {
+    return TxnCategoriesException(
+      stackTrace: failure.stackTrace,
+      errorType: failure.errorType,
+      message: failure.message,
+    );
+  }
 }
 
 /// ****************************************************************

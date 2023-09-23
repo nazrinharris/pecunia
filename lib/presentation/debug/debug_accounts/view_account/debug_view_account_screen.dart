@@ -8,11 +8,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
+import 'package:pecunia/core/util/extensions.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/edit_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
@@ -20,6 +22,7 @@ import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transfer_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_list_tile_widget.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
@@ -367,13 +370,39 @@ class TransactionsList extends ConsumerWidget {
             itemBuilder: (context, index) {
               final txn = transactions[index];
 
-              return txn.isTransferTransaction
-                  ? TransferTxnListTile(
-                      account: account,
-                      txn: txn,
-                      enableTopDivider: index == 0,
-                    )
-                  : TxnListTile(account: account, txn: txn, enableTopDivider: index == 0);
+              if (txn.isTransferTransaction) {
+                return TransferTxnListTile(
+                  account: account,
+                  txn: txn,
+                  enableTopDivider: index == 0,
+                  enableBottomDivider: index == transactions.length - 1,
+                );
+              }
+
+              final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
+
+              return switch (categoryValue) {
+                AsyncLoading() => Column(
+                    children: [
+                      if (index == 0) Divider(color: Colors.grey.withOpacity(0.1)),
+                      const ListTile(title: CupertinoActivityIndicator()),
+                      if (index == transactions.length - 1) Divider(color: Colors.grey.withOpacity(0.1)),
+                    ],
+                  ),
+                AsyncError(:final Object error) => TxnListTileError(
+                    error as Failure,
+                    enableTopDivider: index == 0,
+                    enableBottomDivider: index == transactions.length - 1,
+                  ),
+                AsyncData(:final List<Category?> value) => TxnListTile(
+                    account: account,
+                    txn: txn,
+                    category: value.length == 1 ? value.first : null,
+                    enableTopDivider: index == 0,
+                    enableBottomDivider: index == transactions.length - 1,
+                  ),
+                _ => const Center(child: Text('Something went wrong')),
+              };
             },
           ),
         );
@@ -407,10 +436,11 @@ class TransactionsList extends ConsumerWidget {
   }
 }
 
-class TxnListTile extends StatelessWidget {
+class TxnListTile extends HookConsumerWidget {
   const TxnListTile({
     required this.account,
     required this.txn,
+    required this.category,
     this.enableTopDivider = false,
     this.enableBottomDivider = true,
     this.hideAccountName = false,
@@ -420,13 +450,14 @@ class TxnListTile extends StatelessWidget {
 
   final Account account;
   final Transaction txn;
+  final Category? category;
   final bool enableTopDivider;
   final bool enableBottomDivider;
   final bool hideAccountName;
   final void Function()? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         if (enableTopDivider) Divider(color: Colors.grey.withOpacity(0.1)),
@@ -458,14 +489,7 @@ class TxnListTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
           trailing: BuildTxnAmountText(txn),
-          leading: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.question_mark, color: Colors.grey[100]),
-          ),
+          leading: TxnListTileIcon(category: category),
           onTap: onTap ??
               () {
                 showModalBottomSheet<void>(
@@ -478,12 +502,93 @@ class TxnListTile extends StatelessWidget {
                     builder: (context) {
                       return SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
-                        child: TxnBottomSheet(txn, account),
+                        child: TxnBottomSheet(
+                          account: account,
+                          txn: txn,
+                          category: category,
+                        ),
                       );
                     });
               },
         ),
         if (enableBottomDivider) Divider(color: Colors.grey.withOpacity(0.1)),
+      ],
+    );
+  }
+}
+
+class TxnListTileIcon extends StatelessWidget {
+  const TxnListTileIcon({super.key, this.category});
+
+  final Category? category;
+
+  @override
+  Widget build(BuildContext context) {
+    if (category != null) {
+      final swatch = category!.primaryColor.toMaterialColor();
+      return Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: swatch.shade500.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(
+          category!.icon,
+          color: swatch.shade500, // Use the darker shade for the icon color
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(Icons.question_mark, color: Colors.grey[100]),
+    );
+  }
+}
+
+class TxnListTileError extends HookConsumerWidget {
+  const TxnListTileError(
+    this.failure, {
+    super.key,
+    this.enableTopDivider = false,
+    this.enableBottomDivider = true,
+  });
+
+  final Failure failure;
+  final bool enableTopDivider;
+  final bool enableBottomDivider;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        Divider(color: Colors.grey.withOpacity(0.1)),
+        ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Error loading transaction',
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                failure.message,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          trailing: const Icon(Icons.error_outline, color: Colors.red),
+        ),
+        Divider(color: Colors.grey.withOpacity(0.1)),
       ],
     );
   }

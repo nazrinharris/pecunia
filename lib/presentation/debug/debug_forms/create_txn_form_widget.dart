@@ -320,6 +320,7 @@ class CreateTxnForm extends HookConsumerWidget {
                         exchangeRate: exchangeRateInput,
                         targetCurrency: targetCurrencyInput,
                         targetAmount: targetAmountInput,
+                        category: chosenCategory.value,
                       );
                 }
               },

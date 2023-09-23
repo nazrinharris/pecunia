@@ -1,11 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/categories/data/categories_local_dao.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -59,7 +61,7 @@ class TransactionsTable extends Table {
 class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsLocalDAOMixin {
   TransactionsLocalDAO(super.db);
 
-  TaskEither<TransactionsFailure, Unit> createTransaction(Transaction txn) {
+  TaskEither<Failure, Unit> createTransaction(Transaction txn, Category? category) {
     return TaskEither.tryCatch(
       () async {
         return transaction(() async {
@@ -70,9 +72,22 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
             txn: txn,
           );
           await updateAccountDTO(updatedAccountDTO);
-        }).then((_) => unit);
+
+          if (category != null) {
+            (await db.txnCategoriesLocalDAO.addCategoryToTxn(txn.id, category.id).run()).fold(
+              (l) => throw TxnCategoriesException.fromFailure(l),
+              (r) => unit,
+            );
+          }
+          return unit;
+        });
       },
-      mapDriftToTransactionsFailure,
+      (error, stackTrace) {
+        if (error is TxnCategoriesException) {
+          return TxnCategoriesFailure.fromException(error);
+        }
+        return mapDriftToTransactionsFailure(error, stackTrace);
+      },
     );
   }
 
@@ -258,16 +273,6 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     return TaskEither.tryCatch(
       () async => select(transactionsTable).get(),
       mapDriftToTransactionsFailure,
-    );
-  }
-
-  TaskEither<TxnCategoriesFailure, Unit> addCategoryToTxn(String transactionId, String categoryId) {
-    return TaskEither.tryCatch(
-      () async => transaction(() async {
-        await db.txnCategoriesLocalDAO.addCategoryToTxn(transactionId, categoryId).run();
-        return unit;
-      }),
-      mapDriftToTxnCategoriesFailure,
     );
   }
 
