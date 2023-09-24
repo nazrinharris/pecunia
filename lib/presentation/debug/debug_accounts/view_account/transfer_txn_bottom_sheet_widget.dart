@@ -93,11 +93,13 @@ class TransferTxnBottomSheet extends ConsumerWidget {
             account: account,
             txn: txn,
             enableTopDivider: true,
+            defaultLinkedAccountAndTxn: (linkedAccount: linkedAccount, linkedTransaction: linkedTxn),
             onTap: () {},
           ),
           TransferTxnListTile(
             account: linkedAccount,
             txn: linkedTxn,
+            defaultLinkedAccountAndTxn: (linkedAccount: account, linkedTransaction: txn),
             onTap: () {},
           ),
           const SizedBox(height: 8),
