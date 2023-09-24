@@ -86,4 +86,5 @@ class _EntryScreenState extends State<EntryScreen> {
 /// Comment for tests for accounts and transactions
 /// Comment for multi-currency and transfer feature - multi-currency-and-transfer-feature
 /// Comment for transaction categories feature - transaction-categories
+/// Comment for one time budget feature - one-time-budget
 

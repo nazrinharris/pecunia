@@ -37,12 +37,13 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Transferring funds between accounts.
 - [x] Multi-currency transactions.
 - [x] Transaction categories.
-- [ ] Simple budget creation, deletion, editing, and viewing.
+- [ ] Simple timed budget creation, deletion, editing, and viewing.
 - [ ] Basic UI capabilities (as in, similar looks and functionality to mockup) 
 
 (`0.1.1`)
 
 - [ ] Implement new backend, `pecunia-backend`, and remove dependence on `supabase`
+- [ ] Guest/Local Account
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 
@@ -52,6 +53,8 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [ ] Implementing recurring budgets.
 - [ ] Visual analytics and reports.
 - [ ] Sub-Budgets (Multi-category budgeting).
+
+(`0.2.1`)
 - [ ] UI Upgrade! (Turn it into what it should've looked like)
 
 ### 😋 Phase 3: Quality of Life Improvements
