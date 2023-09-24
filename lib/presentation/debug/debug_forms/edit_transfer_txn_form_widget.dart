@@ -90,7 +90,7 @@ class EditTransferFormContent extends HookConsumerWidget {
         useState(accountsList.firstWhere((account) => account.id == sourceTxn.accountId));
     final chosenDestinationAccount =
         useState<Account>(accountsList.firstWhere((account) => account.id == destinationTxn.accountId));
-    final exchangeRate = useState<double?>(null);
+    final exchangeRate = useState<double?>(sourceTxn.fundDetails.exchangeRate);
 
     final sourceAmountController =
         useTextEditingController(text: sourceTxn.fundDetails.transactionAmount.toString());

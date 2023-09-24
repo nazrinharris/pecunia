@@ -1,10 +1,15 @@
+import 'package:flex_color_picker/flex_color_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
+import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 
@@ -100,6 +105,8 @@ class CreateTxnForm extends HookConsumerWidget {
     final baseCurrency = useState(chosenAccount.value.currency);
     final targetCurrency = useState(chosenAccount.value.currency);
 
+    final chosenCategory = useState<Category?>(null);
+
     final nameNode = useFocusNode();
     final descriptionNode = useFocusNode();
 
@@ -155,31 +162,37 @@ class CreateTxnForm extends HookConsumerWidget {
             const SizedBox(height: 8),
             ChooseAccountField(chosenAccount: chosenAccount, accountsList: accountsList),
             const SizedBox(height: 14),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: TransactionType.values.map((type) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: txnType.value == type
-                        ? (txnType.value.isCredit()
-                            ? Colors.green[200]!.withOpacity(0.2)
-                            : Colors.red[200]!.withOpacity(0.2))
-                        : null,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: RadioListTile<TransactionType>(
-                    title: Text(type.toDescription()),
-                    value: type,
-                    groupValue: txnType.value,
-                    activeColor: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
-                    shape: RoundedRectangleBorder(
+                return Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 14),
+                    decoration: BoxDecoration(
+                      color: txnType.value == type
+                          ? (txnType.value.isCredit()
+                              ? Colors.green[200]!.withOpacity(0.2)
+                              : Colors.red[200]!.withOpacity(0.2))
+                          : null,
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    onChanged: (val) => txnType.value = val!,
+                    child: RadioListTile<TransactionType>(
+                      title: Text(type.toDescription()),
+                      value: type,
+                      groupValue: txnType.value,
+                      activeColor: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      onChanged: (val) => txnType.value = val!,
+                    ),
                   ),
                 );
               }).toList(),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 14),
+            CategoryField(chosenCategory),
+            const SizedBox(height: 14),
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -307,6 +320,7 @@ class CreateTxnForm extends HookConsumerWidget {
                         exchangeRate: exchangeRateInput,
                         targetCurrency: targetCurrencyInput,
                         targetAmount: targetAmountInput,
+                        category: chosenCategory.value,
                       );
                 }
               },
@@ -320,6 +334,76 @@ class CreateTxnForm extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class CategoryField extends HookConsumerWidget {
+  const CategoryField(this.chosenCategory, {super.key});
+
+  final ValueNotifier<Category?> chosenCategory;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categoriesValue = ref.watch(getAllCategoriesProvider);
+
+    return switch (categoriesValue) {
+      AsyncLoading() => const Center(child: CupertinoActivityIndicator()),
+      AsyncError(:final Failure error) => Center(child: Text(error.toString())),
+      AsyncData(:final List<Category> value) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: DropdownButton<Category?>(
+            isExpanded: true,
+            borderRadius: BorderRadius.circular(14),
+            hint: const Text('   Choose an optional category'),
+            underline: const SizedBox.shrink(),
+            icon: const SizedBox.shrink(),
+            value: chosenCategory.value,
+            itemHeight: 64,
+            items: [
+              const DropdownMenuItem<Category?>(
+                child: Text('    No category'),
+              ),
+              ...value.map((category) {
+                final primaryColor = Color(int.parse(category.primaryColor, radix: 16));
+                final primarySwatch = ColorTools.createPrimarySwatch(primaryColor);
+                return DropdownMenuItem<Category>(
+                  value: category,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 14),
+                      Container(
+                        height: 45,
+                        width: 45,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: primarySwatch.shade500.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          category.icon,
+                          color: primarySwatch.shade500,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(category.name),
+                    ],
+                  ),
+                );
+              }),
+            ],
+            onChanged: (val) {
+              chosenCategory.value = val;
+            },
+          ),
+        ),
+      AsyncData(:final List<Category> value) when value.isEmpty => const Center(
+          child: Text('No categories found'),
+        ),
+      _ => const Center(child: Text('Fatal Error, Unexpected State')),
+    };
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
@@ -12,12 +13,14 @@ class EditTxnForm extends HookConsumerWidget {
   const EditTxnForm({
     required this.txn,
     required this.account,
+    required this.category,
     this.disableCloseButton = false,
     super.key,
   });
 
   final Account account;
   final Transaction txn;
+  final Category? category;
   final bool disableCloseButton;
 
   @override
@@ -38,6 +41,9 @@ class EditTxnForm extends HookConsumerWidget {
 
     final baseCurrency = useState(txn.fundDetails.baseCurrency);
     final targetCurrency = useState(txn.fundDetails.targetCurrency ?? chosenAccount.value.currency);
+
+    final oldCategory = category;
+    final chosenCategory = useState(category);
 
     final nameNode = useFocusNode();
     final descriptionNode = useFocusNode();
@@ -112,7 +118,9 @@ class EditTxnForm extends HookConsumerWidget {
                 );
               }).toList(),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 14),
+            CategoryField(chosenCategory),
+            const SizedBox(height: 14),
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -229,16 +237,17 @@ class EditTxnForm extends HookConsumerWidget {
                   }
 
                   await ref.read(editTransactionProvider.notifier).editTransaction(
-                        name: nameController.text,
-                        description: descriptionController.text,
-                        transactionType: txnType.value,
-                        baseAmount: double.parse(baseAmountController.text),
-                        baseCurrency: baseCurrency.value.code,
-                        exchangeRate: exchangeRateInput,
-                        targetCurrency: targetCurrencyInput?.code,
-                        targetAmount: targetAmountInput,
-                        oldTxn: txn,
-                      );
+                    name: nameController.text,
+                    description: descriptionController.text,
+                    transactionType: txnType.value,
+                    baseAmount: double.parse(baseAmountController.text),
+                    baseCurrency: baseCurrency.value.code,
+                    exchangeRate: exchangeRateInput,
+                    targetCurrency: targetCurrencyInput?.code,
+                    targetAmount: targetAmountInput,
+                    oldTxn: txn,
+                    category: (old: oldCategory, current: chosenCategory.value),
+                  );
                 }
               },
               style: ButtonStyle(

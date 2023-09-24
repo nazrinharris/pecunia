@@ -1,5 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
@@ -9,9 +11,7 @@ import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_auth_providers.dart';
-import 'package:pecunia/presentation/debug/debug_auth/debug_form.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugLoginAndRegisterScreen extends HookConsumerWidget {
   const DebugLoginAndRegisterScreen({super.key});
@@ -78,51 +78,65 @@ class LoginForm extends HookConsumerWidget {
   const LoginForm({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loginForm = ref.watch(loginFormProvider);
+    final formKey = useState(GlobalKey<FormState>());
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
 
-    return ReactiveForm(
-      formGroup: loginForm,
+    return Form(
+      key: formKey.value,
       child: Column(
         children: [
-          ReactiveTextField<String>(
-            formControlName: 'email',
+          TextFormField(
+            controller: emailController,
             decoration: const InputDecoration(
               labelText: 'Email',
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter an email';
+              }
+              if (!value.contains('@')) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
           ),
-          ReactiveTextField<String>(
-            formControlName: 'password',
+          TextFormField(
+            controller: passwordController,
             obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Password',
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter a password';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 16),
-          ReactiveFormConsumer(
-            builder: (context, form, child) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: form.valid
-                        ? () =>
-                            ref.read(loginWithEmailAndPasswordProvider.notifier).loginWithEmailAndPassword((
-                              email: form.value['email']! as String,
-                              password: form.value['password']! as String,
-                              currentSession: const Session(isValid: false),
-                            ))
-                        : null,
-                    child: const Text('Login'),
-                  ),
-                  const SizedBox(width: 14),
-                  ElevatedButton(
-                    onPressed: () =>
-                        ref.read(loginWithEmailAndPasswordProvider.notifier).updateProviderUserValue(),
-                    child: const Text('Update User Value'),
-                  ),
-                ],
-              );
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (formKey.value.currentState!.validate()) {
+                    ref.read(loginWithEmailAndPasswordProvider.notifier).loginWithEmailAndPassword((
+                      email: emailController.text,
+                      password: passwordController.text,
+                      currentSession: const Session(isValid: false),
+                    ));
+                  }
+                },
+                child: const Text('Login'),
+              ),
+              const SizedBox(width: 14),
+              ElevatedButton(
+                onPressed: () =>
+                    ref.read(loginWithEmailAndPasswordProvider.notifier).updateProviderUserValue(),
+                child: const Text('Update User Value'),
+              ),
+            ],
           ),
         ],
       ),
@@ -167,59 +181,106 @@ class LoginDetails extends HookConsumerWidget {
   }
 }
 
+class RegisterFields {
+  static String? validateEmail(String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Please enter an email';
+    }
+    if (!EmailValidator.validate(val)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  static String? validateUsername(String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Please enter a username';
+    }
+    if (val.length < 5) {
+      return 'Please enter a username with at least 5 characters';
+    }
+    return null;
+  }
+
+  static String? validatePassword(String? val) {
+    if (val == null || val.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (val.length < 6) {
+      return 'Please enter a password with at least 6 characters';
+    }
+    return null;
+  }
+
+  static String? validateConfirmPassword(String? val, String? password) {
+    if (val == null || val.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (val != password) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+}
+
 class RegisterForm extends HookConsumerWidget {
   const RegisterForm({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final registerForm = ref.watch(registerFormProvider);
+    final formKey = useState(GlobalKey<FormState>());
+    final emailController = useTextEditingController();
+    final usernameController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final confirmPasswordController = useTextEditingController();
 
-    return ReactiveForm(
-      formGroup: registerForm,
+    return Form(
+      key: formKey.value,
       child: Column(
         children: [
-          ReactiveTextField<String>(
-            formControlName: 'email',
+          TextFormField(
+            controller: emailController,
             decoration: const InputDecoration(
               labelText: 'Email',
             ),
+            validator: RegisterFields.validateEmail,
           ),
-          ReactiveTextField<String>(
-            formControlName: 'username',
+          TextFormField(
+            controller: usernameController,
             decoration: const InputDecoration(
               labelText: 'Username',
             ),
+            validator: RegisterFields.validateUsername,
           ),
-          ReactiveTextField<String>(
-            formControlName: 'password',
+          TextFormField(
+            controller: passwordController,
             obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Password',
             ),
+            validator: RegisterFields.validatePassword,
           ),
-          ReactiveTextField<String>(
-            formControlName: 'confirmPassword',
+          TextFormField(
+            controller: confirmPasswordController,
             obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Confirm Password',
             ),
+            validator: (val) => RegisterFields.validateConfirmPassword(val, passwordController.text),
           ),
           const SizedBox(height: 16),
-          ReactiveFormConsumer(
-            builder: (context, form, child) {
-              return ElevatedButton(
-                onPressed: form.valid
-                    ? () =>
-                        ref.read(registerWithEmailAndPasswordProvider.notifier).registerWithEmailAndPassword((
-                          email: form.value['email']! as String,
-                          username: form.value['username']! as String,
-                          password: form.value['password']! as String,
-                          confirmPassword: form.value['confirmPassword']! as String,
-                          currentSession: const Session(isValid: false),
-                        ))
-                    : null,
-                child: const Text('Register'),
-              );
+          ElevatedButton(
+            onPressed: () {
+              if (formKey.value.currentState!.validate()) {
+                ref.read(registerWithEmailAndPasswordProvider.notifier).registerWithEmailAndPassword((
+                  email: emailController.text,
+                  username: usernameController.text,
+                  password: passwordController.text,
+                  confirmPassword: confirmPasswordController.text,
+                  currentSession: const Session(isValid: false),
+                ));
+              }
             },
+            child: const Text('Register'),
           ),
           const SizedBox(height: 10),
           Row(

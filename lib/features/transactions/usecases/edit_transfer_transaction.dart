@@ -32,7 +32,6 @@ class EditTransferTransaction extends _$EditTransferTransaction {
     late final ({Transaction destinationTxn, Transaction sourceTxn}) txns;
 
     final result = Transaction.generateTransferTxnPair(
-      currentAction: TransactionsAction.editTransferTxn,
       sourceAccount: sourceAccount,
       destinationAccount: destinationAccount,
       sourceTransactionAmount: sourceTransactionAmount,

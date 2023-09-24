@@ -9,6 +9,7 @@ import 'package:pecunia/presentation/debug/debug_auth/debug_login_register_scree
 import 'package:pecunia/presentation/debug/debug_dialogs/debug_dialogs.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/debug_local_db_screen.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
+import 'package:pecunia/presentation/screens/categories/view_all_categories/view_all_categories_screen.dart';
 
 final router = GoRouter(
   routes: [
@@ -60,6 +61,11 @@ final router = GoRouter(
       path: '/debug-transactions',
       name: 'debug-transactions',
       builder: (context, state) => const DebugTransactionsScreen(),
+    ),
+    GoRoute(
+      path: '/view-all-categories',
+      name: 'view-all-categories',
+      builder: (context, state) => const ViewAllCategories(),
     ),
   ],
 );

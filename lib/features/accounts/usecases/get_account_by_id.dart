@@ -14,7 +14,6 @@ Future<Account> getAccountById(GetAccountByIdRef ref, String accountId, {bool? d
     return Future<Account>.error(AccountsFailure.unknown(
       stackTrace: StackTrace.current,
       message: 'Account retrieval failed',
-      accountsAction: AccountsAction.unknown,
     ));
   }
 

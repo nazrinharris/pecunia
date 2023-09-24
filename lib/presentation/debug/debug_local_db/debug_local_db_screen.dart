@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/accounts/usecases/watch_accounts.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
-import 'package:pecunia/presentation/debug/debug_local_db/form/debug_create_account_form.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
@@ -65,26 +65,44 @@ class DebugLocalDBScreen extends ConsumerWidget {
             Container(
               alignment: Alignment.center,
               width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
-                    },
-                    child: const Text('Inspect DB'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
+                        },
+                        child: const Text('Inspect DB'),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
+                        ),
+                        onPressed: () {
+                          ref.watch(getAllAccountsProvider);
+                          context.pushNamed('debug-transactions');
+                        },
+                        child: const Text('Go to Debug Transactions'),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.purple[900]),
-                    ),
-                    onPressed: () {
-                      ref.watch(getAllAccountsProvider);
-                      context.pushNamed('debug-transactions');
-                    },
-                    child: const Text('Go to Debug Transactions'),
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.brown[900]),
+                        ),
+                        onPressed: () {
+                          context.pushNamed('view-all-categories');
+                        },
+                        child: const Text('View All Categories'),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -152,7 +170,6 @@ class DebugDialogsButtons extends ConsumerWidget {
                           failure: AuthFailure(
                         stackTrace: StackTrace.current,
                         message: AuthErrorType.unknown.message,
-                        authAction: AuthAction.unknown,
                         errorType: AuthErrorType.unknown,
                       ));
                 },
@@ -203,83 +220,123 @@ class DebugDialogsButtons extends ConsumerWidget {
   }
 }
 
-class CreateAccountFormWidget extends ConsumerWidget {
+class CreateAccountFormWidget extends HookConsumerWidget {
   const CreateAccountFormWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final createAccountForm = ref.watch(createAccountFormProvider);
+    final formKey = useState(GlobalKey<FormState>());
+    final nameController = useTextEditingController();
+    final descriptionController = useTextEditingController();
+    final initialBalanceController = useTextEditingController();
+    final currency = useState<Currency>(PecuniaCurrencies.myr);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ReactiveForm(
-          formGroup: createAccountForm,
-          child: Column(children: [
-            ReactiveTextField<String>(
-              formControlName: 'name',
+      child: Form(
+        key: formKey.value,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: nameController,
               textInputAction: TextInputAction.next,
-              onSubmitted: (_) => createAccountForm.focus('description'),
+              onFieldSubmitted: (_) => descriptionController.text = '',
               decoration: const InputDecoration(
                 labelText: 'Account Name',
                 hintText: 'What name do you want to give to this account?',
               ),
             ),
-            ReactiveTextField<String>(
-              formControlName: 'description',
+            TextFormField(
+              controller: descriptionController,
               textInputAction: TextInputAction.next,
-              onSubmitted: (_) {
-                if (createAccountForm.value['description'] == '') {
-                  createAccountForm.value['description'] = null;
+              onFieldSubmitted: (_) {
+                if (descriptionController.value.text == '') {
+                  descriptionController.text = '';
                 }
-                createAccountForm.focus('currency');
               },
               decoration: const InputDecoration(
                   labelText: 'Description', hintText: 'You could also leave this empty.'),
             ),
-            ReactiveDropdownField<String>(
-              formControlName: 'currency',
-              onChanged: (_) => createAccountForm.focus('initialBalance'),
-              decoration: const InputDecoration(
-                labelText: 'Currency',
-                hintText: 'What currency should this account use?',
+            Container(
+              margin: const EdgeInsets.only(right: 14, left: 14, top: 14),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(14),
               ),
-              items: const [
-                DropdownMenuItem<String>(
-                  value: 'MYR',
-                  child: Text('MYR - Malaysian Ringgit'),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Material(
+                  color: Colors.transparent,
+                  child: PopupMenuButton<Currency>(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    initialValue: currency.value,
+                    onSelected: (Currency value) {
+                      currency.value = value;
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return PecuniaCurrencies.toList().map<PopupMenuItem<Currency>>((Currency c) {
+                        return PopupMenuItem<Currency>(
+                          value: c,
+                          child: Text('${c.code} - ${c.name}', textAlign: TextAlign.center),
+                        );
+                      }).toList();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            '${currency.value.code} - ${currency.value.name}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          )),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                DropdownMenuItem<String>(
-                  value: 'USD',
-                  child: Text('USD - United States Dollar'),
-                ),
-              ],
+              ),
             ),
-            ReactiveTextField<String>(
-              formControlName: 'initialBalance',
+            TextFormField(
+              controller: initialBalanceController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
                 labelText: 'Starting Balance',
                 hintText: 'How much money do you have?',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a value';
+                }
+                if (double.tryParse(value) == null || double.parse(value) < 0) {
+                  return 'Please enter a value greater than or equal to 0';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 16),
-            ReactiveFormConsumer(
-              builder: (context, form, child) {
-                return ElevatedButton(
-                  onPressed: form.valid
-                      ? () => ref.read(createAccountProvider.notifier).createAccount(
-                            name: form.value['name']! as String,
-                            initialBalance: double.parse(form.value['initialBalance']! as String),
-                            currency: form.value['currency']! as String,
-                            description: form.value['description'] as String?,
-                          )
-                      : null,
-                  child: const Text('Create Account'),
-                );
+            ElevatedButton(
+              onPressed: () {
+                if (formKey.value.currentState!.validate()) {
+                  ref.read(createAccountProvider.notifier).createAccount(
+                        name: nameController.value.text,
+                        initialBalance: double.parse(initialBalanceController.value.text),
+                        currency: currency.value.code,
+                        description: descriptionController.value.text,
+                      );
+                }
               },
-            )
-          ])),
+              child: const Text('Create Account'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

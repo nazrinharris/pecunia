@@ -6,7 +6,6 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as s;
@@ -58,7 +57,7 @@ void main() {
             .run();
 
         // Assert
-        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet, AuthAction.login));
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet));
       });
 
       test(
@@ -76,7 +75,7 @@ void main() {
             )
             .run();
 
-        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown, AuthAction.login));
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown));
       });
 
       test('returns [PecuniaUserDTO] and new [Session] when authentication is successful', () async {
@@ -118,8 +117,7 @@ void main() {
             )
             .run();
 
-        expect(
-            result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet, AuthAction.register));
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet));
       });
 
       test(
@@ -143,7 +141,7 @@ void main() {
             )
             .run();
 
-        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown, AuthAction.register));
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown));
       });
 
       test('returns [PecuniaUserDTO] and new [Session] when registration is successful', () async {
@@ -184,8 +182,7 @@ void main() {
 
         final result = await authRemoteDS.logout(const Session(isValid: true)).run();
 
-        expect(
-            result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet, AuthAction.logout));
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.noInternet));
       });
 
       test('returns updated [Session] when succesfull logout', () async {
@@ -207,7 +204,7 @@ void main() {
 
         final result = await authRemoteDS.logout(const Session(isValid: true)).run();
 
-        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown, AuthAction.logout));
+        expect(result.fold((l) => l, (r) => null), isAuthFailure(AuthErrorType.unknown));
       });
     });
   });

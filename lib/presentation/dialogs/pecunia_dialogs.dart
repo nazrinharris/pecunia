@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_dialogs/flutter_easy_dialogs.dart';
 import 'package:full_screen_dialog_manager/full_screen_dialog_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:positioned_dialog_manager/positioned_dialog_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -428,7 +427,7 @@ class ConfirmationDialog extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(EvaIcons.question_mark_circle_outline, color: Colors.white),
+            const Icon(CupertinoIcons.question_circle, color: Colors.white),
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 34),

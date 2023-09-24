@@ -47,7 +47,6 @@ class FundDetails with _$FundDetails {
       throw TransactionsException(
         stackTrace: StackTrace.current,
         errorType: TransactionsErrorType.invalidMultiCurrencyFields,
-        transactionsAction: TransactionsAction.fundDetailsFromDTO,
       );
     }
 
@@ -57,7 +56,7 @@ class FundDetails with _$FundDetails {
       exchangeRate: dto.exchangeRate,
       targetAmount: dto.targetAmount,
       targetCurrency: dto.targetCurrency == null ? null : PecuniaCurrencies.fromString(dto.targetCurrency!),
-      transactionType: TransactionType.fromString(dto.transactionType, TransactionsAction.unknown),
+      transactionType: TransactionType.fromString(dto.transactionType),
     );
   }
 

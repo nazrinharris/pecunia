@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -8,9 +9,10 @@ import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 
 import '../../../matcher/transactions_matchers.dart';
+
+// TODO: Incorporate or add tests for categories
 
 void main() {
   late PecuniaDB db;
@@ -36,14 +38,14 @@ void main() {
       balance: 0,
       currency: PecuniaCurrencies.xxx,
       createdOn: clock.now().toUtc(),
-      description: AccountDescription('test_description'),
+      description: d.Description('test_description'),
     );
 
     testIncomeTxn = Transaction(
         id: 'id_income',
         creatorUid: 'creatorUid',
         name: 'name',
-        transactionDescription: TransactionDescription('input'),
+        transactionDescription: d.Description('input'),
         transactionDate: clock.now().toUtc(),
         accountId: testAccount.id,
         fundDetails: FundDetails(
@@ -60,7 +62,7 @@ void main() {
       id: 'id_expense',
       creatorUid: 'creatorUid',
       name: 'name',
-      transactionDescription: TransactionDescription('input'),
+      transactionDescription: d.Description('input'),
       transactionDate: clock.now().toUtc(),
       accountId: testAccount.id,
       fundDetails: FundDetails(
@@ -86,7 +88,7 @@ void main() {
 
     // Act
     // Run createTransaction()
-    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn, null).run();
     final txnResult = await transactionsLocalDAO.getTransactionById(testIncomeTxn.id).run();
     final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
@@ -111,7 +113,7 @@ void main() {
     // Arrange
     // Create a transaction
     await accountsDAO.createAccount(testAccount.toDTO()).run();
-    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn, null).run();
 
     // Act
     // Run deleteTransaction()
@@ -127,7 +129,6 @@ void main() {
         l,
         isTransactionsFailure(
           TransactionsErrorType.transactionNotFound,
-          TransactionsAction.getTransactionById,
         ),
       ),
       (dto) => fail('Transaction should have been deleted from the database'),
@@ -145,19 +146,18 @@ void main() {
     // Arrange
     // Create a transaction
     await accountsDAO.createAccount(testAccount.toDTO()).run();
-    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn, null).run();
 
     // Act
     // Run editTransaction() with the updated transaction data
-    await transactionsLocalDAO
-        .editTransaction(
-          newTxn: testIncomeTxn.copyWith(
-            name: 'updated_name',
-            fundDetails: testIncomeTxn.fundDetails.copyWith(baseAmount: 30),
-          ),
-          oldTxn: testIncomeTxn,
-        )
-        .run();
+    await transactionsLocalDAO.editTransaction(
+      newTxn: testIncomeTxn.copyWith(
+        name: 'updated_name',
+        fundDetails: testIncomeTxn.fundDetails.copyWith(baseAmount: 30),
+      ),
+      oldTxn: testIncomeTxn,
+      category: (old: null, current: null),
+    ).run();
     final txnResult = await transactionsLocalDAO.getTransactionById(testIncomeTxn.id).run();
     final accountResult = await accountsDAO.getAccountById(testAccount.id).run();
 
@@ -188,8 +188,8 @@ void main() {
     // Arrange
     // Create multiple transactions for multiple accounts
     await accountsDAO.createAccount(testAccount.toDTO()).run();
-    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
-    await transactionsLocalDAO.createTransaction(testExpenseTxn).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn, null).run();
+    await transactionsLocalDAO.createTransaction(testExpenseTxn, null).run();
 
     // Act
     // Run getTransactionsByAccount() for a specific account
@@ -216,8 +216,8 @@ void main() {
     // Arrange
     // Create multiple transactions for multiple accounts
     await accountsDAO.createAccount(testAccount.toDTO()).run();
-    await transactionsLocalDAO.createTransaction(testIncomeTxn).run();
-    await transactionsLocalDAO.createTransaction(testExpenseTxn).run();
+    await transactionsLocalDAO.createTransaction(testIncomeTxn, null).run();
+    await transactionsLocalDAO.createTransaction(testExpenseTxn, null).run();
 
     // Act
     // Run getAllTransactions()

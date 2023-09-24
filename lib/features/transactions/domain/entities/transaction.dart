@@ -2,16 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart' as fp;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:money2/money2.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:uuid/uuid.dart';
 
 part 'transaction.freezed.dart';
 part 'transfer_details.dart';
 part 'fund_details.dart';
+
+typedef TransactionId = String;
 
 enum TransactionType {
   credit('credit'),
@@ -21,13 +23,12 @@ enum TransactionType {
 
   final String typeAsString;
 
-  static TransactionType fromString(String inputType, TransactionsAction action) {
+  static TransactionType fromString(String inputType) {
     return TransactionType.values.firstWhere(
       (element) => element.typeAsString.toLowerCase() == inputType.toLowerCase(),
       orElse: () => throw TransactionsException(
         stackTrace: StackTrace.current,
         errorType: TransactionsErrorType.invalidType,
-        transactionsAction: action,
       ),
     );
   }
@@ -42,9 +43,9 @@ enum TransactionType {
   String toDescription() {
     switch (this) {
       case TransactionType.credit:
-        return 'Income (Credit)';
+        return 'Income';
       case TransactionType.debit:
-        return 'Expense (Debit)';
+        return 'Expense';
     }
   }
 
@@ -74,7 +75,7 @@ class Transaction with _$Transaction {
     required String id,
     required String creatorUid,
     required String name,
-    required TransactionDescription transactionDescription,
+    required Description transactionDescription,
     required DateTime transactionDate,
     required String accountId,
     required FundDetails fundDetails,
@@ -86,7 +87,7 @@ class Transaction with _$Transaction {
   factory Transaction.newTransaction({
     required String creatorUid,
     required String name,
-    required TransactionDescription transactionDescription,
+    required Description transactionDescription,
     required DateTime transactionDate,
     required String accountId,
     required FundDetails fundDetails,
@@ -109,7 +110,7 @@ class Transaction with _$Transaction {
         id: dto.id,
         creatorUid: dto.creatorUid,
         name: dto.name,
-        transactionDescription: TransactionDescription(dto.description),
+        transactionDescription: Description(dto.description),
         transactionDate: dto.transactionDate.toUtc(),
         accountId: dto.accountId,
         fundDetails: FundDetails.fromDTO(dto),
@@ -127,7 +128,6 @@ class Transaction with _$Transaction {
         throw TransactionsException(
             stackTrace: StackTrace.current,
             errorType: TransactionsErrorType.invalidExchangedAmount,
-            transactionsAction: TransactionsAction.unknown,
             message:
                 'Stored target amount (${fundDetails.targetAmount} ${fundDetails.targetCurrency}) does not match computed target amount ($computedTargetAmount ${fundDetails.targetCurrency}). \nBecause (${fundDetails.baseAmount} ${fundDetails.baseCurrency} * ${fundDetails.exchangeRate} should equal to $computedTargetAmount ${fundDetails.targetCurrency}) \nWhich has a difference of $difference, which is greater than the tolerance of $epsilon');
       }
@@ -167,7 +167,6 @@ class Transaction with _$Transaction {
     required double? exchangeRate,
     required String? transferDescription,
     required Uuid uuid,
-    required TransactionsAction currentAction,
     required String? defaultSourceTxnId,
     required String? defaultDestinationTxnId,
 
@@ -185,7 +184,6 @@ class Transaction with _$Transaction {
       return fp.Either.left(TransactionsFailure(
         message: TransactionsErrorType.invalidMultiCurrencyFields.message,
         errorType: TransactionsErrorType.invalidMultiCurrencyFields,
-        transactionsAction: currentAction,
         stackTrace: StackTrace.current,
       ));
     }
@@ -195,7 +193,6 @@ class Transaction with _$Transaction {
       return fp.Either.left(TransactionsFailure(
         message: TransactionsErrorType.missingExchangeRateForDifferentCurrencies.message,
         errorType: TransactionsErrorType.missingExchangeRateForDifferentCurrencies,
-        transactionsAction: currentAction,
         stackTrace: StackTrace.current,
       ));
     }
@@ -205,7 +202,6 @@ class Transaction with _$Transaction {
       return fp.Either.left(TransactionsFailure(
         message: TransactionsErrorType.sameSourceAndDestinationAccount.message,
         errorType: TransactionsErrorType.sameSourceAndDestinationAccount,
-        transactionsAction: currentAction,
         stackTrace: StackTrace.current,
       ));
     }
@@ -233,7 +229,7 @@ class Transaction with _$Transaction {
       id: sourceTxnId,
       creatorUid: sourceAccount.creatorUid,
       name: 'Transfer to ${destinationAccount.id}',
-      transactionDescription: TransactionDescription(null),
+      transactionDescription: Description(null),
       transactionDate: DateTime.now(),
       accountId: sourceAccount.id,
       fundDetails: sourceTxnFundDetails,
@@ -248,7 +244,7 @@ class Transaction with _$Transaction {
       id: destinationTxnId,
       creatorUid: destinationAccount.creatorUid,
       name: 'Transfer from ${sourceAccount.id}',
-      transactionDescription: TransactionDescription(null),
+      transactionDescription: Description(null),
       transactionDate: DateTime.now(),
       accountId: destinationAccount.id,
       fundDetails: destinationTxnFundDetails,
@@ -261,7 +257,6 @@ class Transaction with _$Transaction {
 
     // TODO: Remove debug print
     debugPrint('''
-
       -----------------------------------------------------------------------
       newSourceTxn: ${sourceTxn.fundDetails.transactionAmount}
       oldSourceTxn: ${oldSourceTxn?.fundDetails.transactionAmount}
@@ -272,33 +267,4 @@ class Transaction with _$Transaction {
 
     return fp.Either.right((sourceTxn: sourceTxn, destinationTxn: destinationTxn));
   }
-}
-
-/// Value object for the description of a transaction
-/// The description can be null, so check for that.
-@immutable
-class TransactionDescription {
-  TransactionDescription(String? input) : value = _validateInput(input);
-
-  final String? value;
-
-  @override
-  String toString() => value ?? 'No Description';
-
-  static String? _validateInput(String? input) {
-    if (input == null || input.trim().isEmpty) {
-      return null;
-    }
-    return input;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is TransactionDescription && other.value == value;
-  }
-
-  @override
-  int get hashCode => value.hashCode;
 }

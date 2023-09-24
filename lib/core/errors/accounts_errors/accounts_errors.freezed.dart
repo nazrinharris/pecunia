@@ -18,60 +18,35 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AccountsFailure {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  AccountsAction get accountsAction => throw _privateConstructorUsedError;
   AccountsErrorType get errorType => throw _privateConstructorUsedError;
   Object? get rawException => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) =>
@@ -110,7 +85,6 @@ abstract class $AccountsFailureCopyWith<$Res> {
   $Res call(
       {StackTrace stackTrace,
       String message,
-      AccountsAction accountsAction,
       AccountsErrorType errorType,
       Object? rawException});
 }
@@ -130,7 +104,6 @@ class _$AccountsFailureCopyWithImpl<$Res, $Val extends AccountsFailure>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? accountsAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -143,10 +116,6 @@ class _$AccountsFailureCopyWithImpl<$Res, $Val extends AccountsFailure>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      accountsAction: null == accountsAction
-          ? _value.accountsAction
-          : accountsAction // ignore: cast_nullable_to_non_nullable
-              as AccountsAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -168,7 +137,6 @@ abstract class _$$_AccountsFailureCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       String message,
-      AccountsAction accountsAction,
       AccountsErrorType errorType,
       Object? rawException});
 }
@@ -186,7 +154,6 @@ class __$$_AccountsFailureCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? accountsAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -199,10 +166,6 @@ class __$$_AccountsFailureCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      accountsAction: null == accountsAction
-          ? _value.accountsAction
-          : accountsAction // ignore: cast_nullable_to_non_nullable
-              as AccountsAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -219,7 +182,6 @@ class _$_AccountsFailure extends _AccountsFailure {
   const _$_AccountsFailure(
       {required this.stackTrace,
       required this.message,
-      required this.accountsAction,
       required this.errorType,
       this.rawException})
       : super._();
@@ -228,8 +190,6 @@ class _$_AccountsFailure extends _AccountsFailure {
   final StackTrace stackTrace;
   @override
   final String message;
-  @override
-  final AccountsAction accountsAction;
   @override
   final AccountsErrorType errorType;
   @override
@@ -244,69 +204,42 @@ class _$_AccountsFailure extends _AccountsFailure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)
         unknown,
   }) {
-    return $default(
-        stackTrace, message, accountsAction, errorType, rawException);
+    return $default(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         unknown,
   }) {
-    return $default?.call(
-        stackTrace, message, accountsAction, errorType, rawException);
+    return $default?.call(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(
-          stackTrace, message, accountsAction, errorType, rawException);
+      return $default(stackTrace, message, errorType, rawException);
     }
     return orElse();
   }
@@ -347,7 +280,6 @@ abstract class _AccountsFailure extends AccountsFailure {
   const factory _AccountsFailure(
       {required final StackTrace stackTrace,
       required final String message,
-      required final AccountsAction accountsAction,
       required final AccountsErrorType errorType,
       final Object? rawException}) = _$_AccountsFailure;
   const _AccountsFailure._() : super._();
@@ -356,8 +288,6 @@ abstract class _AccountsFailure extends AccountsFailure {
   StackTrace get stackTrace;
   @override
   String get message;
-  @override
-  AccountsAction get accountsAction;
   @override
   AccountsErrorType get errorType;
   @override
@@ -379,7 +309,6 @@ abstract class _$$_UnknownAccountsFailureCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       String message,
-      AccountsAction accountsAction,
       AccountsErrorType errorType,
       Object? rawException});
 }
@@ -397,7 +326,6 @@ class __$$_UnknownAccountsFailureCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? accountsAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -410,10 +338,6 @@ class __$$_UnknownAccountsFailureCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      accountsAction: null == accountsAction
-          ? _value.accountsAction
-          : accountsAction // ignore: cast_nullable_to_non_nullable
-              as AccountsAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -430,7 +354,6 @@ class _$_UnknownAccountsFailure extends _UnknownAccountsFailure {
   const _$_UnknownAccountsFailure(
       {required this.stackTrace,
       required this.message,
-      required this.accountsAction,
       this.errorType = AccountsErrorType.unknown,
       this.rawException})
       : super._();
@@ -439,8 +362,6 @@ class _$_UnknownAccountsFailure extends _UnknownAccountsFailure {
   final StackTrace stackTrace;
   @override
   final String message;
-  @override
-  final AccountsAction accountsAction;
   @override
   @JsonKey()
   final AccountsErrorType errorType;
@@ -457,69 +378,42 @@ class _$_UnknownAccountsFailure extends _UnknownAccountsFailure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)
         unknown,
   }) {
-    return unknown(
-        stackTrace, message, accountsAction, errorType, rawException);
+    return unknown(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         unknown,
   }) {
-    return unknown?.call(
-        stackTrace, message, accountsAction, errorType, rawException);
+    return unknown?.call(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AccountsAction accountsAction,
-            AccountsErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AccountsErrorType errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) {
     if (unknown != null) {
-      return unknown(
-          stackTrace, message, accountsAction, errorType, rawException);
+      return unknown(stackTrace, message, errorType, rawException);
     }
     return orElse();
   }
@@ -560,7 +454,6 @@ abstract class _UnknownAccountsFailure extends AccountsFailure {
   const factory _UnknownAccountsFailure(
       {required final StackTrace stackTrace,
       required final String message,
-      required final AccountsAction accountsAction,
       final AccountsErrorType errorType,
       final Object? rawException}) = _$_UnknownAccountsFailure;
   const _UnknownAccountsFailure._() : super._();
@@ -569,8 +462,6 @@ abstract class _UnknownAccountsFailure extends AccountsFailure {
   StackTrace get stackTrace;
   @override
   String get message;
-  @override
-  AccountsAction get accountsAction;
   @override
   AccountsErrorType get errorType;
   @override
@@ -585,38 +476,34 @@ abstract class _UnknownAccountsFailure extends AccountsFailure {
 mixin _$AccountsException {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   AccountsErrorType get errorType => throw _privateConstructorUsedError;
-  AccountsAction get accountsAction => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)
+    TResult Function(
+            StackTrace stackTrace, AccountsErrorType errorType, String? message)
         $default, {
     required TResult Function(
-            StackTrace stackTrace,
-            AccountsErrorType errorType,
-            AccountsAction accountsAction,
-            String? message)
+            StackTrace stackTrace, AccountsErrorType errorType, String? message)
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         $default, {
     TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         $default, {
     TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         unknown,
     required TResult orElse(),
   }) =>
@@ -653,10 +540,7 @@ abstract class $AccountsExceptionCopyWith<$Res> {
       _$AccountsExceptionCopyWithImpl<$Res, AccountsException>;
   @useResult
   $Res call(
-      {StackTrace stackTrace,
-      AccountsErrorType errorType,
-      AccountsAction accountsAction,
-      String? message});
+      {StackTrace stackTrace, AccountsErrorType errorType, String? message});
 }
 
 /// @nodoc
@@ -674,7 +558,6 @@ class _$AccountsExceptionCopyWithImpl<$Res, $Val extends AccountsException>
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
-    Object? accountsAction = null,
     Object? message = freezed,
   }) {
     return _then(_value.copyWith(
@@ -686,10 +569,6 @@ class _$AccountsExceptionCopyWithImpl<$Res, $Val extends AccountsException>
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as AccountsErrorType,
-      accountsAction: null == accountsAction
-          ? _value.accountsAction
-          : accountsAction // ignore: cast_nullable_to_non_nullable
-              as AccountsAction,
       message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -707,10 +586,7 @@ abstract class _$$_AccountsExceptionCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {StackTrace stackTrace,
-      AccountsErrorType errorType,
-      AccountsAction accountsAction,
-      String? message});
+      {StackTrace stackTrace, AccountsErrorType errorType, String? message});
 }
 
 /// @nodoc
@@ -726,7 +602,6 @@ class __$$_AccountsExceptionCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
-    Object? accountsAction = null,
     Object? message = freezed,
   }) {
     return _then(_$_AccountsException(
@@ -738,10 +613,6 @@ class __$$_AccountsExceptionCopyWithImpl<$Res>
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as AccountsErrorType,
-      accountsAction: null == accountsAction
-          ? _value.accountsAction
-          : accountsAction // ignore: cast_nullable_to_non_nullable
-              as AccountsAction,
       message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -754,10 +625,7 @@ class __$$_AccountsExceptionCopyWithImpl<$Res>
 
 class _$_AccountsException extends _AccountsException {
   _$_AccountsException(
-      {required this.stackTrace,
-      required this.errorType,
-      required this.accountsAction,
-      this.message})
+      {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
   @override
@@ -765,13 +633,11 @@ class _$_AccountsException extends _AccountsException {
   @override
   final AccountsErrorType errorType;
   @override
-  final AccountsAction accountsAction;
-  @override
   final String? message;
 
   @override
   String toString() {
-    return 'AccountsException(stackTrace: $stackTrace, errorType: $errorType, accountsAction: $accountsAction, message: $message)';
+    return 'AccountsException(stackTrace: $stackTrace, errorType: $errorType, message: $message)';
   }
 
   @override
@@ -783,14 +649,11 @@ class _$_AccountsException extends _AccountsException {
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
                 other.errorType == errorType) &&
-            (identical(other.accountsAction, accountsAction) ||
-                other.accountsAction == accountsAction) &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, stackTrace, errorType, accountsAction, message);
+  int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
   @JsonKey(ignore: true)
   @override
@@ -802,45 +665,42 @@ class _$_AccountsException extends _AccountsException {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)
+    TResult Function(
+            StackTrace stackTrace, AccountsErrorType errorType, String? message)
         $default, {
     required TResult Function(
-            StackTrace stackTrace,
-            AccountsErrorType errorType,
-            AccountsAction accountsAction,
-            String? message)
+            StackTrace stackTrace, AccountsErrorType errorType, String? message)
         unknown,
   }) {
-    return $default(stackTrace, errorType, accountsAction, message);
+    return $default(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         $default, {
     TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         unknown,
   }) {
-    return $default?.call(stackTrace, errorType, accountsAction, message);
+    return $default?.call(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         $default, {
     TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         unknown,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(stackTrace, errorType, accountsAction, message);
+      return $default(stackTrace, errorType, message);
     }
     return orElse();
   }
@@ -881,7 +741,6 @@ abstract class _AccountsException extends AccountsException {
   factory _AccountsException(
       {required final StackTrace stackTrace,
       required final AccountsErrorType errorType,
-      required final AccountsAction accountsAction,
       final String? message}) = _$_AccountsException;
   _AccountsException._() : super._();
 
@@ -889,8 +748,6 @@ abstract class _AccountsException extends AccountsException {
   StackTrace get stackTrace;
   @override
   AccountsErrorType get errorType;
-  @override
-  AccountsAction get accountsAction;
   @override
   String? get message;
   @override
@@ -909,10 +766,7 @@ abstract class _$$_UnknownAccountsExceptionCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {StackTrace stackTrace,
-      AccountsErrorType errorType,
-      AccountsAction accountsAction,
-      String? message});
+      {StackTrace stackTrace, AccountsErrorType errorType, String? message});
 }
 
 /// @nodoc
@@ -928,7 +782,6 @@ class __$$_UnknownAccountsExceptionCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
-    Object? accountsAction = null,
     Object? message = freezed,
   }) {
     return _then(_$_UnknownAccountsException(
@@ -940,10 +793,6 @@ class __$$_UnknownAccountsExceptionCopyWithImpl<$Res>
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as AccountsErrorType,
-      accountsAction: null == accountsAction
-          ? _value.accountsAction
-          : accountsAction // ignore: cast_nullable_to_non_nullable
-              as AccountsAction,
       message: freezed == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -956,10 +805,7 @@ class __$$_UnknownAccountsExceptionCopyWithImpl<$Res>
 
 class _$_UnknownAccountsException extends _UnknownAccountsException {
   _$_UnknownAccountsException(
-      {required this.stackTrace,
-      required this.errorType,
-      this.accountsAction = AccountsAction.unknown,
-      this.message})
+      {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
   @override
@@ -967,14 +813,11 @@ class _$_UnknownAccountsException extends _UnknownAccountsException {
   @override
   final AccountsErrorType errorType;
   @override
-  @JsonKey()
-  final AccountsAction accountsAction;
-  @override
   final String? message;
 
   @override
   String toString() {
-    return 'AccountsException.unknown(stackTrace: $stackTrace, errorType: $errorType, accountsAction: $accountsAction, message: $message)';
+    return 'AccountsException.unknown(stackTrace: $stackTrace, errorType: $errorType, message: $message)';
   }
 
   @override
@@ -986,14 +829,11 @@ class _$_UnknownAccountsException extends _UnknownAccountsException {
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
                 other.errorType == errorType) &&
-            (identical(other.accountsAction, accountsAction) ||
-                other.accountsAction == accountsAction) &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, stackTrace, errorType, accountsAction, message);
+  int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
   @JsonKey(ignore: true)
   @override
@@ -1005,45 +845,42 @@ class _$_UnknownAccountsException extends _UnknownAccountsException {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)
+    TResult Function(
+            StackTrace stackTrace, AccountsErrorType errorType, String? message)
         $default, {
     required TResult Function(
-            StackTrace stackTrace,
-            AccountsErrorType errorType,
-            AccountsAction accountsAction,
-            String? message)
+            StackTrace stackTrace, AccountsErrorType errorType, String? message)
         unknown,
   }) {
-    return unknown(stackTrace, errorType, accountsAction, message);
+    return unknown(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         $default, {
     TResult? Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         unknown,
   }) {
-    return unknown?.call(stackTrace, errorType, accountsAction, message);
+    return unknown?.call(stackTrace, errorType, message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         $default, {
     TResult Function(StackTrace stackTrace, AccountsErrorType errorType,
-            AccountsAction accountsAction, String? message)?
+            String? message)?
         unknown,
     required TResult orElse(),
   }) {
     if (unknown != null) {
-      return unknown(stackTrace, errorType, accountsAction, message);
+      return unknown(stackTrace, errorType, message);
     }
     return orElse();
   }
@@ -1084,7 +921,6 @@ abstract class _UnknownAccountsException extends AccountsException {
   factory _UnknownAccountsException(
       {required final StackTrace stackTrace,
       required final AccountsErrorType errorType,
-      final AccountsAction accountsAction,
       final String? message}) = _$_UnknownAccountsException;
   _UnknownAccountsException._() : super._();
 
@@ -1092,8 +928,6 @@ abstract class _UnknownAccountsException extends AccountsException {
   StackTrace get stackTrace;
   @override
   AccountsErrorType get errorType;
-  @override
-  AccountsAction get accountsAction;
   @override
   String? get message;
   @override

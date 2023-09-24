@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -9,21 +10,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 part 'accounts_repo.g.dart';
-
-enum AccountsAction {
-  getAccounts,
-  getAccountById,
-  watchAccounts,
-  createAccount,
-  updateAccountDetails,
-  deleteAccount,
-
-  recalculateAccountBalance,
-  unknown,
-
-  /// This is a special case. This is used to map an [Account] to an [AccountDTO]
-  mapAccountToDTO,
-}
 
 @riverpod
 AccountsRepo accountsRepo(AccountsRepoRef ref) => AccountsRepoImpl(
@@ -117,7 +103,7 @@ class AccountsRepoImpl implements AccountsRepo {
           currency: PecuniaCurrencies.fromString(currency),
           createdOn: DateTime.now(),
           uuid: uuid,
-          description: AccountDescription(desc),
+          description: Description(desc),
         ))
         .flatMap(accountsLocalDAO.createAccount);
   }
@@ -166,7 +152,6 @@ class AccountsRepoHelper {
         stackTrace: stackTrace,
         message: AccountsErrorType.cannotConvertToDTO.message,
         errorType: AccountsErrorType.cannotConvertToDTO,
-        accountsAction: AccountsAction.mapAccountToDTO,
       ),
     );
   }

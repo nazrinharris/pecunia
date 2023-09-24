@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
@@ -93,11 +93,13 @@ class TransferTxnBottomSheet extends ConsumerWidget {
             account: account,
             txn: txn,
             enableTopDivider: true,
+            defaultLinkedAccountAndTxn: (linkedAccount: linkedAccount, linkedTransaction: linkedTxn),
             onTap: () {},
           ),
           TransferTxnListTile(
             account: linkedAccount,
             txn: linkedTxn,
+            defaultLinkedAccountAndTxn: (linkedAccount: account, linkedTransaction: txn),
             onTap: () {},
           ),
           const SizedBox(height: 8),
@@ -136,7 +138,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 14),
-                            Icon(HeroIcons.pencil, color: Colors.purple[100]),
+                            Icon(CupertinoIcons.pencil, color: Colors.purple[100]),
                           ],
                         ),
                       ),
@@ -175,7 +177,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Icon(HeroIcons.trash, color: Colors.red[100]),
+                            Icon(CupertinoIcons.trash, color: Colors.red[100]),
                           ],
                         ),
                       ),
@@ -252,7 +254,7 @@ class ExpandableTxnMetadata extends ConsumerWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            leading: const Icon(HeroIcons.credit_card),
+            leading: const Icon(CupertinoIcons.creditcard),
             title: const Text(
               'Transaction Metadata',
             ),

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:money2/money2.dart';
+import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:uuid/uuid.dart';
@@ -16,7 +17,7 @@ class Account with _$Account {
     required double balance,
     required Currency currency,
     required DateTime createdOn,
-    required AccountDescription description,
+    required Description description,
   }) = _Account;
 
   const Account._();
@@ -28,7 +29,7 @@ class Account with _$Account {
     required Currency currency,
     required DateTime createdOn,
     required Uuid uuid,
-    required AccountDescription description,
+    required Description description,
   }) =>
       Account(
         id: uuid.v4(),
@@ -50,7 +51,7 @@ class Account with _$Account {
       balance: dto.balance,
       currency: PecuniaCurrencies.fromString(dto.currency),
       createdOn: dto.createdOn.toUtc(),
-      description: AccountDescription(dto.description),
+      description: Description(dto.description),
     );
   }
 
@@ -66,33 +67,4 @@ class Account with _$Account {
       description: description.value,
     );
   }
-}
-
-/// Value object for the description of an account
-/// The description can be null, so check for that.
-@immutable
-class AccountDescription {
-  AccountDescription(String? input) : value = _validateInput(input);
-
-  final String? value;
-
-  @override
-  String toString() => value ?? 'No Description';
-
-  static String? _validateInput(String? input) {
-    if (input == null || input.trim().isEmpty) {
-      return null;
-    }
-    return input;
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is AccountDescription && other.value == value;
-  }
-
-  @override
-  int get hashCode => value.hashCode;
 }

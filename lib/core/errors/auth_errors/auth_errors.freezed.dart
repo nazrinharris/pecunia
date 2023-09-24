@@ -20,25 +20,21 @@ mixin _$AuthException {
   AuthErrorType get errorType => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)
-        $default, {
+    TResult Function(StackTrace stackTrace, AuthErrorType errorType) $default, {
     required TResult Function(StackTrace stackTrace, AuthErrorType errorType)
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)?
+    TResult? Function(StackTrace stackTrace, AuthErrorType errorType)?
         $default, {
     TResult? Function(StackTrace stackTrace, AuthErrorType errorType)? unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)?
+    TResult Function(StackTrace stackTrace, AuthErrorType errorType)?
         $default, {
     TResult Function(StackTrace stackTrace, AuthErrorType errorType)? unknown,
     required TResult orElse(),
@@ -115,8 +111,7 @@ abstract class _$$_AuthExceptionCopyWith<$Res>
       __$$_AuthExceptionCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {StackTrace stackTrace, AuthErrorType errorType, AuthAction authAction});
+  $Res call({StackTrace stackTrace, AuthErrorType errorType});
 }
 
 /// @nodoc
@@ -132,7 +127,6 @@ class __$$_AuthExceptionCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
-    Object? authAction = null,
   }) {
     return _then(_$_AuthException(
       stackTrace: null == stackTrace
@@ -143,10 +137,6 @@ class __$$_AuthExceptionCopyWithImpl<$Res>
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
               as AuthErrorType,
-      authAction: null == authAction
-          ? _value.authAction
-          : authAction // ignore: cast_nullable_to_non_nullable
-              as AuthAction,
     ));
   }
 }
@@ -154,22 +144,17 @@ class __$$_AuthExceptionCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_AuthException extends _AuthException {
-  _$_AuthException(
-      {required this.stackTrace,
-      required this.errorType,
-      required this.authAction})
+  _$_AuthException({required this.stackTrace, required this.errorType})
       : super._();
 
   @override
   final StackTrace stackTrace;
   @override
   final AuthErrorType errorType;
-  @override
-  final AuthAction authAction;
 
   @override
   String toString() {
-    return 'AuthException(stackTrace: $stackTrace, errorType: $errorType, authAction: $authAction)';
+    return 'AuthException(stackTrace: $stackTrace, errorType: $errorType)';
   }
 
   @override
@@ -180,14 +165,11 @@ class _$_AuthException extends _AuthException {
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
-                other.errorType == errorType) &&
-            (identical(other.authAction, authAction) ||
-                other.authAction == authAction));
+                other.errorType == errorType));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, stackTrace, errorType, authAction);
+  int get hashCode => Object.hash(runtimeType, stackTrace, errorType);
 
   @JsonKey(ignore: true)
   @override
@@ -198,37 +180,33 @@ class _$_AuthException extends _AuthException {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)
-        $default, {
+    TResult Function(StackTrace stackTrace, AuthErrorType errorType) $default, {
     required TResult Function(StackTrace stackTrace, AuthErrorType errorType)
         unknown,
   }) {
-    return $default(stackTrace, errorType, authAction);
+    return $default(stackTrace, errorType);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)?
+    TResult? Function(StackTrace stackTrace, AuthErrorType errorType)?
         $default, {
     TResult? Function(StackTrace stackTrace, AuthErrorType errorType)? unknown,
   }) {
-    return $default?.call(stackTrace, errorType, authAction);
+    return $default?.call(stackTrace, errorType);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)?
+    TResult Function(StackTrace stackTrace, AuthErrorType errorType)?
         $default, {
     TResult Function(StackTrace stackTrace, AuthErrorType errorType)? unknown,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(stackTrace, errorType, authAction);
+      return $default(stackTrace, errorType);
     }
     return orElse();
   }
@@ -268,15 +246,13 @@ class _$_AuthException extends _AuthException {
 abstract class _AuthException extends AuthException {
   factory _AuthException(
       {required final StackTrace stackTrace,
-      required final AuthErrorType errorType,
-      required final AuthAction authAction}) = _$_AuthException;
+      required final AuthErrorType errorType}) = _$_AuthException;
   _AuthException._() : super._();
 
   @override
   StackTrace get stackTrace;
   @override
   AuthErrorType get errorType;
-  AuthAction get authAction;
   @override
   @JsonKey(ignore: true)
   _$$_AuthExceptionCopyWith<_$_AuthException> get copyWith =>
@@ -361,9 +337,7 @@ class _$_UnknownAuthException extends _UnknownAuthException {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)
-        $default, {
+    TResult Function(StackTrace stackTrace, AuthErrorType errorType) $default, {
     required TResult Function(StackTrace stackTrace, AuthErrorType errorType)
         unknown,
   }) {
@@ -373,8 +347,7 @@ class _$_UnknownAuthException extends _UnknownAuthException {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)?
+    TResult? Function(StackTrace stackTrace, AuthErrorType errorType)?
         $default, {
     TResult? Function(StackTrace stackTrace, AuthErrorType errorType)? unknown,
   }) {
@@ -384,8 +357,7 @@ class _$_UnknownAuthException extends _UnknownAuthException {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(StackTrace stackTrace, AuthErrorType errorType,
-            AuthAction authAction)?
+    TResult Function(StackTrace stackTrace, AuthErrorType errorType)?
         $default, {
     TResult Function(StackTrace stackTrace, AuthErrorType errorType)? unknown,
     required TResult orElse(),
@@ -448,81 +420,44 @@ abstract class _UnknownAuthException extends AuthException {
 mixin _$AuthFailure {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  AuthAction get authAction => throw _privateConstructorUsedError;
   AuthErrorType? get errorType => throw _privateConstructorUsedError;
   Object? get rawException => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         noInternet,
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) =>
@@ -564,7 +499,6 @@ abstract class $AuthFailureCopyWith<$Res> {
   $Res call(
       {StackTrace stackTrace,
       String message,
-      AuthAction authAction,
       AuthErrorType errorType,
       Object? rawException});
 }
@@ -584,7 +518,6 @@ class _$AuthFailureCopyWithImpl<$Res, $Val extends AuthFailure>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? authAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -597,10 +530,6 @@ class _$AuthFailureCopyWithImpl<$Res, $Val extends AuthFailure>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      authAction: null == authAction
-          ? _value.authAction
-          : authAction // ignore: cast_nullable_to_non_nullable
-              as AuthAction,
       errorType: null == errorType
           ? _value.errorType!
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -622,7 +551,6 @@ abstract class _$$_AuthFailureCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       String message,
-      AuthAction authAction,
       AuthErrorType errorType,
       Object? rawException});
 }
@@ -640,7 +568,6 @@ class __$$_AuthFailureCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? authAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -653,10 +580,6 @@ class __$$_AuthFailureCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      authAction: null == authAction
-          ? _value.authAction
-          : authAction // ignore: cast_nullable_to_non_nullable
-              as AuthAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -673,7 +596,6 @@ class _$_AuthFailure extends _AuthFailure {
   const _$_AuthFailure(
       {required this.stackTrace,
       required this.message,
-      required this.authAction,
       required this.errorType,
       this.rawException})
       : super._();
@@ -682,8 +604,6 @@ class _$_AuthFailure extends _AuthFailure {
   final StackTrace stackTrace;
   @override
   final String message;
-  @override
-  final AuthAction authAction;
   @override
   final AuthErrorType errorType;
   @override
@@ -698,88 +618,51 @@ class _$_AuthFailure extends _AuthFailure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         noInternet,
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
         unknown,
   }) {
-    return $default(stackTrace, message, authAction, errorType, rawException);
+    return $default(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
   }) {
-    return $default?.call(
-        stackTrace, message, authAction, errorType, rawException);
+    return $default?.call(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(stackTrace, message, authAction, errorType, rawException);
+      return $default(stackTrace, message, errorType, rawException);
     }
     return orElse();
   }
@@ -823,7 +706,6 @@ abstract class _AuthFailure extends AuthFailure {
   const factory _AuthFailure(
       {required final StackTrace stackTrace,
       required final String message,
-      required final AuthAction authAction,
       required final AuthErrorType errorType,
       final Object? rawException}) = _$_AuthFailure;
   const _AuthFailure._() : super._();
@@ -832,8 +714,6 @@ abstract class _AuthFailure extends AuthFailure {
   StackTrace get stackTrace;
   @override
   String get message;
-  @override
-  AuthAction get authAction;
   @override
   AuthErrorType get errorType;
   @override
@@ -855,7 +735,6 @@ abstract class _$$_NoInternetAuthFailureCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       String message,
-      AuthAction authAction,
       AuthErrorType errorType,
       Object? rawException});
 }
@@ -873,7 +752,6 @@ class __$$_NoInternetAuthFailureCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? authAction = null,
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
@@ -886,10 +764,6 @@ class __$$_NoInternetAuthFailureCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      authAction: null == authAction
-          ? _value.authAction
-          : authAction // ignore: cast_nullable_to_non_nullable
-              as AuthAction,
       errorType: null == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -906,7 +780,6 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
   const _$_NoInternetAuthFailure(
       {required this.stackTrace,
       required this.message,
-      this.authAction = AuthAction.unknown,
       this.errorType = AuthErrorType.noInternet,
       this.rawException})
       : super._();
@@ -915,9 +788,6 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
   final StackTrace stackTrace;
   @override
   final String message;
-  @override
-  @JsonKey()
-  final AuthAction authAction;
   @override
   @JsonKey()
   final AuthErrorType errorType;
@@ -934,89 +804,51 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         noInternet,
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
         unknown,
   }) {
-    return noInternet(stackTrace, message, authAction, errorType, rawException);
+    return noInternet(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
   }) {
-    return noInternet?.call(
-        stackTrace, message, authAction, errorType, rawException);
+    return noInternet?.call(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) {
     if (noInternet != null) {
-      return noInternet(
-          stackTrace, message, authAction, errorType, rawException);
+      return noInternet(stackTrace, message, errorType, rawException);
     }
     return orElse();
   }
@@ -1060,7 +892,6 @@ abstract class _NoInternetAuthFailure extends AuthFailure {
   const factory _NoInternetAuthFailure(
       {required final StackTrace stackTrace,
       required final String message,
-      final AuthAction authAction,
       final AuthErrorType errorType,
       final Object? rawException}) = _$_NoInternetAuthFailure;
   const _NoInternetAuthFailure._() : super._();
@@ -1069,8 +900,6 @@ abstract class _NoInternetAuthFailure extends AuthFailure {
   StackTrace get stackTrace;
   @override
   String get message;
-  @override
-  AuthAction get authAction;
   @override
   AuthErrorType get errorType;
   @override
@@ -1092,7 +921,6 @@ abstract class _$$_UnknownAuthFailureCopyWith<$Res>
   $Res call(
       {StackTrace stackTrace,
       String message,
-      AuthAction authAction,
       AuthErrorType? errorType,
       Object? rawException});
 }
@@ -1110,7 +938,6 @@ class __$$_UnknownAuthFailureCopyWithImpl<$Res>
   $Res call({
     Object? stackTrace = null,
     Object? message = null,
-    Object? authAction = null,
     Object? errorType = freezed,
     Object? rawException = freezed,
   }) {
@@ -1123,10 +950,6 @@ class __$$_UnknownAuthFailureCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      authAction: null == authAction
-          ? _value.authAction
-          : authAction // ignore: cast_nullable_to_non_nullable
-              as AuthAction,
       errorType: freezed == errorType
           ? _value.errorType
           : errorType // ignore: cast_nullable_to_non_nullable
@@ -1143,7 +966,6 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
   const _$_UnknownAuthFailure(
       {required this.stackTrace,
       required this.message,
-      required this.authAction,
       this.errorType = AuthErrorType.unknown,
       this.rawException})
       : super._();
@@ -1152,8 +974,6 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
   final StackTrace stackTrace;
   @override
   final String message;
-  @override
-  final AuthAction authAction;
   @override
   @JsonKey()
   final AuthErrorType? errorType;
@@ -1170,88 +990,51 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         $default, {
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
         noInternet,
-    required TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
         unknown,
   }) {
-    return unknown(stackTrace, message, authAction, errorType, rawException);
+    return unknown(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult? Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
   }) {
-    return unknown?.call(
-        stackTrace, message, authAction, errorType, rawException);
+    return unknown?.call(stackTrace, message, errorType, rawException);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         $default, {
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
         noInternet,
-    TResult Function(
-            StackTrace stackTrace,
-            String message,
-            AuthAction authAction,
-            AuthErrorType? errorType,
-            Object? rawException)?
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
         unknown,
     required TResult orElse(),
   }) {
     if (unknown != null) {
-      return unknown(stackTrace, message, authAction, errorType, rawException);
+      return unknown(stackTrace, message, errorType, rawException);
     }
     return orElse();
   }
@@ -1295,7 +1078,6 @@ abstract class _UnknownAuthFailure extends AuthFailure {
   const factory _UnknownAuthFailure(
       {required final StackTrace stackTrace,
       required final String message,
-      required final AuthAction authAction,
       final AuthErrorType? errorType,
       final Object? rawException}) = _$_UnknownAuthFailure;
   const _UnknownAuthFailure._() : super._();
@@ -1304,8 +1086,6 @@ abstract class _UnknownAuthFailure extends AuthFailure {
   StackTrace get stackTrace;
   @override
   String get message;
-  @override
-  AuthAction get authAction;
   @override
   AuthErrorType? get errorType;
   @override

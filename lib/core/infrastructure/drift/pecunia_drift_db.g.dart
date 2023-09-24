@@ -1231,21 +1231,581 @@ class TransactionsTableCompanion extends UpdateCompanion<TransactionDTO> {
   }
 }
 
+class $CategoriesTableTable extends CategoriesTable
+    with TableInfo<$CategoriesTableTable, CategoryDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CategoriesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 500),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _primaryColorMeta =
+      const VerificationMeta('primaryColor');
+  @override
+  late final GeneratedColumn<String> primaryColor = GeneratedColumn<String>(
+      'primary_color', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _iconMeta = const VerificationMeta('icon');
+  @override
+  late final GeneratedColumnWithTypeConverter<IconData?, String> icon =
+      GeneratedColumn<String>('icon', aliasedName, true,
+              type: DriftSqlType.string, requiredDuringInsert: false)
+          .withConverter<IconData?>($CategoriesTableTable.$convertericonn);
+  static const VerificationMeta _parentIdMeta =
+      const VerificationMeta('parentId');
+  @override
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
+      'parent_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, name, description, primaryColor, icon, parentId];
+  @override
+  String get aliasedName => _alias ?? 'categories_table';
+  @override
+  String get actualTableName => 'categories_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<CategoryDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('primary_color')) {
+      context.handle(
+          _primaryColorMeta,
+          primaryColor.isAcceptableOrUnknown(
+              data['primary_color']!, _primaryColorMeta));
+    } else if (isInserting) {
+      context.missing(_primaryColorMeta);
+    }
+    context.handle(_iconMeta, const VerificationResult.success());
+    if (data.containsKey('parent_id')) {
+      context.handle(_parentIdMeta,
+          parentId.isAcceptableOrUnknown(data['parent_id']!, _parentIdMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CategoryDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CategoryDTO(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      primaryColor: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}primary_color'])!,
+      icon: $CategoriesTableTable.$convertericonn.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}icon'])),
+      parentId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}parent_id']),
+    );
+  }
+
+  @override
+  $CategoriesTableTable createAlias(String alias) {
+    return $CategoriesTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<IconData, String> $convertericon =
+      const IconDataConverter();
+  static TypeConverter<IconData?, String?> $convertericonn =
+      NullAwareTypeConverter.wrap($convertericon);
+}
+
+class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
+  final String id;
+  final String name;
+  final String? description;
+  final String primaryColor;
+  final IconData? icon;
+  final String? parentId;
+  const CategoryDTO(
+      {required this.id,
+      required this.name,
+      this.description,
+      required this.primaryColor,
+      this.icon,
+      this.parentId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['primary_color'] = Variable<String>(primaryColor);
+    if (!nullToAbsent || icon != null) {
+      final converter = $CategoriesTableTable.$convertericonn;
+      map['icon'] = Variable<String>(converter.toSql(icon));
+    }
+    if (!nullToAbsent || parentId != null) {
+      map['parent_id'] = Variable<String>(parentId);
+    }
+    return map;
+  }
+
+  CategoriesTableCompanion toCompanion(bool nullToAbsent) {
+    return CategoriesTableCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      primaryColor: Value(primaryColor),
+      icon: icon == null && nullToAbsent ? const Value.absent() : Value(icon),
+      parentId: parentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentId),
+    );
+  }
+
+  factory CategoryDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CategoryDTO(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      primaryColor: serializer.fromJson<String>(json['primaryColor']),
+      icon: serializer.fromJson<IconData?>(json['icon']),
+      parentId: serializer.fromJson<String?>(json['parentId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String?>(description),
+      'primaryColor': serializer.toJson<String>(primaryColor),
+      'icon': serializer.toJson<IconData?>(icon),
+      'parentId': serializer.toJson<String?>(parentId),
+    };
+  }
+
+  CategoryDTO copyWith(
+          {String? id,
+          String? name,
+          Value<String?> description = const Value.absent(),
+          String? primaryColor,
+          Value<IconData?> icon = const Value.absent(),
+          Value<String?> parentId = const Value.absent()}) =>
+      CategoryDTO(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description.present ? description.value : this.description,
+        primaryColor: primaryColor ?? this.primaryColor,
+        icon: icon.present ? icon.value : this.icon,
+        parentId: parentId.present ? parentId.value : this.parentId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CategoryDTO(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('primaryColor: $primaryColor, ')
+          ..write('icon: $icon, ')
+          ..write('parentId: $parentId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, description, primaryColor, icon, parentId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CategoryDTO &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.primaryColor == this.primaryColor &&
+          other.icon == this.icon &&
+          other.parentId == this.parentId);
+}
+
+class CategoriesTableCompanion extends UpdateCompanion<CategoryDTO> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String?> description;
+  final Value<String> primaryColor;
+  final Value<IconData?> icon;
+  final Value<String?> parentId;
+  final Value<int> rowid;
+  const CategoriesTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.primaryColor = const Value.absent(),
+    this.icon = const Value.absent(),
+    this.parentId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CategoriesTableCompanion.insert({
+    required String id,
+    required String name,
+    this.description = const Value.absent(),
+    required String primaryColor,
+    this.icon = const Value.absent(),
+    this.parentId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        primaryColor = Value(primaryColor);
+  static Insertable<CategoryDTO> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? primaryColor,
+    Expression<String>? icon,
+    Expression<String>? parentId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (primaryColor != null) 'primary_color': primaryColor,
+      if (icon != null) 'icon': icon,
+      if (parentId != null) 'parent_id': parentId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CategoriesTableCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String?>? description,
+      Value<String>? primaryColor,
+      Value<IconData?>? icon,
+      Value<String?>? parentId,
+      Value<int>? rowid}) {
+    return CategoriesTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      primaryColor: primaryColor ?? this.primaryColor,
+      icon: icon ?? this.icon,
+      parentId: parentId ?? this.parentId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (primaryColor.present) {
+      map['primary_color'] = Variable<String>(primaryColor.value);
+    }
+    if (icon.present) {
+      final converter = $CategoriesTableTable.$convertericonn;
+      map['icon'] = Variable<String>(converter.toSql(icon.value));
+    }
+    if (parentId.present) {
+      map['parent_id'] = Variable<String>(parentId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CategoriesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('primaryColor: $primaryColor, ')
+          ..write('icon: $icon, ')
+          ..write('parentId: $parentId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TxnCategoriesTableTable extends TxnCategoriesTable
+    with TableInfo<$TxnCategoriesTableTable, TransactionCategoryDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TxnCategoriesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _transactionIdMeta =
+      const VerificationMeta('transactionId');
+  @override
+  late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
+      'transaction_id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES transactions_table (id)'));
+  static const VerificationMeta _categoryIdMeta =
+      const VerificationMeta('categoryId');
+  @override
+  late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
+      'category_id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES categories_table (id)'));
+  @override
+  List<GeneratedColumn> get $columns => [transactionId, categoryId];
+  @override
+  String get aliasedName => _alias ?? 'txn_categories_table';
+  @override
+  String get actualTableName => 'txn_categories_table';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<TransactionCategoryDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('transaction_id')) {
+      context.handle(
+          _transactionIdMeta,
+          transactionId.isAcceptableOrUnknown(
+              data['transaction_id']!, _transactionIdMeta));
+    } else if (isInserting) {
+      context.missing(_transactionIdMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+          _categoryIdMeta,
+          categoryId.isAcceptableOrUnknown(
+              data['category_id']!, _categoryIdMeta));
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {transactionId, categoryId};
+  @override
+  TransactionCategoryDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TransactionCategoryDTO(
+      transactionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}transaction_id'])!,
+      categoryId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}category_id'])!,
+    );
+  }
+
+  @override
+  $TxnCategoriesTableTable createAlias(String alias) {
+    return $TxnCategoriesTableTable(attachedDatabase, alias);
+  }
+}
+
+class TransactionCategoryDTO extends DataClass
+    implements Insertable<TransactionCategoryDTO> {
+  final String transactionId;
+  final String categoryId;
+  const TransactionCategoryDTO(
+      {required this.transactionId, required this.categoryId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['transaction_id'] = Variable<String>(transactionId);
+    map['category_id'] = Variable<String>(categoryId);
+    return map;
+  }
+
+  TxnCategoriesTableCompanion toCompanion(bool nullToAbsent) {
+    return TxnCategoriesTableCompanion(
+      transactionId: Value(transactionId),
+      categoryId: Value(categoryId),
+    );
+  }
+
+  factory TransactionCategoryDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TransactionCategoryDTO(
+      transactionId: serializer.fromJson<String>(json['transactionId']),
+      categoryId: serializer.fromJson<String>(json['categoryId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'transactionId': serializer.toJson<String>(transactionId),
+      'categoryId': serializer.toJson<String>(categoryId),
+    };
+  }
+
+  TransactionCategoryDTO copyWith(
+          {String? transactionId, String? categoryId}) =>
+      TransactionCategoryDTO(
+        transactionId: transactionId ?? this.transactionId,
+        categoryId: categoryId ?? this.categoryId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TransactionCategoryDTO(')
+          ..write('transactionId: $transactionId, ')
+          ..write('categoryId: $categoryId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(transactionId, categoryId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TransactionCategoryDTO &&
+          other.transactionId == this.transactionId &&
+          other.categoryId == this.categoryId);
+}
+
+class TxnCategoriesTableCompanion
+    extends UpdateCompanion<TransactionCategoryDTO> {
+  final Value<String> transactionId;
+  final Value<String> categoryId;
+  final Value<int> rowid;
+  const TxnCategoriesTableCompanion({
+    this.transactionId = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TxnCategoriesTableCompanion.insert({
+    required String transactionId,
+    required String categoryId,
+    this.rowid = const Value.absent(),
+  })  : transactionId = Value(transactionId),
+        categoryId = Value(categoryId);
+  static Insertable<TransactionCategoryDTO> custom({
+    Expression<String>? transactionId,
+    Expression<String>? categoryId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (transactionId != null) 'transaction_id': transactionId,
+      if (categoryId != null) 'category_id': categoryId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TxnCategoriesTableCompanion copyWith(
+      {Value<String>? transactionId,
+      Value<String>? categoryId,
+      Value<int>? rowid}) {
+    return TxnCategoriesTableCompanion(
+      transactionId: transactionId ?? this.transactionId,
+      categoryId: categoryId ?? this.categoryId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (transactionId.present) {
+      map['transaction_id'] = Variable<String>(transactionId.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TxnCategoriesTableCompanion(')
+          ..write('transactionId: $transactionId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$PecuniaDB extends GeneratedDatabase {
   _$PecuniaDB(QueryExecutor e) : super(e);
   late final $AccountsTableTable accountsTable = $AccountsTableTable(this);
   late final $TransactionsTableTable transactionsTable =
       $TransactionsTableTable(this);
+  late final $CategoriesTableTable categoriesTable =
+      $CategoriesTableTable(this);
+  late final $TxnCategoriesTableTable txnCategoriesTable =
+      $TxnCategoriesTableTable(this);
   late final AccountsLocalDAO accountsLocalDAO =
       AccountsLocalDAO(this as PecuniaDB);
   late final TransactionsLocalDAO transactionsLocalDAO =
       TransactionsLocalDAO(this as PecuniaDB);
+  late final CategoriesLocalDAO categoriesLocalDAO =
+      CategoriesLocalDAO(this as PecuniaDB);
+  late final TxnCategoriesLocalDAO txnCategoriesLocalDAO =
+      TxnCategoriesLocalDAO(this as PecuniaDB);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [accountsTable, transactionsTable];
+      [accountsTable, transactionsTable, categoriesTable, txnCategoriesTable];
 }
 
 // **************************************************************************

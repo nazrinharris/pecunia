@@ -2,22 +2,19 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
 
 /// Checks if the given [AuthFailure] has the expected [AuthErrorType] and [AuthAction]
-Matcher isAuthFailure(AuthErrorType expectedErrorType, AuthAction expectedAction) =>
-    _IsAuthFailure(expectedErrorType, expectedAction);
+Matcher isAuthFailure(AuthErrorType expectedErrorType) => _IsAuthFailure(expectedErrorType);
 
 class _IsAuthFailure extends CustomMatcher {
-  _IsAuthFailure(this.expectedErrorType, this.expectedAction)
+  _IsAuthFailure(this.expectedErrorType)
       : super(
-          'AuthFailure with $expectedErrorType and $expectedAction',
+          'AuthFailure with $expectedErrorType',
           'errorType and action',
           '',
         );
 
   final AuthErrorType expectedErrorType;
-  final AuthAction expectedAction;
 
   @override
   bool matches(dynamic item, Map matchState) {
@@ -27,10 +24,10 @@ class _IsAuthFailure extends CustomMatcher {
     }
 
     if (item is AuthFailure) {
-      if (item.errorType == expectedErrorType && item.authAction == expectedAction) {
+      if (item.errorType == expectedErrorType) {
         return true;
       } else {
-        matchState['authFailure'] = 'has errorType ${item.errorType} and action ${item.authAction}';
+        matchState['authFailure'] = 'has errorType ${item.errorType}';
         return false;
       }
     } else {

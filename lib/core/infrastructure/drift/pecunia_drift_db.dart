@@ -2,9 +2,13 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/material.dart' show IconData;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:pecunia/core/infrastructure/drift/icon_data_converter.dart';
+import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
+import 'package:pecunia/features/categories/data/categories_local_dao.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,10 +21,16 @@ PecuniaDB pecuniaDB(PecuniaDBRef ref) => PecuniaDB(_openConnection());
   tables: [
     AccountsTable,
     TransactionsTable,
+    CategoriesTable,
+
+    // Join Tables
+    TxnCategoriesTable,
   ],
   daos: [
     AccountsLocalDAO,
     TransactionsLocalDAO,
+    CategoriesLocalDAO,
+    TxnCategoriesLocalDAO,
   ],
 )
 class PecuniaDB extends _$PecuniaDB {

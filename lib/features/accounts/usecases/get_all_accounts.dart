@@ -37,7 +37,6 @@ class GetAllAccounts extends _$GetAllAccounts {
         AccountsFailure.unknown(
           stackTrace: StackTrace.current,
           message: 'This should never happen, please contact support.',
-          accountsAction: AccountsAction.unknown,
         ),
         StackTrace.current,
       );

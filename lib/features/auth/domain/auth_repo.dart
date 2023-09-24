@@ -35,14 +35,6 @@ abstract interface class AuthRepo {
 
 typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
 
-enum AuthAction {
-  login,
-  logout,
-  register,
-  getLoggedInUser,
-  unknown,
-}
-
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl({required this.authRemoteDS});
   final AuthRemoteDS authRemoteDS;

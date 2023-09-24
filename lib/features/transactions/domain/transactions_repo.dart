@@ -1,10 +1,15 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' as f;
 import 'package:fpdart/fpdart.dart';
+import 'package:pecunia/core/common/description.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
+import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,35 +20,19 @@ part 'transactions_repo.g.dart';
 @riverpod
 TransactionsRepo transactionsRepo(TransactionsRepoRef ref) => TransactionsRepo(
       ref.watch(transactionsLocalDAOProvider),
+      ref.watch(txnCategoriesLocalDAOProvider),
       ref.watch(uuidProvider),
     );
 
-enum TransactionsAction {
-  create,
-  createTransferTransaction,
-  delete,
-  deleteTransferTransaction,
-  edit,
-  editTransferTxn,
-  getTransactionsByAccount,
-  getTransactionById,
-  getAllTransactions,
-  unknown,
-
-  getTransactionAmount,
-  getTransactionCurrency,
-  fundDetailsFromDTO,
-  mapAccountToDTO,
-}
-
 class TransactionsRepo {
-  TransactionsRepo(this.transactionsLocalDAO, this.uuid);
+  TransactionsRepo(this.transactionsLocalDAO, this.txnCategoriesLocalDAO, this.uuid);
 
   final TransactionsLocalDAO transactionsLocalDAO;
+  final TxnCategoriesLocalDAO txnCategoriesLocalDAO;
   final TransactionsRepoHelper _helper = TransactionsRepoHelper();
   final Uuid uuid;
 
-  TaskEither<TransactionsFailure, Unit> createTransaction({
+  TaskEither<Failure, Unit> createTransaction({
     required String name,
     required String creatorUid,
     required DateTime transactionDate,
@@ -55,16 +44,16 @@ class TransactionsRepo {
     required double? targetAmount,
     required String? targetCurrency,
     required String? transactionDescription,
+    required Category? category,
   }) {
-    const currentAction = TransactionsAction.create;
     final txn = Transaction.newTransaction(
       creatorUid: creatorUid,
       name: name,
-      transactionDescription: TransactionDescription(transactionDescription),
+      transactionDescription: Description(transactionDescription),
       transactionDate: transactionDate,
       accountId: accountId,
       fundDetails: FundDetails(
-        transactionType: TransactionType.fromString(type, currentAction),
+        transactionType: TransactionType.fromString(type),
         baseAmount: baseAmount,
         baseCurrency: PecuniaCurrencies.fromString(baseCurrency),
         exchangeRate: exchangeRate,
@@ -75,7 +64,7 @@ class TransactionsRepo {
       uuid: uuid,
     );
 
-    return transactionsLocalDAO.createTransaction(txn);
+    return transactionsLocalDAO.createTransaction(txn, category);
   }
 
   // TODO: Consider if the checks should be put as asserts or not
@@ -95,7 +84,6 @@ class TransactionsRepo {
         exchangeRate: exchangeRate,
         transferDescription: transferDescription,
         uuid: uuid,
-        currentAction: TransactionsAction.createTransferTransaction,
         defaultSourceTxnId: null,
         defaultDestinationTxnId: null,
       ).toTaskEither().flatMap(
@@ -117,11 +105,12 @@ class TransactionsRepo {
     return transactionsLocalDAO.getTransactionById(txnId).map(Transaction.fromDTO);
   }
 
-  TaskEither<TransactionsFailure, Unit> editTransaction({
+  TaskEither<Failure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
+    required ({Category? old, Category? current}) category,
   }) {
-    return transactionsLocalDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
+    return transactionsLocalDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn, category: category);
   }
 
   TaskEither<TransactionsFailure, Unit> editTransferTransaction({
@@ -145,6 +134,10 @@ class TransactionsRepo {
   TaskEither<TransactionsFailure, Unit> deleteTransferTransaction(Transaction transferTxnToDelete) {
     return transactionsLocalDAO.deleteTransferTransaction(transferTxnToDelete);
   }
+
+  TaskEither<TxnCategoriesFailure, List<Category>> getCategoriesByTxnId(String txnId) {
+    return txnCategoriesLocalDAO.getCategoriesByTxnId(txnId);
+  }
 }
 
 /// This class provides utility methods for the [TransactionsRepo] class.
@@ -154,7 +147,7 @@ class TransactionsRepo {
 ///
 /// It is designed to keep the code in [TransactionsRepo] more clean and readable
 /// by abstracting away some of the lower-level operations related to account data conversion.
-@visibleForTesting
+@f.visibleForTesting
 class TransactionsRepoHelper {
   /// Converts an [Transaction] object to an [TransactionDTO] object.
   ///
@@ -167,7 +160,6 @@ class TransactionsRepoHelper {
         stackTrace: stackTrace,
         message: TransactionsErrorType.cannotConvertToDTO.message,
         errorType: TransactionsErrorType.cannotConvertToDTO,
-        transactionsAction: TransactionsAction.mapAccountToDTO,
       ),
     );
   }
@@ -186,7 +178,6 @@ class TransactionsRepoHelper {
         stackTrace: stackTrace,
         message: TransactionsErrorType.cannotConvertFromDTO.message,
         errorType: TransactionsErrorType.cannotConvertFromDTO,
-        transactionsAction: TransactionsAction.unknown,
       );
     });
   }

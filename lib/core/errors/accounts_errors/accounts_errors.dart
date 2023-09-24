@@ -2,7 +2,6 @@ import 'package:drift/isolate.dart';
 import 'package:drift/native.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pecunia/core/errors/failures.dart';
-import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 part 'accounts_errors.freezed.dart';
@@ -45,7 +44,6 @@ class AccountsFailure with _$AccountsFailure implements Failure {
   const factory AccountsFailure({
     required StackTrace stackTrace,
     required String message,
-    required AccountsAction accountsAction,
     required AccountsErrorType errorType,
     Object? rawException,
   }) = _AccountsFailure;
@@ -55,7 +53,6 @@ class AccountsFailure with _$AccountsFailure implements Failure {
   const factory AccountsFailure.unknown({
     required StackTrace stackTrace,
     required String message,
-    required AccountsAction accountsAction,
     @Default(AccountsErrorType.unknown) AccountsErrorType errorType,
     Object? rawException,
   }) = _UnknownAccountsFailure;
@@ -87,7 +84,6 @@ class AccountsException with _$AccountsException implements Exception {
   factory AccountsException({
     required StackTrace stackTrace,
     required AccountsErrorType errorType,
-    required AccountsAction accountsAction,
     String? message,
   }) = _AccountsException;
 
@@ -96,7 +92,6 @@ class AccountsException with _$AccountsException implements Exception {
   factory AccountsException.unknown({
     required StackTrace stackTrace,
     required AccountsErrorType errorType,
-    @Default(AccountsAction.unknown) AccountsAction accountsAction,
     String? message,
   }) = _UnknownAccountsException;
 
@@ -104,7 +99,6 @@ class AccountsException with _$AccountsException implements Exception {
     return AccountsException(
       stackTrace: failure.stackTrace,
       errorType: failure.errorType,
-      accountsAction: failure.accountsAction,
     );
   }
 
@@ -112,7 +106,6 @@ class AccountsException with _$AccountsException implements Exception {
     return AccountsException(
       stackTrace: failure.stackTrace,
       errorType: AccountsErrorType.unknown,
-      accountsAction: AccountsAction.unknown,
     );
   }
 }
@@ -121,22 +114,19 @@ class AccountsException with _$AccountsException implements Exception {
 /// * Helpers
 /// ****************************************************************
 
-AccountsFailure mapDriftToAccountsFailure(
-    AccountsAction accountsAction, Object error, StackTrace stackTrace) {
+AccountsFailure mapDriftToAccountsFailure(Object error, StackTrace stackTrace) {
   switch (error) {
     case DriftRemoteException(remoteCause: SqliteException):
       final cause = error.remoteCause as SqliteException;
       return AccountsFailure(
         stackTrace: stackTrace,
         message: '${cause.message} \n${cause.causingStatement}',
-        accountsAction: accountsAction,
         errorType: AccountsErrorType.sqliteException,
       );
     default:
       return AccountsFailure.unknown(
         stackTrace: stackTrace,
         message: AccountsErrorType.unknown.message,
-        accountsAction: accountsAction,
         rawException: error,
       );
   }

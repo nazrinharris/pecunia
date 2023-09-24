@@ -4,10 +4,8 @@ import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
-import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'accounts_local_dao.g.dart';
@@ -35,26 +33,24 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
   AccountsLocalDAO(super.db);
 
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {
-    const currentAction = AccountsAction.getAccounts;
     return TaskEither.tryCatch(
       () async => (select(accountsTable)
             ..orderBy([
               (tbl) => OrderingTerm(expression: tbl.name),
             ]))
           .get(),
-      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
+      mapDriftToAccountsFailure,
     );
   }
 
   TaskEither<AccountsFailure, AccountDTO> getAccountById(String id) {
     return TaskEither.tryCatch(
       () async => (select(accountsTable)..where((tbl) => tbl.id.equals(id))).getSingle(),
-      (error, stackTrace) => mapDriftToAccountsFailure(AccountsAction.getAccounts, error, stackTrace),
+      mapDriftToAccountsFailure,
     );
   }
 
   TaskEither<AccountsFailure, Unit> updateAccount(AccountDTO account) {
-    const accountsAction = AccountsAction.recalculateAccountBalance;
     return TaskEither.tryCatch(
       () => transaction(() async {
         // Get all transactions for this account
@@ -64,7 +60,7 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
         // Calculate the new balance
         var newBalance = account.initialBalance;
         for (final txn in txnList) {
-          final type = TransactionType.fromString(txn.transactionType, TransactionsAction.unknown);
+          final type = TransactionType.fromString(txn.transactionType);
           if (type == TransactionType.credit) {
             newBalance += txn.transactionAmount;
           } else if (type == TransactionType.debit) {
@@ -80,7 +76,7 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
 
         return unit;
       }),
-      (error, stackTrace) => mapDriftToAccountsFailure(accountsAction, error, stackTrace),
+      mapDriftToAccountsFailure,
     );
   }
 
@@ -95,7 +91,7 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
         // Calculate the new balance
         var calculatedBalance = account.initialBalance;
         for (final txn in txnList) {
-          final type = TransactionType.fromString(txn.transactionType, TransactionsAction.unknown);
+          final type = TransactionType.fromString(txn.transactionType);
           if (type == TransactionType.credit) {
             calculatedBalance += txn.transactionAmount;
           } else if (type == TransactionType.debit) {
@@ -107,7 +103,7 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
 
         return (calculatedBalance == account.balance, calculatedBalance);
       }),
-      (error, stackTrace) => mapDriftToAccountsFailure(AccountsAction.unknown, error, stackTrace),
+      mapDriftToAccountsFailure,
     );
   }
 
@@ -117,7 +113,6 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
   /// Another solution is to simply return the pure stream, though I'm not sure
   /// on how I'd handle the errors in that case.
   Stream<Either<AccountsFailure, List<AccountDTO>>> watchAccounts() {
-    const currentAction = AccountsAction.watchAccounts;
     return select(accountsTable).watch().transform(StreamTransformer.fromHandlers(
           handleData: (listOfDTOs, sink) {
             sink.add(
@@ -126,25 +121,23 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
           },
           handleError: (error, stackTrace, sink) {
             sink.add(
-              left(mapDriftToAccountsFailure(currentAction, error, stackTrace)),
+              left(mapDriftToAccountsFailure(error, stackTrace)),
             );
           },
         ));
   }
 
   TaskEither<AccountsFailure, Unit> createAccount(AccountDTO account) {
-    const currentAction = AccountsAction.createAccount;
     return TaskEither.tryCatch(
       () async {
         await into(accountsTable).insert(account.toCompanion(false));
         return unit;
       },
-      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
+      mapDriftToAccountsFailure,
     );
   }
 
   TaskEither<AccountsFailure, Unit> deleteAccount(AccountDTO account) {
-    const currentAction = AccountsAction.deleteAccount;
     return TaskEither.tryCatch(
       () async {
         return transaction(() async {
@@ -154,7 +147,6 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
 
           if (linkedTxnList.isNotEmpty) {
             for (final linkedTxn in linkedTxnList) {
-              print('This is supposed to delete');
               (await db.transactionsLocalDAO.deleteTransferTransaction(Transaction.fromDTO(linkedTxn)).run())
                   .fold(
                 (l) => throw AccountsException.fromGenericFailure(l),
@@ -172,7 +164,7 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
           return unit;
         });
       },
-      (error, stackTrace) => mapDriftToAccountsFailure(currentAction, error, stackTrace),
+      mapDriftToAccountsFailure,
     );
   }
 }

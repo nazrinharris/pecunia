@@ -83,7 +83,6 @@ void main() {
           (_) => TaskEither.left(AuthFailure.unknown(
             stackTrace: StackTrace.current,
             message: AuthErrorType.unknown.message,
-            authAction: AuthAction.login,
           )),
         );
 
@@ -95,7 +94,7 @@ void main() {
         // Assert
         expect(result.isLeft(), isTrue);
         result.fold(
-          (l) => expect(l, isAuthFailure(AuthErrorType.unknown, AuthAction.login)),
+          (l) => expect(l, isAuthFailure(AuthErrorType.unknown)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -157,7 +156,6 @@ void main() {
           (_) => TaskEither.left(AuthFailure.unknown(
             stackTrace: StackTrace.current,
             message: AuthErrorType.unknown.message,
-            authAction: AuthAction.register,
           )),
         );
 
@@ -172,7 +170,7 @@ void main() {
 
         expect(result.isLeft(), isTrue);
         result.fold(
-          (l) => expect(l, isAuthFailure(AuthErrorType.unknown, AuthAction.register)),
+          (l) => expect(l, isAuthFailure(AuthErrorType.unknown)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
@@ -194,7 +192,6 @@ void main() {
           (_) => TaskEither.left(AuthFailure.unknown(
             stackTrace: StackTrace.current,
             message: AuthErrorType.unknown.message,
-            authAction: AuthAction.logout,
           )),
         );
 
@@ -202,7 +199,7 @@ void main() {
 
         expect(result.isLeft(), isTrue);
         result.fold(
-          (l) => expect(l, isAuthFailure(AuthErrorType.unknown, AuthAction.logout)),
+          (l) => expect(l, isAuthFailure(AuthErrorType.unknown)),
           (r) => fail('Operation succeeded with value: $r'),
         );
       });
