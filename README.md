@@ -36,7 +36,7 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Transaction creation, deletion, editing and viewing.
 - [x] Transferring funds between accounts.
 - [x] Multi-currency transactions.
-- [ ] Transaction categories.
+- [x] Transaction categories.
 - [ ] Simple budget creation, deletion, editing, and viewing.
 - [ ] Basic UI capabilities (as in, similar looks and functionality to mockup) 
 
