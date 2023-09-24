@@ -89,7 +89,7 @@ class TxnBottomSheet extends ConsumerWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-                      showEditTransactionBottomSheet(context, txn, account);
+                      showEditTransactionBottomSheet(context, txn, account, category);
                     },
                     child: Card(
                       margin: EdgeInsets.zero,
@@ -199,7 +199,8 @@ void showTransactionBottomSheet(
       });
 }
 
-void showEditTransactionBottomSheet(BuildContext context, Transaction txn, Account account) {
+void showEditTransactionBottomSheet(
+    BuildContext context, Transaction txn, Account account, Category? category) {
   showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
@@ -212,7 +213,7 @@ void showEditTransactionBottomSheet(BuildContext context, Transaction txn, Accou
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              EditTxnForm(txn: txn, account: account),
+              EditTxnForm(txn: txn, account: account, category: category),
             ],
           ),
         );

@@ -13,6 +13,8 @@ part 'transaction.freezed.dart';
 part 'transfer_details.dart';
 part 'fund_details.dart';
 
+typedef TransactionId = String;
+
 enum TransactionType {
   credit('credit'),
   debit('debit');

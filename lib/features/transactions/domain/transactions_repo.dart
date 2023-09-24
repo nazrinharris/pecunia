@@ -105,11 +105,12 @@ class TransactionsRepo {
     return transactionsLocalDAO.getTransactionById(txnId).map(Transaction.fromDTO);
   }
 
-  TaskEither<TransactionsFailure, Unit> editTransaction({
+  TaskEither<Failure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
+    required ({Category? old, Category? current}) category,
   }) {
-    return transactionsLocalDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn);
+    return transactionsLocalDAO.editTransaction(newTxn: newTxn, oldTxn: oldTxn, category: category);
   }
 
   TaskEither<TransactionsFailure, Unit> editTransferTransaction({

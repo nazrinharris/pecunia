@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,7 +11,7 @@ part 'edit_transaction.g.dart';
 @riverpod
 class EditTransaction extends _$EditTransaction {
   @override
-  Future<Option<Unit>> build() async {
+  Future<Option<TransactionId>> build() async {
     return const Option.none();
   }
 
@@ -24,6 +25,7 @@ class EditTransaction extends _$EditTransaction {
     required String? targetCurrency,
     required double? targetAmount,
     required Transaction oldTxn,
+    required ({Category? old, Category? current}) category,
     //  required String txnAccount, Commented out, because as of now, can't change account of a transaction
   }) async {
     state = const AsyncLoading();
@@ -40,9 +42,17 @@ class EditTransaction extends _$EditTransaction {
           targetCurrency: targetCurrency == null ? null : PecuniaCurrencies.fromString(targetCurrency),
         ));
 
-    (await ref.read(transactionsRepoProvider).editTransaction(newTxn: newTxn, oldTxn: oldTxn).run()).fold(
+    (await ref
+            .read(transactionsRepoProvider)
+            .editTransaction(
+              newTxn: newTxn,
+              oldTxn: oldTxn,
+              category: category,
+            )
+            .run())
+        .fold(
       (l) => state = AsyncError(l, l.stackTrace),
-      (r) => state = AsyncData(Option.of(r)),
+      (r) => state = AsyncData(Option.of(oldTxn.id)),
     );
   }
 }

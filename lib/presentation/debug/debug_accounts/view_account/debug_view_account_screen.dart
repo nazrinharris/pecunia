@@ -76,7 +76,7 @@ class DebugViewAccountScreen extends ConsumerWidget {
                 failure: next.error as Failure?,
               );
         }
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        if (next is AsyncData<Option<TransactionId>> && next.value.isSome()) {
           context
             ..pop()
             ..pop();
@@ -85,7 +85,15 @@ class DebugViewAccountScreen extends ConsumerWidget {
               );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
-            ..invalidate(getAccountByIdProvider(accountId));
+            ..invalidate(getAccountByIdProvider(accountId))
+            ..invalidate(
+              getCategoriesByTxnIdProvider(
+                next.value.getOrElse(() {
+                  throw Exception(
+                      'Expected a value of TransactionId. This is a fatal error, should never be null.');
+                }),
+              ),
+            );
         }
       })
       ..listen(deleteTransactionProvider, (previous, next) {

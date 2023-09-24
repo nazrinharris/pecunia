@@ -179,9 +179,10 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     );
   }
 
-  TaskEither<TransactionsFailure, Unit> editTransaction({
+  TaskEither<Failure, Unit> editTransaction({
     required Transaction newTxn,
     required Transaction oldTxn,
+    required ({Category? old, Category? current}) category,
   }) {
     return TaskEither.tryCatch(
       () async => transaction(() async {
@@ -205,9 +206,30 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
         await updateAccountDTO(updatedAccountDTO);
         await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxn.id)))
             .write(newTxn.toDTO().toCompanion(false));
+
+        // Update the category
+        if (category.old != null) {
+          (await db.txnCategoriesLocalDAO.removeCategoryFromTxn(newTxn.id, category.old!.id).run()).fold(
+            (l) => throw TxnCategoriesException.fromFailure(l),
+            (r) => unit,
+          );
+        }
+
+        if (category.current != null) {
+          (await db.txnCategoriesLocalDAO.addCategoryToTxn(newTxn.id, category.current!.id).run()).fold(
+            (l) => throw TxnCategoriesException.fromFailure(l),
+            (r) => unit,
+          );
+        }
+
         return unit;
       }),
-      mapDriftToTransactionsFailure,
+      (error, stackTrace) {
+        if (error is TxnCategoriesException) {
+          return TxnCategoriesFailure.fromException(error);
+        }
+        return mapDriftToTransactionsFailure(error, stackTrace);
+      },
     );
   }
 
