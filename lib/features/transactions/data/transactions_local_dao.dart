@@ -52,6 +52,9 @@ class TransactionsTable extends Table {
 /// null will be the value. Therefore, `.toCompanion(false)` must be used. This will ensure that the
 /// null fields aren't treated as "not changed". This also means that to update a field, you must first
 /// retrieve the whole row, then use the `copyWith` method.
+///
+/// I mean, technically `toCompanion(false)` is the default behavior if you insert a DTO object (Drift Generated).
+/// But I'm just putting this here to make sure I don't forget.
 @DriftAccessor(tables: [
   TransactionsTable,
   AccountsTable,
@@ -204,8 +207,7 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         // Update the account and transactions
         await updateAccountDTO(updatedAccountDTO);
-        await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxn.id)))
-            .write(newTxn.toDTO().toCompanion(false));
+        await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxn.id))).write(newTxn.toDTO());
 
         // Update the category
         if (category.old != null) {
@@ -312,11 +314,11 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
   }
 
   Future<void> insertTransactionToTable(TransactionDTO txnDto) async {
-    await into(transactionsTable).insert(txnDto.toCompanion(false));
+    await into(transactionsTable).insert(txnDto);
   }
 
   Future<void> updateAccountDTO(AccountDTO accountDto) async {
-    await update(accountsTable).replace(accountDto.toCompanion(false));
+    await update(accountsTable).replace(accountDto);
   }
 
   Future<(bool isValid, double actualBalance)> _validateAccountBalance(String accountId) async {
