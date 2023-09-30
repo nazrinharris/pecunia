@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_dialogs/flutter_easy_dialogs.dart';
 import 'package:full_screen_dialog_manager/full_screen_dialog_manager.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/util/logger.dart';
 import 'package:pecunia/presentation/router/router.dart';
@@ -34,7 +32,9 @@ class PecuniaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      darkTheme: ThemeData.dark(useMaterial3: true),
+      darkTheme: ThemeData.dark(
+        useMaterial3: true,
+      ).copyWith(textTheme: ThemeData.dark(useMaterial3: true).textTheme.apply(fontFamily: 'Subjectivity')),
       themeMode: ThemeMode.dark,
       title: 'Pecunia',
       routerConfig: router,
@@ -44,34 +44,6 @@ class PecuniaApp extends StatelessWidget {
             ..registerFullScreen(overlayController)
             ..registerPositioned(overlayController);
         },
-      ),
-    );
-  }
-}
-
-class EntryScreen extends StatefulWidget {
-  const EntryScreen({super.key});
-
-  @override
-  State<EntryScreen> createState() => _EntryScreenState();
-}
-
-class _EntryScreenState extends State<EntryScreen> {
-  @override
-  void initState() {
-    super.initState();
-    if (isDebugMode) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/debug-login');
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CupertinoActivityIndicator(),
       ),
     );
   }

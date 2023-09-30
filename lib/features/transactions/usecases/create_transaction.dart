@@ -35,17 +35,19 @@ class CreateTransaction extends _$CreateTransaction {
     final pecuniaUser = failureOrPecuniaUser.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace);
+        return;
       },
       (pecuniaUser) => pecuniaUser,
     );
 
-    if (pecuniaUser != null) {
+    if (pecuniaUser != null && pecuniaUser.isSome()) {
       f.debugPrint('user exists, creating transaction...');
       (await ref
               .read(transactionsRepoProvider)
               .createTransaction(
                 name: name,
-                creatorUid: pecuniaUser.uid,
+                // TODO: Make better exception
+                creatorUid: pecuniaUser.getOrElse(() => throw Exception()).uid,
                 transactionDate: DateTime.now(),
                 accountId: accountId,
                 type: transactionType.typeAsString,

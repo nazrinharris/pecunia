@@ -52,6 +52,12 @@ dependencies:
   positioned_dialog_manager: ^1.0.5+1
   full_screen_dialog_manager: ^1.0.4+1
 
+  # UI and Animations
+  simple_animations: ^5.0.2
+  bottom_nav_layout: ^3.0.10
+  flutter_gradient_animation_text: ^1.0.2
+  animated_text_kit: ^4.2.2
+
   # Convenience
   screwdriver: ^4.1.0
   flex_color_picker: ^3.3.0
@@ -109,3 +115,45 @@ flutter_native_splash:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/app_icon/dev_transparent.png
+    - assets/app_icon/icon_transparent.png
+
+  fonts:
+    - family: Subjectivity
+      fonts:
+        - asset: fonts/Subjectivity-Black.otf
+          weight: 900
+        - asset: fonts/Subjectivity-BlackSlanted.otf
+          weight: 900
+          style: italic
+        - asset: fonts/Subjectivity-Bold.otf
+          weight: 700
+        - asset: fonts/Subjectivity-BoldSlanted.otf
+          weight: 700
+          style: italic
+        - asset: fonts/Subjectivity-ExtraBold.otf
+          weight: 800
+        - asset: fonts/Subjectivity-ExtraBoldSlanted.otf
+          weight: 800
+          style: italic
+        - asset: fonts/Subjectivity-Light.otf
+          weight: 300
+        - asset: fonts/Subjectivity-LightSlanted.otf
+          weight: 300
+          style: italic
+        - asset: fonts/Subjectivity-Medium.otf
+          weight: 500
+        - asset: fonts/Subjectivity-MediumSlanted.otf
+          weight: 500
+          style: italic
+        - asset: fonts/Subjectivity-Regular.otf
+          weight: 400
+        - asset: fonts/Subjectivity-RegularSlanted.otf
+          weight: 400
+          style: italic
+        - asset: fonts/Subjectivity-Thin.otf
+          weight: 100
+        - asset: fonts/Subjectivity-ThinSlanted.otf
+          weight: 100
+          style: italic

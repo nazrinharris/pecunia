@@ -2,20 +2,37 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/main.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/edit_account/debug_edit_account_screen.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_login_register_screen.dart';
 import 'package:pecunia/presentation/debug/debug_dialogs/debug_dialogs.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/debug_local_db_screen.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
+import 'package:pecunia/presentation/screens/auth/login_screen.dart';
+import 'package:pecunia/presentation/screens/auth/register_screen.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories/view_all_categories_screen.dart';
+import 'package:pecunia/presentation/screens/entry_screen.dart';
+import 'package:pecunia/presentation/screens/start_screen.dart';
 
 final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
       builder: (context, state) => const EntryScreen(),
+    ),
+    GoRoute(
+      path: '/start',
+      builder: (context, state) => const StartScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      name: 'register',
+      builder: (context, state) => const RegisterScreen(),
     ),
     // Debug Routes
     GoRoute(

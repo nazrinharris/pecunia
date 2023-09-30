@@ -13,6 +13,10 @@ import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/accounts/usecases/watch_accounts.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/features/auth/domain/entities/session.dart';
+import 'package:pecunia/features/auth/usecases/login_with_password.dart';
+import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
@@ -52,12 +56,6 @@ class DebugLocalDBScreen extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Debug Local DB'),
-          leading: IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: const Icon(Icons.arrow_back),
-          ),
         ),
         body: ListView(
           children: [
@@ -100,6 +98,19 @@ class DebugLocalDBScreen extends ConsumerWidget {
                           context.pushNamed('view-all-categories');
                         },
                         child: const Text('View All Categories'),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 83, 10, 10)),
+                        ),
+                        onPressed: () async {
+                          await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
+                          ref.read(loginWithEmailAndPasswordProvider.notifier).reset();
+                          ref.read(registerWithEmailAndPasswordProvider.notifier).reset();
+                          context.go('/start');
+                        },
+                        child: const Text('Logout'),
                       ),
                     ],
                   )

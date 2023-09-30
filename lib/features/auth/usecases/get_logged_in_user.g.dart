@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create_transaction.dart';
+part of 'get_logged_in_user.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createTransactionHash() => r'34785517ba5f2215b6b561758dcaea670ce5591d';
+String _$getLoggedInUserHash() => r'e29f2664e35b135ae38863e3ce46df32e8f5074c';
 
-/// See also [CreateTransaction].
-@ProviderFor(CreateTransaction)
-final createTransactionProvider =
-    AutoDisposeAsyncNotifierProvider<CreateTransaction, Option<Unit>>.internal(
-  CreateTransaction.new,
-  name: r'createTransactionProvider',
+/// See also [GetLoggedInUser].
+@ProviderFor(GetLoggedInUser)
+final getLoggedInUserProvider = AutoDisposeAsyncNotifierProvider<
+    GetLoggedInUser, Option<PecuniaUser>>.internal(
+  GetLoggedInUser.new,
+  name: r'getLoggedInUserProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$createTransactionHash,
+      : _$getLoggedInUserHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CreateTransaction = AutoDisposeAsyncNotifier<Option<Unit>>;
+typedef _$GetLoggedInUser = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
