@@ -131,6 +131,7 @@ class CreateTxnForm extends HookConsumerWidget {
                     '${txnType.value.toDisplayName()} Transaction',
                     style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                           color: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
+                          fontWeight: FontWeight.bold,
                         ),
                   ),
                   if (!disableCloseButton)

@@ -30,6 +30,7 @@ abstract interface class PecuniaDialogs {
     required String title,
     required void Function() onConfirm,
     required BuildContext context,
+    Icon? icon,
     String? message,
   });
   Future<void> showInfoDialog(String message);
@@ -92,20 +93,24 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
     required String title,
     required void Function() onConfirm,
     required BuildContext context,
+    Icon? icon,
     String? message,
   }) async {
     await showDialog<void>(
         context: context,
         builder: (context) {
           return AlertDialog(
+            icon: Icon(Icons.warning_amber_rounded, color: Colors.red[200], size: 48),
             title: Text(
               title,
               style: TextStyle(
+                fontWeight: FontWeight.bold,
                 color: Colors.red[200],
               ),
             ),
             content: Text(
               message ?? '',
+              textAlign: TextAlign.center,
             ),
             actions: [
               TextButton(
@@ -117,7 +122,7 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
                   onConfirm();
                   Navigator.of(context).pop();
                 },
-                icon: Icon(Icons.delete_forever, color: Colors.red[200]),
+                icon: icon ?? Icon(Icons.delete_forever, color: Colors.red[200]),
                 label: Text(
                   'Confirm',
                   style: TextStyle(color: Colors.red[200]),

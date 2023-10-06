@@ -23,7 +23,7 @@ class RegisterScreen extends ConsumerWidget {
             );
       }
       if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
-        context.go('/debug-local-db');
+        context.goNamed('main');
       }
     });
 

@@ -749,7 +749,21 @@ class AccountMetadataCard extends ConsumerWidget {
   }
 }
 
-void showCreateTransactionBottomSheet(BuildContext context, Account account, bool isCredit) {
+/// Shows a bottom sheet for creating a transaction.
+///
+/// Either [account] or [accountsList] must be provided, but not both.
+/// Both cannot be null.
+void showCreateTransactionBottomSheet(
+  BuildContext context,
+  bool isCredit, {
+  Account? account,
+  List<Account>? accountsList,
+}) {
+  assert(
+    (account == null) != (accountsList == null),
+    'Either account or accountsList must be provided, but not both. Both cannot be null.',
+  );
+
   showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
@@ -767,6 +781,7 @@ void showCreateTransactionBottomSheet(BuildContext context, Account account, boo
               children: [
                 CreateTxnForm(
                   account: account,
+                  accountsList: accountsList,
                   initialTransactionType: isCredit ? TransactionType.credit : TransactionType.debit,
                 ),
                 const SizedBox(height: 64),
@@ -795,7 +810,6 @@ void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
               children: [
                 CreateTransferTxnForm(
                   defaultSourceAccount: account,
-                  accountsList: [account],
                 ),
                 const SizedBox(height: 64),
               ],
@@ -825,7 +839,7 @@ class AccountActionsGrid extends ConsumerWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
               onTap: () {
-                showCreateTransactionBottomSheet(context, account, true);
+                showCreateTransactionBottomSheet(context, true, account: account);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -841,7 +855,7 @@ class AccountActionsGrid extends ConsumerWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
               onTap: () {
-                showCreateTransactionBottomSheet(context, account, false);
+                showCreateTransactionBottomSheet(context, false, account: account);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

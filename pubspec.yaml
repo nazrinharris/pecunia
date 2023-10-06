@@ -31,7 +31,7 @@ dependencies:
   intl: ^0.18.1
 
   # Local Storage
-  drift: ^2.8.2
+  drift: ^2.12.1
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.0.0
   path: ^1.8.3
@@ -55,8 +55,13 @@ dependencies:
   # UI and Animations
   simple_animations: ^5.0.2
   bottom_nav_layout: ^3.0.10
+  google_nav_bar: ^5.0.6
+  sliver_app_bar_builder: ^1.1.0
   flutter_gradient_animation_text: ^1.0.2
   animated_text_kit: ^4.2.2
+  sprung: ^3.0.1
+  flutter_expandable_fab: ^2.0.0
+  fl_chart: ^0.63.0
 
   # Convenience
   screwdriver: ^4.1.0

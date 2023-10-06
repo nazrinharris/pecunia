@@ -138,6 +138,14 @@ class TransactionsRepo {
   TaskEither<TxnCategoriesFailure, List<Category>> getCategoriesByTxnId(String txnId) {
     return txnCategoriesLocalDAO.getCategoriesByTxnId(txnId);
   }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getAllIncomeTxn() {
+    return transactionsLocalDAO.getAllIncomeTxns();
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getAllExpenseTxn() {
+    return transactionsLocalDAO.getAllExpenseTxns();
+  }
 }
 
 /// This class provides utility methods for the [TransactionsRepo] class.

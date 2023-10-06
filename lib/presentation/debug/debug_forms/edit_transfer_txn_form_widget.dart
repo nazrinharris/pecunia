@@ -111,8 +111,13 @@ class EditTransferFormContent extends HookConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Transfer Transaction',
-                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.blue[100])),
+                  Text(
+                    'Transfer Transaction',
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: Colors.blue[100],
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                   IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))
                 ],
               ),

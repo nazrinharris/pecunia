@@ -65,7 +65,10 @@ class CreateCategoryBottomSheet extends HookConsumerWidget {
                 children: [
                   Text(
                     'Create Category',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.purple[100]),
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: Colors.purple[100],
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   if (!disableCloseButton)
                     IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))

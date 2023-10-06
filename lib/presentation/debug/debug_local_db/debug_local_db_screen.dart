@@ -12,13 +12,12 @@ import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
-import 'package:pecunia/features/accounts/usecases/watch_accounts.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
-import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/screens/accounts/accounts_screen.dart';
 
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
@@ -87,30 +86,23 @@ class DebugLocalDBScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.brown[900]),
+                      ButtonTheme(
+                        minWidth: 0,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 83, 10, 10)),
+                          ),
+                          onPressed: () async {
+                            await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
+                            ref.read(loginWithEmailAndPasswordProvider.notifier).reset();
+                            ref.read(registerWithEmailAndPasswordProvider.notifier).reset();
+                            context.go('/start');
+                          },
+                          child: const Text('Logout'),
                         ),
-                        onPressed: () {
-                          context.pushNamed('view-all-categories');
-                        },
-                        child: const Text('View All Categories'),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 83, 10, 10)),
-                        ),
-                        onPressed: () async {
-                          await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
-                          ref.read(loginWithEmailAndPasswordProvider.notifier).reset();
-                          ref.read(registerWithEmailAndPasswordProvider.notifier).reset();
-                          context.go('/start');
-                        },
-                        child: const Text('Logout'),
                       ),
                     ],
                   )
@@ -348,96 +340,6 @@ class CreateAccountFormWidget extends HookConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class AccountsList extends ConsumerWidget {
-  const AccountsList({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final stream = ref.watch(watchAccountsProvider);
-
-    return Column(
-      children: [
-        const Align(
-          child: Text(
-            'All Accounts List',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        const SizedBox(height: 14),
-        stream.when(
-          data: (failureOrList) => failureOrList.fold(
-              (l) => Text(l.toString()),
-              (list) => ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: list.length,
-                    itemBuilder: (ctx, index) => ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      title: Text(list[index].name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: list[index].description.value == null
-                          ? null
-                          : Text(
-                              list[index].description.value!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.grey.withOpacity(0.8)),
-                            ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            '${list[index].currency.code} ${list[index].balance}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.purple[100],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              // Handle edit action here
-                              context.pushNamed('debug-edit-account', extra: list[index]);
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red[300],
-                            ),
-                            onPressed: () {
-                              // Handle delete action here
-                              ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                                  title: 'Are you sure you want to delete this account?',
-                                  message: 'This is irreversible',
-                                  onConfirm: () {
-                                    ref.read(deleteAccountProvider.notifier).deleteAccount(list[index]);
-                                  },
-                                  context: context);
-                            },
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        ref.watch(getTransactionsByAccountIdProvider(list[index].id));
-
-                        context.pushNamed('debug-view-account', extra: list[index]);
-                      },
-                    ),
-                  )),
-          error: (e, __) => Text(e.toString()),
-          loading: () => const Align(child: CupertinoActivityIndicator()),
-        )
-      ],
     );
   }
 }

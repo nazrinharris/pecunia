@@ -12,6 +12,8 @@ import 'package:pecunia/presentation/screens/auth/login_screen.dart';
 import 'package:pecunia/presentation/screens/auth/register_screen.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories/view_all_categories_screen.dart';
 import 'package:pecunia/presentation/screens/entry_screen.dart';
+import 'package:pecunia/presentation/screens/main_screen.dart';
+import 'package:pecunia/presentation/screens/settings_screen.dart';
 import 'package:pecunia/presentation/screens/start_screen.dart';
 
 final router = GoRouter(
@@ -22,6 +24,7 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/start',
+      name: 'start',
       builder: (context, state) => const StartScreen(),
     ),
     GoRoute(
@@ -33,6 +36,16 @@ final router = GoRouter(
       path: '/register',
       name: 'register',
       builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/main',
+      name: 'main',
+      builder: (context, state) => const MainScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      name: 'settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
     // Debug Routes
     GoRoute(

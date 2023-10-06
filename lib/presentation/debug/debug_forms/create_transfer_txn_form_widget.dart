@@ -37,12 +37,10 @@ class CreateTransferTxnFields {
 class CreateTransferTxnForm extends HookConsumerWidget {
   const CreateTransferTxnForm({
     required this.defaultSourceAccount,
-    required this.accountsList,
     super.key,
   });
 
   final Account? defaultSourceAccount;
-  final List<Account> accountsList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +54,7 @@ class CreateTransferTxnForm extends HookConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
               'You need at least 2 accounts to transfer money.',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
           ),
@@ -104,8 +102,13 @@ class TransferFormContent extends HookConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Transfer Transaction',
-                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.blue[100])),
+                  Text(
+                    'Transfer Transaction',
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: Colors.blue[100],
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
                   IconButton(onPressed: () => context.pop(), icon: const Icon(Icons.close, size: 28))
                 ],
               ),
@@ -400,6 +403,12 @@ class SourceAccountDropdown extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ids = accountsList.map((account) => account.id);
+    final uniqueIds = ids.toSet();
+    if (ids.length != uniqueIds.length) {
+      print('There are duplicate accounts in the list');
+    }
+
     return DropdownButtonFormField<Account>(
       isExpanded: true,
       value: chosenSourceAccount.value,

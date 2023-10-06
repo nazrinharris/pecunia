@@ -4,6 +4,8 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,6 +18,7 @@ import 'package:pecunia/features/categories/usecases/update_category.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories/category_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories/create_category_form_widget.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 class ViewAllCategories extends HookConsumerWidget {
   const ViewAllCategories({super.key});
@@ -70,23 +73,107 @@ class ViewAllCategories extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Categories'),
         leading: IconButton(
           onPressed: () {
             context.pop();
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showCreateCategoryBottomSheet(context);
-            },
-            icon: const Icon(Icons.add),
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 14),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Text(
+                  'Categories',
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                Spacer(),
+                AddCategoryButton(),
+              ],
+            ),
           ),
+          const SizedBox(height: 14),
+          Expanded(child: const CategoriesContent()),
         ],
       ),
-      body: const CategoriesContent(),
+    );
+  }
+}
+
+class AddCategoryButton extends HookConsumerWidget {
+  const AddCategoryButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final control = useState(Control.stop);
+
+    return CustomAnimationBuilder(
+      control: control.value,
+      tween: MovieTween()
+        ..tween(
+          'scale',
+          Tween<double>(begin: 1, end: 0.95),
+          duration: const Duration(milliseconds: 100),
+        )
+        ..tween(
+          'opacity',
+          Tween<double>(begin: 1, end: 0.8),
+          duration: const Duration(milliseconds: 100),
+        ),
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) => Transform.scale(
+        scale: value.get('scale'),
+        child: Opacity(
+          opacity: value.get('opacity'),
+          child: child,
+        ),
+      ),
+      child: GestureDetector(
+        onTapDown: (details) {
+          control.value = Control.play;
+        },
+        onTapUp: (details) async {
+          showCreateCategoryBottomSheet(context);
+
+          await HapticFeedback.lightImpact();
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          control.value = Control.playReverse;
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          control.value = Control.stop;
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondary,
+            borderRadius: BorderRadius.circular(100),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            children: [
+              Text(
+                'Add Category',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

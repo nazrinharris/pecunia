@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -21,9 +22,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         final result = await ref.watch(getLoggedInUserProvider.future);
 
         if (result.isSome()) {
-          context.go('/debug-local-db');
+          context.goNamed('main');
         } else {
-          context.go('/start');
+          context.goNamed('start');
         }
       });
     }

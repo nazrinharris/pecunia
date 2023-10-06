@@ -26,9 +26,14 @@ void main() async {
   ));
 }
 
-class PecuniaApp extends StatelessWidget {
+class PecuniaApp extends StatefulWidget {
   const PecuniaApp({super.key});
 
+  @override
+  State<PecuniaApp> createState() => _PecuniaAppState();
+}
+
+class _PecuniaAppState extends State<PecuniaApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(

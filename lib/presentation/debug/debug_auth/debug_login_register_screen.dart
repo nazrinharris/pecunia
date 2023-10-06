@@ -52,6 +52,12 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.pop();
+          },
+        ),
         title: const Text('Debug Login & Register'),
       ),
       body: Padding(
@@ -59,11 +65,17 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
         child: Center(
           child: ListView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            children: const [
-              LoginForm(),
-              LoginDetails(),
-              RegisterForm(),
-              RegisterDetails(),
+            children: [
+              const LoginForm(),
+              const LoginDetails(),
+              const RegisterForm(),
+              const RegisterDetails(),
+              ElevatedButton(
+                onPressed: () {
+                  context.pushNamed('debug-local-db');
+                },
+                child: const Text('Navigate to DebugLocalDB'),
+              )
             ],
           ),
         ),

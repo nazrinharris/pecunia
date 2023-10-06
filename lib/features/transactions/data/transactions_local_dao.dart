@@ -300,6 +300,30 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     );
   }
 
+  TaskEither<TransactionsFailure, List<Transaction>> getAllIncomeTxns() {
+    return TaskEither.tryCatch(
+      () async {
+        return (select(transactionsTable)
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.credit.typeAsString)))
+            .get()
+            .then((value) => value.map(Transaction.fromDTO).toList());
+      },
+      mapDriftToTransactionsFailure,
+    );
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getAllExpenseTxns() {
+    return TaskEither.tryCatch(
+      () async {
+        return (select(transactionsTable)
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.debit.typeAsString)))
+            .get()
+            .then((value) => value.map(Transaction.fromDTO).toList());
+      },
+      mapDriftToTransactionsFailure,
+    );
+  }
+
   // ********************************************************************************************************
   // DAO Private Methods, these methods are extracted to improve legibility of the DAO methods. These methods
   // must be directly related to the database actions.
