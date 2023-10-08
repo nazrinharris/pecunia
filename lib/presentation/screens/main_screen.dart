@@ -1,6 +1,5 @@
 import 'package:bottom_nav_layout/bottom_nav_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/presentation/screens/accounts/accounts_screen.dart';
@@ -21,20 +20,21 @@ class MainScreen extends HookConsumerWidget {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: PlayAnimationBuilder(
-          tween: Tween<Offset>(begin: const Offset(0, 200), end: Offset.zero),
-          duration: const Duration(milliseconds: 1000),
-          delay: const Duration(milliseconds: 200),
-          curve: Curves.easeOutExpo,
-          builder: (context, value, child) => Transform.translate(
-                offset: value,
-                child: child,
-              ),
-          child: Transform.translate(
-            offset: const Offset(0, -70),
-            child: const PecuniaFAB(),
-          )),
-      floatingActionButtonLocation: ExpandableFab.location,
+        tween: Tween<Offset>(begin: const Offset(0, 200), end: Offset.zero),
+        duration: const Duration(milliseconds: 1000),
+        delay: const Duration(milliseconds: 200),
+        curve: Curves.easeOutExpo,
+        builder: (context, value, child) => Transform.translate(
+          offset: value,
+          child: child,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 65),
+          child: const PecuniaFAB(),
+        ),
+      ),
       body: BottomNavLayout(
         pages: [
           (_) => const DashboardScreen(),
