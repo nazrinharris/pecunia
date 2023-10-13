@@ -30,9 +30,9 @@ class MainScreen extends HookConsumerWidget {
           offset: value,
           child: child,
         ),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 65),
-          child: const PecuniaFAB(),
+        child: const Padding(
+          padding: EdgeInsets.only(bottom: 65),
+          child: PecuniaFAB(),
         ),
       ),
       body: BottomNavLayout(

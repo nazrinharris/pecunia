@@ -5,6 +5,7 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/screens/accounts/create_account_bottom_sheet_widget.dart';
 
 class PecuniaFAB extends ConsumerWidget {
   const PecuniaFAB({super.key});
@@ -85,6 +86,24 @@ class PecuniaFAB extends ConsumerWidget {
               case _:
                 break;
             }
+          },
+        ),
+        SpeedDialChild(
+          child: const Icon(Icons.folder),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          foregroundColor: Theme.of(context).colorScheme.onSecondary,
+          label: 'Add Account',
+          labelBackgroundColor: Colors.transparent,
+          labelStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          elevation: 0,
+          labelShadow: [],
+          shape: const CircleBorder(),
+          onTap: () {
+            showCreateAccountBottomSheet(context);
           },
         ),
       ],

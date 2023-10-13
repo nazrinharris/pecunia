@@ -36,7 +36,7 @@ enum TransactionsErrorType {
   ),
   mismatchAccountBalance(
     'mismatch-account-balance',
-    'Reported account balance is not the same as actual account balance',
+    'Action cancelled, account balance does not match the expected balance',
   ),
   transactionNotFound(
     'transaction-not-found',

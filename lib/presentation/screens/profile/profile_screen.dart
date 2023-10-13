@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
+import 'package:pecunia/presentation/screens/shared/scale_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -152,17 +153,16 @@ class ProfileActionsButtons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          alignment: Alignment.centerLeft,
-          child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-            color: Colors.orange[600]!.withOpacity(0.2),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(32),
-              onTap: () {
-                context.pushNamed('view-all-categories');
-              },
+        ScaleButton(
+          onTap: () {
+            context.pushNamed('view-all-categories');
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            alignment: Alignment.centerLeft,
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+              color: Colors.orange[600]!.withOpacity(0.2),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
                 child: Row(

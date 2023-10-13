@@ -6,13 +6,13 @@ part of 'get_all_accounts.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAllAccountsHash() => r'8d20cbacd139c5bdfa4230dd9ed99c826c90741f';
+String _$getAllAccountsHash() => r'557363ffed1ed5eb6b9ff88cc84fea0fcccab0b2';
 
-/// See also [GetAllAccounts].
-@ProviderFor(GetAllAccounts)
+/// See also [getAllAccounts].
+@ProviderFor(getAllAccounts)
 final getAllAccountsProvider =
-    AutoDisposeAsyncNotifierProvider<GetAllAccounts, List<Account>>.internal(
-  GetAllAccounts.new,
+    AutoDisposeFutureProvider<List<Account>>.internal(
+  getAllAccounts,
   name: r'getAllAccountsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
@@ -21,5 +21,5 @@ final getAllAccountsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$GetAllAccounts = AutoDisposeAsyncNotifier<List<Account>>;
+typedef GetAllAccountsRef = AutoDisposeFutureProviderRef<List<Account>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

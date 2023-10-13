@@ -82,6 +82,9 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
               (r) => unit,
             );
           }
+
+          await _validateAccountBalance(txn.accountId);
+
           return unit;
         });
       },
@@ -138,6 +141,9 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         await updateAccountDTO(updatedAccountDTO);
         await (delete(transactionsTable)..where((tbl) => tbl.id.equals(txn.id))).go();
+
+        await _validateAccountBalance(txn.accountId);
+
         return unit;
       }),
       mapDriftToTransactionsFailure,
@@ -223,6 +229,8 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
             (r) => unit,
           );
         }
+
+        await _validateAccountBalance(newTxn.accountId);
 
         return unit;
       }),
@@ -345,7 +353,7 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     await update(accountsTable).replace(accountDto);
   }
 
-  Future<(bool isValid, double actualBalance)> _validateAccountBalance(String accountId) async {
+  Future<void> _validateAccountBalance(String accountId) async {
     final account = await (select(accountsTable)..where((tbl) => tbl.id.equals(accountId))).getSingle();
 
     // Get all transactions for this account
@@ -365,13 +373,13 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     }
 
     if (calculatedBalance != account.balance) {
+      print(TransactionsErrorType.mismatchAccountBalance.message);
+      print(StackTrace.current);
       throw TransactionsException(
         stackTrace: StackTrace.current,
         errorType: TransactionsErrorType.mismatchAccountBalance,
       );
     }
-
-    return (calculatedBalance == account.balance, calculatedBalance);
   }
 
   // ********************************************************************************************************

@@ -6,12 +6,14 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/watch_accounts.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/screens/accounts/create_account_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/screens/shared/scale_button.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class AccountsScreen extends ConsumerWidget {
@@ -179,67 +181,100 @@ class AccountsList extends ConsumerWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: list.length,
-                    itemBuilder: (ctx, index) => ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      title: Text(list[index].name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      subtitle: list[index].description.value == null
-                          ? null
-                          : Text(
-                              list[index].description.value!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.grey.withOpacity(0.8)),
-                            ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            '${list[index].currency.code} ${list[index].balance}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.purple[100],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              // Handle edit action here
-                              context.pushNamed('debug-edit-account', extra: list[index]);
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red[300],
-                            ),
-                            onPressed: () {
-                              // Handle delete action here
-                              ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                                  title: 'Delete this Account?',
-                                  message: 'You will not be able to recover this account once deleted.',
-                                  onConfirm: () async {
-                                    await ref.read(deleteAccountProvider.notifier).deleteAccount(list[index]);
-                                  },
-                                  context: context);
-                            },
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        ref.watch(getTransactionsByAccountIdProvider(list[index].id));
+                    itemBuilder: (ctx, index) {
+                      ({bool isFirst, bool isLast})? position;
 
-                        context.pushNamed('debug-view-account', extra: list[index]);
-                      },
-                    ),
+                      if (list.length == 1) {
+                        position = (isFirst: true, isLast: true);
+                      } else if (index == 0) {
+                        position = (isFirst: true, isLast: false);
+                      } else if (index == list.length - 1) {
+                        position = (isFirst: false, isLast: true);
+                      } else {
+                        position = null;
+                      }
+
+                      return AccountListTile(list[index], position: position);
+                    },
                   )),
           error: (e, __) => Text(e.toString()),
           loading: () => const Align(child: CupertinoActivityIndicator()),
         )
       ],
     );
+  }
+}
+
+class AccountListTile extends ConsumerWidget {
+  const AccountListTile(
+    this.account, {
+    this.position,
+    super.key,
+  });
+
+  final Account account;
+  final ({bool isFirst, bool isLast})? position;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ScaleButton(
+      onTap: () {
+        ref.watch(getTransactionsByAccountIdProvider(account.id));
+        context.pushNamed('debug-view-account', extra: account);
+      },
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 4),
+        shape: buildBorder(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: Row(
+            children: [
+              Text(
+                account.name,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+              ),
+              const Spacer(),
+              Text(
+                '${account.currency.code} ${account.balance}',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple[100],
+                ),
+              ),
+              const SizedBox(width: 10),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  RoundedRectangleBorder buildBorder() {
+    if (position != null) {
+      if (position!.isFirst == true && position!.isLast == true) {
+        return const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(32)),
+        );
+      } else if (position!.isFirst) {
+        return const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        );
+      } else if (position!.isLast) {
+        return const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
+        );
+      }
+    }
+
+    return RoundedRectangleBorder(borderRadius: BorderRadius.circular(0));
   }
 }

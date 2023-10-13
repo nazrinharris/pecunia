@@ -10,7 +10,7 @@ import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:pecunia/presentation/screens/finance/finance_screen.dart';
+import 'package:pecunia/presentation/screens/shared/recent_txn_list.dart';
 
 class DebugTransactionsScreen extends ConsumerWidget {
   const DebugTransactionsScreen({super.key});
@@ -68,7 +68,7 @@ class DebugTransactionsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 14),
-          const ViewAllTransactions(),
+          const RecentTxnList(),
         ],
       ),
     );
