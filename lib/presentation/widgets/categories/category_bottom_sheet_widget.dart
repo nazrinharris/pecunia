@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/categories/usecases/delete_category.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:pecunia/presentation/screens/categories/view_all_categories/edit_category_form_widget.dart';
+import 'package:pecunia/presentation/widgets/categories/forms/edit_category_form_widget.dart';
 
 void showCategoryBottomSheet(BuildContext context, Category category) {
   showModalBottomSheet<void>(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/transactions/usecases/get_all_transactions.dart';
-import 'package:pecunia/presentation/screens/shared/recent_txn_list.dart';
+import 'package:pecunia/presentation/widgets/transactions/recent_txn_list.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class DashboardScreen extends ConsumerWidget {

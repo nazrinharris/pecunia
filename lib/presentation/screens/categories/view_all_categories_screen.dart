@@ -16,8 +16,8 @@ import 'package:pecunia/features/categories/usecases/delete_category.dart';
 import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
 import 'package:pecunia/features/categories/usecases/update_category.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:pecunia/presentation/screens/categories/view_all_categories/category_bottom_sheet_widget.dart';
-import 'package:pecunia/presentation/screens/categories/view_all_categories/create_category_form_widget.dart';
+import 'package:pecunia/presentation/widgets/categories/category_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/categories/forms/create_category_form_widget.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class ViewAllCategories extends HookConsumerWidget {

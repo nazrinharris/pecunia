@@ -2,18 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/accounts/usecases/create_account.dart';
-import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/watch_accounts.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:pecunia/presentation/screens/accounts/create_account_bottom_sheet_widget.dart';
-import 'package:pecunia/presentation/screens/shared/scale_button.dart';
+import 'package:pecunia/presentation/widgets/accounts/create_account_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/common/scale_button.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class AccountsScreen extends ConsumerWidget {
@@ -21,35 +16,6 @@ class AccountsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref
-      ..listen(createAccountProvider, (prev, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: "We couldn't create an account for you.",
-                failure: next.error as Failure?,
-              );
-        }
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Account created successfully!',
-              );
-        }
-      })
-      ..listen(deleteAccountProvider, (prev, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: "We couldn't delete your account.",
-                failure: next.error as Failure?,
-              );
-        }
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Account deleted successfully!',
-              );
-        }
-      });
-
     return Scaffold(
         body: ListView(
       physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),

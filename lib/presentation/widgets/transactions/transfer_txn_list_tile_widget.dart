@@ -8,8 +8,8 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/presentation/debug/debug_accounts/view_account/providers/get_linked_account_and_txn.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_bottom_sheet_widget.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/txn_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/transfer_txn_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/txn_bottom_sheet_widget.dart';
 
 /// If `onTap` is not provided, then the transaction will be displayed in a bottom sheet
 class TransferTxnListTile extends ConsumerWidget {

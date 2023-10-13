@@ -6,11 +6,39 @@ import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_bottom_sheet_widget.dart';
-import 'package:pecunia/presentation/debug/debug_forms/edit_txn_form_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
-import 'package:pecunia/presentation/screens/categories/view_all_categories/category_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/categories/category_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/forms/edit_txn_form_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/transfer_txn_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/txn_list_tile.dart';
+
+void showTransactionBottomSheet(
+  BuildContext context,
+  Transaction txn,
+  Account account, {
+  Category? category,
+}) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SizedBox(
+          height: 550,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: TxnBottomSheet(
+              txn: txn,
+              account: account,
+              category: category,
+            ),
+          ),
+        );
+      });
+}
 
 class TxnBottomSheet extends ConsumerWidget {
   const TxnBottomSheet({
@@ -169,55 +197,6 @@ class TxnBottomSheet extends ConsumerWidget {
       ),
     );
   }
-}
-
-void showTransactionBottomSheet(
-  BuildContext context,
-  Transaction txn,
-  Account account, {
-  Category? category,
-}) {
-  showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      showDragHandle: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(44),
-      ),
-      builder: (context) {
-        return SizedBox(
-          height: 550,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: TxnBottomSheet(
-              txn: txn,
-              account: account,
-              category: category,
-            ),
-          ),
-        );
-      });
-}
-
-void showEditTransactionBottomSheet(
-    BuildContext context, Transaction txn, Account account, Category? category) {
-  showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      showDragHandle: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(44),
-      ),
-      builder: (context) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              EditTxnForm(txn: txn, account: account, category: category),
-            ],
-          ),
-        );
-      });
 }
 
 class BuildTxnAmountText extends ConsumerWidget {

@@ -2,6 +2,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
@@ -12,6 +13,50 @@ import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
+import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+
+/// Shows a bottom sheet for creating a transaction.
+///
+/// Either [account] or [accountsList] must be provided, but not both.
+/// Both cannot be null.
+void showCreateTransactionBottomSheet(
+  BuildContext context,
+  bool isCredit, {
+  Account? account,
+  List<Account>? accountsList,
+}) {
+  assert(
+    (account == null) != (accountsList == null),
+    'Either account or accountsList must be provided, but not both. Both cannot be null.',
+  );
+
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CreateTxnForm(
+                  account: account,
+                  accountsList: accountsList,
+                  initialTransactionType: isCredit ? TransactionType.credit : TransactionType.debit,
+                ),
+                const SizedBox(height: 64),
+              ],
+            ),
+          ),
+        );
+      });
+}
 
 class CreateTxnFields {
   static String? validateTxnName(String? val) {
@@ -90,6 +135,21 @@ class CreateTxnForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(createTransactionProvider, (prev, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: "We couldn't delete your account.",
+              failure: next.error as Failure?,
+            );
+      }
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Transaction created successfully!',
+            );
+      }
+    });
+
     final chosenAccount = useState(account ?? accountsList!.first);
 
     final txnType = useState(initialTransactionType);

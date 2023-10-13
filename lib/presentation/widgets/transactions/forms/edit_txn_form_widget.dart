@@ -7,7 +7,28 @@ import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
-import 'package:pecunia/presentation/debug/debug_forms/create_txn_form_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_widget.dart';
+
+void showEditTransactionBottomSheet(
+    BuildContext context, Transaction txn, Account account, Category? category) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              EditTxnForm(txn: txn, account: account, category: category),
+            ],
+          ),
+        );
+      });
+}
 
 class EditTxnForm extends HookConsumerWidget {
   const EditTxnForm({

@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_list_tile_widget.dart';
-import 'package:pecunia/presentation/debug/debug_forms/edit_transfer_txn_form_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/forms/edit_transfer_txn_form_widget.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
 class TransferTxnBottomSheet extends ConsumerWidget {
@@ -196,38 +196,6 @@ class TransferTxnBottomSheet extends ConsumerWidget {
       ),
     );
   }
-}
-
-void showEditTransferTxnBottomSheet(
-  BuildContext context, {
-  required Transaction txn,
-  required Transaction linkedTxn,
-}) {
-  showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      showDragHandle: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(44),
-      ),
-      builder: (context) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                EditTransferTxnForm(
-                  txn: txn,
-                  linkedTxn: linkedTxn,
-                ),
-                const SizedBox(height: 64),
-              ],
-            ),
-          ),
-        );
-      });
 }
 
 class ExpandableTxnMetadata extends ConsumerWidget {

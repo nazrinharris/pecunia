@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
-import 'package:pecunia/presentation/screens/shared/scale_button.dart';
+import 'package:pecunia/presentation/widgets/common/scale_button.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

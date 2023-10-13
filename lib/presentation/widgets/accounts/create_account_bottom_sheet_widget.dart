@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
+import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
+import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 
 void showCreateAccountBottomSheet(BuildContext context) {
   showModalBottomSheet<void>(
@@ -42,6 +45,22 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(createAccountProvider, (previous, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: 'Unable to create account.',
+              failure: next.error as TransactionsFailure?,
+            );
+      }
+
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Account created successfully!',
+            );
+      }
+    });
+
     final formKey = useState(GlobalKey<FormState>());
     final nameController = useTextEditingController();
     final descriptionController = useTextEditingController();

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/categories/usecases/update_category.dart';
-import 'package:pecunia/presentation/screens/categories/view_all_categories/create_category_form_widget.dart';
+import 'package:pecunia/presentation/widgets/categories/forms/create_category_form_widget.dart';
 
 void showEditCategoryFormWidget(BuildContext context, Category oldCategory) {
   showModalBottomSheet<void>(

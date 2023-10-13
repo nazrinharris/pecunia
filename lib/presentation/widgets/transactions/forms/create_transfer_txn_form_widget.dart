@@ -4,14 +4,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
+import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/util/extensions.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
+import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:screwdriver/screwdriver.dart';
 
 class CreateTransferTxnFields {
@@ -44,6 +47,21 @@ class CreateTransferTxnForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(createTransferTransactionProvider, (previous, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: 'Unable to create transfer transaction.',
+              failure: next.error as TransactionsFailure?,
+            );
+      }
+
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Transfer transaction created successfully!',
+            );
+      }
+    });
     final accountsListValue = ref.watch(getAllAccountsProvider);
 
     return switch (accountsListValue) {

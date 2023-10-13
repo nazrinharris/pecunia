@@ -8,8 +8,8 @@ import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_all_transactions.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/transfer_txn_list_tile_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/txn_list_tile.dart';
 
 class RecentTxnList extends ConsumerWidget {
   const RecentTxnList({super.key, this.maxTxnShown});

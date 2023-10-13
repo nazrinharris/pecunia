@@ -8,8 +8,40 @@ import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transfer_transaction.dart';
-import 'package:pecunia/presentation/debug/debug_forms/create_transfer_txn_form_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/forms/create_transfer_txn_form_widget.dart';
 import 'package:screwdriver/screwdriver.dart';
+
+void showEditTransferTxnBottomSheet(
+  BuildContext context, {
+  required Transaction txn,
+  required Transaction linkedTxn,
+}) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                EditTransferTxnForm(
+                  txn: txn,
+                  linkedTxn: linkedTxn,
+                ),
+                const SizedBox(height: 64),
+              ],
+            ),
+          ),
+        );
+      });
+}
 
 // TODO: Update the fields
 class EditTransferTxnFields {

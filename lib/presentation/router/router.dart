@@ -10,7 +10,7 @@ import 'package:pecunia/presentation/debug/debug_local_db/debug_local_db_screen.
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
 import 'package:pecunia/presentation/screens/auth/login_screen.dart';
 import 'package:pecunia/presentation/screens/auth/register_screen.dart';
-import 'package:pecunia/presentation/screens/categories/view_all_categories/view_all_categories_screen.dart';
+import 'package:pecunia/presentation/screens/categories/view_all_categories_screen.dart';
 import 'package:pecunia/presentation/screens/entry_screen.dart';
 import 'package:pecunia/presentation/screens/main_screen.dart';
 import 'package:pecunia/presentation/screens/settings_screen.dart';
