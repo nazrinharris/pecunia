@@ -144,6 +144,30 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         await _validateAccountBalance(txn.accountId);
 
+        (await db.txnCategoriesLocalDAO.deleteCategoriesByTxnId(txn.id).run()).fold(
+          (l) => throw TxnCategoriesException.fromFailure(l),
+          (r) => unit,
+        );
+
+        return unit;
+      }),
+      mapDriftToTransactionsFailure,
+    );
+  }
+
+  TaskEither<TransactionsFailure, Unit> deleteTransactionsByAccountId(String accountId) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        final txnList =
+            await (select(transactionsTable)..where((tbl) => tbl.accountId.equals(accountId))).get();
+
+        for (final txn in txnList) {
+          (await deleteTransaction(Transaction.fromDTO(txn)).run()).fold(
+            (l) => throw TransactionsException.fromFailure(l),
+            (r) => unit,
+          );
+        }
+
         return unit;
       }),
       mapDriftToTransactionsFailure,

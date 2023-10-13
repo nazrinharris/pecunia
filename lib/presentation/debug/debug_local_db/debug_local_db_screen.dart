@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/infrastructure/drift/debug_dao.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
@@ -86,7 +87,7 @@ class DebugLocalDBScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  Column(
+                  Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ButtonTheme(
@@ -102,6 +103,27 @@ class DebugLocalDBScreen extends ConsumerWidget {
                             context.go('/start');
                           },
                           child: const Text('Logout'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ButtonTheme(
+                        minWidth: 0,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 83, 10, 10)),
+                          ),
+                          onPressed: () async {
+                            await ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                                  title: 'Are you sure?',
+                                  message:
+                                      "Deleting the entries won't delete transactions or categories, but will delete all their relations",
+                                  onConfirm: () async {
+                                    await ref.read(debugDAOProvider).deleteAllTxnCategoriesEntries();
+                                  },
+                                  context: context,
+                                );
+                          },
+                          child: const Text('Delete All Txn-Category Entries'),
                         ),
                       ),
                     ],

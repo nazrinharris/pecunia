@@ -1804,6 +1804,7 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
       CategoriesLocalDAO(this as PecuniaDB);
   late final TxnCategoriesLocalDAO txnCategoriesLocalDAO =
       TxnCategoriesLocalDAO(this as PecuniaDB);
+  late final DebugDAO debugDAO = DebugDAO(this as PecuniaDB);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

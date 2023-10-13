@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
@@ -35,7 +36,7 @@ abstract interface class AccountsRepo {
   TaskEither<AccountsFailure, (bool isValid, double calculatedAmount)> validateAccountBalance(
       Account accountToRecalculate);
 
-  TaskEither<AccountsFailure, Unit> deleteAccount(Account accountToDelete);
+  TaskEither<Failure, Unit> deleteAccount(Account accountToDelete);
 }
 
 class AccountsRepoImpl implements AccountsRepo {
@@ -120,8 +121,8 @@ class AccountsRepoImpl implements AccountsRepo {
   /// [deleteAccount]
   /// ******************************************************************************************************
   @override
-  TaskEither<AccountsFailure, Unit> deleteAccount(Account accountToDelete) {
-    return helper.mapAccountToDTO(accountToDelete).flatMap(accountsLocalDAO.deleteAccount);
+  TaskEither<Failure, Unit> deleteAccount(Account accountToDelete) {
+    return accountsLocalDAO.deleteAccount(accountToDelete.id);
   }
 
   /// ******************************************************************************************************
