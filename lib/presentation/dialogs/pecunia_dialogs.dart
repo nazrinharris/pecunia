@@ -14,36 +14,9 @@ part 'pecunia_dialogs.g.dart';
 /// ******************************************************************************************************
 
 @Riverpod(keepAlive: true)
-PecuniaDialogs pecuniaDialogs(PecuniaDialogsRef ref) => _PecuniaDialogsImpl();
+PecuniaDialogs pecuniaDialogs(PecuniaDialogsRef ref) => PecuniaDialogs();
 
-abstract interface class PecuniaDialogs {
-  Future<void> showFailureDialog({
-    Failure? failure,
-    String? title,
-    String? message,
-  });
-  Future<void> showSuccessDialog({
-    String? title,
-    String? message,
-  });
-  Future<void> showConfirmationDialog({
-    required String title,
-    required void Function() onConfirm,
-    required BuildContext context,
-    Icon? icon,
-    String? message,
-  });
-  Future<void> showInfoDialog(String message);
-  Future<void> showWarningDialog(String message);
-  Future<void> showLoadingDialog();
-  Future<void> hideLoadingDialog();
-
-  Future<void> showDebugPositionedDialog();
-  Future<void> showDebugFullScreenDialog();
-}
-
-class _PecuniaDialogsImpl implements PecuniaDialogs {
-  @override
+class PecuniaDialogs {
   Future<void> showFailureDialog({
     Failure? failure,
     String? title,
@@ -68,7 +41,6 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
     );
   }
 
-  @override
   Future<void> showSuccessDialog({
     String? title,
     String? message,
@@ -88,7 +60,6 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
     );
   }
 
-  @override
   Future<void> showConfirmationDialog({
     required String title,
     required void Function() onConfirm,
@@ -133,31 +104,6 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
         });
   }
 
-  @override
-  Future<void> hideLoadingDialog() async {
-    // TODO: implement hideLoadingDialog
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> showInfoDialog(String message) async {
-    // TODO: implement showInfoDialog
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> showLoadingDialog() async {
-    // TODO: implement showLoadingDialog
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> showWarningDialog(String message) async {
-    // TODO: implement showWarningDialog
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> showDebugPositionedDialog() async {
     await FlutterEasyDialogs.provider.showPositioned(
       PositionedShowParams(
@@ -180,7 +126,6 @@ class _PecuniaDialogsImpl implements PecuniaDialogs {
     );
   }
 
-  @override
   Future<void> showDebugFullScreenDialog() async {
     await FlutterEasyDialogs.provider.showFullScreen(
       FullScreenShowParams(
