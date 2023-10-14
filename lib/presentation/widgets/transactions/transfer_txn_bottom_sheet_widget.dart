@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
-import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
-import 'package:pecunia/presentation/widgets/transactions/forms/edit_transfer_txn_form_widget.dart';
+import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/transactions/forms/edit_transfer_txn_form_widget.dart';
+import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
 
 class TransferTxnBottomSheet extends ConsumerWidget {
   const TransferTxnBottomSheet({
@@ -25,6 +29,25 @@ class TransferTxnBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(deleteTransferTransactionProvider, (previous, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: 'Unable to create transfer transaction.',
+              failure: next.error as TransactionsFailure?,
+            );
+      }
+
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Transfer transaction deleted successfully!',
+            );
+        ref
+          ..invalidate(getTransactionsByAccountIdProvider(txn.accountId))
+          ..invalidate(getAccountByIdProvider(txn.accountId));
+      }
+    });
+
     return Container(
       padding: const EdgeInsets.only(top: 14, bottom: 14),
       child: Column(

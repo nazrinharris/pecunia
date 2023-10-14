@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
+import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
+import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_widget.dart';
 
 void showEditTransactionBottomSheet(
@@ -46,6 +52,34 @@ class EditTxnForm extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(editTransactionProvider, (previous, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: "We couldn't edit your account.",
+              failure: next.error as Failure?,
+            );
+      }
+      if (next is AsyncData<Option<TransactionId>> && next.value.isSome()) {
+        context
+          ..pop()
+          ..pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Transaction edited successfully!',
+            );
+        ref
+          ..invalidate(getTransactionsByAccountIdProvider(txn.accountId))
+          ..invalidate(getAccountByIdProvider(txn.accountId))
+          ..invalidate(
+            getCategoriesByTxnIdProvider(
+              next.value.getOrElse(() {
+                throw Exception(
+                    'Expected a value of TransactionId. This is a fatal error, should never be null.');
+              }),
+            ),
+          );
+      }
+    });
+
     final chosenAccount = useState(account);
 
     final txnType = useState(txn.fundDetails.transactionType);

@@ -19,7 +19,7 @@ import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 ///
 /// Either [account] or [accountsList] must be provided, but not both.
 /// Both cannot be null.
-void showCreateTransactionBottomSheet(
+void showCreateTxnBottomSheet(
   BuildContext context,
   bool isCredit, {
   Account? account,

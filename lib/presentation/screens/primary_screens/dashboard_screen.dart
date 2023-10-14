@@ -79,12 +79,12 @@ class DashboardScreen extends ConsumerWidget {
               )
               ..tween(
                 'position',
-                Tween<Offset>(begin: const Offset(0, 40), end: Offset.zero),
+                Tween<Offset>(begin: const Offset(0, 80), end: Offset.zero),
                 curve: Curves.easeOutQuad,
                 duration: const Duration(milliseconds: 600),
               ),
             duration: const Duration(milliseconds: 600),
-            delay: const Duration(milliseconds: 300),
+            delay: const Duration(milliseconds: 200),
             builder: (context, value, child) => Transform.translate(
               offset: value.get('position'),
               child: Opacity(

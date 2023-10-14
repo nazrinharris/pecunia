@@ -7,20 +7,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
-import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/edit_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
-import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
-import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
-import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
-import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
-import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
-import 'package:pecunia/features/transactions/usecases/edit_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
@@ -51,67 +43,6 @@ class DebugViewAccountScreen extends ConsumerWidget {
               );
         }
       })
-      ..listen(createTransactionProvider, (prev, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: "We couldn't delete your account.",
-                failure: next.error as Failure?,
-              );
-        }
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Transaction created successfully!',
-              );
-          ref
-            ..invalidate(getTransactionsByAccountIdProvider(accountId))
-            ..invalidate(getAccountByIdProvider(accountId));
-        }
-      })
-      ..listen(editTransactionProvider, (previous, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: "We couldn't edit your account.",
-                failure: next.error as Failure?,
-              );
-        }
-        if (next is AsyncData<Option<TransactionId>> && next.value.isSome()) {
-          context
-            ..pop()
-            ..pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Transaction edited successfully!',
-              );
-          ref
-            ..invalidate(getTransactionsByAccountIdProvider(accountId))
-            ..invalidate(getAccountByIdProvider(accountId))
-            ..invalidate(
-              getCategoriesByTxnIdProvider(
-                next.value.getOrElse(() {
-                  throw Exception(
-                      'Expected a value of TransactionId. This is a fatal error, should never be null.');
-                }),
-              ),
-            );
-        }
-      })
-      ..listen(deleteTransactionProvider, (previous, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: 'Oopsies',
-                failure: next.error as Failure?,
-              );
-        }
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Transaction deleted succesfully!',
-              );
-          ref
-            ..invalidate(getTransactionsByAccountIdProvider(accountId))
-            ..invalidate(getAccountByIdProvider(accountId));
-        }
-      })
       ..listen(editAccountProvider, (previous, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
@@ -124,61 +55,6 @@ class DebugViewAccountScreen extends ConsumerWidget {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
                 title: 'Your account has been edited!',
-              );
-          ref
-            ..invalidate(getTransactionsByAccountIdProvider(accountId))
-            ..invalidate(getAccountByIdProvider(accountId));
-        }
-      })
-      ..listen(createTransferTransactionProvider, (previous, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: 'Unable to create transfer transaction.',
-                failure: next.error as TransactionsFailure?,
-              );
-        }
-
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Transfer transaction created successfully!',
-              );
-          ref
-            ..invalidate(getTransactionsByAccountIdProvider(accountId))
-            ..invalidate(getAccountByIdProvider(accountId));
-        }
-      })
-      ..listen(deleteTransferTransactionProvider, (previous, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: 'Unable to create transfer transaction.',
-                failure: next.error as TransactionsFailure?,
-              );
-        }
-
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Transfer transaction deleted successfully!',
-              );
-          ref
-            ..invalidate(getTransactionsByAccountIdProvider(accountId))
-            ..invalidate(getAccountByIdProvider(accountId));
-        }
-      })
-      ..listen(editTransferTransactionProvider, (previous, next) {
-        if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
-                title: 'Unable to create transfer transaction.',
-                failure: next.error as Failure?,
-              );
-        }
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          context
-            ..pop()
-            ..pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
-                title: 'Updated transfer transaction!',
               );
           ref
             ..invalidate(getTransactionsByAccountIdProvider(accountId))
@@ -637,7 +513,7 @@ class AccountActionsGrid extends ConsumerWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
               onTap: () {
-                showCreateTransactionBottomSheet(context, true, account: account);
+                showCreateTxnBottomSheet(context, true, account: account);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -653,7 +529,7 @@ class AccountActionsGrid extends ConsumerWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
               onTap: () {
-                showCreateTransactionBottomSheet(context, false, account: account);
+                showCreateTxnBottomSheet(context, false, account: account);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

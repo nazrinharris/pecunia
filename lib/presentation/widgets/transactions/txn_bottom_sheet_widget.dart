@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/categories/category_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/edit_txn_form_widget.dart';
@@ -54,6 +58,24 @@ class TxnBottomSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(deleteTransactionProvider, (previous, next) {
+      if (next is AsyncError) {
+        ref.read(pecuniaDialogsProvider).showFailureDialog(
+              title: 'Oopsies',
+              failure: next.error as Failure?,
+            );
+      }
+      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+        context.pop();
+        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              title: 'Transaction deleted succesfully!',
+            );
+        ref
+          ..invalidate(getTransactionsByAccountIdProvider(txn.accountId))
+          ..invalidate(getAccountByIdProvider(txn.accountId));
+      }
+    });
+
     final sign = txn.fundDetails.transactionType == TransactionType.credit ? '+' : '-';
 
     return Container(

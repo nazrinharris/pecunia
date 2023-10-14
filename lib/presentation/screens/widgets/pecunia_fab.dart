@@ -52,7 +52,7 @@ class PecuniaFAB extends ConsumerWidget {
                       failure: accountsValue.error as Failure?,
                     );
               case AsyncData(:final value):
-                showCreateTransactionBottomSheet(context, true, accountsList: value);
+                showCreateTxnBottomSheet(context, true, accountsList: value);
               case _:
                 break;
             }
@@ -82,7 +82,7 @@ class PecuniaFAB extends ConsumerWidget {
                       failure: accountsValue.error as Failure?,
                     );
               case AsyncData(:final value):
-                showCreateTransactionBottomSheet(context, false, accountsList: value);
+                showCreateTxnBottomSheet(context, false, accountsList: value);
               case _:
                 break;
             }
