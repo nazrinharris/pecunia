@@ -67,41 +67,55 @@ class PecuniaDialogs {
     Icon? icon,
     String? message,
   }) async {
-    await showDialog<void>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            icon: Icon(Icons.warning_amber_rounded, color: Colors.red[200], size: 48),
-            title: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red[200],
-              ),
+    await showGeneralDialog<void>(
+      context: context,
+      pageBuilder: (context, anim1, anim2) => const SizedBox(),
+      transitionBuilder: (context, a1, a2, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(
+            parent: a1,
+            curve: Curves.easeOutCubic,
+          ),
+          child: FadeTransition(
+            opacity: CurvedAnimation(
+              parent: a1,
+              curve: Curves.easeOutCubic,
             ),
-            content: Text(
-              message ?? '',
-              textAlign: TextAlign.center,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  onConfirm();
-                  Navigator.of(context).pop();
-                },
-                icon: icon ?? Icon(Icons.delete_forever, color: Colors.red[200]),
-                label: Text(
-                  'Confirm',
-                  style: TextStyle(color: Colors.red[200]),
+            child: AlertDialog(
+              icon: Icon(Icons.warning_amber_rounded, color: Colors.red[200], size: 48),
+              title: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red[200],
                 ),
               ),
-            ],
-          );
-        });
+              content: Text(
+                message ?? '',
+                textAlign: TextAlign.center,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    onConfirm();
+                    Navigator.of(context).pop();
+                  },
+                  icon: icon ?? Icon(Icons.delete_forever, color: Colors.red[200]),
+                  label: Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.red[200]),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> showDebugPositionedDialog() async {
