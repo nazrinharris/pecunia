@@ -21,8 +21,8 @@ import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_
 import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/txn_list_tile.dart';
 
-class DebugViewAccountScreen extends ConsumerWidget {
-  const DebugViewAccountScreen(this.accountId, {super.key});
+class ViewAccountScreen extends ConsumerWidget {
+  const ViewAccountScreen(this.accountId, {super.key});
 
   final String accountId;
 

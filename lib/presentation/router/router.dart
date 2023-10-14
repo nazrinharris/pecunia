@@ -2,12 +2,12 @@ import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/edit_account/debug_edit_account_screen.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/debug_view_account_screen.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_login_register_screen.dart';
 import 'package:pecunia/presentation/debug/debug_dialogs/debug_dialogs.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/debug_local_db_screen.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
+import 'package:pecunia/presentation/screens/accounts/edit_account_screen.dart';
+import 'package:pecunia/presentation/screens/accounts/view_account_screen.dart';
 import 'package:pecunia/presentation/screens/auth/login_screen.dart';
 import 'package:pecunia/presentation/screens/auth/register_screen.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories_screen.dart';
@@ -47,6 +47,15 @@ final router = GoRouter(
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
     ),
+    GoRoute(
+      path: '/view-account',
+      name: 'view-account',
+      builder: (context, state) {
+        final account = state.extra! as Account;
+        return ViewAccountScreen(account.id);
+      },
+    ),
+
     // Debug Routes
     GoRoute(
       path: '/debug-login',
@@ -76,15 +85,7 @@ final router = GoRouter(
       name: 'debug-edit-account',
       builder: (context, state) {
         final account = state.extra! as Account;
-        return DebugEditAccountScreen(account);
-      },
-    ),
-    GoRoute(
-      path: '/debug-view-account',
-      name: 'debug-view-account',
-      builder: (context, state) {
-        final account = state.extra! as Account;
-        return DebugViewAccountScreen(account.id);
+        return EditAccountScreen(account);
       },
     ),
     GoRoute(

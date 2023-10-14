@@ -6,8 +6,8 @@ import 'package:money2/money2.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/edit_account.dart';
 
-class DebugEditAccountScreen extends HookConsumerWidget {
-  const DebugEditAccountScreen(this.account, {super.key});
+class EditAccountScreen extends HookConsumerWidget {
+  const EditAccountScreen(this.account, {super.key});
 
   final Account account;
 

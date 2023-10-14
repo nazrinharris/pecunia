@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart' as f;
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
@@ -8,6 +7,7 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
+import 'package:pecunia/core/shared/description.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';

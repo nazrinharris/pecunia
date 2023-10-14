@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
+import 'package:pecunia/core/shared/description.dart';
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

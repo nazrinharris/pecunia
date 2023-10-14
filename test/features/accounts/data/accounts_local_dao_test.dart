@@ -4,10 +4,10 @@ import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/core/shared/description.dart' as d;
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 
@@ -51,7 +51,7 @@ void main() {
     );
 
     // Clean up
-    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO().id).run();
   });
 
   test('updateAccount() should update correctly', () async {
@@ -70,7 +70,7 @@ void main() {
     );
 
     // Clean up
-    await accountsLocalDAO.deleteAccount(updatedAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(updatedAccount.toDTO().id).run();
   });
 
   test('getAllAccounts() should retrieve all accounts', () async {
@@ -88,14 +88,14 @@ void main() {
     expect(resultAccounts, contains(testAccount.copyWith(id: 'test_id2')));
 
     // Clean up
-    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
-    await accountsLocalDAO.deleteAccount(testAccount.copyWith(id: 'test_id2').toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO().id).run();
+    await accountsLocalDAO.deleteAccount(testAccount.copyWith(id: 'test_id2').toDTO().id).run();
   });
 
   test('deleteAccount() should remove the account from database', () async {
     // Arrange
     await accountsLocalDAO.createAccount(testAccount.toDTO()).run();
-    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO().id).run();
 
     // Act
     final result = await accountsLocalDAO.getAccounts().run().then((value) => value.getOrElse((f) => []));
@@ -124,7 +124,7 @@ void main() {
     // Act
     await accountsLocalDAO.createAccount(testAccount.toDTO()).run();
     await Future<void>.delayed(const Duration(seconds: 1));
-    await accountsLocalDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsLocalDAO.deleteAccount(testAccount.toDTO().id).run();
     await Future<void>.delayed(const Duration(seconds: 1));
 
     await pumpEventQueue();

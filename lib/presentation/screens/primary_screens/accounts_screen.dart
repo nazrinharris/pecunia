@@ -186,7 +186,7 @@ class AccountListTile extends ConsumerWidget {
     return ScaleButton(
       onTap: () {
         ref.watch(getTransactionsByAccountIdProvider(account.id));
-        context.pushNamed('debug-view-account', extra: account);
+        context.pushNamed('view-account', extra: account);
       },
       child: Card(
         margin: const EdgeInsets.only(bottom: 4),

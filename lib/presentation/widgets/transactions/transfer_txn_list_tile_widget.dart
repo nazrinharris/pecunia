@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/shared/get_linked_account_and_txn.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/presentation/debug/debug_accounts/view_account/providers/get_linked_account_and_txn.dart';
 import 'package:pecunia/presentation/widgets/transactions/transfer_txn_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/txn_bottom_sheet_widget.dart';
 
