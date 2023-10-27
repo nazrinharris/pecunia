@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,7 +51,33 @@ class LoadingTxnList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(child: CupertinoActivityIndicator());
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Text(
+              'Recent Transactions',
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
+              textAlign: TextAlign.left,
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              height: 64,
+              child: CupertinoActivityIndicator(),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -80,47 +108,52 @@ class TxnList extends ConsumerWidget {
               textAlign: TextAlign.left,
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: txns.length,
-            itemBuilder: (context, index) {
-              final txn = txns[index];
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: txns.length,
+                itemBuilder: (context, index) {
+                  final txn = txns[index];
 
-              if (txn.isTransferTransaction) {
-                return TransferTxnListTile(
-                  account: returnAccount(txn.accountId, accounts),
-                  txn: txn,
-                  enableTopDivider: index == 0,
-                  enableBottomDivider: index == txns.length - 1,
-                );
-              }
+                  if (txn.isTransferTransaction) {
+                    return TransferTxnListTile(
+                      account: returnAccount(txn.accountId, accounts),
+                      txn: txn,
+                      // enableTopDivider: index == 0,
+                      // enableBottomDivider: index == txns.length - 1,
+                      enableBottomDivider: false,
+                    );
+                  }
 
-              final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
+                  final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
 
-              return switch (categoryValue) {
-                AsyncLoading() => Column(
-                    children: [
-                      if (index == 0) Divider(color: Colors.grey.withOpacity(0.1)),
-                      const ListTile(title: CupertinoActivityIndicator()),
-                      if (index == txns.length - 1) Divider(color: Colors.grey.withOpacity(0.1)),
-                    ],
-                  ),
-                AsyncError(:final Object error) => TxnListTileError(
-                    error as Failure,
-                    enableTopDivider: index == 0,
-                    enableBottomDivider: index == txns.length - 1,
-                  ),
-                AsyncData(:final List<Category?> value) => TxnListTile(
-                    account: returnAccount(txn.accountId, accounts),
-                    txn: txn,
-                    category: value.length == 1 ? value.first : null,
-                    enableTopDivider: index == 0,
-                    enableBottomDivider: index == txns.length - 1,
-                  ),
-                _ => const Center(child: Text('Something went wrong')),
-              };
-            },
+                  return switch (categoryValue) {
+                    AsyncLoading() => const Column(
+                        children: [
+                          ListTile(title: CupertinoActivityIndicator()),
+                        ],
+                      ),
+                    AsyncError(:final Object error) => TxnListTileError(
+                        error as Failure,
+                        enableBottomDivider: false,
+                      ),
+                    AsyncData(:final List<Category?> value) => TxnListTile(
+                        account: returnAccount(txn.accountId, accounts),
+                        txn: txn,
+                        category: value.length == 1 ? value.first : null,
+                        enableBottomDivider: false,
+                      ),
+                    _ => const Center(child: Text('Something went wrong')),
+                  };
+                },
+              ),
+            ),
           ),
         ],
       ),
