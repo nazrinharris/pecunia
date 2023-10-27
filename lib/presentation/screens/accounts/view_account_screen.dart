@@ -15,7 +15,7 @@ import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_transfer_txn_form_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
@@ -32,6 +32,7 @@ class ViewAccountScreen extends ConsumerWidget {
       ..listen(deleteAccountProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "We couldn't delete your account.",
                 failure: next.error as Failure?,
               );
@@ -39,6 +40,7 @@ class ViewAccountScreen extends ConsumerWidget {
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                context: context,
                 title: 'Account deleted successfully!',
               );
         }
@@ -46,6 +48,7 @@ class ViewAccountScreen extends ConsumerWidget {
       ..listen(editAccountProvider, (previous, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: 'Something went wrong while editing your account.',
                 failure: next.error as AccountsFailure?,
               );
@@ -54,6 +57,7 @@ class ViewAccountScreen extends ConsumerWidget {
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                context: context,
                 title: 'Your account has been edited!',
               );
           ref

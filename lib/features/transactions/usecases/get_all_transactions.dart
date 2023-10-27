@@ -6,7 +6,9 @@ import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
+import 'package:pecunia/features/transactions/usecases/edit_transfer_transaction.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'get_all_transactions.g.dart';
@@ -21,9 +23,11 @@ class GetAllTransactions extends _$GetAllTransactions {
       ..watch(deleteAccountProvider)
       ..watch(editAccountProvider)
       ..watch(createTransactionProvider)
-      ..watch(createTransferTransactionProvider)
       ..watch(deleteTransactionProvider)
-      ..watch(editTransactionProvider);
+      ..watch(editTransactionProvider)
+      ..watch(createTransferTransactionProvider)
+      ..watch(deleteTransferTransactionProvider)
+      ..watch(editTransferTransactionProvider);
 
     return _getAllTransactions();
   }

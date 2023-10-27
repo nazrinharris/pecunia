@@ -7,9 +7,9 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_auth_providers.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/screens/auth/login_screen.dart';
 import 'package:pecunia/presentation/screens/auth/register_screen.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 class DebugLoginAndRegisterScreen extends HookConsumerWidget {
   const DebugLoginAndRegisterScreen({super.key});
@@ -28,6 +28,7 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
 
         if (next.runtimeType == AsyncError<bool>) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: 'You cannot navigate to DebugLocalDB',
                 failure: next.error as AuthFailure?,
               );
@@ -36,6 +37,7 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
       ..listen(loginWithEmailAndPasswordProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "We couldn't log you in.",
                 failure: next.error as AuthFailure?,
               );
@@ -44,6 +46,7 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
       ..listen(registerWithEmailAndPasswordProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "We couldn't register an account for you.",
                 failure: next.error as AuthFailure?,
               );

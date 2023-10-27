@@ -47,10 +47,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_native_splash: ^2.3.1
 
-  # Dialogs
-  flutter_easy_dialogs: ^2.0.8+7
-  positioned_dialog_manager: ^1.0.5+1
-  full_screen_dialog_manager: ^1.0.4+1
+  # Dialogs and Toast
+  fl_toast: ^3.2.0
 
   # UI and Animations
   simple_animations: ^5.0.2

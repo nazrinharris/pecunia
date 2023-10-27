@@ -16,8 +16,8 @@ import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/screens/primary_screens/accounts_screen.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
@@ -28,12 +28,14 @@ class DebugLocalDBScreen extends ConsumerWidget {
       ..listen(createAccountProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "We couldn't create an account for you.",
                 failure: next.error as Failure?,
               );
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                context: context,
                 title: 'Account created successfully!',
               );
         }
@@ -41,12 +43,14 @@ class DebugLocalDBScreen extends ConsumerWidget {
       ..listen(deleteAccountProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "We couldn't delete your account.",
                 failure: next.error as Failure?,
               );
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                context: context,
                 title: 'Account deleted successfully!',
               );
         }
@@ -173,16 +177,9 @@ class DebugDialogsButtons extends ConsumerWidget {
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
-                  ref.read(pecuniaDialogsProvider).showDebugPositionedDialog();
+                  ref.read(pecuniaDialogsProvider).showDebugPositionedDialog(context);
                 },
                 child: const Text('Show Positioned Dialog'),
-              ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  ref.read(pecuniaDialogsProvider).showDebugFullScreenDialog();
-                },
-                child: const Text('Show Full Screen Dialog'),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
@@ -191,7 +188,8 @@ class DebugDialogsButtons extends ConsumerWidget {
                 ),
                 onPressed: () {
                   ref.read(pecuniaDialogsProvider).showFailureDialog(
-                          failure: AuthFailure(
+                      context: context,
+                      failure: AuthFailure(
                         stackTrace: StackTrace.current,
                         message: AuthErrorType.unknown.message,
                         errorType: AuthErrorType.unknown,
@@ -206,6 +204,7 @@ class DebugDialogsButtons extends ConsumerWidget {
                 ),
                 onPressed: () {
                   ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                      context: context,
                       title: 'Account created successfully!',
                       message: 'You can check it out in the accounts tab.');
                 },
@@ -229,16 +228,6 @@ class DebugDialogsButtons extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(height: 10),
-        Container(
-          alignment: Alignment.center,
-          child: ElevatedButton(
-              onPressed: () {
-                context.pushNamed('debug-dialogs');
-              },
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.purple[900])),
-              child: const Text('Go to All Dialogs')),
-        )
       ],
     );
   }

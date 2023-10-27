@@ -14,7 +14,7 @@ import 'package:pecunia/core/util/extensions.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:screwdriver/screwdriver.dart';
 
 class CreateTransferTxnFields {
@@ -50,6 +50,7 @@ class CreateTransferTxnForm extends HookConsumerWidget {
     ref.listen(createTransferTransactionProvider, (previous, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: 'Unable to create transfer transaction.',
               failure: next.error as TransactionsFailure?,
             );
@@ -58,6 +59,7 @@ class CreateTransferTxnForm extends HookConsumerWidget {
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
         ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              context: context,
               title: 'Transfer transaction created successfully!',
             );
       }

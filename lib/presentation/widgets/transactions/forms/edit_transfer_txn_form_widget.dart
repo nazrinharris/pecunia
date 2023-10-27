@@ -12,7 +12,7 @@ import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_transfer_txn_form_widget.dart';
 import 'package:screwdriver/screwdriver.dart';
 
@@ -83,6 +83,7 @@ class EditTransferTxnForm extends HookConsumerWidget {
     ref.listen(editTransferTransactionProvider, (previous, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: 'Unable to create transfer transaction.',
               failure: next.error as Failure?,
             );
@@ -92,6 +93,7 @@ class EditTransferTxnForm extends HookConsumerWidget {
           ..pop()
           ..pop();
         ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              context: context,
               title: 'Updated transfer transaction!',
             );
         ref

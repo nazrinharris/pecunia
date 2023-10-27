@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_login_register_screen.dart';
-import 'package:pecunia/presentation/debug/debug_dialogs/debug_dialogs.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/debug_local_db_screen.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
 import 'package:pecunia/presentation/screens/accounts/edit_account_screen.dart';
@@ -67,11 +66,7 @@ final router = GoRouter(
       name: 'debug-local-db',
       builder: (context, state) => const DebugLocalDBScreen(),
     ),
-    GoRoute(
-      path: '/debug-dialogs',
-      name: 'debug-dialogs',
-      builder: (context, state) => const DebugDialogsScreen(),
-    ),
+
     GoRoute(
       path: '/drift-db-viewer',
       name: 'drift-db-viewer',

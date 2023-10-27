@@ -65,14 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  back_button_interceptor:
-    dependency: transitive
-    description:
-      name: back_button_interceptor
-      sha256: e47660f2178a4392eb72001f9594d3fdcb5efde93e59d2819d61fda499e781c8
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -401,6 +393,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.63.0"
+  fl_toast:
+    dependency: "direct main"
+    description:
+      name: fl_toast
+      sha256: "0f7bbce90d1b75463a414c6a5476e45bd93fa7c4adccce1690076f4d1ef77c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   flex_color_picker:
     dependency: "direct main"
     description:
@@ -422,14 +422,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_easy_dialogs:
-    dependency: "direct main"
-    description:
-      name: flutter_easy_dialogs
-      sha256: c3e71129e9b7ba1036f908df73474c83508591088b208f09c777127ea1277d37
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.8+7"
   flutter_gradient_animation_text:
     dependency: "direct main"
     description:
@@ -544,14 +536,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
-  full_screen_dialog_manager:
-    dependency: "direct main"
-    description:
-      name: full_screen_dialog_manager
-      sha256: "021cd91ca2dd84a6e9d3e42b8c3a5d84473bc639767982beef8bc501b8a43899"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4+1"
   functions_client:
     dependency: transitive
     description:
@@ -920,14 +904,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
-  positioned_dialog_manager:
-    dependency: "direct main"
-    description:
-      name: positioned_dialog_manager
-      sha256: a79083cf54e86695b9bb68d359c821253a63cc3a02c3c847a8d88e940a2fbd12
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5+1"
   postgrest:
     dependency: transitive
     description:

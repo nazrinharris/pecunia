@@ -3,8 +3,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/accounts/create_account_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_widget.dart';
 
 class PecuniaFAB extends ConsumerWidget {
@@ -48,6 +48,7 @@ class PecuniaFAB extends ConsumerWidget {
                 break;
               case AsyncError():
                 ref.read(pecuniaDialogsProvider).showFailureDialog(
+                      context: context,
                       title: "Uh oh, can't create transaction...",
                       failure: accountsValue.error as Failure?,
                     );
@@ -78,6 +79,7 @@ class PecuniaFAB extends ConsumerWidget {
                 break;
               case AsyncError():
                 ref.read(pecuniaDialogsProvider).showFailureDialog(
+                      context: context,
                       title: "Uh oh, can't create transaction...",
                       failure: accountsValue.error as Failure?,
                     );

@@ -12,7 +12,7 @@ import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/edit_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_widget.dart';
 
 void showEditTransactionBottomSheet(
@@ -55,6 +55,7 @@ class EditTxnForm extends HookConsumerWidget {
     ref.listen(editTransactionProvider, (previous, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: "We couldn't edit your account.",
               failure: next.error as Failure?,
             );
@@ -64,6 +65,7 @@ class EditTxnForm extends HookConsumerWidget {
           ..pop()
           ..pop();
         ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              context: context,
               title: 'Transaction edited successfully!',
             );
         ref

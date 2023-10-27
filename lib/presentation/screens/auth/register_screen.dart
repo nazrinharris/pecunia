@@ -8,7 +8,7 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 class RegisterScreen extends ConsumerWidget {
   const RegisterScreen({super.key});
@@ -18,6 +18,7 @@ class RegisterScreen extends ConsumerWidget {
     ref.listen(registerWithEmailAndPasswordProvider, (prev, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: "We couldn't register you.",
               failure: next.error as AuthFailure?,
             );

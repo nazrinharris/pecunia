@@ -7,7 +7,7 @@ import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 void showCreateAccountBottomSheet(BuildContext context) {
   showModalBottomSheet<void>(
@@ -48,6 +48,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
     ref.listen(createAccountProvider, (previous, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: 'Unable to create account.',
               failure: next.error as TransactionsFailure?,
             );
@@ -56,6 +57,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
         ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              context: context,
               title: 'Account created successfully!',
             );
       }

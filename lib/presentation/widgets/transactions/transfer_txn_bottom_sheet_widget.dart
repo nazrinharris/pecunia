@@ -9,7 +9,7 @@ import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/edit_transfer_txn_form_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
 
@@ -32,6 +32,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
     ref.listen(deleteTransferTransactionProvider, (previous, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: 'Unable to create transfer transaction.',
               failure: next.error as TransactionsFailure?,
             );
@@ -40,6 +41,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
         ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              context: context,
               title: 'Transfer transaction deleted successfully!',
             );
         ref

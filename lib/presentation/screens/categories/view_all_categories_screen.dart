@@ -15,9 +15,9 @@ import 'package:pecunia/features/categories/usecases/create_category.dart';
 import 'package:pecunia/features/categories/usecases/delete_category.dart';
 import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
 import 'package:pecunia/features/categories/usecases/update_category.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/categories/category_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/widgets/categories/forms/create_category_form_widget.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class ViewAllCategories extends HookConsumerWidget {
@@ -28,6 +28,7 @@ class ViewAllCategories extends HookConsumerWidget {
       ..listen(createCategoryProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "Uh oh, can't create category...",
                 failure: next.error as Failure?,
               );
@@ -35,6 +36,7 @@ class ViewAllCategories extends HookConsumerWidget {
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                context: context,
                 title: 'Category created successfully!',
               );
           ref.invalidate(getAllCategoriesProvider);
@@ -43,6 +45,7 @@ class ViewAllCategories extends HookConsumerWidget {
       ..listen(updateCategoryProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "Uh oh, can't update the category...",
                 failure: next.error as Failure?,
               );
@@ -50,6 +53,7 @@ class ViewAllCategories extends HookConsumerWidget {
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                context: context,
                 title: 'Category updated successfully!',
               );
           ref.invalidate(getAllCategoriesProvider);
@@ -58,6 +62,7 @@ class ViewAllCategories extends HookConsumerWidget {
       ..listen(deleteCategoryProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureDialog(
+                context: context,
                 title: "Uh oh, can't delete the category...",
                 failure: next.error as Failure?,
               );
@@ -65,6 +70,7 @@ class ViewAllCategories extends HookConsumerWidget {
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
           ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                context: context,
                 title: 'Category deleted successfully!',
               );
           ref.invalidate(getAllCategoriesProvider);

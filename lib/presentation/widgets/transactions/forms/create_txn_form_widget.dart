@@ -13,7 +13,7 @@ import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 /// Shows a bottom sheet for creating a transaction.
 ///
@@ -138,6 +138,7 @@ class CreateTxnForm extends HookConsumerWidget {
     ref.listen(createTransactionProvider, (prev, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: "We couldn't delete your account.",
               failure: next.error as Failure?,
             );
@@ -145,6 +146,7 @@ class CreateTxnForm extends HookConsumerWidget {
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
         ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              context: context,
               title: 'Transaction created successfully!',
             );
       }

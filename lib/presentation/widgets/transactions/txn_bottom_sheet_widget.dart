@@ -10,8 +10,8 @@ import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
-import 'package:pecunia/presentation/dialogs/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/categories/category_bottom_sheet_widget.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/edit_txn_form_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/transfer_txn_bottom_sheet_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/txn_list_tile.dart';
@@ -61,6 +61,7 @@ class TxnBottomSheet extends ConsumerWidget {
     ref.listen(deleteTransactionProvider, (previous, next) {
       if (next is AsyncError) {
         ref.read(pecuniaDialogsProvider).showFailureDialog(
+              context: context,
               title: 'Oopsies',
               failure: next.error as Failure?,
             );
@@ -68,6 +69,7 @@ class TxnBottomSheet extends ConsumerWidget {
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
         ref.read(pecuniaDialogsProvider).showSuccessDialog(
+              context: context,
               title: 'Transaction deleted succesfully!',
             );
         ref
