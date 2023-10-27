@@ -27,7 +27,7 @@ class ViewAllCategories extends HookConsumerWidget {
     ref
       ..listen(createCategoryProvider, (prev, next) {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: "Uh oh, can't create category...",
                 failure: next.error as Failure?,
@@ -35,7 +35,7 @@ class ViewAllCategories extends HookConsumerWidget {
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+          ref.read(pecuniaDialogsProvider).showSuccessToast(
                 context: context,
                 title: 'Category created successfully!',
               );
@@ -44,7 +44,7 @@ class ViewAllCategories extends HookConsumerWidget {
       })
       ..listen(updateCategoryProvider, (prev, next) {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: "Uh oh, can't update the category...",
                 failure: next.error as Failure?,
@@ -52,7 +52,7 @@ class ViewAllCategories extends HookConsumerWidget {
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+          ref.read(pecuniaDialogsProvider).showSuccessToast(
                 context: context,
                 title: 'Category updated successfully!',
               );
@@ -61,7 +61,7 @@ class ViewAllCategories extends HookConsumerWidget {
       })
       ..listen(deleteCategoryProvider, (prev, next) {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: "Uh oh, can't delete the category...",
                 failure: next.error as Failure?,
@@ -69,7 +69,7 @@ class ViewAllCategories extends HookConsumerWidget {
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
           context.pop();
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+          ref.read(pecuniaDialogsProvider).showSuccessToast(
                 context: context,
                 title: 'Category deleted successfully!',
               );

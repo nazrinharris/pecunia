@@ -31,7 +31,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(deleteTransferTransactionProvider, (previous, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: 'Unable to create transfer transaction.',
               failure: next.error as TransactionsFailure?,
@@ -40,7 +40,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
 
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+        ref.read(pecuniaDialogsProvider).showSuccessToast(
               context: context,
               title: 'Transfer transaction deleted successfully!',
             );

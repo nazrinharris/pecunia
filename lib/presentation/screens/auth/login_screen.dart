@@ -18,7 +18,7 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(loginWithEmailAndPasswordProvider, (prev, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: "We couldn't log you in.",
               failure: next.error as AuthFailure?,

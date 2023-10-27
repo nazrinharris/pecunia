@@ -47,7 +47,7 @@ class PecuniaFAB extends ConsumerWidget {
               case AsyncLoading():
                 break;
               case AsyncError():
-                ref.read(pecuniaDialogsProvider).showFailureDialog(
+                ref.read(pecuniaDialogsProvider).showFailureToast(
                       context: context,
                       title: "Uh oh, can't create transaction...",
                       failure: accountsValue.error as Failure?,
@@ -78,7 +78,7 @@ class PecuniaFAB extends ConsumerWidget {
               case AsyncLoading():
                 break;
               case AsyncError():
-                ref.read(pecuniaDialogsProvider).showFailureDialog(
+                ref.read(pecuniaDialogsProvider).showFailureToast(
                       context: context,
                       title: "Uh oh, can't create transaction...",
                       failure: accountsValue.error as Failure?,

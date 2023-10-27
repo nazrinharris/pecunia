@@ -27,7 +27,7 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
         }
 
         if (next.runtimeType == AsyncError<bool>) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: 'You cannot navigate to DebugLocalDB',
                 failure: next.error as AuthFailure?,
@@ -36,7 +36,7 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
       })
       ..listen(loginWithEmailAndPasswordProvider, (prev, next) {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: "We couldn't log you in.",
                 failure: next.error as AuthFailure?,
@@ -45,7 +45,7 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
       })
       ..listen(registerWithEmailAndPasswordProvider, (prev, next) {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: "We couldn't register an account for you.",
                 failure: next.error as AuthFailure?,

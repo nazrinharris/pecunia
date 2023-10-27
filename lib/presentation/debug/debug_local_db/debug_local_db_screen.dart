@@ -27,14 +27,14 @@ class DebugLocalDBScreen extends ConsumerWidget {
     ref
       ..listen(createAccountProvider, (prev, next) {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: "We couldn't create an account for you.",
                 failure: next.error as Failure?,
               );
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+          ref.read(pecuniaDialogsProvider).showSuccessToast(
                 context: context,
                 title: 'Account created successfully!',
               );
@@ -42,14 +42,14 @@ class DebugLocalDBScreen extends ConsumerWidget {
       })
       ..listen(deleteAccountProvider, (prev, next) {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureDialog(
+          ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: "We couldn't delete your account.",
                 failure: next.error as Failure?,
               );
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          ref.read(pecuniaDialogsProvider).showSuccessDialog(
+          ref.read(pecuniaDialogsProvider).showSuccessToast(
                 context: context,
                 title: 'Account deleted successfully!',
               );
@@ -187,7 +187,7 @@ class DebugDialogsButtons extends ConsumerWidget {
                   backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 61, 14, 11)),
                 ),
                 onPressed: () {
-                  ref.read(pecuniaDialogsProvider).showFailureDialog(
+                  ref.read(pecuniaDialogsProvider).showFailureToast(
                       context: context,
                       failure: AuthFailure(
                         stackTrace: StackTrace.current,
@@ -203,7 +203,7 @@ class DebugDialogsButtons extends ConsumerWidget {
                   backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 33, 1)),
                 ),
                 onPressed: () {
-                  ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                  ref.read(pecuniaDialogsProvider).showSuccessToast(
                       context: context,
                       title: 'Account created successfully!',
                       message: 'You can check it out in the accounts tab.');

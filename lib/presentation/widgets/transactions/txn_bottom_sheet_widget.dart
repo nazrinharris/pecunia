@@ -60,7 +60,7 @@ class TxnBottomSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(deleteTransactionProvider, (previous, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: 'Oopsies',
               failure: next.error as Failure?,
@@ -68,7 +68,7 @@ class TxnBottomSheet extends ConsumerWidget {
       }
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+        ref.read(pecuniaDialogsProvider).showSuccessToast(
               context: context,
               title: 'Transaction deleted succesfully!',
             );

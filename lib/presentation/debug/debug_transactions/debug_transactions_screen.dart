@@ -19,14 +19,14 @@ class DebugTransactionsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(createTransactionProvider, (previous, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: 'Oopsies',
               failure: next.error as Failure?,
             );
       }
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+        ref.read(pecuniaDialogsProvider).showSuccessToast(
               context: context,
               title: 'Transaction successfully created!',
             );

@@ -54,7 +54,7 @@ class EditTxnForm extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(editTransactionProvider, (previous, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: "We couldn't edit your account.",
               failure: next.error as Failure?,
@@ -64,7 +64,7 @@ class EditTxnForm extends HookConsumerWidget {
         context
           ..pop()
           ..pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+        ref.read(pecuniaDialogsProvider).showSuccessToast(
               context: context,
               title: 'Transaction edited successfully!',
             );

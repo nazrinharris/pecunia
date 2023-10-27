@@ -11,7 +11,7 @@ part 'pecunia_dialogs.g.dart';
 PecuniaDialogs pecuniaDialogs(PecuniaDialogsRef ref) => PecuniaDialogs();
 
 class PecuniaDialogs {
-  Future<void> showFailureDialog({
+  Future<void> showFailureToast({
     required BuildContext context,
     Failure? failure,
     String? title,
@@ -87,7 +87,7 @@ class PecuniaDialogs {
     });
   }
 
-  Future<void> showSuccessDialog({
+  Future<void> showSuccessToast({
     required BuildContext context,
     String? title,
     String? message,

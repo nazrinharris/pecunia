@@ -47,7 +47,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(createAccountProvider, (previous, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: 'Unable to create account.',
               failure: next.error as TransactionsFailure?,
@@ -56,7 +56,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
 
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+        ref.read(pecuniaDialogsProvider).showSuccessToast(
               context: context,
               title: 'Account created successfully!',
             );

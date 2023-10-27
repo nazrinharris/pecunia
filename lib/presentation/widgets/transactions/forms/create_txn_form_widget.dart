@@ -137,7 +137,7 @@ class CreateTxnForm extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(createTransactionProvider, (prev, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: "We couldn't delete your account.",
               failure: next.error as Failure?,
@@ -145,7 +145,7 @@ class CreateTxnForm extends HookConsumerWidget {
       }
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+        ref.read(pecuniaDialogsProvider).showSuccessToast(
               context: context,
               title: 'Transaction created successfully!',
             );

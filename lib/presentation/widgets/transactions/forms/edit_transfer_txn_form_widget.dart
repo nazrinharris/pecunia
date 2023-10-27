@@ -82,7 +82,7 @@ class EditTransferTxnForm extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(editTransferTransactionProvider, (previous, next) {
       if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureDialog(
+        ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: 'Unable to create transfer transaction.',
               failure: next.error as Failure?,
@@ -92,7 +92,7 @@ class EditTransferTxnForm extends HookConsumerWidget {
         context
           ..pop()
           ..pop();
-        ref.read(pecuniaDialogsProvider).showSuccessDialog(
+        ref.read(pecuniaDialogsProvider).showSuccessToast(
               context: context,
               title: 'Updated transfer transaction!',
             );
