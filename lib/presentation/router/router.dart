@@ -14,6 +14,7 @@ import 'package:pecunia/presentation/screens/entry_screen.dart';
 import 'package:pecunia/presentation/screens/main_screen.dart';
 import 'package:pecunia/presentation/screens/settings_screen.dart';
 import 'package:pecunia/presentation/screens/start_screen.dart';
+import 'package:pecunia/presentation/screens/transactions/recent_txns_screen.dart';
 
 final router = GoRouter(
   routes: [
@@ -53,6 +54,11 @@ final router = GoRouter(
         final account = state.extra! as Account;
         return ViewAccountScreen(account.id);
       },
+    ),
+    GoRoute(
+      path: '/recent-txns',
+      name: 'recent-txns',
+      builder: (context, state) => const RecentTxnsScreen(),
     ),
 
     // Debug Routes

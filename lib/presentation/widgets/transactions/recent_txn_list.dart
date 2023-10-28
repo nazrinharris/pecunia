@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
@@ -14,9 +15,20 @@ import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile
 import 'package:pecunia/presentation/widgets/transactions/txn_list_tile.dart';
 
 class RecentTxnList extends ConsumerWidget {
-  const RecentTxnList({super.key, this.maxTxnShown});
+  const RecentTxnList({
+    super.key,
+    this.maxTxnShown,
+    this.showTitle = true,
+    this.showViewMoreButton = true,
+    this.elevation = 1,
+    this.horizontalMargin = 8,
+  });
 
   final int? maxTxnShown;
+  final bool showTitle;
+  final bool showViewMoreButton;
+  final double elevation;
+  final double horizontalMargin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +54,14 @@ class RecentTxnList extends ConsumerWidget {
     // limit
     final limitedTxn = maxTxnShown != null ? sortedTxn.take(maxTxnShown!).toList() : sortedTxn;
 
-    return TxnList(limitedTxn, accounts);
+    return TxnList(
+      limitedTxn,
+      accounts,
+      showTitle: showTitle,
+      showViewMoreButton: showViewMoreButton,
+      elevation: elevation,
+      horizontalMargin: horizontalMargin,
+    );
   }
 }
 
@@ -71,7 +90,7 @@ class LoadingTxnList extends ConsumerWidget {
             child: Container(
               alignment: Alignment.center,
               width: double.infinity,
-              height: 64,
+              height: 256,
               child: CupertinoActivityIndicator(),
             ),
           )
@@ -82,10 +101,22 @@ class LoadingTxnList extends ConsumerWidget {
 }
 
 class TxnList extends ConsumerWidget {
-  const TxnList(this.txns, this.accounts, {super.key});
+  const TxnList(
+    this.txns,
+    this.accounts, {
+    required this.showTitle,
+    required this.showViewMoreButton,
+    required this.elevation,
+    required this.horizontalMargin,
+    super.key,
+  });
 
   final List<Transaction> txns;
   final List<Account> accounts;
+  final bool showTitle;
+  final bool showViewMoreButton;
+  final double elevation;
+  final double horizontalMargin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,38 +127,66 @@ class TxnList extends ConsumerWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Text(
-              'Recent Transactions',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
-              textAlign: TextAlign.left,
+          if (showTitle)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: Text(
+                'Recent Transactions',
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
+                textAlign: TextAlign.left,
+              ),
             ),
-          ),
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
+            elevation: elevation,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 14),
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: txns.length,
+                itemCount: txns.length + 1,
                 itemBuilder: (context, index) {
+                  if (index == txns.length) {
+                    if (!showViewMoreButton) {
+                      return const SizedBox.shrink();
+                    }
+                    return Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.onSecondary,
+                        )),
+                        onPressed: () {
+                          context.pushNamed('recent-txns');
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Text('View More'),
+                            SizedBox(width: 8),
+                            Icon(Icons.more_horiz),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
                   final txn = txns[index];
 
                   if (txn.isTransferTransaction) {
                     return TransferTxnListTile(
                       account: returnAccount(txn.accountId, accounts),
                       txn: txn,
-                      // enableTopDivider: index == 0,
-                      // enableBottomDivider: index == txns.length - 1,
                       enableBottomDivider: false,
+                      showLinkedAccountName: true,
                     );
                   }
 

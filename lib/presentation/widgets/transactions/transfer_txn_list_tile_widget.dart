@@ -22,6 +22,7 @@ class TransferTxnListTile extends ConsumerWidget {
     this.debugReturnErrorAccount,
     this.debugReturnErrorTransaction,
     this.defaultLinkedAccountAndTxn,
+    this.showLinkedAccountName = false,
     super.key,
   });
 
@@ -30,6 +31,7 @@ class TransferTxnListTile extends ConsumerWidget {
   final bool enableTopDivider;
   final bool enableBottomDivider;
   final void Function()? onTap;
+  final bool showLinkedAccountName;
 
   //TODO: Remove debug exception return
   final bool? debugReturnErrorAccount;
@@ -48,6 +50,7 @@ class TransferTxnListTile extends ConsumerWidget {
         onTap: onTap,
         enableTopDivider: enableTopDivider,
         enableBottomDivider: enableBottomDivider,
+        showLinkedAccountName: showLinkedAccountName,
       );
     }
 
@@ -75,6 +78,7 @@ class TransferTxnListTile extends ConsumerWidget {
           onTap: onTap,
           enableTopDivider: enableTopDivider,
           enableBottomDivider: enableBottomDivider,
+          showLinkedAccountName: showLinkedAccountName,
         ),
       AsyncError(
         error: ParallelWaitError(
@@ -166,6 +170,7 @@ class BuildTransferTxnContent extends StatelessWidget {
     required this.onTap,
     required this.enableTopDivider,
     required this.enableBottomDivider,
+    required this.showLinkedAccountName,
     super.key,
   });
 
@@ -176,10 +181,12 @@ class BuildTransferTxnContent extends StatelessWidget {
   final void Function()? onTap;
   final bool enableTopDivider;
   final bool enableBottomDivider;
+  final bool showLinkedAccountName;
 
   @override
   Widget build(BuildContext context) {
-    final toOrFromText = txn.fundDetails.transactionType == TransactionType.credit ? 'From' : 'To';
+    final toOrFromTextBase = txn.fundDetails.transactionType == TransactionType.credit ? 'From' : 'To';
+    final toOrFromTextTarget = txn.fundDetails.transactionType == TransactionType.credit ? 'To' : 'From';
 
     return Column(
       children: [
@@ -190,8 +197,15 @@ class BuildTransferTxnContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (showLinkedAccountName)
+                Text(
+                  '$toOrFromTextTarget ${account.name}',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               Text(
-                '$toOrFromText ${linkedAccount.name}',
+                '$toOrFromTextBase ${linkedAccount.name}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],

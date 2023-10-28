@@ -79,6 +79,8 @@ class ViewAllCategories extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         leading: IconButton(
           onPressed: () {
             context.pop();
