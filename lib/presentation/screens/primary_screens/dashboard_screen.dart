@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fpdart/src/option.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/features/transactions/usecases/get_all_transactions.dart';
 import 'package:pecunia/presentation/widgets/transactions/recent_txn_list.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -10,6 +14,8 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(getLoggedInUserProvider);
+
     return Scaffold(
         body: RefreshIndicator.adaptive(
       displacement: 100,
@@ -57,13 +63,30 @@ class DashboardScreen extends ConsumerWidget {
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                   ),
-                  Text(
-                    'Heisenberg',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                          fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
+                  switch (user) {
+                    AsyncLoading() => const SizedBox.shrink(),
+                    AsyncError(:final Failure error) => Text(
+                        error.message,
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                              fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    AsyncData(:final Option<PecuniaUser> value) => Text(
+                        value.fold(() => '', (t) => t.username),
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                              fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    _ => Text(
+                        'Unknown State',
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                              fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                  }
                 ],
               ),
             ),

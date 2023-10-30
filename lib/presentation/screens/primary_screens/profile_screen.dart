@@ -7,11 +7,13 @@ import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/presentation/widgets/common/scale_button.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(getLoggedInUserProvider);
+
     return Scaffold(
         body: ListView(
       physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -25,13 +27,30 @@ class ProfileScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Heisenberg,',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                          fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
+                  switch (user) {
+                    AsyncLoading() => const SizedBox.shrink(),
+                    AsyncError(:final Failure error) => Text(
+                        error.message,
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                              fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    AsyncData(:final Option<PecuniaUser> value) => Text(
+                        value.fold(() => '', (t) => t.username),
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                              fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    _ => Text(
+                        'Unknown State',
+                        style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                              fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                  },
                   Text(
                     'Welcome to your crib',
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
