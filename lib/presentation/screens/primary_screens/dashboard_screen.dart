@@ -6,6 +6,7 @@ import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/features/transactions/usecases/get_all_transactions.dart';
+import 'package:pecunia/presentation/widgets/transactions/quick_add_txn_module.dart';
 import 'package:pecunia/presentation/widgets/transactions/recent_txn_list.dart';
 import 'package:simple_animations/simple_animations.dart';
 
@@ -41,8 +42,8 @@ class DashboardScreen extends ConsumerWidget {
                 curve: Curves.easeOutQuad,
                 duration: const Duration(milliseconds: 600),
               ),
-            duration: const Duration(milliseconds: 600),
-            delay: const Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 700),
+            delay: const Duration(milliseconds: 100),
             builder: (context, value, child) => Transform.translate(
               offset: value.get('position'),
               child: Opacity(
@@ -91,6 +92,31 @@ class DashboardScreen extends ConsumerWidget {
               ),
             ),
           ),
+          PlayAnimationBuilder(
+            tween: MovieTween()
+              ..tween(
+                'opacity',
+                Tween<double>(begin: 0, end: 1),
+                curve: Curves.easeOutExpo,
+                duration: const Duration(milliseconds: 600),
+              )
+              ..tween(
+                'position',
+                Tween<Offset>(begin: const Offset(0, 80), end: Offset.zero),
+                curve: Curves.easeOutQuad,
+                duration: const Duration(milliseconds: 600),
+              ),
+            duration: const Duration(milliseconds: 500),
+            delay: const Duration(milliseconds: 150),
+            builder: (context, value, child) => Transform.translate(
+              offset: value.get('position'),
+              child: Opacity(
+                opacity: value.get('opacity'),
+                child: child,
+              ),
+            ),
+            child: const QuickAddTxnModule(),
+          ),
           const SizedBox(height: 14),
           PlayAnimationBuilder(
             tween: MovieTween()
@@ -106,7 +132,7 @@ class DashboardScreen extends ConsumerWidget {
                 curve: Curves.easeOutQuad,
                 duration: const Duration(milliseconds: 600),
               ),
-            duration: const Duration(milliseconds: 600),
+            duration: const Duration(milliseconds: 500),
             delay: const Duration(milliseconds: 200),
             builder: (context, value, child) => Transform.translate(
               offset: value.get('position'),
