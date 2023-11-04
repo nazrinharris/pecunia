@@ -57,11 +57,13 @@ class PecuniaDialogs {
                   children: [
                     Icon(Icons.warning_amber_outlined, color: Colors.red[100]),
                     const SizedBox(width: 10),
-                    Text(
-                      title ?? 'Something failed!',
-                      style: TextStyle(
-                        color: Colors.red[100],
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        title ?? 'Something failed!',
+                        style: TextStyle(
+                          color: Colors.red[100],
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],

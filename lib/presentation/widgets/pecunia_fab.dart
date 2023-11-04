@@ -52,7 +52,13 @@ class PecuniaFAB extends ConsumerWidget {
                       title: "Uh oh, can't create transaction...",
                       failure: accountsValue.error as Failure?,
                     );
-              case AsyncData(:final value):
+              case AsyncData(:final value) when value.isEmpty:
+                ref.read(pecuniaDialogsProvider).showFailureToast(
+                      context: context,
+                      title: "You don't have an account to add income to!",
+                      failure: accountsValue.error as Failure?,
+                    );
+              case AsyncData(:final value) when value.isNotEmpty:
                 showCreateTxnBottomSheet(context, true, accountsList: value);
               case _:
                 break;
@@ -81,6 +87,12 @@ class PecuniaFAB extends ConsumerWidget {
                 ref.read(pecuniaDialogsProvider).showFailureToast(
                       context: context,
                       title: "Uh oh, can't create transaction...",
+                      failure: accountsValue.error as Failure?,
+                    );
+              case AsyncData(:final value) when value.isEmpty:
+                ref.read(pecuniaDialogsProvider).showFailureToast(
+                      context: context,
+                      title: "You don't have an account to add expense to!",
                       failure: accountsValue.error as Failure?,
                     );
               case AsyncData(:final value):

@@ -120,12 +120,6 @@ class TxnList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (txns.isEmpty) {
-      return const Center(
-        child: Text('No transactions yet!'),
-      );
-    }
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
       child: Column(
@@ -147,75 +141,92 @@ class TxnList extends ConsumerWidget {
             elevation: elevation,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 14),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: txns.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == txns.length) {
-                    if (!showViewMoreButton) {
-                      return const SizedBox.shrink();
-                    }
-                    return Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                          Theme.of(context).colorScheme.onSecondary,
-                        )),
-                        onPressed: () {
-                          context.pushNamed('recent-txns');
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Text('View More'),
-                            SizedBox(width: 8),
-                            Icon(Icons.more_horiz),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  final txn = txns[index];
-
-                  if (txn.isTransferTransaction) {
-                    return TransferTxnListTile(
-                      account: returnAccount(txn.accountId, accounts),
-                      txn: txn,
-                      enableBottomDivider: false,
-                      showLinkedAccountName: true,
-                    );
-                  }
-
-                  final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
-
-                  return switch (categoryValue) {
-                    AsyncLoading() => const Column(
-                        children: [
-                          ListTile(title: CupertinoActivityIndicator()),
-                        ],
-                      ),
-                    AsyncError(:final Object error) => TxnListTileError(
-                        error as Failure,
-                        enableBottomDivider: false,
-                      ),
-                    AsyncData(:final List<Category?> value) => TxnListTile(
-                        account: returnAccount(txn.accountId, accounts),
-                        txn: txn,
-                        category: value.length == 1 ? value.first : null,
-                        enableBottomDivider: false,
-                      ),
-                    _ => const Center(child: Text('Something went wrong')),
-                  };
-                },
-              ),
+              child: txns.isEmpty ? buildEmptyTxnList() : buildTxnList(ref),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildEmptyTxnList() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 14),
+      child: const Center(
+        child: Text('No transactions yet!',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            )),
+      ),
+    );
+  }
+
+  ListView buildTxnList(WidgetRef ref) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: txns.length + 1,
+      itemBuilder: (context, index) {
+        if (index == txns.length) {
+          if (!showViewMoreButton) {
+            return const SizedBox.shrink();
+          }
+          return Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                Theme.of(context).colorScheme.onSecondary,
+              )),
+              onPressed: () {
+                context.pushNamed('recent-txns');
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text('View More'),
+                  SizedBox(width: 8),
+                  Icon(Icons.more_horiz),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final txn = txns[index];
+
+        if (txn.isTransferTransaction) {
+          return TransferTxnListTile(
+            account: returnAccount(txn.accountId, accounts),
+            txn: txn,
+            enableBottomDivider: false,
+            showLinkedAccountName: true,
+          );
+        }
+
+        final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
+
+        return switch (categoryValue) {
+          AsyncLoading() => const Column(
+              children: [
+                ListTile(title: CupertinoActivityIndicator()),
+              ],
+            ),
+          AsyncError(:final Object error) => TxnListTileError(
+              error as Failure,
+              enableBottomDivider: false,
+            ),
+          AsyncData(:final List<Category?> value) => TxnListTile(
+              account: returnAccount(txn.accountId, accounts),
+              txn: txn,
+              category: value.length == 1 ? value.first : null,
+              enableBottomDivider: false,
+            ),
+          _ => const Center(child: Text('Something went wrong')),
+        };
+      },
     );
   }
 

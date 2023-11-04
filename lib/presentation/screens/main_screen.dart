@@ -7,7 +7,7 @@ import 'package:pecunia/presentation/screens/primary_screens/analytics_screen.da
 import 'package:pecunia/presentation/screens/primary_screens/dashboard_screen.dart';
 import 'package:pecunia/presentation/screens/primary_screens/finance_screen.dart';
 import 'package:pecunia/presentation/screens/primary_screens/profile_screen.dart';
-import 'package:pecunia/presentation/widgets/common/pecunia_fab.dart';
+import 'package:pecunia/presentation/widgets/pecunia_fab.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class MainScreen extends HookConsumerWidget {
