@@ -12,8 +12,6 @@ class GetAllTransactions extends _$GetAllTransactions {
     // Watch all possible write
     watchAllWritesAsyncNotifierProvider<List<Transaction>>(ref);
 
-    await Future<void>.delayed(const Duration(seconds: 1));
-
     return _getAllTransactions();
   }
 

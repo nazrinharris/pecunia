@@ -65,7 +65,7 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
     Object? balance = null,
     Object? currency = null,
     Object? createdOn = null,
-    Object? description = freezed,
+    Object? description = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -96,7 +96,7 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
           ? _value.createdOn
           : createdOn // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      description: freezed == description
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as Description,
@@ -139,7 +139,7 @@ class __$$_AccountCopyWithImpl<$Res>
     Object? balance = null,
     Object? currency = null,
     Object? createdOn = null,
-    Object? description = freezed,
+    Object? description = null,
   }) {
     return _then(_$_Account(
       id: null == id
@@ -170,7 +170,7 @@ class __$$_AccountCopyWithImpl<$Res>
           ? _value.createdOn
           : createdOn // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      description: freezed == description
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as Description,
@@ -230,21 +230,13 @@ class _$_Account extends _Account {
                 other.currency == currency) &&
             (identical(other.createdOn, createdOn) ||
                 other.createdOn == createdOn) &&
-            const DeepCollectionEquality()
-                .equals(other.description, description));
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      creatorUid,
-      name,
-      initialBalance,
-      balance,
-      currency,
-      createdOn,
-      const DeepCollectionEquality().hash(description));
+  int get hashCode => Object.hash(runtimeType, id, creatorUid, name,
+      initialBalance, balance, currency, createdOn, description);
 
   @JsonKey(ignore: true)
   @override

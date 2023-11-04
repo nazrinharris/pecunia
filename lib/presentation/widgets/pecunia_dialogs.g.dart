@@ -6,13 +6,9 @@ part of 'pecunia_dialogs.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDialogsHash() => r'af0defabba286b18286b08d18be0fad8a2a3b45c';
+String _$pecuniaDialogsHash() => r'fc226aa847f2971ca0807a38c46f288815d5073c';
 
-/// ******************************************************************************************************
-/// * General Interface for Pecunia Dialogs
-/// ******************************************************************************************************
-///
-/// Copied from [pecuniaDialogs].
+/// See also [pecuniaDialogs].
 @ProviderFor(pecuniaDialogs)
 final pecuniaDialogsProvider = Provider<PecuniaDialogs>.internal(
   pecuniaDialogs,

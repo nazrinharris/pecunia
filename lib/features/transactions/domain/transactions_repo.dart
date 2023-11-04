@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' as f;
 import 'package:fpdart/fpdart.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
@@ -145,6 +146,20 @@ class TransactionsRepo {
 
   TaskEither<TransactionsFailure, List<Transaction>> getAllExpenseTxn() {
     return transactionsLocalDAO.getAllExpenseTxns();
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getTxnsOverPeriod({
+    required DateTime startDate,
+    required DateTime endDate,
+    required TransactionType type,
+    required Currency currency,
+  }) {
+    return transactionsLocalDAO.getTxnsOverPeriod(
+      startDate: startDate,
+      endDate: endDate,
+      type: type,
+      currency: currency,
+    );
   }
 }
 

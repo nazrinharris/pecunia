@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
@@ -349,6 +350,26 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
       () async {
         return (select(transactionsTable)
               ..where((tbl) => tbl.transactionType.equals(TransactionType.debit.typeAsString)))
+            .get()
+            .then((value) => value.map(Transaction.fromDTO).toList());
+      },
+      mapDriftToTransactionsFailure,
+    );
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getTxnsOverPeriod({
+    required DateTime startDate,
+    required DateTime endDate,
+    required TransactionType type,
+    required Currency currency,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        return (select(transactionsTable)
+              ..where((tbl) => tbl.transactionType.equals(type.typeAsString))
+              ..where((tbl) => tbl.transactionDate.isBetweenValues(startDate, endDate))
+              ..where(
+                  (tbl) => tbl.baseCurrency.equals(currency.code) | tbl.targetCurrency.equals(currency.code)))
             .get()
             .then((value) => value.map(Transaction.fromDTO).toList());
       },

@@ -7,7 +7,7 @@ part of 'get_all_transactions.dart';
 // **************************************************************************
 
 String _$getAllTransactionsHash() =>
-    r'c94016f2be9a4cffeae4f9529758a4d583e6c072';
+    r'7d2010877b55ea82bbc680ac74be97b2b3d7be0e';
 
 /// See also [GetAllTransactions].
 @ProviderFor(GetAllTransactions)

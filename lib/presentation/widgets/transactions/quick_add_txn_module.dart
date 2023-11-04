@@ -21,7 +21,6 @@ class QuickAddTxnModule extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        elevation: 2,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
