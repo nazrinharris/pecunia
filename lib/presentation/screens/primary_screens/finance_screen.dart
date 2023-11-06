@@ -52,6 +52,21 @@ class FinanceScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 14),
+          const SizedBox(height: 144),
+          const Column(
+            children: [
+              Text('🙏', style: TextStyle(fontSize: 84)),
+              Text('Sorry!', style: TextStyle(fontSize: 54, fontWeight: FontWeight.bold)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 54),
+                child: Text(
+                  'This feature will come in a future update.',
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          )
         ],
       ),
     ));
