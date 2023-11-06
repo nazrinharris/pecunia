@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:async' as a;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
+import 'package:pecunia/features/shared/get_all_txns_and_accounts.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/usecases/get_all_transactions.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/presentation/widgets/transactions/transfer_txn_list_tile_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/txn_list_tile.dart';
@@ -32,18 +32,22 @@ class RecentTxnList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final transactionsList = ref.watch(getAllTransactionsProvider);
-    final accountsList = ref.watch(getAllAccountsProvider);
+    final txnsAndAccountsList = ref.watch(getAllTxnsAndAccountsProvider);
 
-    return switch ((transactionsList, accountsList)) {
-      (AsyncLoading(), _) || (_, AsyncLoading()) => const LoadingTxnList(),
-      (AsyncError(:final Object error), _) => Center(child: Text((error as Failure).message)),
-      (_, AsyncError(:final Object error)) => Center(child: Text((error as Failure).message)),
-      (
-        AsyncData(value: final List<Transaction> txnList),
-        AsyncData(value: final List<Account> accountsList)
+    return switch (txnsAndAccountsList) {
+      AsyncLoading(value: (final List<Transaction> txns, final List<Account> accounts)) =>
+        sortAndReturnTxnList(txns, accounts),
+      AsyncLoading(value: null) => const LoadingTxnList(),
+      AsyncError(
+        error: ParallelWaitError(
+          errors: (final a.AsyncError? txnsError, final a.AsyncError? accountError),
+          values: (final List<Transaction>? _, final List<Account>? _)
+        ),
+        stackTrace: _
       ) =>
-        sortAndReturnTxnList(txnList, accountsList),
+        ErrorTxnList((txnsError ?? accountError!).error as Failure),
+      AsyncData(value: (final List<Transaction> txns, final List<Account> accounts)) =>
+        sortAndReturnTxnList(txns, accounts),
       _ => const Center(child: Text('Something went wrong')),
     };
   }
@@ -92,6 +96,43 @@ class LoadingTxnList extends ConsumerWidget {
               width: double.infinity,
               height: 256,
               child: CupertinoActivityIndicator(),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ErrorTxnList extends ConsumerWidget {
+  const ErrorTxnList(this.failure, {super.key});
+
+  final Failure failure;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Text(
+              'Recent Transactions',
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
+              textAlign: TextAlign.left,
+            ),
+          ),
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              height: 256,
+              child: Text(failure.message),
             ),
           )
         ],
