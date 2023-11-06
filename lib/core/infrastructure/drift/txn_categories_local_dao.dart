@@ -74,4 +74,15 @@ class TxnCategoriesLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TxnCatego
       mapDriftToTxnCategoriesFailure,
     );
   }
+
+  TaskEither<TxnCategoriesFailure, Unit> deleteCategoriesByTxnId(String txnId) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        await (delete(txnCategoriesTable)..where((txnCategory) => txnCategory.transactionId.equals(txnId)))
+            .go();
+        return unit;
+      }),
+      mapDriftToTxnCategoriesFailure,
+    );
+  }
 }

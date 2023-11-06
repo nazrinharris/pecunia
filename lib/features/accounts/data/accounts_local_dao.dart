@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
+import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
@@ -137,13 +139,13 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
     );
   }
 
-  TaskEither<AccountsFailure, Unit> deleteAccount(AccountDTO account) {
+  TaskEither<Failure, Unit> deleteAccount(String accountId) {
     return TaskEither.tryCatch(
       () async {
         return transaction(() async {
           // Delete linked transactions
           final linkedTxnList =
-              await (select(transactionsTable)..where((tbl) => tbl.linkedAccountId.equals(account.id))).get();
+              await (select(transactionsTable)..where((tbl) => tbl.linkedAccountId.equals(accountId))).get();
 
           if (linkedTxnList.isNotEmpty) {
             for (final linkedTxn in linkedTxnList) {
@@ -156,15 +158,24 @@ class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalD
           }
 
           // Delete this account's transactions
-          await (delete(transactionsTable)..where((tbl) => tbl.accountId.equals(account.id))).go();
+          (await db.transactionsLocalDAO.deleteTransactionsByAccountId(accountId).run()).fold(
+            (l) => throw TransactionsException.fromFailure(l),
+            (r) => unit,
+          );
 
           // Delete this account
-          await (delete(accountsTable)..where((tbl) => tbl.id.equals(account.id))).go();
+          await (delete(accountsTable)..where((tbl) => tbl.id.equals(accountId))).go();
 
           return unit;
         });
       },
-      mapDriftToAccountsFailure,
+      (error, stackTrace) {
+        if (error is TransactionsException) {
+          return TransactionsFailure.fromException(error);
+        } else {
+          return mapDriftToAccountsFailure(error, stackTrace);
+        }
+      },
     );
   }
 }

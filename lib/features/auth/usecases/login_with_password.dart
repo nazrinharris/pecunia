@@ -54,7 +54,7 @@ class LoginWithEmailAndPassword extends _$LoginWithEmailAndPassword {
           state = AsyncValue.error(failure, failure.stackTrace);
         }
       },
-      (pecuniaUser) => state = AsyncValue.data(Option.of(pecuniaUser)),
+      (pecuniaUser) => state = AsyncValue.data(pecuniaUser),
     );
   }
 }

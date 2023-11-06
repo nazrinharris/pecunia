@@ -6,7 +6,7 @@ part of 'create_account.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createAccountHash() => r'847b846beb0d11b021c5b36295d16c36d60d61ea';
+String _$createAccountHash() => r'756b16f451a7d2df578107dbb5d0a70756aa54a0';
 
 /// See also [CreateAccount].
 @ProviderFor(CreateAccount)

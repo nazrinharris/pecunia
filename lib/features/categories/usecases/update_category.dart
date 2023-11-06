@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/common/description.dart';
+import 'package:pecunia/core/shared/description.dart';
 import 'package:pecunia/features/categories/domain/categories_repo.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

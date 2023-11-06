@@ -3,7 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 
-/// Checks if the given [AccountsFailure] has the expected [AccountsErrorType] and [AccountsAction]
+/// Checks if the given [AccountsFailure] has the expected [AccountsErrorType]
 Matcher isAccountsFailure(AccountsErrorType expectedErrorType) => _IsAccountsFailure(expectedErrorType);
 
 class _IsAccountsFailure extends CustomMatcher {

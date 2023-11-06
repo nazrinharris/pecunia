@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/core/shared/description.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';

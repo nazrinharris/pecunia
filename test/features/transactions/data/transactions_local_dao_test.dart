@@ -1,10 +1,10 @@
 import 'package:clock/clock.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/core/shared/description.dart' as d;
 import 'package:pecunia/features/accounts/data/accounts_local_dao.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/transactions/data/transactions_local_dao.dart';
@@ -106,7 +106,7 @@ void main() {
 
     // Clean up
     await transactionsLocalDAO.deleteTransaction(testIncomeTxn).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.toDTO().id).run();
   });
 
   test('deleteTransaction() should delete a transaction and update the account balance correctly', () async {
@@ -139,7 +139,7 @@ void main() {
     );
 
     // Clean up
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.toDTO().id).run();
   });
 
   test('editTransaction() should update a transaction and adjust the account balance correctly', () async {
@@ -180,7 +180,7 @@ void main() {
 
     // Clean up
     await transactionsLocalDAO.deleteTransaction(testIncomeTxn.copyWith(name: 'updated_name')).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.toDTO().id).run();
   });
 
   test('getTransactionsByAccount() should retrieve all transactions associated with a specific account',
@@ -209,7 +209,7 @@ void main() {
     // Clean up
     await transactionsLocalDAO.deleteTransaction(testIncomeTxn).run();
     await transactionsLocalDAO.deleteTransaction(testExpenseTxn).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.toDTO().id).run();
   });
 
   test('getAllTransactions() should retrieve all transactions', () async {
@@ -237,6 +237,6 @@ void main() {
     // Clean up
     await transactionsLocalDAO.deleteTransaction(testIncomeTxn).run();
     await transactionsLocalDAO.deleteTransaction(testExpenseTxn).run();
-    await accountsDAO.deleteAccount(testAccount.toDTO()).run();
+    await accountsDAO.deleteAccount(testAccount.toDTO().id).run();
   });
 }

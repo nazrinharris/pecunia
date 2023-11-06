@@ -76,9 +76,10 @@ class $AccountsTableTable extends AccountsTable
         description
       ];
   @override
-  String get aliasedName => _alias ?? 'accounts_table';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'accounts_table';
+  String get actualTableName => $name;
+  static const String $name = 'accounts_table';
   @override
   VerificationContext validateIntegrity(Insertable<AccountDTO> instance,
       {bool isInserting = false}) {
@@ -577,9 +578,10 @@ class $TransactionsTableTable extends TransactionsTable
         transferDescription
       ];
   @override
-  String get aliasedName => _alias ?? 'transactions_table';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'transactions_table';
+  String get actualTableName => $name;
+  static const String $name = 'transactions_table';
   @override
   VerificationContext validateIntegrity(Insertable<TransactionDTO> instance,
       {bool isInserting = false}) {
@@ -1281,9 +1283,10 @@ class $CategoriesTableTable extends CategoriesTable
   List<GeneratedColumn> get $columns =>
       [id, name, description, primaryColor, icon, parentId];
   @override
-  String get aliasedName => _alias ?? 'categories_table';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'categories_table';
+  String get actualTableName => $name;
+  static const String $name = 'categories_table';
   @override
   VerificationContext validateIntegrity(Insertable<CategoryDTO> instance,
       {bool isInserting = false}) {
@@ -1608,9 +1611,10 @@ class $TxnCategoriesTableTable extends TxnCategoriesTable
   @override
   List<GeneratedColumn> get $columns => [transactionId, categoryId];
   @override
-  String get aliasedName => _alias ?? 'txn_categories_table';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'txn_categories_table';
+  String get actualTableName => $name;
+  static const String $name = 'txn_categories_table';
   @override
   VerificationContext validateIntegrity(
       Insertable<TransactionCategoryDTO> instance,
@@ -1800,6 +1804,7 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
       CategoriesLocalDAO(this as PecuniaDB);
   late final TxnCategoriesLocalDAO txnCategoriesLocalDAO =
       TxnCategoriesLocalDAO(this as PecuniaDB);
+  late final DebugDAO debugDAO = DebugDAO(this as PecuniaDB);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();

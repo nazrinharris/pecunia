@@ -2,11 +2,11 @@
 
 # Pecunia: Personal Finance Management 💸
 
-Pecunia is a cross-platform personal finance management app built with Flutter. It enables users to effectively track their expenses, set budgets, visualize financial trends, and much more. Designed with a local-first approach, Pecunia puts your financial data directly in your hands.
+Pecunia is a cross-platform personal finance management app built with Flutter. It enables users to effectively track their expenses, set budgets, visualize financial trends, and much more.
 
 ---
 
-## Features (to be implemented lol) 💀
+## Features
 
 1. Transaction Tracking: Keep a record of all your income and expenses, each associated with a specific account.
 2. Budget Management: Set one-time or recurring budgets, with features supporting diverse and complex budgeting needs.
@@ -37,21 +37,24 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Transferring funds between accounts.
 - [x] Multi-currency transactions.
 - [x] Transaction categories.
-- [ ] Simple budget creation, deletion, editing, and viewing.
 - [ ] Basic UI capabilities (as in, similar looks and functionality to mockup) 
 
 (`0.1.1`)
 
 - [ ] Implement new backend, `pecunia-backend`, and remove dependence on `supabase`
+- [ ] Guest/Local Account
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 
 (`0.2.0`)
 
 - [ ] Nested categories
+- [ ] Simple timed budget creation, deletion, editing, and viewing.
 - [ ] Implementing recurring budgets.
 - [ ] Visual analytics and reports.
 - [ ] Sub-Budgets (Multi-category budgeting).
+
+(`0.2.1`)
 - [ ] UI Upgrade! (Turn it into what it should've looked like)
 
 ### 😋 Phase 3: Quality of Life Improvements

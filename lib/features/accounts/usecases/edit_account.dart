@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:pecunia/core/common/description.dart';
+import 'package:pecunia/core/shared/description.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

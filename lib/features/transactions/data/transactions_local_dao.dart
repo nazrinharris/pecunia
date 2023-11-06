@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
@@ -52,6 +53,9 @@ class TransactionsTable extends Table {
 /// null will be the value. Therefore, `.toCompanion(false)` must be used. This will ensure that the
 /// null fields aren't treated as "not changed". This also means that to update a field, you must first
 /// retrieve the whole row, then use the `copyWith` method.
+///
+/// I mean, technically `toCompanion(false)` is the default behavior if you insert a DTO object (Drift Generated).
+/// But I'm just putting this here to make sure I don't forget.
 @DriftAccessor(tables: [
   TransactionsTable,
   AccountsTable,
@@ -79,6 +83,9 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
               (r) => unit,
             );
           }
+
+          await _validateAccountBalance(txn.accountId);
+
           return unit;
         });
       },
@@ -135,6 +142,33 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         await updateAccountDTO(updatedAccountDTO);
         await (delete(transactionsTable)..where((tbl) => tbl.id.equals(txn.id))).go();
+
+        await _validateAccountBalance(txn.accountId);
+
+        (await db.txnCategoriesLocalDAO.deleteCategoriesByTxnId(txn.id).run()).fold(
+          (l) => throw TxnCategoriesException.fromFailure(l),
+          (r) => unit,
+        );
+
+        return unit;
+      }),
+      mapDriftToTransactionsFailure,
+    );
+  }
+
+  TaskEither<TransactionsFailure, Unit> deleteTransactionsByAccountId(String accountId) {
+    return TaskEither.tryCatch(
+      () async => transaction(() async {
+        final txnList =
+            await (select(transactionsTable)..where((tbl) => tbl.accountId.equals(accountId))).get();
+
+        for (final txn in txnList) {
+          (await deleteTransaction(Transaction.fromDTO(txn)).run()).fold(
+            (l) => throw TransactionsException.fromFailure(l),
+            (r) => unit,
+          );
+        }
+
         return unit;
       }),
       mapDriftToTransactionsFailure,
@@ -204,8 +238,7 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
 
         // Update the account and transactions
         await updateAccountDTO(updatedAccountDTO);
-        await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxn.id)))
-            .write(newTxn.toDTO().toCompanion(false));
+        await (update(transactionsTable)..where((tbl) => tbl.id.equals(oldTxn.id))).write(newTxn.toDTO());
 
         // Update the category
         if (category.old != null) {
@@ -221,6 +254,8 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
             (r) => unit,
           );
         }
+
+        await _validateAccountBalance(newTxn.accountId);
 
         return unit;
       }),
@@ -298,6 +333,50 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     );
   }
 
+  TaskEither<TransactionsFailure, List<Transaction>> getAllIncomeTxns() {
+    return TaskEither.tryCatch(
+      () async {
+        return (select(transactionsTable)
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.credit.typeAsString)))
+            .get()
+            .then((value) => value.map(Transaction.fromDTO).toList());
+      },
+      mapDriftToTransactionsFailure,
+    );
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getAllExpenseTxns() {
+    return TaskEither.tryCatch(
+      () async {
+        return (select(transactionsTable)
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.debit.typeAsString)))
+            .get()
+            .then((value) => value.map(Transaction.fromDTO).toList());
+      },
+      mapDriftToTransactionsFailure,
+    );
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getTxnsOverPeriod({
+    required DateTime startDate,
+    required DateTime endDate,
+    required TransactionType type,
+    required Currency currency,
+  }) {
+    return TaskEither.tryCatch(
+      () async {
+        return (select(transactionsTable)
+              ..where((tbl) => tbl.transactionType.equals(type.typeAsString))
+              ..where((tbl) => tbl.transactionDate.isBetweenValues(startDate, endDate))
+              ..where(
+                  (tbl) => tbl.baseCurrency.equals(currency.code) | tbl.targetCurrency.equals(currency.code)))
+            .get()
+            .then((value) => value.map(Transaction.fromDTO).toList());
+      },
+      mapDriftToTransactionsFailure,
+    );
+  }
+
   // ********************************************************************************************************
   // DAO Private Methods, these methods are extracted to improve legibility of the DAO methods. These methods
   // must be directly related to the database actions.
@@ -312,14 +391,14 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
   }
 
   Future<void> insertTransactionToTable(TransactionDTO txnDto) async {
-    await into(transactionsTable).insert(txnDto.toCompanion(false));
+    await into(transactionsTable).insert(txnDto);
   }
 
   Future<void> updateAccountDTO(AccountDTO accountDto) async {
-    await update(accountsTable).replace(accountDto.toCompanion(false));
+    await update(accountsTable).replace(accountDto);
   }
 
-  Future<(bool isValid, double actualBalance)> _validateAccountBalance(String accountId) async {
+  Future<void> _validateAccountBalance(String accountId) async {
     final account = await (select(accountsTable)..where((tbl) => tbl.id.equals(accountId))).getSingle();
 
     // Get all transactions for this account
@@ -339,13 +418,13 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     }
 
     if (calculatedBalance != account.balance) {
+      print(TransactionsErrorType.mismatchAccountBalance.message);
+      print(StackTrace.current);
       throw TransactionsException(
         stackTrace: StackTrace.current,
         errorType: TransactionsErrorType.mismatchAccountBalance,
       );
     }
-
-    return (calculatedBalance == account.balance, calculatedBalance);
   }
 
   // ********************************************************************************************************

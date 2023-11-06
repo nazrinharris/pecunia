@@ -99,6 +99,7 @@ class AccountsException with _$AccountsException implements Exception {
     return AccountsException(
       stackTrace: failure.stackTrace,
       errorType: failure.errorType,
+      message: failure.message,
     );
   }
 
@@ -106,6 +107,7 @@ class AccountsException with _$AccountsException implements Exception {
     return AccountsException(
       stackTrace: failure.stackTrace,
       errorType: AccountsErrorType.unknown,
+      message: failure.message,
     );
   }
 }

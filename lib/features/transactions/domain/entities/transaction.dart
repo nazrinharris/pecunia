@@ -2,16 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart' as fp;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:money2/money2.dart';
-import 'package:pecunia/core/common/description.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/core/shared/description.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:uuid/uuid.dart';
 
+part 'fund_details.dart';
 part 'transaction.freezed.dart';
 part 'transfer_details.dart';
-part 'fund_details.dart';
 
 typedef TransactionId = String;
 

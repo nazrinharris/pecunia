@@ -1,9 +1,9 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pecunia/core/common/description.dart' as d;
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/core/shared/description.dart' as d;
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:uuid/uuid.dart';
 

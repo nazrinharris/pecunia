@@ -14,6 +14,13 @@ class PecuniaUser with _$PecuniaUser {
 
   const PecuniaUser._();
 
+  factory PecuniaUser.empty() => PecuniaUser(
+        uid: '',
+        username: '',
+        dateCreated: DateTime.now(),
+        email: '',
+      );
+
   factory PecuniaUser.fromJson(Map<String, dynamic> json) => _$PecuniaUserFromJson(json);
 
   factory PecuniaUser.fromDTO(PecuniaUserDTO dto) {

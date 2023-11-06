@@ -35,7 +35,7 @@ abstract interface class AuthRemoteDS {
     required Session currentSession,
   });
 
-  TaskEither<AuthFailure, PecuniaUserDTO> getLoggedInUser();
+  TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser();
 
   TaskEither<AuthFailure, Session> logout(Session currentSession);
 }
@@ -183,16 +183,12 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   /// * [getLoggedInUser]
   /// ******************************************************************************************************
   @override
-  TaskEither<AuthFailure, PecuniaUserDTO> getLoggedInUser() {
+  TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {
     final user = supabaseClient.auth.currentUser;
     if (user == null) {
-      return TaskEither.left(AuthFailure(
-        errorType: AuthErrorType.noLoggedInUser,
-        stackTrace: StackTrace.current,
-        message: AuthErrorType.noLoggedInUser.message,
-      ));
+      return TaskEither.of(const Option<PecuniaUser>.none());
     }
-    return helper.mapSupaUserToDTO(user);
+    return helper.mapSupaUserToDTO(user).flatMap((r) => TaskEither.of(Option.of(PecuniaUser.fromDTO(r))));
   }
 }
 

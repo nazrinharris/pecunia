@@ -337,189 +337,6 @@ abstract class _Transaction extends Transaction {
 }
 
 /// @nodoc
-mixin _$TransferDetails {
-  String get linkedAccountId => throw _privateConstructorUsedError;
-  String get linkedTransactionId => throw _privateConstructorUsedError;
-  TransferDescription get transferDescription =>
-      throw _privateConstructorUsedError;
-
-  @JsonKey(ignore: true)
-  $TransferDetailsCopyWith<TransferDetails> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $TransferDetailsCopyWith<$Res> {
-  factory $TransferDetailsCopyWith(
-          TransferDetails value, $Res Function(TransferDetails) then) =
-      _$TransferDetailsCopyWithImpl<$Res, TransferDetails>;
-  @useResult
-  $Res call(
-      {String linkedAccountId,
-      String linkedTransactionId,
-      TransferDescription transferDescription});
-}
-
-/// @nodoc
-class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
-    implements $TransferDetailsCopyWith<$Res> {
-  _$TransferDetailsCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? linkedAccountId = null,
-    Object? linkedTransactionId = null,
-    Object? transferDescription = null,
-  }) {
-    return _then(_value.copyWith(
-      linkedAccountId: null == linkedAccountId
-          ? _value.linkedAccountId
-          : linkedAccountId // ignore: cast_nullable_to_non_nullable
-              as String,
-      linkedTransactionId: null == linkedTransactionId
-          ? _value.linkedTransactionId
-          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
-              as String,
-      transferDescription: null == transferDescription
-          ? _value.transferDescription
-          : transferDescription // ignore: cast_nullable_to_non_nullable
-              as TransferDescription,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_TransferDetailsCopyWith<$Res>
-    implements $TransferDetailsCopyWith<$Res> {
-  factory _$$_TransferDetailsCopyWith(
-          _$_TransferDetails value, $Res Function(_$_TransferDetails) then) =
-      __$$_TransferDetailsCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String linkedAccountId,
-      String linkedTransactionId,
-      TransferDescription transferDescription});
-}
-
-/// @nodoc
-class __$$_TransferDetailsCopyWithImpl<$Res>
-    extends _$TransferDetailsCopyWithImpl<$Res, _$_TransferDetails>
-    implements _$$_TransferDetailsCopyWith<$Res> {
-  __$$_TransferDetailsCopyWithImpl(
-      _$_TransferDetails _value, $Res Function(_$_TransferDetails) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? linkedAccountId = null,
-    Object? linkedTransactionId = null,
-    Object? transferDescription = null,
-  }) {
-    return _then(_$_TransferDetails(
-      linkedAccountId: null == linkedAccountId
-          ? _value.linkedAccountId
-          : linkedAccountId // ignore: cast_nullable_to_non_nullable
-              as String,
-      linkedTransactionId: null == linkedTransactionId
-          ? _value.linkedTransactionId
-          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
-              as String,
-      transferDescription: null == transferDescription
-          ? _value.transferDescription
-          : transferDescription // ignore: cast_nullable_to_non_nullable
-              as TransferDescription,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$_TransferDetails extends _TransferDetails with DiagnosticableTreeMixin {
-  const _$_TransferDetails(
-      {required this.linkedAccountId,
-      required this.linkedTransactionId,
-      required this.transferDescription})
-      : assert(
-            linkedAccountId != null && linkedTransactionId != null ||
-                linkedAccountId == null && linkedTransactionId == null,
-            'Either provide all fields or none'),
-        super._();
-
-  @override
-  final String linkedAccountId;
-  @override
-  final String linkedTransactionId;
-  @override
-  final TransferDescription transferDescription;
-
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'TransferDetails(linkedAccountId: $linkedAccountId, linkedTransactionId: $linkedTransactionId, transferDescription: $transferDescription)';
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'TransferDetails'))
-      ..add(DiagnosticsProperty('linkedAccountId', linkedAccountId))
-      ..add(DiagnosticsProperty('linkedTransactionId', linkedTransactionId))
-      ..add(DiagnosticsProperty('transferDescription', transferDescription));
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_TransferDetails &&
-            (identical(other.linkedAccountId, linkedAccountId) ||
-                other.linkedAccountId == linkedAccountId) &&
-            (identical(other.linkedTransactionId, linkedTransactionId) ||
-                other.linkedTransactionId == linkedTransactionId) &&
-            (identical(other.transferDescription, transferDescription) ||
-                other.transferDescription == transferDescription));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, linkedAccountId, linkedTransactionId, transferDescription);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
-      __$$_TransferDetailsCopyWithImpl<_$_TransferDetails>(this, _$identity);
-}
-
-abstract class _TransferDetails extends TransferDetails {
-  const factory _TransferDetails(
-          {required final String linkedAccountId,
-          required final String linkedTransactionId,
-          required final TransferDescription transferDescription}) =
-      _$_TransferDetails;
-  const _TransferDetails._() : super._();
-
-  @override
-  String get linkedAccountId;
-  @override
-  String get linkedTransactionId;
-  @override
-  TransferDescription get transferDescription;
-  @override
-  @JsonKey(ignore: true)
-  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
 mixin _$FundDetails {
   double get baseAmount => throw _privateConstructorUsedError;
   Currency get baseCurrency => throw _privateConstructorUsedError;
@@ -767,5 +584,188 @@ abstract class _FundDetails extends FundDetails {
   @override
   @JsonKey(ignore: true)
   _$$_FundDetailsCopyWith<_$_FundDetails> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$TransferDetails {
+  String get linkedAccountId => throw _privateConstructorUsedError;
+  String get linkedTransactionId => throw _privateConstructorUsedError;
+  TransferDescription get transferDescription =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $TransferDetailsCopyWith<TransferDetails> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TransferDetailsCopyWith<$Res> {
+  factory $TransferDetailsCopyWith(
+          TransferDetails value, $Res Function(TransferDetails) then) =
+      _$TransferDetailsCopyWithImpl<$Res, TransferDetails>;
+  @useResult
+  $Res call(
+      {String linkedAccountId,
+      String linkedTransactionId,
+      TransferDescription transferDescription});
+}
+
+/// @nodoc
+class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
+    implements $TransferDetailsCopyWith<$Res> {
+  _$TransferDetailsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? linkedAccountId = null,
+    Object? linkedTransactionId = null,
+    Object? transferDescription = null,
+  }) {
+    return _then(_value.copyWith(
+      linkedAccountId: null == linkedAccountId
+          ? _value.linkedAccountId
+          : linkedAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkedTransactionId: null == linkedTransactionId
+          ? _value.linkedTransactionId
+          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      transferDescription: null == transferDescription
+          ? _value.transferDescription
+          : transferDescription // ignore: cast_nullable_to_non_nullable
+              as TransferDescription,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_TransferDetailsCopyWith<$Res>
+    implements $TransferDetailsCopyWith<$Res> {
+  factory _$$_TransferDetailsCopyWith(
+          _$_TransferDetails value, $Res Function(_$_TransferDetails) then) =
+      __$$_TransferDetailsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String linkedAccountId,
+      String linkedTransactionId,
+      TransferDescription transferDescription});
+}
+
+/// @nodoc
+class __$$_TransferDetailsCopyWithImpl<$Res>
+    extends _$TransferDetailsCopyWithImpl<$Res, _$_TransferDetails>
+    implements _$$_TransferDetailsCopyWith<$Res> {
+  __$$_TransferDetailsCopyWithImpl(
+      _$_TransferDetails _value, $Res Function(_$_TransferDetails) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? linkedAccountId = null,
+    Object? linkedTransactionId = null,
+    Object? transferDescription = null,
+  }) {
+    return _then(_$_TransferDetails(
+      linkedAccountId: null == linkedAccountId
+          ? _value.linkedAccountId
+          : linkedAccountId // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkedTransactionId: null == linkedTransactionId
+          ? _value.linkedTransactionId
+          : linkedTransactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      transferDescription: null == transferDescription
+          ? _value.transferDescription
+          : transferDescription // ignore: cast_nullable_to_non_nullable
+              as TransferDescription,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_TransferDetails extends _TransferDetails with DiagnosticableTreeMixin {
+  const _$_TransferDetails(
+      {required this.linkedAccountId,
+      required this.linkedTransactionId,
+      required this.transferDescription})
+      : assert(
+            linkedAccountId != null && linkedTransactionId != null ||
+                linkedAccountId == null && linkedTransactionId == null,
+            'Either provide all fields or none'),
+        super._();
+
+  @override
+  final String linkedAccountId;
+  @override
+  final String linkedTransactionId;
+  @override
+  final TransferDescription transferDescription;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'TransferDetails(linkedAccountId: $linkedAccountId, linkedTransactionId: $linkedTransactionId, transferDescription: $transferDescription)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'TransferDetails'))
+      ..add(DiagnosticsProperty('linkedAccountId', linkedAccountId))
+      ..add(DiagnosticsProperty('linkedTransactionId', linkedTransactionId))
+      ..add(DiagnosticsProperty('transferDescription', transferDescription));
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_TransferDetails &&
+            (identical(other.linkedAccountId, linkedAccountId) ||
+                other.linkedAccountId == linkedAccountId) &&
+            (identical(other.linkedTransactionId, linkedTransactionId) ||
+                other.linkedTransactionId == linkedTransactionId) &&
+            (identical(other.transferDescription, transferDescription) ||
+                other.transferDescription == transferDescription));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, linkedAccountId, linkedTransactionId, transferDescription);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
+      __$$_TransferDetailsCopyWithImpl<_$_TransferDetails>(this, _$identity);
+}
+
+abstract class _TransferDetails extends TransferDetails {
+  const factory _TransferDetails(
+          {required final String linkedAccountId,
+          required final String linkedTransactionId,
+          required final TransferDescription transferDescription}) =
+      _$_TransferDetails;
+  const _TransferDetails._() : super._();
+
+  @override
+  String get linkedAccountId;
+  @override
+  String get linkedTransactionId;
+  @override
+  TransferDescription get transferDescription;
+  @override
+  @JsonKey(ignore: true)
+  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
       throw _privateConstructorUsedError;
 }

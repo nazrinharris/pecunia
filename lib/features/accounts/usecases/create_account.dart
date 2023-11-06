@@ -26,17 +26,19 @@ class CreateAccount extends _$CreateAccount {
     final pecuniaUser = failureOrPecuniaUser.fold(
       (failure) {
         state = AsyncValue.error(failure, failure.stackTrace);
+        return;
       },
       (pecuniaUser) => pecuniaUser,
     );
 
-    if (pecuniaUser != null) {
+    if (pecuniaUser != null && pecuniaUser.isSome()) {
       debugPrint('user exists, creating account...');
       (await ref
               .read(accountsRepoProvider)
               .createAccount(
                 name: name,
-                creatorUid: pecuniaUser.uid,
+                // TODO: Make better exception
+                creatorUid: pecuniaUser.getOrElse(() => throw Exception()).uid,
                 initialBalance: initialBalance,
                 currency: currency,
                 desc: description,

@@ -1,6 +1,7 @@
 import 'package:pecunia/core/errors/txn_categories_errors/txn_categories_errors.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
+import 'package:pecunia/features/transactions/usecases/watch_all_writes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'get_categories_by_txn_id.g.dart';
@@ -19,6 +20,8 @@ Future<List<Category>> getCategoriesByTxnId(
       message: 'Categories of Transaction retrieval failed',
     ));
   }
+
+  watchAllWritesFutureProvider<List<Category>>(ref);
 
   return (await ref.read(transactionsRepoProvider).getCategoriesByTxnId(txnId).run()).fold(
     (l) => Future<List<Category>>.error(l, l.stackTrace),
