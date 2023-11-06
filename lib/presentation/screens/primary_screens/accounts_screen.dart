@@ -204,7 +204,7 @@ class AccountListTile extends ConsumerWidget {
               ),
               const Spacer(),
               Text(
-                '${account.currency.code} ${account.balance}',
+                '${account.currency.code} ${account.balance.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,

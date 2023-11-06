@@ -43,30 +43,22 @@ class AnalyticsScreen extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                Divider(
-                  color: Theme.of(context).dividerColor.withOpacity(0.2),
-                ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 4, bottom: 24, top: 14),
+                  padding: const EdgeInsets.only(left: 4, top: 14),
                   child: const Text(
-                    'Income',
+                    "This Month's Income",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 ),
                 AllIncomeChart(),
-                Divider(
-                  color: Theme.of(context).dividerColor.withOpacity(0.2),
-                ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 4, bottom: 24, top: 14),
+                  padding: const EdgeInsets.only(left: 4, top: 14),
                   child: const Text(
-                    'Expense',
+                    "This Month's Expense",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -120,60 +112,61 @@ class AllIncomeLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    txns.forEach((txn) {
-      print('Transaction ID: ${txn.id}, Transaction Amount: ${txn.fundDetails.transactionAmount}');
-    });
-
-    return AspectRatio(
-      aspectRatio: 1.7,
-      child: LineChart(
-        LineChartData(
-          lineTouchData: LineTouchData(enabled: false),
-          gridData: FlGridData(
-            horizontalInterval: 10,
-            verticalInterval: 10,
-            getDrawingHorizontalLine: (value) {
-              return FlLine(
-                color: Theme.of(context).dividerColor.withOpacity(0.2),
-                strokeWidth: 1,
-              );
-            },
-            getDrawingVerticalLine: (value) {
-              return FlLine(
-                color: Theme.of(context).dividerColor.withOpacity(0.2),
-                strokeWidth: 1,
-              );
-            },
-          ),
-          titlesData: FlTitlesData(
-            rightTitles: const AxisTitles(),
-            topTitles: const AxisTitles(),
-            bottomTitles: const AxisTitles(),
-          ),
-          borderData: FlBorderData(
-            show: false,
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: txns
-                  .map((e) => FlSpot(
-                        txns.indexOf(e).toDouble(),
-                        e.fundDetails.transactionAmount,
-                      ))
-                  .toList(),
-              barWidth: 3,
-              isStrokeCapRound: true,
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xff23b6e6),
-                  Color(0xff02d39a),
-                ],
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 34, bottom: 34, right: 14),
+        child: AspectRatio(
+          aspectRatio: 1.7,
+          child: BarChart(
+            BarChartData(
+              barTouchData: BarTouchData(),
+              gridData: FlGridData(
+                horizontalInterval: 10,
+                verticalInterval: 10,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: Theme.of(context).dividerColor.withOpacity(0.2),
+                    strokeWidth: 1,
+                  );
+                },
+                getDrawingVerticalLine: (value) {
+                  return FlLine(
+                    color: Theme.of(context).dividerColor.withOpacity(0.2),
+                    strokeWidth: 1,
+                  );
+                },
               ),
-              dotData: FlDotData(show: false),
+              titlesData: FlTitlesData(
+                rightTitles: const AxisTitles(),
+                topTitles: const AxisTitles(),
+                bottomTitles: const AxisTitles(),
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              barGroups: txns
+                  .map(
+                    (e) => BarChartGroupData(
+                      x: txns.indexOf(e),
+                      barRods: [
+                        BarChartRodData(
+                          toY: e.fundDetails.transactionAmount,
+                          color: Colors.green[300],
+                          width: 42,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(4),
+                            bottomRight: Radius.circular(4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -220,60 +213,61 @@ class AllExpenseLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    txns.forEach((txn) {
-      print('Transaction ID: ${txn.id}, Transaction Amount: ${txn.fundDetails.transactionAmount}');
-    });
-
-    return AspectRatio(
-      aspectRatio: 1.7,
-      child: LineChart(
-        LineChartData(
-          lineTouchData: LineTouchData(enabled: false),
-          gridData: FlGridData(
-            horizontalInterval: 10,
-            verticalInterval: 10,
-            getDrawingHorizontalLine: (value) {
-              return FlLine(
-                color: Theme.of(context).dividerColor.withOpacity(0.2),
-                strokeWidth: 1,
-              );
-            },
-            getDrawingVerticalLine: (value) {
-              return FlLine(
-                color: Theme.of(context).dividerColor.withOpacity(0.2),
-                strokeWidth: 1,
-              );
-            },
-          ),
-          titlesData: FlTitlesData(
-            rightTitles: const AxisTitles(),
-            topTitles: const AxisTitles(),
-            bottomTitles: const AxisTitles(),
-          ),
-          borderData: FlBorderData(
-            show: false,
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: txns
-                  .map((e) => FlSpot(
-                        txns.indexOf(e).toDouble(),
-                        e.fundDetails.transactionAmount,
-                      ))
-                  .toList(),
-              barWidth: 3,
-              isStrokeCapRound: true,
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xffFF0000),
-                  Color(0xff8B0000),
-                ],
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 34, bottom: 34, right: 14),
+        child: AspectRatio(
+          aspectRatio: 1.7,
+          child: BarChart(
+            BarChartData(
+              barTouchData: BarTouchData(),
+              gridData: FlGridData(
+                horizontalInterval: 10,
+                verticalInterval: 10,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: Theme.of(context).dividerColor.withOpacity(0.2),
+                    strokeWidth: 1,
+                  );
+                },
+                getDrawingVerticalLine: (value) {
+                  return FlLine(
+                    color: Theme.of(context).dividerColor.withOpacity(0.2),
+                    strokeWidth: 1,
+                  );
+                },
               ),
-              dotData: FlDotData(show: false),
+              titlesData: FlTitlesData(
+                rightTitles: const AxisTitles(),
+                topTitles: const AxisTitles(),
+                bottomTitles: const AxisTitles(),
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              barGroups: txns
+                  .map(
+                    (e) => BarChartGroupData(
+                      x: txns.indexOf(e),
+                      barRods: [
+                        BarChartRodData(
+                          toY: e.fundDetails.transactionAmount,
+                          color: Colors.red[300],
+                          width: 42,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(4),
+                            bottomRight: Radius.circular(4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
             ),
-          ],
+          ),
         ),
       ),
     );
