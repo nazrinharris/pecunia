@@ -54,4 +54,5 @@ class _PecuniaAppState extends State<PecuniaApp> {
 /// Comment for multi-currency and transfer feature - multi-currency-and-transfer-feature
 /// Comment for transaction categories feature - transaction-categories
 /// Comment for UI general usability - ui-general-usability
+/// Comment for version management - version-management
 
