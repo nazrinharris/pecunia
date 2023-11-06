@@ -2,6 +2,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/edit_account.dart';
+import 'package:pecunia/features/categories/usecases/delete_category.dart';
+import 'package:pecunia/features/categories/usecases/update_category.dart';
 import 'package:pecunia/features/transactions/usecases/create_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
 import 'package:pecunia/features/transactions/usecases/delete_transaction.dart';
@@ -19,7 +21,9 @@ void watchAllWritesAsyncNotifierProvider<T>(AutoDisposeAsyncNotifierProviderRef<
     ..watch(editTransactionProvider)
     ..watch(createTransferTransactionProvider)
     ..watch(deleteTransferTransactionProvider)
-    ..watch(editTransferTransactionProvider);
+    ..watch(editTransferTransactionProvider)
+    ..watch(updateCategoryProvider)
+    ..watch(deleteCategoryProvider);
 }
 
 void watchAllWritesFutureProvider<T>(AutoDisposeFutureProviderRef<T> ref) {
@@ -32,5 +36,7 @@ void watchAllWritesFutureProvider<T>(AutoDisposeFutureProviderRef<T> ref) {
     ..watch(editTransactionProvider)
     ..watch(createTransferTransactionProvider)
     ..watch(deleteTransferTransactionProvider)
-    ..watch(editTransferTransactionProvider);
+    ..watch(editTransferTransactionProvider)
+    ..watch(updateCategoryProvider)
+    ..watch(deleteCategoryProvider);
 }
