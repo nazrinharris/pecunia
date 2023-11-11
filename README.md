@@ -38,10 +38,6 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Multi-currency transactions.
 - [x] Transaction categories.
 - [ ] Basic UI capabilities (as in, similar looks and functionality to mockup) 
-
-(`0.1.1`)
-
-- [ ] Implement new backend, `pecunia-backend`, and remove dependence on `supabase`
 - [ ] Guest/Local Account
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
@@ -56,6 +52,9 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 
 (`0.2.1`)
 - [ ] UI Upgrade! (Turn it into what it should've looked like)
+
+(`0.2.2`) (possible)
+- [ ] Implement custom backend, `pecunia-backend`
 
 ### 😋 Phase 3: Quality of Life Improvements
 

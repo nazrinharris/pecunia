@@ -2,7 +2,7 @@ name: pecunia
 description: A Personal Finance Management App.
 publish_to: "none"
 
-version: 1.0.0+1
+version: 0.1.0+1
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -40,8 +40,9 @@ dependencies:
   # Functional Programming
   fpdart: ^0.6.0
 
-  # Connectivity
+  # Connectivity and Application Info
   internet_connection_checker_plus: ^1.0.1
+  package_info_plus: ^4.2.0
 
   # Icons and Splash
   cupertino_icons: ^1.0.2

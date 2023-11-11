@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
@@ -77,12 +78,86 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.bug_report),
             title: Text('Navigate to Debug Mode', style: Theme.of(context).textTheme.bodyMedium),
             onTap: () {
-              context.pushNamed('debug-login');
+              ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                    title: 'Navigate to Debug Mode?',
+                    message: 'This is only for testing purposes. Functionality is not guaranteed.',
+                    onConfirm: () {
+                      context.pushNamed('debug-login');
+                    },
+                    icon: Icon(Icons.bug_report, color: Theme.of(context).colorScheme.error),
+                    context: context,
+                  );
             },
           ),
           const Divider(),
+          const PecuniaAppMetadata(),
         ],
       ),
     );
+  }
+}
+
+class PecuniaAppMetadata extends ConsumerWidget {
+  const PecuniaAppMetadata({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final packageInfoValue = ref.watch(packageInfoProvider);
+
+    return switch (packageInfoValue) {
+      AsyncLoading() => const SizedBox.shrink(),
+      AsyncError(:final Exception error) => Container(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 64),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Text(
+                'Pecunia',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize! + 4,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Text(
+                error.toString(),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize! - 2,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      AsyncData(value: final packageInfo) => Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Text(
+                packageInfo.appName,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize! + 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Text(
+                packageInfo.packageName,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5),
+                    ),
+              ),
+              Text(
+                'Version ${packageInfo.version}+${packageInfo.buildNumber}',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5),
+                    ),
+              ),
+            ],
+          ),
+        ),
+      _ => const SizedBox.shrink(),
+    };
   }
 }
