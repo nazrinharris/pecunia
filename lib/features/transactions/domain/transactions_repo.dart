@@ -153,12 +153,14 @@ class TransactionsRepo {
     required DateTime endDate,
     required TransactionType type,
     required Currency currency,
+    bool includeTransfers = false,
   }) {
     return transactionsLocalDAO.getTxnsOverPeriod(
       startDate: startDate,
       endDate: endDate,
       type: type,
       currency: currency,
+      includeTransfers: includeTransfers,
     );
   }
 }
