@@ -337,7 +337,10 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     return TaskEither.tryCatch(
       () async {
         return (select(transactionsTable)
-              ..where((tbl) => tbl.transactionType.equals(TransactionType.credit.typeAsString)))
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.credit.typeAsString))
+              ..where(
+                (tbl) => tbl.linkedAccountId.isNull() & tbl.linkedTransactionId.isNull(),
+              ))
             .get()
             .then((value) => value.map(Transaction.fromDTO).toList());
       },
@@ -349,7 +352,10 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     return TaskEither.tryCatch(
       () async {
         return (select(transactionsTable)
-              ..where((tbl) => tbl.transactionType.equals(TransactionType.debit.typeAsString)))
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.debit.typeAsString))
+              ..where(
+                (tbl) => tbl.linkedAccountId.isNull() & tbl.linkedTransactionId.isNull(),
+              ))
             .get()
             .then((value) => value.map(Transaction.fromDTO).toList());
       },
