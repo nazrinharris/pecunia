@@ -15,6 +15,7 @@ import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
+import 'package:pecunia/presentation/widgets/common/scale_button.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_transfer_txn_form_widget.dart';
 import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_widget.dart';
@@ -211,7 +212,7 @@ class AccountDetails extends ConsumerWidget {
             const SizedBox(height: 14),
             SafeArea(child: AccountMetadataCard(account)),
             const SizedBox(height: 4),
-            SafeArea(child: AccountActionsGrid(account)),
+            SafeArea(child: AccountActions(account)),
             SafeArea(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -497,28 +498,56 @@ void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
       });
 }
 
-class AccountActionsGrid extends ConsumerWidget {
-  const AccountActionsGrid(this.account, {super.key});
+class AccountActions extends ConsumerWidget {
+  const AccountActions(this.account, {super.key});
 
   final Account account;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      child: GridView.count(
-        shrinkWrap: true,
-        crossAxisCount: 5,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-            color: Colors.green[900]!.withOpacity(0.1),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(18),
-              onTap: () {
-                showCreateTxnBottomSheet(context, true, account: account);
-              },
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth < 470) {
+          return SizedBox(
+            height: 94,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              children: [
+                BuildAccountActionsGrid(account: account),
+              ],
+            ),
+          );
+        }
+
+        return BuildAccountActionsGrid(account: account);
+      }),
+    );
+  }
+}
+
+class BuildAccountActionsGrid extends ConsumerWidget {
+  const BuildAccountActionsGrid({
+    required this.account,
+    super.key,
+  });
+
+  final Account account;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 94,
+          width: 94,
+          child: ScaleButton(
+            onTap: () => showCreateTxnBottomSheet(context, true, account: account),
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              color: Colors.green[900]!.withOpacity(0.1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -527,14 +556,15 @@ class AccountActionsGrid extends ConsumerWidget {
               ),
             ),
           ),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-            color: Colors.red[900]!.withOpacity(0.1),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(18),
-              onTap: () {
-                showCreateTxnBottomSheet(context, false, account: account);
-              },
+        ),
+        SizedBox(
+          height: 94,
+          width: 94,
+          child: ScaleButton(
+            onTap: () => showCreateTxnBottomSheet(context, false, account: account),
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              color: Colors.red[900]!.withOpacity(0.1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -543,14 +573,15 @@ class AccountActionsGrid extends ConsumerWidget {
               ),
             ),
           ),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-            color: Colors.blue[900]!.withOpacity(0.1),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(18),
-              onTap: () {
-                showCreateTransferTxnBottomSheet(context, account);
-              },
+        ),
+        SizedBox(
+          height: 94,
+          width: 94,
+          child: ScaleButton(
+            onTap: () => showCreateTransferTxnBottomSheet(context, account),
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              color: Colors.blue[900]!.withOpacity(0.1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -559,36 +590,38 @@ class AccountActionsGrid extends ConsumerWidget {
               ),
             ),
           ),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-            color: Colors.purple[900]!.withOpacity(0.1),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(18),
-              onTap: () {
-                context.pushNamed('debug-edit-account', extra: account);
-              },
+        ),
+        SizedBox(
+          height: 94,
+          width: 94,
+          child: ScaleButton(
+            onTap: () => context.pushNamed('debug-edit-account', extra: account),
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              color: Colors.purple[900]!.withOpacity(0.1),
               child: Icon(CupertinoIcons.pencil, color: Colors.purple[100], size: 32),
             ),
           ),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-            color: Colors.red[900]!.withOpacity(0.1),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(18),
-              onTap: () {
-                ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                    title: 'Are you sure you want to delete this account?',
-                    message: 'This is irreversible',
-                    onConfirm: () {
-                      ref.read(deleteAccountProvider.notifier).deleteAccount(account);
-                    },
-                    context: context);
-              },
+        ),
+        SizedBox(
+          height: 94,
+          width: 94,
+          child: ScaleButton(
+            onTap: () => ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                title: 'Are you sure you want to delete this account?',
+                message: 'This is irreversible',
+                onConfirm: () {
+                  ref.read(deleteAccountProvider.notifier).deleteAccount(account);
+                },
+                context: context),
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              color: Colors.red[900]!.withOpacity(0.1),
               child: Icon(Icons.delete_forever, color: Colors.red[100], size: 30),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
