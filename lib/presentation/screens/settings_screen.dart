@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
-import 'package:pecunia/features/auth/domain/auth_repo.dart';
-import 'package:pecunia/features/auth/domain/entities/session.dart';
+import 'package:pecunia/features/auth/usecases/logout.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -65,9 +64,8 @@ class SettingsScreen extends ConsumerWidget {
               ref.read(pecuniaDialogsProvider).showConfirmationDialog(
                     title: 'Are you sure you want to logout?',
                     icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
-                    onConfirm: () {
-                      ref.read(authRepoProvider).logout(const Session(isValid: true));
-                      context.goNamed('start');
+                    onConfirm: () async {
+                      await ref.read(logoutProvider.future).then((value) => context.goNamed('start'));
                     },
                     context: context,
                   );

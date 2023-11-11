@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EntryScreen extends StatefulHookConsumerWidget {
   const EntryScreen({super.key});
@@ -24,7 +25,15 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         if (result.isSome()) {
           context.goNamed('main');
         } else {
-          context.goNamed('start');
+          final shared = await SharedPreferences.getInstance();
+          final isFirstOpen = shared.getBool('is_first_open') ?? true;
+
+          if (isFirstOpen) {
+            await shared.setBool('is_first_open', false);
+            context.goNamed('onboarding');
+          } else {
+            context.goNamed('start');
+          }
         }
       });
     }

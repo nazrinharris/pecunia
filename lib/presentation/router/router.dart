@@ -12,6 +12,7 @@ import 'package:pecunia/presentation/screens/auth/register_screen.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories_screen.dart';
 import 'package:pecunia/presentation/screens/entry_screen.dart';
 import 'package:pecunia/presentation/screens/main_screen.dart';
+import 'package:pecunia/presentation/screens/onboarding_screen.dart';
 import 'package:pecunia/presentation/screens/settings_screen.dart';
 import 'package:pecunia/presentation/screens/start_screen.dart';
 import 'package:pecunia/presentation/screens/transactions/recent_txns_screen.dart';
@@ -26,6 +27,11 @@ final router = GoRouter(
       path: '/start',
       name: 'start',
       builder: (context, state) => const StartScreen(),
+    ),
+    GoRoute(
+      path: '/onboarding',
+      name: 'onboarding',
+      builder: (context, state) => const OnboardingScreen(),
     ),
     GoRoute(
       path: '/login',
