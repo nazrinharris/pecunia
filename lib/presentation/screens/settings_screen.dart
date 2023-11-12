@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
 import 'package:pecunia/features/auth/usecases/logout.dart';
+import 'package:pecunia/presentation/screens/onboarding_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -48,6 +49,13 @@ class SettingsScreen extends ConsumerWidget {
             title: Text('Change Password', style: Theme.of(context).textTheme.bodyMedium),
             onTap: () {
               // TODO: Implement change password functionality
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.verified_outlined),
+            title: Text("Show what's new in this version", style: Theme.of(context).textTheme.bodyMedium),
+            onTap: () {
+              showOnboardingBottomSheet(context);
             },
           ),
           ListTile(

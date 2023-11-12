@@ -17,6 +17,33 @@ import 'package:pecunia/features/transactions/usecases/create_transfer_transacti
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:screwdriver/screwdriver.dart';
 
+void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
+  showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      showDragHandle: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(44),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CreateTransferTxnForm(
+                  defaultSourceAccount: account,
+                ),
+                const SizedBox(height: 64),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
 class CreateTransferTxnFields {
   static String? validateTransferDescription(String? val) {
     if (val != null && val.length > 500) {

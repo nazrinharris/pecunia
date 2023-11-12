@@ -471,33 +471,6 @@ class AccountMetadataCard extends ConsumerWidget {
   }
 }
 
-void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
-  showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      showDragHandle: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(44),
-      ),
-      builder: (context) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CreateTransferTxnForm(
-                  defaultSourceAccount: account,
-                ),
-                const SizedBox(height: 64),
-              ],
-            ),
-          ),
-        );
-      });
-}
-
 class AccountActions extends ConsumerWidget {
   const AccountActions(this.account, {super.key});
 
@@ -508,9 +481,9 @@ class AccountActions extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth < 470) {
+        if (constraints.maxWidth < 420) {
           return SizedBox(
-            height: 94,
+            height: 84,
             child: ListView(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
@@ -541,8 +514,8 @@ class BuildAccountActionsGrid extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 94,
-          width: 94,
+          height: 84,
+          width: 84,
           child: ScaleButton(
             onTap: () => showCreateTxnBottomSheet(context, true, account: account),
             child: Card(
@@ -558,8 +531,8 @@ class BuildAccountActionsGrid extends ConsumerWidget {
           ),
         ),
         SizedBox(
-          height: 94,
-          width: 94,
+          height: 84,
+          width: 84,
           child: ScaleButton(
             onTap: () => showCreateTxnBottomSheet(context, false, account: account),
             child: Card(
@@ -575,8 +548,8 @@ class BuildAccountActionsGrid extends ConsumerWidget {
           ),
         ),
         SizedBox(
-          height: 94,
-          width: 94,
+          height: 84,
+          width: 84,
           child: ScaleButton(
             onTap: () => showCreateTransferTxnBottomSheet(context, account),
             child: Card(
@@ -592,8 +565,8 @@ class BuildAccountActionsGrid extends ConsumerWidget {
           ),
         ),
         SizedBox(
-          height: 94,
-          width: 94,
+          height: 84,
+          width: 84,
           child: ScaleButton(
             onTap: () => context.pushNamed('debug-edit-account', extra: account),
             child: Card(
@@ -604,8 +577,8 @@ class BuildAccountActionsGrid extends ConsumerWidget {
           ),
         ),
         SizedBox(
-          height: 94,
-          width: 94,
+          height: 84,
+          width: 84,
           child: ScaleButton(
             onTap: () => ref.read(pecuniaDialogsProvider).showConfirmationDialog(
                 title: 'Are you sure you want to delete this account?',

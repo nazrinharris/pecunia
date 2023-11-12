@@ -62,6 +62,7 @@ dependencies:
   sprung: ^3.0.1
   flutter_speed_dial: ^7.0.0
   fl_chart: ^0.63.0
+  page_view_dot_indicator: ^2.3.0
 
   # Convenience
   screwdriver: ^4.1.0

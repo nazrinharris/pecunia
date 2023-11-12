@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_animation_text/flutter_gradient_animation_text.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class StartScreen extends HookWidget {
@@ -319,7 +320,18 @@ class AuthButtons extends StatelessWidget {
                   control.value = Control.play;
                 },
                 icon: const Icon(Icons.restart_alt_rounded),
-              )
+              ),
+              const SizedBox(width: 14),
+              IconButton(
+                onPressed: () async {
+                  final shared = await SharedPreferences.getInstance();
+                  await shared.setBool('is_first_open', true);
+                  debugPrint('is_first_open set to true');
+                  // ignore: use_build_context_synchronously
+                  context.goNamed('onboarding');
+                },
+                icon: const Icon(Icons.verified_user_outlined),
+              ),
             ],
           ),
         ),

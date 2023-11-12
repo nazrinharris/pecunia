@@ -18,6 +18,7 @@ import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/presentation/screens/primary_screens/accounts_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
@@ -127,6 +128,25 @@ class DebugLocalDBScreen extends ConsumerWidget {
                                 );
                           },
                           child: const Text('Delete All Txn-Category Entries'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ButtonTheme(
+                        minWidth: 0,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Colors.orange[900]!.withOpacity(0.6)),
+                          ),
+                          onPressed: () async {
+                            final shared = await SharedPreferences.getInstance();
+                            await shared.setBool('is_first_open', true);
+                            debugPrint('is_first_open set to true');
+                          },
+                          child: const Text('Reset is_first_open'),
                         ),
                       ),
                     ],
