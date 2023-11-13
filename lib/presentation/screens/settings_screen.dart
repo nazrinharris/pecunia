@@ -62,14 +62,41 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.privacy_tip),
             title: Text('Privacy Policy', style: Theme.of(context).textTheme.bodyMedium),
             onTap: () {
-              // TODO: Implement navigation to privacy policy
+              showDialog<void>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Privacy Policy'),
+                  content: const Text('No privacy policy yet.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
             },
           ),
           ListTile(
             leading: const Icon(Icons.gavel),
             title: Text('Terms and Conditions', style: Theme.of(context).textTheme.bodyMedium),
             onTap: () {
-              // TODO: Implement navigation to terms and conditions
+              showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: const Text('Terms and Conditions'),
+                        content: const Text('No terms and conditions yet.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              context.pop();
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ));
             },
           ),
           ListTile(
