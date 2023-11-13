@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/features/app_info/app_info.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -16,7 +17,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showOnboardingBottomSheet(context).then((_) => context.goNamed('start'));
+      showOnboardingBottomSheet(context).then((_) {
+        context.goNamed('start');
+        ref.read(setIsFirstOpenProvider(false));
+      });
     });
   }
 
@@ -41,7 +45,7 @@ class OnboardingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 64),
+      padding: EdgeInsets.symmetric(horizontal: 44),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -76,11 +80,13 @@ Future<void> showOnboardingBottomSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
+    isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(44)),
     ),
     builder: (context) {
-      return SizedBox(
+      return SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
           child: Container(
@@ -172,6 +178,7 @@ Future<void> showOnboardingBottomSheet(BuildContext context) {
                   subtitle: 'So that you can see how much you spent on coffee.',
                   icon: Icons.sell,
                 ),
+                const SizedBox(height: 84),
               ],
             ),
           ),

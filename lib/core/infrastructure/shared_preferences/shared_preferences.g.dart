@@ -7,7 +7,7 @@ part of 'shared_preferences.dart';
 // **************************************************************************
 
 String _$pecuniaSharedPreferencesHash() =>
-    r'83b442d1f8b3a316aad7b4a609f82cf9d2e1c24b';
+    r'7614611d9d68d3ce49fdb14044e28bca5ae644ca';
 
 /// See also [PecuniaSharedPreferences].
 @ProviderFor(PecuniaSharedPreferences)

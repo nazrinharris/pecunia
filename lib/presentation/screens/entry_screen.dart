@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/features/app_info/app_info.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class EntryScreen extends StatefulHookConsumerWidget {
   const EntryScreen({super.key});
@@ -25,15 +26,18 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         if (result.isSome()) {
           context.goNamed('main');
         } else {
-          final shared = await SharedPreferences.getInstance();
-          final isFirstOpen = shared.getBool('is_first_open') ?? true;
-
-          if (isFirstOpen) {
-            await shared.setBool('is_first_open', false);
-            context.goNamed('onboarding');
-          } else {
-            context.goNamed('start');
-          }
+          ref.watch(getIsFirstOpenProvider).whenData((isFirstOpen) {
+            isFirstOpen.fold(
+              () => debugPrint('Not First Open'),
+              (isFirstOpen) {
+                if (isFirstOpen) {
+                  context.goNamed('onboarding');
+                } else {
+                  context.goNamed('start');
+                }
+              },
+            );
+          });
         }
       });
     }
@@ -41,6 +45,48 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(
+      getIsFirstOpenProvider,
+      (previous, next) {
+        switch (next) {
+          case AsyncError(:final Failure error):
+            showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title:
+                    const Text('Oops! We encountered an issue while setting up your app for the first time'),
+                content: Text(error.message),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ).then((value) => context.goNamed('start'));
+          case AsyncError(:final Exception error):
+            showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title:
+                    const Text('Oops! We encountered an issue while setting up your app for the first time'),
+                content: Text(error.toString()),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ).then((value) => context.goNamed('start'));
+        }
+      },
+    );
+
     return const Scaffold(
       body: Center(
         child: SizedBox.shrink(),

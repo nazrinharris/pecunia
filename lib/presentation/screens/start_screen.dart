@@ -189,6 +189,56 @@ class WelcomeText extends StatelessWidget {
               duration: const Duration(seconds: 5),
               transform: const GradientRotation(math.pi / 4)),
         ),
+        CustomAnimationBuilder(
+          control: control.value,
+          tween: MovieTween()
+            ..tween(
+              'opacity',
+              Tween<double>(begin: 0, end: 1),
+              curve: Curves.easeOutCubic,
+              duration: const Duration(milliseconds: 500),
+            )
+            ..tween(
+              'position',
+              Tween<Offset>(begin: const Offset(0, 70), end: Offset.zero),
+              curve: Curves.easeOutCubic,
+              duration: const Duration(milliseconds: 500),
+            )
+            ..tween(
+              'scale',
+              Tween<double>(begin: 1.2, end: 1),
+              curve: Curves.easeOutCubic,
+              duration: const Duration(milliseconds: 500),
+            ),
+          duration: const Duration(milliseconds: 1000),
+          delay: const Duration(milliseconds: 700),
+          builder: (context, value, child) {
+            return Opacity(
+              opacity: value.get('opacity'),
+              child: Transform.translate(
+                offset: value.get('position'),
+                child: Transform.scale(
+                  scale: value.get('scale'),
+                  child: child,
+                ),
+              ),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.error,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Text(
+              'BETA',
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.onError,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -328,9 +378,9 @@ class AuthButtons extends StatelessWidget {
                   await shared.setBool('is_first_open', true);
                   debugPrint('is_first_open set to true');
                   // ignore: use_build_context_synchronously
-                  context.goNamed('onboarding');
+                  context.go('/');
                 },
-                icon: const Icon(Icons.verified_user_outlined),
+                icon: const Icon(Icons.verified_outlined),
               ),
             ],
           ),
