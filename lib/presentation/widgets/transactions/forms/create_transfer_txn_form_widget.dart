@@ -36,7 +36,7 @@ void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
                 CreateTransferTxnForm(
                   defaultSourceAccount: account,
                 ),
-                const SizedBox(height: 64),
+                const SizedBox(height: 94),
               ],
             ),
           ),

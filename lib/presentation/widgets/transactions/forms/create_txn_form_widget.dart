@@ -50,7 +50,7 @@ void showCreateTxnBottomSheet(
                   accountsList: accountsList,
                   initialTransactionType: isCredit ? TransactionType.credit : TransactionType.debit,
                 ),
-                const SizedBox(height: 64),
+                const SizedBox(height: 94),
               ],
             ),
           ),

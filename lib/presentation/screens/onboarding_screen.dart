@@ -45,7 +45,7 @@ class OnboardingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 44),
+      padding: EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -105,7 +105,7 @@ Future<void> showOnboardingBottomSheet(BuildContext context) {
                             children: [
                               Text(
                                 "What's new in",
-                                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                       color:
                                           Theme.of(context).textTheme.headlineSmall!.color!.withOpacity(0.5),
                                     ),
@@ -115,7 +115,6 @@ Future<void> showOnboardingBottomSheet(BuildContext context) {
                                   text: 'Pecunia',
                                   style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 48,
                                         color: Theme.of(context).colorScheme.primary,
                                       ),
                                   children: [
@@ -123,7 +122,6 @@ Future<void> showOnboardingBottomSheet(BuildContext context) {
                                       text: ' v0.1.0+1',
                                       style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 48,
                                           ),
                                     ),
                                   ],
@@ -137,11 +135,13 @@ Future<void> showOnboardingBottomSheet(BuildContext context) {
                           onPressed: () {
                             context.pop();
                           },
-                          child: Text('Skip'))
+                          child: Text('Done'))
                     ],
                   ),
                 ),
-                const SizedBox(height: 44),
+                const SizedBox(height: 14),
+                Divider(color: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
+                const SizedBox(height: 14),
                 OnboardingItem(
                   title: 'Remote and local user accounts',
                   subtitle:

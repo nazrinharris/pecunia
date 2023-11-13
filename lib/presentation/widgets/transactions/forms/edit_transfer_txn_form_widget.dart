@@ -40,7 +40,7 @@ void showEditTransferTxnBottomSheet(
                   txn: txn,
                   linkedTxn: linkedTxn,
                 ),
-                const SizedBox(height: 64),
+                const SizedBox(height: 94),
               ],
             ),
           ),

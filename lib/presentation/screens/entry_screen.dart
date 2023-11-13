@@ -26,18 +26,21 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         if (result.isSome()) {
           context.goNamed('main');
         } else {
-          ref.watch(getIsFirstOpenProvider).whenData((isFirstOpen) {
-            isFirstOpen.fold(
-              () => debugPrint('Not First Open'),
-              (isFirstOpen) {
-                if (isFirstOpen) {
-                  context.goNamed('onboarding');
-                } else {
-                  context.goNamed('start');
-                }
-              },
-            );
-          });
+          debugPrint('No user logged in, checking if first open');
+          try {
+            (await ref.watch(getIsFirstOpenProvider.future)).fold(() => null, (isFirstOpen) {
+              if (isFirstOpen) {
+                debugPrint('First open, showing onboarding');
+                context.goNamed('onboarding');
+              } else {
+                debugPrint('Not first open, showing start');
+                context.goNamed('start');
+              }
+            });
+          } catch (e) {
+            // Error is handled in the ref.listen
+            debugPrint('Error while checking if first open: $e');
+          }
         }
       });
     }
