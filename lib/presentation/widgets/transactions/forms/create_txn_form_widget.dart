@@ -530,7 +530,7 @@ class BaseAmountField extends HookConsumerWidget {
       controller: baseAmountController,
       validator: CreateTxnFields.validateBaseAmount,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: const InputDecoration(
         labelText: 'Amount',
         hintText: 'Enter amount',
@@ -578,7 +578,7 @@ class ExchangeRateField extends HookConsumerWidget {
     return TextFormField(
       controller: exchangeRateController,
       enabled: false,
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: const InputDecoration(
         labelText: 'Exchange Rate (optional)',
         hintText: 'Just fill amount & target amount',
@@ -613,7 +613,7 @@ class TargetAmountField extends HookConsumerWidget {
       controller: targetAmountController,
       validator: CreateTxnFields.validateTargetAmount,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: const InputDecoration(
         labelText: 'Target Amount',
         hintText: 'Enter the target amount',

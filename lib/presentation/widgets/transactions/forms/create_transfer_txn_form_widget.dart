@@ -384,7 +384,7 @@ class SourceAmountField extends HookConsumerWidget {
             child: TextFormField(
           controller: sourceController,
           decoration: const InputDecoration(hintText: 'Enter amount'),
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
           validator: CreateTransferTxnFields.validateTransferAmount,
           autovalidateMode: AutovalidateMode.onUserInteraction,
         )),
@@ -431,7 +431,7 @@ class DestinationAmountField extends HookConsumerWidget {
             child: TextFormField(
           controller: destinationController,
           decoration: const InputDecoration(hintText: 'Enter amount'),
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
           validator: CreateTransferTxnFields.validateTransferAmount,
           autovalidateMode: AutovalidateMode.onUserInteraction,
         )),
