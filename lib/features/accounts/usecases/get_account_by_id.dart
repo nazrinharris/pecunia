@@ -1,6 +1,7 @@
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/features/accounts/domain/accounts_repo.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
+import 'package:pecunia/features/transactions/usecases/watch_all_writes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'get_account_by_id.g.dart';
@@ -16,6 +17,8 @@ Future<Account> getAccountById(GetAccountByIdRef ref, String accountId, {bool? d
       message: 'Account retrieval failed',
     ));
   }
+
+  watchAllWritesFutureProvider<Account>(ref);
 
   return (await ref.read(accountsRepoProvider).getAccountById(accountId).run()).fold(
     (l) => Future<Account>.error(l, l.stackTrace),

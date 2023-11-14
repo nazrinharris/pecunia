@@ -1,4 +1,5 @@
 import 'package:drift_db_viewer/drift_db_viewer.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
@@ -12,6 +13,7 @@ import 'package:pecunia/presentation/screens/auth/register_screen.dart';
 import 'package:pecunia/presentation/screens/categories/view_all_categories_screen.dart';
 import 'package:pecunia/presentation/screens/entry_screen.dart';
 import 'package:pecunia/presentation/screens/main_screen.dart';
+import 'package:pecunia/presentation/screens/onboarding_screen.dart';
 import 'package:pecunia/presentation/screens/settings_screen.dart';
 import 'package:pecunia/presentation/screens/start_screen.dart';
 import 'package:pecunia/presentation/screens/transactions/recent_txns_screen.dart';
@@ -20,12 +22,44 @@ final router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const EntryScreen(),
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: const EntryScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+            child: child,
+          );
+        },
+      ),
     ),
     GoRoute(
       path: '/start',
       name: 'start',
-      builder: (context, state) => const StartScreen(),
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: const StartScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    ),
+    GoRoute(
+      path: '/onboarding',
+      name: 'onboarding',
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: const OnboardingScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+            child: child,
+          );
+        },
+      ),
     ),
     GoRoute(
       path: '/login',
@@ -40,7 +74,16 @@ final router = GoRouter(
     GoRoute(
       path: '/main',
       name: 'main',
-      builder: (context, state) => const MainScreen(),
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: state.pageKey,
+        child: const MainScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+            child: child,
+          );
+        },
+      ),
     ),
     GoRoute(
       path: '/settings',

@@ -6,7 +6,7 @@ part of 'get_txns_over_period.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getTxnsOverPeriodHash() => r'6e0da0c333079539c26f3fc393729b002ca30a3b';
+String _$getTxnsOverPeriodHash() => r'704a79da56636ffd8f92a6758507a1116d1fc04b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -46,12 +46,14 @@ class GetTxnsOverPeriodFamily extends Family<AsyncValue<List<Transaction>>> {
     required DateTime endDate,
     required TransactionType type,
     required Currency currency,
+    bool includeTransfers = false,
   }) {
     return GetTxnsOverPeriodProvider(
       startDate: startDate,
       endDate: endDate,
       type: type,
       currency: currency,
+      includeTransfers: includeTransfers,
     );
   }
 
@@ -64,6 +66,7 @@ class GetTxnsOverPeriodFamily extends Family<AsyncValue<List<Transaction>>> {
       endDate: provider.endDate,
       type: provider.type,
       currency: provider.currency,
+      includeTransfers: provider.includeTransfers,
     );
   }
 
@@ -91,6 +94,7 @@ class GetTxnsOverPeriodProvider
     required this.endDate,
     required this.type,
     required this.currency,
+    this.includeTransfers = false,
   }) : super.internal(
           (ref) => getTxnsOverPeriod(
             ref,
@@ -98,6 +102,7 @@ class GetTxnsOverPeriodProvider
             endDate: endDate,
             type: type,
             currency: currency,
+            includeTransfers: includeTransfers,
           ),
           from: getTxnsOverPeriodProvider,
           name: r'getTxnsOverPeriodProvider',
@@ -114,6 +119,7 @@ class GetTxnsOverPeriodProvider
   final DateTime endDate;
   final TransactionType type;
   final Currency currency;
+  final bool includeTransfers;
 
   @override
   bool operator ==(Object other) {
@@ -121,7 +127,8 @@ class GetTxnsOverPeriodProvider
         other.startDate == startDate &&
         other.endDate == endDate &&
         other.type == type &&
-        other.currency == currency;
+        other.currency == currency &&
+        other.includeTransfers == includeTransfers;
   }
 
   @override
@@ -131,6 +138,7 @@ class GetTxnsOverPeriodProvider
     hash = _SystemHash.combine(hash, endDate.hashCode);
     hash = _SystemHash.combine(hash, type.hashCode);
     hash = _SystemHash.combine(hash, currency.hashCode);
+    hash = _SystemHash.combine(hash, includeTransfers.hashCode);
 
     return _SystemHash.finish(hash);
   }

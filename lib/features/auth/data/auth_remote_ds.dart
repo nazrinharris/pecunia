@@ -167,6 +167,7 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
       return isConnected
           ? TaskEither.tryCatch(
               () async {
+                print('Logging out...');
                 await supabaseClient.auth.signOut();
                 return currentSession.copyWith(isValid: false);
               },

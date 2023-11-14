@@ -13,17 +13,18 @@ Future<List<Transaction>> getTxnsOverPeriod(
   required DateTime endDate,
   required TransactionType type,
   required Currency currency,
+  bool includeTransfers = false,
 }) async {
   watchAllWritesFutureProvider<List<Transaction>>(ref);
 
   return (await ref
           .read(transactionsRepoProvider)
           .getTxnsOverPeriod(
-            startDate: startDate,
-            endDate: endDate,
-            type: type,
-            currency: currency,
-          )
+              startDate: startDate,
+              endDate: endDate,
+              type: type,
+              currency: currency,
+              includeTransfers: includeTransfers)
           .run())
       .fold(
     (l) => Future<List<Transaction>>.error(l, l.stackTrace),

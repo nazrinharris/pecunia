@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_account_by_id.dart';
+part of 'get_account_by_id_and_all_accounts.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAccountByIdHash() => r'0a93fc02dbd20830f783f71b4eec23bdd2563d8b';
+String _$getAccountByIdAndAllAccountsHash() =>
+    r'230982f998d581cf5a3e9786f8c37a9b81a82ccc';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,35 +30,35 @@ class _SystemHash {
   }
 }
 
-typedef GetAccountByIdRef = AutoDisposeFutureProviderRef<Account>;
+typedef GetAccountByIdAndAllAccountsRef = AutoDisposeFutureProviderRef<
+    ({Account account, List<Account> accountsList})>;
 
-/// See also [getAccountById].
-@ProviderFor(getAccountById)
-const getAccountByIdProvider = GetAccountByIdFamily();
+/// See also [getAccountByIdAndAllAccounts].
+@ProviderFor(getAccountByIdAndAllAccounts)
+const getAccountByIdAndAllAccountsProvider =
+    GetAccountByIdAndAllAccountsFamily();
 
-/// See also [getAccountById].
-class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
-  /// See also [getAccountById].
-  const GetAccountByIdFamily();
+/// See also [getAccountByIdAndAllAccounts].
+class GetAccountByIdAndAllAccountsFamily extends Family<
+    AsyncValue<({Account account, List<Account> accountsList})>> {
+  /// See also [getAccountByIdAndAllAccounts].
+  const GetAccountByIdAndAllAccountsFamily();
 
-  /// See also [getAccountById].
-  GetAccountByIdProvider call(
-    String accountId, {
-    bool? debugReturnError,
-  }) {
-    return GetAccountByIdProvider(
+  /// See also [getAccountByIdAndAllAccounts].
+  GetAccountByIdAndAllAccountsProvider call(
+    String accountId,
+  ) {
+    return GetAccountByIdAndAllAccountsProvider(
       accountId,
-      debugReturnError: debugReturnError,
     );
   }
 
   @override
-  GetAccountByIdProvider getProviderOverride(
-    covariant GetAccountByIdProvider provider,
+  GetAccountByIdAndAllAccountsProvider getProviderOverride(
+    covariant GetAccountByIdAndAllAccountsProvider provider,
   ) {
     return call(
       provider.accountId,
-      debugReturnError: provider.debugReturnError,
     );
   }
 
@@ -73,47 +74,43 @@ class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getAccountByIdProvider';
+  String? get name => r'getAccountByIdAndAllAccountsProvider';
 }
 
-/// See also [getAccountById].
-class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
-  /// See also [getAccountById].
-  GetAccountByIdProvider(
-    this.accountId, {
-    this.debugReturnError,
-  }) : super.internal(
-          (ref) => getAccountById(
+/// See also [getAccountByIdAndAllAccounts].
+class GetAccountByIdAndAllAccountsProvider extends AutoDisposeFutureProvider<
+    ({Account account, List<Account> accountsList})> {
+  /// See also [getAccountByIdAndAllAccounts].
+  GetAccountByIdAndAllAccountsProvider(
+    this.accountId,
+  ) : super.internal(
+          (ref) => getAccountByIdAndAllAccounts(
             ref,
             accountId,
-            debugReturnError: debugReturnError,
           ),
-          from: getAccountByIdProvider,
-          name: r'getAccountByIdProvider',
+          from: getAccountByIdAndAllAccountsProvider,
+          name: r'getAccountByIdAndAllAccountsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getAccountByIdHash,
-          dependencies: GetAccountByIdFamily._dependencies,
+                  : _$getAccountByIdAndAllAccountsHash,
+          dependencies: GetAccountByIdAndAllAccountsFamily._dependencies,
           allTransitiveDependencies:
-              GetAccountByIdFamily._allTransitiveDependencies,
+              GetAccountByIdAndAllAccountsFamily._allTransitiveDependencies,
         );
 
   final String accountId;
-  final bool? debugReturnError;
 
   @override
   bool operator ==(Object other) {
-    return other is GetAccountByIdProvider &&
-        other.accountId == accountId &&
-        other.debugReturnError == debugReturnError;
+    return other is GetAccountByIdAndAllAccountsProvider &&
+        other.accountId == accountId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, accountId.hashCode);
-    hash = _SystemHash.combine(hash, debugReturnError.hashCode);
 
     return _SystemHash.finish(hash);
   }

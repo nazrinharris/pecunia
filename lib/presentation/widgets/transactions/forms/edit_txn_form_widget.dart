@@ -27,10 +27,15 @@ void showEditTransactionBottomSheet(
       builder: (context) {
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              EditTxnForm(txn: txn, account: account, category: category),
-            ],
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                EditTxnForm(txn: txn, account: account, category: category),
+                const SizedBox(height: 94),
+              ],
+            ),
           ),
         );
       });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences.dart';
 import 'package:pecunia/core/util/logger.dart';
 import 'package:pecunia/presentation/router/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
@@ -23,16 +24,19 @@ void main() async {
   ));
 }
 
-class PecuniaApp extends StatefulWidget {
+class PecuniaApp extends ConsumerStatefulWidget {
   const PecuniaApp({super.key});
 
   @override
-  State<PecuniaApp> createState() => _PecuniaAppState();
+  ConsumerState<PecuniaApp> createState() => _PecuniaAppState();
 }
 
-class _PecuniaAppState extends State<PecuniaApp> {
+class _PecuniaAppState extends ConsumerState<PecuniaApp> {
   @override
   Widget build(BuildContext context) {
+    // TODO: Maybe implement eager initialization to avoid unnecessary rebuilds
+    ref.watch(pecuniaSharedPreferencesProvider);
+
     return MaterialApp.router(
       darkTheme: ThemeData.dark(
         useMaterial3: true,
@@ -54,4 +58,5 @@ class _PecuniaAppState extends State<PecuniaApp> {
 /// Comment for multi-currency and transfer feature - multi-currency-and-transfer-feature
 /// Comment for transaction categories feature - transaction-categories
 /// Comment for UI general usability - ui-general-usability
+/// Comment for version management - version-management
 

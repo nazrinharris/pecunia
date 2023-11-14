@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stack_trace/stack_trace.dart';
+
+part 'failures.freezed.dart';
 
 abstract interface class Failure extends Equatable {
   const Failure({
@@ -38,4 +41,12 @@ final class UnexpectedFailure extends Failure {
     super.message,
     super.rawException,
   });
+}
+
+@freezed
+class CriticalException with _$CriticalException implements Exception {
+  factory CriticalException({
+    required StackTrace stackTrace,
+    @Default('This operation should never fail') String? message,
+  }) = _CriticalException;
 }

@@ -337,7 +337,10 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     return TaskEither.tryCatch(
       () async {
         return (select(transactionsTable)
-              ..where((tbl) => tbl.transactionType.equals(TransactionType.credit.typeAsString)))
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.credit.typeAsString))
+              ..where(
+                (tbl) => tbl.linkedAccountId.isNull() & tbl.linkedTransactionId.isNull(),
+              ))
             .get()
             .then((value) => value.map(Transaction.fromDTO).toList());
       },
@@ -349,7 +352,10 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     return TaskEither.tryCatch(
       () async {
         return (select(transactionsTable)
-              ..where((tbl) => tbl.transactionType.equals(TransactionType.debit.typeAsString)))
+              ..where((tbl) => tbl.transactionType.equals(TransactionType.debit.typeAsString))
+              ..where(
+                (tbl) => tbl.linkedAccountId.isNull() & tbl.linkedTransactionId.isNull(),
+              ))
             .get()
             .then((value) => value.map(Transaction.fromDTO).toList());
       },
@@ -362,16 +368,20 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
     required DateTime endDate,
     required TransactionType type,
     required Currency currency,
+    bool includeTransfers = false,
   }) {
     return TaskEither.tryCatch(
       () async {
-        return (select(transactionsTable)
-              ..where((tbl) => tbl.transactionType.equals(type.typeAsString))
-              ..where((tbl) => tbl.transactionDate.isBetweenValues(startDate, endDate))
-              ..where(
-                  (tbl) => tbl.baseCurrency.equals(currency.code) | tbl.targetCurrency.equals(currency.code)))
-            .get()
-            .then((value) => value.map(Transaction.fromDTO).toList());
+        var query = select(transactionsTable)
+          ..where((tbl) => tbl.transactionType.equals(type.typeAsString))
+          ..where((tbl) => tbl.transactionDate.isBetweenValues(startDate, endDate))
+          ..where((tbl) => tbl.baseCurrency.equals(currency.code) | tbl.targetCurrency.equals(currency.code));
+
+        if (!includeTransfers) {
+          query = query..where((tbl) => tbl.linkedAccountId.isNull() & tbl.linkedTransactionId.isNull());
+        }
+
+        return query.get().then((value) => value.map(Transaction.fromDTO).toList());
       },
       mapDriftToTransactionsFailure,
     );

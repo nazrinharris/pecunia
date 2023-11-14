@@ -1,5 +1,4 @@
 import 'package:fl_toast/fl_toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
@@ -68,12 +67,12 @@ class PecuniaDialogs {
                     ),
                   ],
                 ),
-                if (message != null) const SizedBox(height: 4),
-                if (message != null)
+                if (message != null || failure != null) const SizedBox(height: 4),
+                if (message != null || failure != null)
                   Text(
-                    message,
+                    message ?? failure?.message ?? '',
                     style: TextStyle(
-                      color: Colors.green[100],
+                      color: Colors.red[100],
                     ),
                   ),
               ],
