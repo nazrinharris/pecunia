@@ -11,6 +11,7 @@ import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/edit_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
+import 'package:pecunia/features/accounts/usecases/get_account_by_id_and_all_accounts.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
@@ -67,15 +68,17 @@ class ViewAccountScreen extends ConsumerWidget {
         }
       });
 
-    final acc = ref.watch(getAccountByIdProvider(accountId));
+    final res = ref.watch(getAccountByIdAndAllAccountsProvider(accountId));
 
-    switch (acc) {
-      case AsyncLoading():
+    switch (res) {
+      case AsyncLoading(:final value) when value == null:
         return const Center(child: CupertinoActivityIndicator());
+      case AsyncLoading(:final value) when value != null:
+        return AccountDetails(value.account, value.accountsList);
       case AsyncError():
         return const Center(child: Text('Error loading account'));
       case AsyncData():
-        return AccountDetails(acc.value);
+        return AccountDetails(res.value.account, res.value.accountsList);
       default:
         throw UnimplementedError();
     }
@@ -83,9 +86,10 @@ class ViewAccountScreen extends ConsumerWidget {
 }
 
 class AccountDetails extends ConsumerWidget {
-  const AccountDetails(this.account, {super.key});
+  const AccountDetails(this.account, this.accountsList, {super.key});
 
   final Account account;
+  final List<Account> accountsList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -212,7 +216,7 @@ class AccountDetails extends ConsumerWidget {
             const SizedBox(height: 14),
             SafeArea(child: AccountMetadataCard(account)),
             const SizedBox(height: 4),
-            SafeArea(child: AccountActions(account)),
+            SafeArea(child: AccountActions(account, accountsList)),
             SafeArea(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -472,9 +476,10 @@ class AccountMetadataCard extends ConsumerWidget {
 }
 
 class AccountActions extends ConsumerWidget {
-  const AccountActions(this.account, {super.key});
+  const AccountActions(this.account, this.accountsList, {super.key});
 
   final Account account;
+  final List<Account> accountsList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -488,13 +493,13 @@ class AccountActions extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               children: [
-                BuildAccountActionsGrid(account: account),
+                BuildAccountActionsGrid(account: account, accountsList: accountsList),
               ],
             ),
           );
         }
 
-        return BuildAccountActionsGrid(account: account);
+        return BuildAccountActionsGrid(account: account, accountsList: accountsList);
       }),
     );
   }
@@ -503,10 +508,12 @@ class AccountActions extends ConsumerWidget {
 class BuildAccountActionsGrid extends ConsumerWidget {
   const BuildAccountActionsGrid({
     required this.account,
+    required this.accountsList,
     super.key,
   });
 
   final Account account;
+  final List<Account> accountsList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -551,7 +558,7 @@ class BuildAccountActionsGrid extends ConsumerWidget {
           height: 84,
           width: 84,
           child: ScaleButton(
-            onTap: () => showCreateTransferTxnBottomSheet(context, account),
+            onTap: () => showCreateTransferTxnBottomSheet(context, account, accountsList),
             child: Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
               color: Colors.blue[900]!.withOpacity(0.1),

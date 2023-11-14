@@ -1,47 +1,46 @@
 // TODO: Remove ignore_for_file: prefer_const_constructors
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
-import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/util/extensions.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
-import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/transactions/usecases/create_transfer_transaction.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:screwdriver/screwdriver.dart';
 
-void showCreateTransferTxnBottomSheet(BuildContext context, Account account) {
+void showCreateTransferTxnBottomSheet(BuildContext context, Account account, List<Account> accountsList) {
   showModalBottomSheet<void>(
-      isScrollControlled: true,
-      context: context,
-      showDragHandle: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(44),
-      ),
-      builder: (context) {
-        return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CreateTransferTxnForm(
-                  defaultSourceAccount: account,
-                ),
-                const SizedBox(height: 94),
-              ],
-            ),
+    isScrollControlled: true,
+    context: context,
+    showDragHandle: true,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(44),
+    ),
+    builder: (context) {
+      return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CreateTransferTxnForm(
+                defaultSourceAccount: account,
+                accountsList: accountsList,
+              ),
+              const SizedBox(height: 94),
+            ],
           ),
-        );
-      });
+        ),
+      );
+    },
+  );
 }
 
 class CreateTransferTxnFields {
@@ -67,10 +66,12 @@ class CreateTransferTxnFields {
 class CreateTransferTxnForm extends HookConsumerWidget {
   const CreateTransferTxnForm({
     required this.defaultSourceAccount,
+    required this.accountsList,
     super.key,
   });
 
   final Account? defaultSourceAccount;
+  final List<Account> accountsList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,27 +92,24 @@ class CreateTransferTxnForm extends HookConsumerWidget {
             );
       }
     });
-    final accountsListValue = ref.watch(getAllAccountsProvider);
 
-    return switch (accountsListValue) {
-      AsyncLoading() => const Center(child: CupertinoActivityIndicator()),
-      AsyncError(:final AccountsFailure error) => Center(child: Text(error.message)),
-      AsyncData(value: final List<Account> accountsList) when accountsList.length == 1 => Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              'You need at least 2 accounts to transfer money.',
-              style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
+    if (accountsList.length < 2) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Text(
+            'You need at least 2 accounts to transfer money.',
+            style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
         ),
-      AsyncData(value: final List<Account> accountsList) => TransferFormContent(
-          defaultSourceAccount,
-          accountsList,
-        ),
-      _ => const Center(child: Text('Something went wrong')),
-    };
+      );
+    }
+
+    return TransferFormContent(
+      defaultSourceAccount,
+      accountsList,
+    );
   }
 }
 
@@ -454,6 +452,10 @@ class SourceAccountDropdown extends HookConsumerWidget {
     final uniqueIds = ids.toSet();
     if (ids.length != uniqueIds.length) {
       print('There are duplicate accounts in the list');
+    }
+    if (!accountsList.contains(chosenSourceAccount.value)) {
+      print('The chosen source account is not in the accounts list');
+      // You may want to handle this case appropriately
     }
 
     return DropdownButtonFormField<Account>(
