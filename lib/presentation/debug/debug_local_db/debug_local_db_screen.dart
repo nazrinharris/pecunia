@@ -9,6 +9,7 @@ import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/debug_dao.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
@@ -143,7 +144,7 @@ class DebugLocalDBScreen extends ConsumerWidget {
                           ),
                           onPressed: () async {
                             final shared = await SharedPreferences.getInstance();
-                            await shared.setBool('is_first_open', true);
+                            await shared.setBool(kPrefsIsFirstOpen, true);
                             debugPrint('is_first_open set to true');
                           },
                           child: const Text('Reset is_first_open'),

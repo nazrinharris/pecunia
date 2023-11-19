@@ -34,7 +34,7 @@ class PecuniaApp extends ConsumerStatefulWidget {
 class _PecuniaAppState extends ConsumerState<PecuniaApp> {
   @override
   Widget build(BuildContext context) {
-    // TODO: Maybe implement eager initialization to avoid unnecessary rebuilds
+    // TODO: Maybe implement eager initialization to avoid unnecessary rebuilds and error handling
     ref.watch(pecuniaSharedPreferencesProvider);
 
     return MaterialApp.router(

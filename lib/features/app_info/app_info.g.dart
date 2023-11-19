@@ -6,7 +6,7 @@ part of 'app_info.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getIsFirstOpenHash() => r'67fe707a85be9528ca0485d28f82b05c98327d84';
+String _$getIsFirstOpenHash() => r'b9c17eb71941b7fc2091c10157b8963c6fe013c8';
 
 /// See also [getIsFirstOpen].
 @ProviderFor(getIsFirstOpen)
@@ -21,7 +21,7 @@ final getIsFirstOpenProvider = AutoDisposeFutureProvider<Option<bool>>.internal(
 );
 
 typedef GetIsFirstOpenRef = AutoDisposeFutureProviderRef<Option<bool>>;
-String _$setIsFirstOpenHash() => r'5f620699582c27771ddf425a670cf1fb2dbcf541';
+String _$setIsFirstOpenHash() => r'33983010140d6dd6ac061fe82f78505ec37a2b4c';
 
 /// Copied from Dart SDK
 class _SystemHash {

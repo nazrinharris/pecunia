@@ -45,6 +45,10 @@ enum AuthErrorType {
     'cannot-remove-logged-in-user',
     'Something went wrong while removing the logged in user.',
   ),
+  cannotGetAllLoggedInUsers(
+    'cannot-get-all-logged-in-users',
+    'Something went wrong while getting all the logged in users.',
+  ),
   unknown(
     defaultUnknownAuthErrorCode,
     defaultUnknownAuthErrorMessage,

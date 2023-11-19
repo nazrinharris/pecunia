@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/features/auth/data/auth_local_ds.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_auth_providers.dart';
@@ -69,6 +70,8 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
           child: ListView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             children: [
+              const Text('Stored logged in users:'),
+              const StoredLoggedInUserDetails(),
               const LoginForm(),
               const LoginDetails(),
               const RegisterForm(),
@@ -83,6 +86,39 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class StoredLoggedInUserDetails extends ConsumerWidget {
+  const StoredLoggedInUserDetails({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FutureBuilder(
+      future: ref.watch(authLocalDSProvider).getAllLoggedInUsers().run(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data!.fold(
+            (l) => Text(l.toString()),
+            (r) {
+              final userList = List.of(r.values.toList());
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: r.length,
+                itemBuilder: (context, index) {
+                  return Text(userList[index].toString());
+                },
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        return const Center(
+          child: CupertinoActivityIndicator(),
+        );
+      },
     );
   }
 }
