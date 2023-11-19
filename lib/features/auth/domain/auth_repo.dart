@@ -55,7 +55,7 @@ class AuthRepoImpl implements AuthRepo {
     return authRemoteDS
         .loginWithPassword(email: email, password: password, currentSession: currentSession)
         .flatMap(
-          (r) => authLocalDS.storeLoggedInUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
+          (r) => authLocalDS.storeSavedUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
                 (_) => (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
               ),
         );
@@ -76,7 +76,7 @@ class AuthRepoImpl implements AuthRepo {
           currentSession: currentSession,
         )
         .flatMap(
-          (r) => authLocalDS.storeLoggedInUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
+          (r) => authLocalDS.storeSavedUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
                 (_) => (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
               ),
         );

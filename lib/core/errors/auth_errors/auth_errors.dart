@@ -37,15 +37,15 @@ enum AuthErrorType {
     'cannot-convert-to-pecunia-user-dto',
     'Something went wrong while converting the PecuniaUser to a DTO.',
   ),
-  cannotStoreLoggedInUser(
+  cannotStoreSavedUser(
     'cannot-store-logged-in-user',
     'Something went wrong while storing the logged in user.',
   ),
-  cannotRemoveLoggedInUser(
+  cannotRemoveSavedUser(
     'cannot-remove-logged-in-user',
     'Something went wrong while removing the logged in user.',
   ),
-  cannotGetAllLoggedInUsers(
+  cannotGetAllSavedUsers(
     'cannot-get-all-logged-in-users',
     'Something went wrong while getting all the logged in users.',
   ),

@@ -70,8 +70,8 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
           child: ListView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             children: [
-              const Text('Stored logged in users:'),
-              const StoredLoggedInUserDetails(),
+              const Text('Saved users:'),
+              const StoredSavedUserDetails(),
               const LoginForm(),
               const LoginDetails(),
               const RegisterForm(),
@@ -90,13 +90,13 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
   }
 }
 
-class StoredLoggedInUserDetails extends ConsumerWidget {
-  const StoredLoggedInUserDetails({super.key});
+class StoredSavedUserDetails extends ConsumerWidget {
+  const StoredSavedUserDetails({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
-      future: ref.watch(authLocalDSProvider).getAllLoggedInUsers().run(),
+      future: ref.watch(authLocalDSProvider).getAllSavedUsers().run(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!.fold(

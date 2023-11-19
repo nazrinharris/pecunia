@@ -20,55 +20,61 @@ class AuthLocalDS {
 
   final SharedPreferences prefs;
 
-  TaskEither<AuthFailure, Unit> storeLoggedInUser(PecuniaUser user) {
+  /// `storeSavedUser` method is used to record in [kPrefsSavedUsers] that a user has once logged in
+  /// or registered, and their data is still on the app. If the user logs out, their
+  /// record should persist, unless they choose to clear their data.
+  TaskEither<AuthFailure, Unit> storeSavedUser(PecuniaUser user) {
     return TaskEither.tryCatch(
       () async {
-        final allUsersString = prefs.getString(kPrefsLoggedInUsers) ?? '{}';
+        final allUsersString = prefs.getString(kPrefsSavedUsers) ?? '{}';
         final allUsers = jsonDecode(allUsersString) as Map<String, dynamic>;
         allUsers[user.uid] = user.username;
-        await prefs.setString(kPrefsLoggedInUsers, jsonEncode(allUsers));
+        await prefs.setString(kPrefsSavedUsers, jsonEncode(allUsers));
 
         return unit;
       },
       (e, s) => AuthFailure(
         stackTrace: s,
-        message: AuthErrorType.cannotStoreLoggedInUser.message,
-        errorType: AuthErrorType.cannotStoreLoggedInUser,
+        message: AuthErrorType.cannotStoreSavedUser.message,
+        errorType: AuthErrorType.cannotStoreSavedUser,
         rawException: e,
       ),
     );
   }
 
-  TaskEither<AuthFailure, Unit> removeLoggedInUser(String uid) {
+  /// `removeSavedUser` method is used to remove a user's record from the app.
+  /// This doesn't take responsibility of actually removing the database linked to the user, it simply
+  /// removes the user from the [kPrefsSavedUsers] list.
+  TaskEither<AuthFailure, Unit> removeSavedUser(String uid) {
     return TaskEither.tryCatch(
       () async {
-        final allUsersString = prefs.getString(kPrefsLoggedInUsers) ?? '{}';
+        final allUsersString = prefs.getString(kPrefsSavedUsers) ?? '{}';
         final allUsers = jsonDecode(allUsersString) as Map<String, dynamic>..remove(uid);
-        await prefs.setString(kPrefsLoggedInUsers, jsonEncode(allUsers));
+        await prefs.setString(kPrefsSavedUsers, jsonEncode(allUsers));
 
         return unit;
       },
       (e, s) => AuthFailure(
         stackTrace: s,
-        message: AuthErrorType.cannotRemoveLoggedInUser.message,
-        errorType: AuthErrorType.cannotRemoveLoggedInUser,
+        message: AuthErrorType.cannotRemoveSavedUser.message,
+        errorType: AuthErrorType.cannotRemoveSavedUser,
         rawException: e,
       ),
     );
   }
 
-  TaskEither<AuthFailure, Map<String, dynamic>> getAllLoggedInUsers() {
+  TaskEither<AuthFailure, Map<String, dynamic>> getAllSavedUsers() {
     return TaskEither.tryCatch(
       () async {
-        final allUsersString = prefs.getString(kPrefsLoggedInUsers) ?? '{}';
+        final allUsersString = prefs.getString(kPrefsSavedUsers) ?? '{}';
         final allUsers = jsonDecode(allUsersString) as Map<String, dynamic>;
 
         return allUsers;
       },
       (e, s) => AuthFailure(
         stackTrace: s,
-        message: AuthErrorType.cannotGetAllLoggedInUsers.message,
-        errorType: AuthErrorType.cannotGetAllLoggedInUsers,
+        message: AuthErrorType.cannotGetAllSavedUsers.message,
+        errorType: AuthErrorType.cannotGetAllSavedUsers,
         rawException: e,
       ),
     );
