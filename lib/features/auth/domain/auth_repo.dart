@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/features/auth/data/auth_local_ds.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
@@ -11,6 +12,7 @@ part 'auth_repo.g.dart';
 AuthRepo authRepo(AuthRepoRef ref) {
   return AuthRepoImpl(
     authRemoteDS: ref.watch(authRemoteDSProvider),
+    authLocalDS: ref.watch(authLocalDSProvider),
   );
 }
 
@@ -36,12 +38,14 @@ abstract interface class AuthRepo {
 typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
 
 class AuthRepoImpl implements AuthRepo {
-  AuthRepoImpl({required this.authRemoteDS});
-  final AuthRemoteDS authRemoteDS;
+  AuthRepoImpl({
+    required this.authRemoteDS,
+    required this.authLocalDS,
+  });
 
-  /// ******************************************************************************************************
-  /// [loginWithPassword]
-  /// ******************************************************************************************************
+  final AuthRemoteDS authRemoteDS;
+  final AuthLocalDS authLocalDS;
+
   @override
   TaskEither<AuthFailure, PecuniaUserAndSession> loginWithPassword({
     required String email,
@@ -51,18 +55,12 @@ class AuthRepoImpl implements AuthRepo {
     return authRemoteDS
         .loginWithPassword(email: email, password: password, currentSession: currentSession)
         .flatMap(
-          (r) => TaskEither.of(
-            (
-              pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO),
-              session: r.newSession,
-            ),
-          ),
+          (r) => authLocalDS.storeLoggedInUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
+                (_) => (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
+              ),
         );
   }
 
-  /// ******************************************************************************************************
-  /// [registerWithPassword]
-  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, PecuniaUserAndSession> registerWithPassword({
     required String username,
@@ -78,26 +76,17 @@ class AuthRepoImpl implements AuthRepo {
           currentSession: currentSession,
         )
         .flatMap(
-          (r) => TaskEither.of(
-            (
-              pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO),
-              session: r.newSession,
-            ),
-          ),
+          (r) => authLocalDS.storeLoggedInUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
+                (_) => (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
+              ),
         );
   }
 
-  /// ******************************************************************************************************
-  /// [logout]
-  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, Session> logout(Session currentSession) {
     return authRemoteDS.logout(currentSession);
   }
 
-  /// ******************************************************************************************************
-  /// [getLoggedInUser]
-  /// ******************************************************************************************************
   @override
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {
     return authRemoteDS.getLoggedInUser();

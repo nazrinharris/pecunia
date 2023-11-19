@@ -40,8 +40,8 @@ class AuthLocalDS {
       },
       (e, s) => AuthFailure(
         stackTrace: s,
-        message: AuthErrorType.cannotStoreLoggedInUser.message,
-        errorType: AuthErrorType.cannotStoreLoggedInUser,
+        message: AuthErrorType.cannotRemoveLoggedInUser.message,
+        errorType: AuthErrorType.cannotRemoveLoggedInUser,
         rawException: e,
       ),
     );
