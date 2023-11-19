@@ -31,7 +31,7 @@ void main() {
     final user = MockUser();
     final network = MockNetworkInfo();
 
-    final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network, AuthRemoteDSHelper());
+    final authRemoteDS = SupabaseAuthRemoteDS(supabaseClient, network);
 
     setUpAll(() {
       registerFallbackValue(StackTrace.empty);

@@ -17,13 +17,38 @@ const defaultUnknownAuthErrorMessage = 'Something went wrong during authenticati
 const defaultNoInternetMessage = 'No internet connection, please retry later.';
 
 enum AuthErrorType {
-  noInternet('no-internet', "You don't seem to be connected to the internet, please try again later."),
-  invalidCredentials('invalid-credentials', 'Your email or password are incorrect.'),
-  missingUsername('missing-username', 'Username is missing, please contact support.'),
-  noLoggedInUser('no-logged-in-user', 'No user is currently logged in.'),
-  cannotConvertToDTO('cannot-convert-to-pecunia-user-dto',
-      'Something went wrong while converting the PecuniaUser to a DTO.'),
-  unknown(defaultUnknownAuthErrorCode, defaultUnknownAuthErrorMessage);
+  noInternet(
+    'no-internet',
+    "You don't seem to be connected to the internet, please try again later.",
+  ),
+  invalidCredentials(
+    'invalid-credentials',
+    'Your email or password are incorrect.',
+  ),
+  missingUsername(
+    'missing-username',
+    'Username is missing, please contact support.',
+  ),
+  noLoggedInUser(
+    'no-logged-in-user',
+    'No user is currently logged in.',
+  ),
+  cannotConvertToDTO(
+    'cannot-convert-to-pecunia-user-dto',
+    'Something went wrong while converting the PecuniaUser to a DTO.',
+  ),
+  cannotStoreLoggedInUser(
+    'cannot-store-logged-in-user',
+    'Something went wrong while storing the logged in user.',
+  ),
+  cannotRemoveLoggedInUser(
+    'cannot-remove-logged-in-user',
+    'Something went wrong while removing the logged in user.',
+  ),
+  unknown(
+    defaultUnknownAuthErrorCode,
+    defaultUnknownAuthErrorMessage,
+  );
 
   const AuthErrorType(this.code, this.message);
 
