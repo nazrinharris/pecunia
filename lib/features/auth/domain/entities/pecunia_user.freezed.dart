@@ -80,22 +80,22 @@ class _$PecuniaUserCopyWithImpl<$Res, $Val extends PecuniaUser>
 }
 
 /// @nodoc
-abstract class _$$_PecuniaUserCopyWith<$Res>
+abstract class _$$PecuniaUserImplCopyWith<$Res>
     implements $PecuniaUserCopyWith<$Res> {
-  factory _$$_PecuniaUserCopyWith(
-          _$_PecuniaUser value, $Res Function(_$_PecuniaUser) then) =
-      __$$_PecuniaUserCopyWithImpl<$Res>;
+  factory _$$PecuniaUserImplCopyWith(
+          _$PecuniaUserImpl value, $Res Function(_$PecuniaUserImpl) then) =
+      __$$PecuniaUserImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String uid, String username, DateTime dateCreated, String? email});
 }
 
 /// @nodoc
-class __$$_PecuniaUserCopyWithImpl<$Res>
-    extends _$PecuniaUserCopyWithImpl<$Res, _$_PecuniaUser>
-    implements _$$_PecuniaUserCopyWith<$Res> {
-  __$$_PecuniaUserCopyWithImpl(
-      _$_PecuniaUser _value, $Res Function(_$_PecuniaUser) _then)
+class __$$PecuniaUserImplCopyWithImpl<$Res>
+    extends _$PecuniaUserCopyWithImpl<$Res, _$PecuniaUserImpl>
+    implements _$$PecuniaUserImplCopyWith<$Res> {
+  __$$PecuniaUserImplCopyWithImpl(
+      _$PecuniaUserImpl _value, $Res Function(_$PecuniaUserImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -106,7 +106,7 @@ class __$$_PecuniaUserCopyWithImpl<$Res>
     Object? dateCreated = null,
     Object? email = freezed,
   }) {
-    return _then(_$_PecuniaUser(
+    return _then(_$PecuniaUserImpl(
       uid: null == uid
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
@@ -129,16 +129,16 @@ class __$$_PecuniaUserCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PecuniaUser extends _PecuniaUser {
-  _$_PecuniaUser(
+class _$PecuniaUserImpl extends _PecuniaUser {
+  _$PecuniaUserImpl(
       {required this.uid,
       required this.username,
       required this.dateCreated,
       this.email})
       : super._();
 
-  factory _$_PecuniaUser.fromJson(Map<String, dynamic> json) =>
-      _$$_PecuniaUserFromJson(json);
+  factory _$PecuniaUserImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PecuniaUserImplFromJson(json);
 
   @override
   final String uid;
@@ -158,7 +158,7 @@ class _$_PecuniaUser extends _PecuniaUser {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PecuniaUser &&
+            other is _$PecuniaUserImpl &&
             (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.username, username) ||
                 other.username == username) &&
@@ -175,12 +175,12 @@ class _$_PecuniaUser extends _PecuniaUser {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PecuniaUserCopyWith<_$_PecuniaUser> get copyWith =>
-      __$$_PecuniaUserCopyWithImpl<_$_PecuniaUser>(this, _$identity);
+  _$$PecuniaUserImplCopyWith<_$PecuniaUserImpl> get copyWith =>
+      __$$PecuniaUserImplCopyWithImpl<_$PecuniaUserImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PecuniaUserToJson(
+    return _$$PecuniaUserImplToJson(
       this,
     );
   }
@@ -191,11 +191,11 @@ abstract class _PecuniaUser extends PecuniaUser {
       {required final String uid,
       required final String username,
       required final DateTime dateCreated,
-      final String? email}) = _$_PecuniaUser;
+      final String? email}) = _$PecuniaUserImpl;
   _PecuniaUser._() : super._();
 
   factory _PecuniaUser.fromJson(Map<String, dynamic> json) =
-      _$_PecuniaUser.fromJson;
+      _$PecuniaUserImpl.fromJson;
 
   @override
   String get uid;
@@ -207,7 +207,7 @@ abstract class _PecuniaUser extends PecuniaUser {
   String? get email;
   @override
   @JsonKey(ignore: true)
-  _$$_PecuniaUserCopyWith<_$_PecuniaUser> get copyWith =>
+  _$$PecuniaUserImplCopyWith<_$PecuniaUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -277,22 +277,22 @@ class _$PecuniaUserDTOCopyWithImpl<$Res, $Val extends PecuniaUserDTO>
 }
 
 /// @nodoc
-abstract class _$$_PecuniaUserDTOCopyWith<$Res>
+abstract class _$$PecuniaUserDTOImplCopyWith<$Res>
     implements $PecuniaUserDTOCopyWith<$Res> {
-  factory _$$_PecuniaUserDTOCopyWith(
-          _$_PecuniaUserDTO value, $Res Function(_$_PecuniaUserDTO) then) =
-      __$$_PecuniaUserDTOCopyWithImpl<$Res>;
+  factory _$$PecuniaUserDTOImplCopyWith(_$PecuniaUserDTOImpl value,
+          $Res Function(_$PecuniaUserDTOImpl) then) =
+      __$$PecuniaUserDTOImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String uid, String username, DateTime dateCreated, String? email});
 }
 
 /// @nodoc
-class __$$_PecuniaUserDTOCopyWithImpl<$Res>
-    extends _$PecuniaUserDTOCopyWithImpl<$Res, _$_PecuniaUserDTO>
-    implements _$$_PecuniaUserDTOCopyWith<$Res> {
-  __$$_PecuniaUserDTOCopyWithImpl(
-      _$_PecuniaUserDTO _value, $Res Function(_$_PecuniaUserDTO) _then)
+class __$$PecuniaUserDTOImplCopyWithImpl<$Res>
+    extends _$PecuniaUserDTOCopyWithImpl<$Res, _$PecuniaUserDTOImpl>
+    implements _$$PecuniaUserDTOImplCopyWith<$Res> {
+  __$$PecuniaUserDTOImplCopyWithImpl(
+      _$PecuniaUserDTOImpl _value, $Res Function(_$PecuniaUserDTOImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -303,7 +303,7 @@ class __$$_PecuniaUserDTOCopyWithImpl<$Res>
     Object? dateCreated = null,
     Object? email = freezed,
   }) {
-    return _then(_$_PecuniaUserDTO(
+    return _then(_$PecuniaUserDTOImpl(
       uid: null == uid
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
@@ -326,16 +326,16 @@ class __$$_PecuniaUserDTOCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PecuniaUserDTO extends _PecuniaUserDTO {
-  _$_PecuniaUserDTO(
+class _$PecuniaUserDTOImpl extends _PecuniaUserDTO {
+  _$PecuniaUserDTOImpl(
       {required this.uid,
       required this.username,
       required this.dateCreated,
       this.email})
       : super._();
 
-  factory _$_PecuniaUserDTO.fromJson(Map<String, dynamic> json) =>
-      _$$_PecuniaUserDTOFromJson(json);
+  factory _$PecuniaUserDTOImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PecuniaUserDTOImplFromJson(json);
 
   @override
   final String uid;
@@ -355,7 +355,7 @@ class _$_PecuniaUserDTO extends _PecuniaUserDTO {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PecuniaUserDTO &&
+            other is _$PecuniaUserDTOImpl &&
             (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.username, username) ||
                 other.username == username) &&
@@ -372,12 +372,13 @@ class _$_PecuniaUserDTO extends _PecuniaUserDTO {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PecuniaUserDTOCopyWith<_$_PecuniaUserDTO> get copyWith =>
-      __$$_PecuniaUserDTOCopyWithImpl<_$_PecuniaUserDTO>(this, _$identity);
+  _$$PecuniaUserDTOImplCopyWith<_$PecuniaUserDTOImpl> get copyWith =>
+      __$$PecuniaUserDTOImplCopyWithImpl<_$PecuniaUserDTOImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PecuniaUserDTOToJson(
+    return _$$PecuniaUserDTOImplToJson(
       this,
     );
   }
@@ -388,11 +389,11 @@ abstract class _PecuniaUserDTO extends PecuniaUserDTO {
       {required final String uid,
       required final String username,
       required final DateTime dateCreated,
-      final String? email}) = _$_PecuniaUserDTO;
+      final String? email}) = _$PecuniaUserDTOImpl;
   _PecuniaUserDTO._() : super._();
 
   factory _PecuniaUserDTO.fromJson(Map<String, dynamic> json) =
-      _$_PecuniaUserDTO.fromJson;
+      _$PecuniaUserDTOImpl.fromJson;
 
   @override
   String get uid;
@@ -404,6 +405,6 @@ abstract class _PecuniaUserDTO extends PecuniaUserDTO {
   String? get email;
   @override
   @JsonKey(ignore: true)
-  _$$_PecuniaUserDTOCopyWith<_$_PecuniaUserDTO> get copyWith =>
+  _$$PecuniaUserDTOImplCopyWith<_$PecuniaUserDTOImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

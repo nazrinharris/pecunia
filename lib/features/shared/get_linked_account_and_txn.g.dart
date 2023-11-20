@@ -30,16 +30,13 @@ class _SystemHash {
   }
 }
 
-typedef GetLinkedAccountAndTxnRef
-    = AutoDisposeFutureProviderRef<(Account, Transaction)>;
-
 /// See also [getLinkedAccountAndTxn].
 @ProviderFor(getLinkedAccountAndTxn)
 const getLinkedAccountAndTxnProvider = GetLinkedAccountAndTxnFamily();
 
 /// See also [getLinkedAccountAndTxn].
 class GetLinkedAccountAndTxnFamily
-    extends Family<AsyncValue<(Account, Transaction)>> {
+    extends Family<AsyncValue<(Account account, Transaction txn)>> {
   /// See also [getLinkedAccountAndTxn].
   const GetLinkedAccountAndTxnFamily();
 
@@ -87,16 +84,16 @@ class GetLinkedAccountAndTxnFamily
 
 /// See also [getLinkedAccountAndTxn].
 class GetLinkedAccountAndTxnProvider
-    extends AutoDisposeFutureProvider<(Account, Transaction)> {
+    extends AutoDisposeFutureProvider<(Account account, Transaction txn)> {
   /// See also [getLinkedAccountAndTxn].
   GetLinkedAccountAndTxnProvider({
-    required this.accountId,
-    required this.txnId,
-    this.debugReturnErrorAccount,
-    this.debugReturnErrorTransaction,
-  }) : super.internal(
+    required String accountId,
+    required String txnId,
+    bool? debugReturnErrorAccount,
+    bool? debugReturnErrorTransaction,
+  }) : this._internal(
           (ref) => getLinkedAccountAndTxn(
-            ref,
+            ref as GetLinkedAccountAndTxnRef,
             accountId: accountId,
             txnId: txnId,
             debugReturnErrorAccount: debugReturnErrorAccount,
@@ -111,12 +108,58 @@ class GetLinkedAccountAndTxnProvider
           dependencies: GetLinkedAccountAndTxnFamily._dependencies,
           allTransitiveDependencies:
               GetLinkedAccountAndTxnFamily._allTransitiveDependencies,
+          accountId: accountId,
+          txnId: txnId,
+          debugReturnErrorAccount: debugReturnErrorAccount,
+          debugReturnErrorTransaction: debugReturnErrorTransaction,
         );
+
+  GetLinkedAccountAndTxnProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.accountId,
+    required this.txnId,
+    required this.debugReturnErrorAccount,
+    required this.debugReturnErrorTransaction,
+  }) : super.internal();
 
   final String accountId;
   final String txnId;
   final bool? debugReturnErrorAccount;
   final bool? debugReturnErrorTransaction;
+
+  @override
+  Override overrideWith(
+    FutureOr<(Account account, Transaction txn)> Function(
+            GetLinkedAccountAndTxnRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetLinkedAccountAndTxnProvider._internal(
+        (ref) => create(ref as GetLinkedAccountAndTxnRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        accountId: accountId,
+        txnId: txnId,
+        debugReturnErrorAccount: debugReturnErrorAccount,
+        debugReturnErrorTransaction: debugReturnErrorTransaction,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<(Account account, Transaction txn)>
+      createElement() {
+    return _GetLinkedAccountAndTxnProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -138,4 +181,37 @@ class GetLinkedAccountAndTxnProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin GetLinkedAccountAndTxnRef
+    on AutoDisposeFutureProviderRef<(Account account, Transaction txn)> {
+  /// The parameter `accountId` of this provider.
+  String get accountId;
+
+  /// The parameter `txnId` of this provider.
+  String get txnId;
+
+  /// The parameter `debugReturnErrorAccount` of this provider.
+  bool? get debugReturnErrorAccount;
+
+  /// The parameter `debugReturnErrorTransaction` of this provider.
+  bool? get debugReturnErrorTransaction;
+}
+
+class _GetLinkedAccountAndTxnProviderElement
+    extends AutoDisposeFutureProviderElement<(Account account, Transaction txn)>
+    with GetLinkedAccountAndTxnRef {
+  _GetLinkedAccountAndTxnProviderElement(super.provider);
+
+  @override
+  String get accountId => (origin as GetLinkedAccountAndTxnProvider).accountId;
+  @override
+  String get txnId => (origin as GetLinkedAccountAndTxnProvider).txnId;
+  @override
+  bool? get debugReturnErrorAccount =>
+      (origin as GetLinkedAccountAndTxnProvider).debugReturnErrorAccount;
+  @override
+  bool? get debugReturnErrorTransaction =>
+      (origin as GetLinkedAccountAndTxnProvider).debugReturnErrorTransaction;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

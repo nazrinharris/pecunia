@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
@@ -8,6 +10,7 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/debug_dao.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
@@ -162,6 +165,10 @@ class DebugLocalDBScreen extends ConsumerWidget {
             const SizedBox(height: 14),
             const Divider(),
             const SizedBox(height: 14),
+            const DebugFlutterSecureStorage(),
+            const SizedBox(height: 14),
+            const Divider(),
+            const SizedBox(height: 14),
             const CreateAccountFormWidget(),
             const SizedBox(height: 14),
             const Divider(),
@@ -169,6 +176,68 @@ class DebugLocalDBScreen extends ConsumerWidget {
             const AccountsList(),
           ],
         ));
+  }
+}
+
+class DebugFlutterSecureStorage extends HookConsumerWidget {
+  const DebugFlutterSecureStorage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textController = useTextEditingController();
+    final storage = ref.watch(pecuniaFlutterSecureStorageProvider).requireValue;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Column(
+        children: [
+          const Align(
+            child: Text(
+              'flutter_secure_storage test',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          TextField(
+            controller: textController,
+            decoration: const InputDecoration(
+              labelText: 'Storing this string at key: debug',
+              hintText: 'Enter something',
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await storage.write(key: 'debug', value: textController.value.text);
+                },
+                child: const Text('Write'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  await storage.delete(key: 'debug');
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ElevatedButton(
+            onPressed: () async {
+              final value = await storage.read(key: 'debug');
+              textController.text = value ?? '';
+            },
+            child: const Text('Read (replaces the value in text field with stored value)'),
+          ),
+          const SizedBox(width: 10),
+        ],
+      ),
+    );
   }
 }
 
@@ -181,7 +250,7 @@ class DebugDialogsButtons extends ConsumerWidget {
       children: [
         const Align(
           child: Text(
-            'flutter_easy_dialogs',
+            'dialogs and toast test',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),

@@ -6,15 +6,15 @@ part of 'pecunia_user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PecuniaUser _$$_PecuniaUserFromJson(Map<String, dynamic> json) =>
-    _$_PecuniaUser(
+_$PecuniaUserImpl _$$PecuniaUserImplFromJson(Map<String, dynamic> json) =>
+    _$PecuniaUserImpl(
       uid: json['uid'] as String,
       username: json['username'] as String,
       dateCreated: DateTime.parse(json['dateCreated'] as String),
       email: json['email'] as String?,
     );
 
-Map<String, dynamic> _$$_PecuniaUserToJson(_$_PecuniaUser instance) =>
+Map<String, dynamic> _$$PecuniaUserImplToJson(_$PecuniaUserImpl instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'username': instance.username,
@@ -22,15 +22,16 @@ Map<String, dynamic> _$$_PecuniaUserToJson(_$_PecuniaUser instance) =>
       'email': instance.email,
     };
 
-_$_PecuniaUserDTO _$$_PecuniaUserDTOFromJson(Map<String, dynamic> json) =>
-    _$_PecuniaUserDTO(
+_$PecuniaUserDTOImpl _$$PecuniaUserDTOImplFromJson(Map<String, dynamic> json) =>
+    _$PecuniaUserDTOImpl(
       uid: json['uid'] as String,
       username: json['username'] as String,
       dateCreated: DateTime.parse(json['dateCreated'] as String),
       email: json['email'] as String?,
     );
 
-Map<String, dynamic> _$$_PecuniaUserDTOToJson(_$_PecuniaUserDTO instance) =>
+Map<String, dynamic> _$$PecuniaUserDTOImplToJson(
+        _$PecuniaUserDTOImpl instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'username': instance.username,

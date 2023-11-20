@@ -127,11 +127,11 @@ class _$AppInfoFailureCopyWithImpl<$Res, $Val extends AppInfoFailure>
 }
 
 /// @nodoc
-abstract class _$$_AppInfoFailureCopyWith<$Res>
+abstract class _$$AppInfoFailureImplCopyWith<$Res>
     implements $AppInfoFailureCopyWith<$Res> {
-  factory _$$_AppInfoFailureCopyWith(
-          _$_AppInfoFailure value, $Res Function(_$_AppInfoFailure) then) =
-      __$$_AppInfoFailureCopyWithImpl<$Res>;
+  factory _$$AppInfoFailureImplCopyWith(_$AppInfoFailureImpl value,
+          $Res Function(_$AppInfoFailureImpl) then) =
+      __$$AppInfoFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -142,11 +142,11 @@ abstract class _$$_AppInfoFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AppInfoFailureCopyWithImpl<$Res>
-    extends _$AppInfoFailureCopyWithImpl<$Res, _$_AppInfoFailure>
-    implements _$$_AppInfoFailureCopyWith<$Res> {
-  __$$_AppInfoFailureCopyWithImpl(
-      _$_AppInfoFailure _value, $Res Function(_$_AppInfoFailure) _then)
+class __$$AppInfoFailureImplCopyWithImpl<$Res>
+    extends _$AppInfoFailureCopyWithImpl<$Res, _$AppInfoFailureImpl>
+    implements _$$AppInfoFailureImplCopyWith<$Res> {
+  __$$AppInfoFailureImplCopyWithImpl(
+      _$AppInfoFailureImpl _value, $Res Function(_$AppInfoFailureImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -157,7 +157,7 @@ class __$$_AppInfoFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_AppInfoFailure(
+    return _then(_$AppInfoFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -178,8 +178,8 @@ class __$$_AppInfoFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AppInfoFailure extends _AppInfoFailure {
-  const _$_AppInfoFailure(
+class _$AppInfoFailureImpl extends _AppInfoFailure {
+  const _$AppInfoFailureImpl(
       {required this.stackTrace,
       required this.message,
       required this.errorType,
@@ -198,8 +198,9 @@ class _$_AppInfoFailure extends _AppInfoFailure {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AppInfoFailureCopyWith<_$_AppInfoFailure> get copyWith =>
-      __$$_AppInfoFailureCopyWithImpl<_$_AppInfoFailure>(this, _$identity);
+  _$$AppInfoFailureImplCopyWith<_$AppInfoFailureImpl> get copyWith =>
+      __$$AppInfoFailureImplCopyWithImpl<_$AppInfoFailureImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -281,7 +282,7 @@ abstract class _AppInfoFailure extends AppInfoFailure {
       {required final StackTrace stackTrace,
       required final String message,
       required final AppInfoErrorType errorType,
-      final Object? rawException}) = _$_AppInfoFailure;
+      final Object? rawException}) = _$AppInfoFailureImpl;
   const _AppInfoFailure._() : super._();
 
   @override
@@ -294,16 +295,17 @@ abstract class _AppInfoFailure extends AppInfoFailure {
   Object? get rawException;
   @override
   @JsonKey(ignore: true)
-  _$$_AppInfoFailureCopyWith<_$_AppInfoFailure> get copyWith =>
+  _$$AppInfoFailureImplCopyWith<_$AppInfoFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownAppInfoFailureCopyWith<$Res>
+abstract class _$$UnknownAppInfoFailureImplCopyWith<$Res>
     implements $AppInfoFailureCopyWith<$Res> {
-  factory _$$_UnknownAppInfoFailureCopyWith(_$_UnknownAppInfoFailure value,
-          $Res Function(_$_UnknownAppInfoFailure) then) =
-      __$$_UnknownAppInfoFailureCopyWithImpl<$Res>;
+  factory _$$UnknownAppInfoFailureImplCopyWith(
+          _$UnknownAppInfoFailureImpl value,
+          $Res Function(_$UnknownAppInfoFailureImpl) then) =
+      __$$UnknownAppInfoFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -314,11 +316,11 @@ abstract class _$$_UnknownAppInfoFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownAppInfoFailureCopyWithImpl<$Res>
-    extends _$AppInfoFailureCopyWithImpl<$Res, _$_UnknownAppInfoFailure>
-    implements _$$_UnknownAppInfoFailureCopyWith<$Res> {
-  __$$_UnknownAppInfoFailureCopyWithImpl(_$_UnknownAppInfoFailure _value,
-      $Res Function(_$_UnknownAppInfoFailure) _then)
+class __$$UnknownAppInfoFailureImplCopyWithImpl<$Res>
+    extends _$AppInfoFailureCopyWithImpl<$Res, _$UnknownAppInfoFailureImpl>
+    implements _$$UnknownAppInfoFailureImplCopyWith<$Res> {
+  __$$UnknownAppInfoFailureImplCopyWithImpl(_$UnknownAppInfoFailureImpl _value,
+      $Res Function(_$UnknownAppInfoFailureImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -329,7 +331,7 @@ class __$$_UnknownAppInfoFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_UnknownAppInfoFailure(
+    return _then(_$UnknownAppInfoFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -350,8 +352,8 @@ class __$$_UnknownAppInfoFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownAppInfoFailure extends _UnknownAppInfoFailure {
-  const _$_UnknownAppInfoFailure(
+class _$UnknownAppInfoFailureImpl extends _UnknownAppInfoFailure {
+  const _$UnknownAppInfoFailureImpl(
       {required this.stackTrace,
       required this.message,
       this.errorType = AppInfoErrorType.unknown,
@@ -371,9 +373,9 @@ class _$_UnknownAppInfoFailure extends _UnknownAppInfoFailure {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownAppInfoFailureCopyWith<_$_UnknownAppInfoFailure> get copyWith =>
-      __$$_UnknownAppInfoFailureCopyWithImpl<_$_UnknownAppInfoFailure>(
-          this, _$identity);
+  _$$UnknownAppInfoFailureImplCopyWith<_$UnknownAppInfoFailureImpl>
+      get copyWith => __$$UnknownAppInfoFailureImplCopyWithImpl<
+          _$UnknownAppInfoFailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -455,7 +457,7 @@ abstract class _UnknownAppInfoFailure extends AppInfoFailure {
       {required final StackTrace stackTrace,
       required final String message,
       final AppInfoErrorType errorType,
-      final Object? rawException}) = _$_UnknownAppInfoFailure;
+      final Object? rawException}) = _$UnknownAppInfoFailureImpl;
   const _UnknownAppInfoFailure._() : super._();
 
   @override
@@ -468,8 +470,8 @@ abstract class _UnknownAppInfoFailure extends AppInfoFailure {
   Object? get rawException;
   @override
   @JsonKey(ignore: true)
-  _$$_UnknownAppInfoFailureCopyWith<_$_UnknownAppInfoFailure> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$UnknownAppInfoFailureImplCopyWith<_$UnknownAppInfoFailureImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -578,11 +580,11 @@ class _$AppInfoExceptionCopyWithImpl<$Res, $Val extends AppInfoException>
 }
 
 /// @nodoc
-abstract class _$$_AppInfoExceptionCopyWith<$Res>
+abstract class _$$AppInfoExceptionImplCopyWith<$Res>
     implements $AppInfoExceptionCopyWith<$Res> {
-  factory _$$_AppInfoExceptionCopyWith(
-          _$_AppInfoException value, $Res Function(_$_AppInfoException) then) =
-      __$$_AppInfoExceptionCopyWithImpl<$Res>;
+  factory _$$AppInfoExceptionImplCopyWith(_$AppInfoExceptionImpl value,
+          $Res Function(_$AppInfoExceptionImpl) then) =
+      __$$AppInfoExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -590,11 +592,11 @@ abstract class _$$_AppInfoExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AppInfoExceptionCopyWithImpl<$Res>
-    extends _$AppInfoExceptionCopyWithImpl<$Res, _$_AppInfoException>
-    implements _$$_AppInfoExceptionCopyWith<$Res> {
-  __$$_AppInfoExceptionCopyWithImpl(
-      _$_AppInfoException _value, $Res Function(_$_AppInfoException) _then)
+class __$$AppInfoExceptionImplCopyWithImpl<$Res>
+    extends _$AppInfoExceptionCopyWithImpl<$Res, _$AppInfoExceptionImpl>
+    implements _$$AppInfoExceptionImplCopyWith<$Res> {
+  __$$AppInfoExceptionImplCopyWithImpl(_$AppInfoExceptionImpl _value,
+      $Res Function(_$AppInfoExceptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -604,7 +606,7 @@ class __$$_AppInfoExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_AppInfoException(
+    return _then(_$AppInfoExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -623,8 +625,8 @@ class __$$_AppInfoExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AppInfoException extends _AppInfoException {
-  _$_AppInfoException(
+class _$AppInfoExceptionImpl extends _AppInfoException {
+  _$AppInfoExceptionImpl(
       {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
@@ -644,7 +646,7 @@ class _$_AppInfoException extends _AppInfoException {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AppInfoException &&
+            other is _$AppInfoExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -658,8 +660,9 @@ class _$_AppInfoException extends _AppInfoException {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AppInfoExceptionCopyWith<_$_AppInfoException> get copyWith =>
-      __$$_AppInfoExceptionCopyWithImpl<_$_AppInfoException>(this, _$identity);
+  _$$AppInfoExceptionImplCopyWith<_$AppInfoExceptionImpl> get copyWith =>
+      __$$AppInfoExceptionImplCopyWithImpl<_$AppInfoExceptionImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -740,7 +743,7 @@ abstract class _AppInfoException extends AppInfoException {
   factory _AppInfoException(
       {required final StackTrace stackTrace,
       required final AppInfoErrorType errorType,
-      final String? message}) = _$_AppInfoException;
+      final String? message}) = _$AppInfoExceptionImpl;
   _AppInfoException._() : super._();
 
   @override
@@ -751,16 +754,17 @@ abstract class _AppInfoException extends AppInfoException {
   String? get message;
   @override
   @JsonKey(ignore: true)
-  _$$_AppInfoExceptionCopyWith<_$_AppInfoException> get copyWith =>
+  _$$AppInfoExceptionImplCopyWith<_$AppInfoExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownAppInfoExceptionCopyWith<$Res>
+abstract class _$$UnknownAppInfoExceptionImplCopyWith<$Res>
     implements $AppInfoExceptionCopyWith<$Res> {
-  factory _$$_UnknownAppInfoExceptionCopyWith(_$_UnknownAppInfoException value,
-          $Res Function(_$_UnknownAppInfoException) then) =
-      __$$_UnknownAppInfoExceptionCopyWithImpl<$Res>;
+  factory _$$UnknownAppInfoExceptionImplCopyWith(
+          _$UnknownAppInfoExceptionImpl value,
+          $Res Function(_$UnknownAppInfoExceptionImpl) then) =
+      __$$UnknownAppInfoExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -768,11 +772,12 @@ abstract class _$$_UnknownAppInfoExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownAppInfoExceptionCopyWithImpl<$Res>
-    extends _$AppInfoExceptionCopyWithImpl<$Res, _$_UnknownAppInfoException>
-    implements _$$_UnknownAppInfoExceptionCopyWith<$Res> {
-  __$$_UnknownAppInfoExceptionCopyWithImpl(_$_UnknownAppInfoException _value,
-      $Res Function(_$_UnknownAppInfoException) _then)
+class __$$UnknownAppInfoExceptionImplCopyWithImpl<$Res>
+    extends _$AppInfoExceptionCopyWithImpl<$Res, _$UnknownAppInfoExceptionImpl>
+    implements _$$UnknownAppInfoExceptionImplCopyWith<$Res> {
+  __$$UnknownAppInfoExceptionImplCopyWithImpl(
+      _$UnknownAppInfoExceptionImpl _value,
+      $Res Function(_$UnknownAppInfoExceptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -782,7 +787,7 @@ class __$$_UnknownAppInfoExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_UnknownAppInfoException(
+    return _then(_$UnknownAppInfoExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -801,8 +806,8 @@ class __$$_UnknownAppInfoExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownAppInfoException extends _UnknownAppInfoException {
-  _$_UnknownAppInfoException(
+class _$UnknownAppInfoExceptionImpl extends _UnknownAppInfoException {
+  _$UnknownAppInfoExceptionImpl(
       {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
@@ -822,7 +827,7 @@ class _$_UnknownAppInfoException extends _UnknownAppInfoException {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UnknownAppInfoException &&
+            other is _$UnknownAppInfoExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -836,10 +841,9 @@ class _$_UnknownAppInfoException extends _UnknownAppInfoException {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownAppInfoExceptionCopyWith<_$_UnknownAppInfoException>
-      get copyWith =>
-          __$$_UnknownAppInfoExceptionCopyWithImpl<_$_UnknownAppInfoException>(
-              this, _$identity);
+  _$$UnknownAppInfoExceptionImplCopyWith<_$UnknownAppInfoExceptionImpl>
+      get copyWith => __$$UnknownAppInfoExceptionImplCopyWithImpl<
+          _$UnknownAppInfoExceptionImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -920,7 +924,7 @@ abstract class _UnknownAppInfoException extends AppInfoException {
   factory _UnknownAppInfoException(
       {required final StackTrace stackTrace,
       required final AppInfoErrorType errorType,
-      final String? message}) = _$_UnknownAppInfoException;
+      final String? message}) = _$UnknownAppInfoExceptionImpl;
   _UnknownAppInfoException._() : super._();
 
   @override
@@ -931,6 +935,6 @@ abstract class _UnknownAppInfoException extends AppInfoException {
   String? get message;
   @override
   @JsonKey(ignore: true)
-  _$$_UnknownAppInfoExceptionCopyWith<_$_UnknownAppInfoException>
+  _$$UnknownAppInfoExceptionImplCopyWith<_$UnknownAppInfoExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

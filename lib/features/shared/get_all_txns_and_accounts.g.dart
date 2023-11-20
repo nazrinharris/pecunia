@@ -11,8 +11,8 @@ String _$getAllTxnsAndAccountsHash() =>
 
 /// See also [getAllTxnsAndAccounts].
 @ProviderFor(getAllTxnsAndAccounts)
-final getAllTxnsAndAccountsProvider =
-    AutoDisposeFutureProvider<(List<Transaction>, List<Account>)>.internal(
+final getAllTxnsAndAccountsProvider = AutoDisposeFutureProvider<
+    (List<Transaction> txns, List<Account> accounts)>.internal(
   getAllTxnsAndAccounts,
   name: r'getAllTxnsAndAccountsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,7 @@ final getAllTxnsAndAccountsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef GetAllTxnsAndAccountsRef
-    = AutoDisposeFutureProviderRef<(List<Transaction>, List<Account>)>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+typedef GetAllTxnsAndAccountsRef = AutoDisposeFutureProviderRef<
+    (List<Transaction> txns, List<Account> accounts)>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

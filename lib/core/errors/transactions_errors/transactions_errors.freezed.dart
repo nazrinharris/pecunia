@@ -123,11 +123,12 @@ class _$TransactionsExceptionCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_TransactionsExceptionCopyWith<$Res>
+abstract class _$$TransactionsExceptionImplCopyWith<$Res>
     implements $TransactionsExceptionCopyWith<$Res> {
-  factory _$$_TransactionsExceptionCopyWith(_$_TransactionsException value,
-          $Res Function(_$_TransactionsException) then) =
-      __$$_TransactionsExceptionCopyWithImpl<$Res>;
+  factory _$$TransactionsExceptionImplCopyWith(
+          _$TransactionsExceptionImpl value,
+          $Res Function(_$TransactionsExceptionImpl) then) =
+      __$$TransactionsExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -137,11 +138,12 @@ abstract class _$$_TransactionsExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TransactionsExceptionCopyWithImpl<$Res>
-    extends _$TransactionsExceptionCopyWithImpl<$Res, _$_TransactionsException>
-    implements _$$_TransactionsExceptionCopyWith<$Res> {
-  __$$_TransactionsExceptionCopyWithImpl(_$_TransactionsException _value,
-      $Res Function(_$_TransactionsException) _then)
+class __$$TransactionsExceptionImplCopyWithImpl<$Res>
+    extends _$TransactionsExceptionCopyWithImpl<$Res,
+        _$TransactionsExceptionImpl>
+    implements _$$TransactionsExceptionImplCopyWith<$Res> {
+  __$$TransactionsExceptionImplCopyWithImpl(_$TransactionsExceptionImpl _value,
+      $Res Function(_$TransactionsExceptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -151,7 +153,7 @@ class __$$_TransactionsExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_TransactionsException(
+    return _then(_$TransactionsExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -170,8 +172,8 @@ class __$$_TransactionsExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TransactionsException extends _TransactionsException {
-  _$_TransactionsException(
+class _$TransactionsExceptionImpl extends _TransactionsException {
+  _$TransactionsExceptionImpl(
       {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
@@ -191,7 +193,7 @@ class _$_TransactionsException extends _TransactionsException {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TransactionsException &&
+            other is _$TransactionsExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -205,9 +207,9 @@ class _$_TransactionsException extends _TransactionsException {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TransactionsExceptionCopyWith<_$_TransactionsException> get copyWith =>
-      __$$_TransactionsExceptionCopyWithImpl<_$_TransactionsException>(
-          this, _$identity);
+  _$$TransactionsExceptionImplCopyWith<_$TransactionsExceptionImpl>
+      get copyWith => __$$TransactionsExceptionImplCopyWithImpl<
+          _$TransactionsExceptionImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -288,7 +290,7 @@ abstract class _TransactionsException extends TransactionsException {
   factory _TransactionsException(
       {required final StackTrace stackTrace,
       required final TransactionsErrorType errorType,
-      final String? message}) = _$_TransactionsException;
+      final String? message}) = _$TransactionsExceptionImpl;
   _TransactionsException._() : super._();
 
   @override
@@ -299,17 +301,17 @@ abstract class _TransactionsException extends TransactionsException {
   String? get message;
   @override
   @JsonKey(ignore: true)
-  _$$_TransactionsExceptionCopyWith<_$_TransactionsException> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TransactionsExceptionImplCopyWith<_$TransactionsExceptionImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownTransactionsExceptionCopyWith<$Res>
+abstract class _$$UnknownTransactionsExceptionImplCopyWith<$Res>
     implements $TransactionsExceptionCopyWith<$Res> {
-  factory _$$_UnknownTransactionsExceptionCopyWith(
-          _$_UnknownTransactionsException value,
-          $Res Function(_$_UnknownTransactionsException) then) =
-      __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>;
+  factory _$$UnknownTransactionsExceptionImplCopyWith(
+          _$UnknownTransactionsExceptionImpl value,
+          $Res Function(_$UnknownTransactionsExceptionImpl) then) =
+      __$$UnknownTransactionsExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -319,13 +321,13 @@ abstract class _$$_UnknownTransactionsExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
+class __$$UnknownTransactionsExceptionImplCopyWithImpl<$Res>
     extends _$TransactionsExceptionCopyWithImpl<$Res,
-        _$_UnknownTransactionsException>
-    implements _$$_UnknownTransactionsExceptionCopyWith<$Res> {
-  __$$_UnknownTransactionsExceptionCopyWithImpl(
-      _$_UnknownTransactionsException _value,
-      $Res Function(_$_UnknownTransactionsException) _then)
+        _$UnknownTransactionsExceptionImpl>
+    implements _$$UnknownTransactionsExceptionImplCopyWith<$Res> {
+  __$$UnknownTransactionsExceptionImplCopyWithImpl(
+      _$UnknownTransactionsExceptionImpl _value,
+      $Res Function(_$UnknownTransactionsExceptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -335,7 +337,7 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_UnknownTransactionsException(
+    return _then(_$UnknownTransactionsExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -354,8 +356,8 @@ class __$$_UnknownTransactionsExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownTransactionsException extends _UnknownTransactionsException {
-  _$_UnknownTransactionsException(
+class _$UnknownTransactionsExceptionImpl extends _UnknownTransactionsException {
+  _$UnknownTransactionsExceptionImpl(
       {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
@@ -375,7 +377,7 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UnknownTransactionsException &&
+            other is _$UnknownTransactionsExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -389,9 +391,10 @@ class _$_UnknownTransactionsException extends _UnknownTransactionsException {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownTransactionsExceptionCopyWith<_$_UnknownTransactionsException>
-      get copyWith => __$$_UnknownTransactionsExceptionCopyWithImpl<
-          _$_UnknownTransactionsException>(this, _$identity);
+  _$$UnknownTransactionsExceptionImplCopyWith<
+          _$UnknownTransactionsExceptionImpl>
+      get copyWith => __$$UnknownTransactionsExceptionImplCopyWithImpl<
+          _$UnknownTransactionsExceptionImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -472,7 +475,7 @@ abstract class _UnknownTransactionsException extends TransactionsException {
   factory _UnknownTransactionsException(
       {required final StackTrace stackTrace,
       required final TransactionsErrorType errorType,
-      final String? message}) = _$_UnknownTransactionsException;
+      final String? message}) = _$UnknownTransactionsExceptionImpl;
   _UnknownTransactionsException._() : super._();
 
   @override
@@ -483,7 +486,8 @@ abstract class _UnknownTransactionsException extends TransactionsException {
   String? get message;
   @override
   @JsonKey(ignore: true)
-  _$$_UnknownTransactionsExceptionCopyWith<_$_UnknownTransactionsException>
+  _$$UnknownTransactionsExceptionImplCopyWith<
+          _$UnknownTransactionsExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -600,11 +604,11 @@ class _$TransactionsFailureCopyWithImpl<$Res, $Val extends TransactionsFailure>
 }
 
 /// @nodoc
-abstract class _$$_TransactionsFailureCopyWith<$Res>
+abstract class _$$TransactionsFailureImplCopyWith<$Res>
     implements $TransactionsFailureCopyWith<$Res> {
-  factory _$$_TransactionsFailureCopyWith(_$_TransactionsFailure value,
-          $Res Function(_$_TransactionsFailure) then) =
-      __$$_TransactionsFailureCopyWithImpl<$Res>;
+  factory _$$TransactionsFailureImplCopyWith(_$TransactionsFailureImpl value,
+          $Res Function(_$TransactionsFailureImpl) then) =
+      __$$TransactionsFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -615,11 +619,11 @@ abstract class _$$_TransactionsFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TransactionsFailureCopyWithImpl<$Res>
-    extends _$TransactionsFailureCopyWithImpl<$Res, _$_TransactionsFailure>
-    implements _$$_TransactionsFailureCopyWith<$Res> {
-  __$$_TransactionsFailureCopyWithImpl(_$_TransactionsFailure _value,
-      $Res Function(_$_TransactionsFailure) _then)
+class __$$TransactionsFailureImplCopyWithImpl<$Res>
+    extends _$TransactionsFailureCopyWithImpl<$Res, _$TransactionsFailureImpl>
+    implements _$$TransactionsFailureImplCopyWith<$Res> {
+  __$$TransactionsFailureImplCopyWithImpl(_$TransactionsFailureImpl _value,
+      $Res Function(_$TransactionsFailureImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -630,7 +634,7 @@ class __$$_TransactionsFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_TransactionsFailure(
+    return _then(_$TransactionsFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -651,8 +655,8 @@ class __$$_TransactionsFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TransactionsFailure extends _TransactionsFailure {
-  const _$_TransactionsFailure(
+class _$TransactionsFailureImpl extends _TransactionsFailure {
+  const _$TransactionsFailureImpl(
       {required this.stackTrace,
       required this.message,
       required this.errorType,
@@ -671,8 +675,8 @@ class _$_TransactionsFailure extends _TransactionsFailure {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TransactionsFailureCopyWith<_$_TransactionsFailure> get copyWith =>
-      __$$_TransactionsFailureCopyWithImpl<_$_TransactionsFailure>(
+  _$$TransactionsFailureImplCopyWith<_$TransactionsFailureImpl> get copyWith =>
+      __$$TransactionsFailureImplCopyWithImpl<_$TransactionsFailureImpl>(
           this, _$identity);
 
   @override
@@ -755,7 +759,7 @@ abstract class _TransactionsFailure extends TransactionsFailure {
       {required final StackTrace stackTrace,
       required final String message,
       required final TransactionsErrorType errorType,
-      final Object? rawException}) = _$_TransactionsFailure;
+      final Object? rawException}) = _$TransactionsFailureImpl;
   const _TransactionsFailure._() : super._();
 
   @override
@@ -768,17 +772,17 @@ abstract class _TransactionsFailure extends TransactionsFailure {
   Object? get rawException;
   @override
   @JsonKey(ignore: true)
-  _$$_TransactionsFailureCopyWith<_$_TransactionsFailure> get copyWith =>
+  _$$TransactionsFailureImplCopyWith<_$TransactionsFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownTransactionsFailureCopyWith<$Res>
+abstract class _$$UnknownTransactionsFailureImplCopyWith<$Res>
     implements $TransactionsFailureCopyWith<$Res> {
-  factory _$$_UnknownTransactionsFailureCopyWith(
-          _$_UnknownTransactionsFailure value,
-          $Res Function(_$_UnknownTransactionsFailure) then) =
-      __$$_UnknownTransactionsFailureCopyWithImpl<$Res>;
+  factory _$$UnknownTransactionsFailureImplCopyWith(
+          _$UnknownTransactionsFailureImpl value,
+          $Res Function(_$UnknownTransactionsFailureImpl) then) =
+      __$$UnknownTransactionsFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -789,13 +793,13 @@ abstract class _$$_UnknownTransactionsFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownTransactionsFailureCopyWithImpl<$Res>
+class __$$UnknownTransactionsFailureImplCopyWithImpl<$Res>
     extends _$TransactionsFailureCopyWithImpl<$Res,
-        _$_UnknownTransactionsFailure>
-    implements _$$_UnknownTransactionsFailureCopyWith<$Res> {
-  __$$_UnknownTransactionsFailureCopyWithImpl(
-      _$_UnknownTransactionsFailure _value,
-      $Res Function(_$_UnknownTransactionsFailure) _then)
+        _$UnknownTransactionsFailureImpl>
+    implements _$$UnknownTransactionsFailureImplCopyWith<$Res> {
+  __$$UnknownTransactionsFailureImplCopyWithImpl(
+      _$UnknownTransactionsFailureImpl _value,
+      $Res Function(_$UnknownTransactionsFailureImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -806,7 +810,7 @@ class __$$_UnknownTransactionsFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_UnknownTransactionsFailure(
+    return _then(_$UnknownTransactionsFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -827,8 +831,8 @@ class __$$_UnknownTransactionsFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownTransactionsFailure extends _UnknownTransactionsFailure {
-  const _$_UnknownTransactionsFailure(
+class _$UnknownTransactionsFailureImpl extends _UnknownTransactionsFailure {
+  const _$UnknownTransactionsFailureImpl(
       {required this.stackTrace,
       required this.message,
       this.errorType = TransactionsErrorType.unknown,
@@ -848,9 +852,9 @@ class _$_UnknownTransactionsFailure extends _UnknownTransactionsFailure {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownTransactionsFailureCopyWith<_$_UnknownTransactionsFailure>
-      get copyWith => __$$_UnknownTransactionsFailureCopyWithImpl<
-          _$_UnknownTransactionsFailure>(this, _$identity);
+  _$$UnknownTransactionsFailureImplCopyWith<_$UnknownTransactionsFailureImpl>
+      get copyWith => __$$UnknownTransactionsFailureImplCopyWithImpl<
+          _$UnknownTransactionsFailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -932,7 +936,7 @@ abstract class _UnknownTransactionsFailure extends TransactionsFailure {
       {required final StackTrace stackTrace,
       required final String message,
       final TransactionsErrorType errorType,
-      final Object? rawException}) = _$_UnknownTransactionsFailure;
+      final Object? rawException}) = _$UnknownTransactionsFailureImpl;
   const _UnknownTransactionsFailure._() : super._();
 
   @override
@@ -945,6 +949,6 @@ abstract class _UnknownTransactionsFailure extends TransactionsFailure {
   Object? get rawException;
   @override
   @JsonKey(ignore: true)
-  _$$_UnknownTransactionsFailureCopyWith<_$_UnknownTransactionsFailure>
+  _$$UnknownTransactionsFailureImplCopyWith<_$UnknownTransactionsFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

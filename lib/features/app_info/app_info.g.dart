@@ -44,8 +44,6 @@ class _SystemHash {
   }
 }
 
-typedef SetIsFirstOpenRef = AutoDisposeFutureProviderRef<void>;
-
 /// See also [setIsFirstOpen].
 @ProviderFor(setIsFirstOpen)
 const setIsFirstOpenProvider = SetIsFirstOpenFamily();
@@ -92,10 +90,10 @@ class SetIsFirstOpenFamily extends Family<AsyncValue<void>> {
 class SetIsFirstOpenProvider extends AutoDisposeFutureProvider<void> {
   /// See also [setIsFirstOpen].
   SetIsFirstOpenProvider(
-    this.value,
-  ) : super.internal(
+    bool value,
+  ) : this._internal(
           (ref) => setIsFirstOpen(
-            ref,
+            ref as SetIsFirstOpenRef,
             value,
           ),
           from: setIsFirstOpenProvider,
@@ -107,9 +105,43 @@ class SetIsFirstOpenProvider extends AutoDisposeFutureProvider<void> {
           dependencies: SetIsFirstOpenFamily._dependencies,
           allTransitiveDependencies:
               SetIsFirstOpenFamily._allTransitiveDependencies,
+          value: value,
         );
 
+  SetIsFirstOpenProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.value,
+  }) : super.internal();
+
   final bool value;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(SetIsFirstOpenRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SetIsFirstOpenProvider._internal(
+        (ref) => create(ref as SetIsFirstOpenRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        value: value,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _SetIsFirstOpenProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -124,4 +156,18 @@ class SetIsFirstOpenProvider extends AutoDisposeFutureProvider<void> {
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin SetIsFirstOpenRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `value` of this provider.
+  bool get value;
+}
+
+class _SetIsFirstOpenProviderElement
+    extends AutoDisposeFutureProviderElement<void> with SetIsFirstOpenRef {
+  _SetIsFirstOpenProviderElement(super.provider);
+
+  @override
+  bool get value => (origin as SetIsFirstOpenProvider).value;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

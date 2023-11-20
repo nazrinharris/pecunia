@@ -29,8 +29,6 @@ class _SystemHash {
   }
 }
 
-typedef GetTxnsOverPeriodRef = AutoDisposeFutureProviderRef<List<Transaction>>;
-
 /// See also [getTxnsOverPeriod].
 @ProviderFor(getTxnsOverPeriod)
 const getTxnsOverPeriodProvider = GetTxnsOverPeriodFamily();
@@ -90,14 +88,14 @@ class GetTxnsOverPeriodProvider
     extends AutoDisposeFutureProvider<List<Transaction>> {
   /// See also [getTxnsOverPeriod].
   GetTxnsOverPeriodProvider({
-    required this.startDate,
-    required this.endDate,
-    required this.type,
-    required this.currency,
-    this.includeTransfers = false,
-  }) : super.internal(
+    required DateTime startDate,
+    required DateTime endDate,
+    required TransactionType type,
+    required Currency currency,
+    bool includeTransfers = false,
+  }) : this._internal(
           (ref) => getTxnsOverPeriod(
-            ref,
+            ref as GetTxnsOverPeriodRef,
             startDate: startDate,
             endDate: endDate,
             type: type,
@@ -113,13 +111,59 @@ class GetTxnsOverPeriodProvider
           dependencies: GetTxnsOverPeriodFamily._dependencies,
           allTransitiveDependencies:
               GetTxnsOverPeriodFamily._allTransitiveDependencies,
+          startDate: startDate,
+          endDate: endDate,
+          type: type,
+          currency: currency,
+          includeTransfers: includeTransfers,
         );
+
+  GetTxnsOverPeriodProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.startDate,
+    required this.endDate,
+    required this.type,
+    required this.currency,
+    required this.includeTransfers,
+  }) : super.internal();
 
   final DateTime startDate;
   final DateTime endDate;
   final TransactionType type;
   final Currency currency;
   final bool includeTransfers;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Transaction>> Function(GetTxnsOverPeriodRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetTxnsOverPeriodProvider._internal(
+        (ref) => create(ref as GetTxnsOverPeriodRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        startDate: startDate,
+        endDate: endDate,
+        type: type,
+        currency: currency,
+        includeTransfers: includeTransfers,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Transaction>> createElement() {
+    return _GetTxnsOverPeriodProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -143,4 +187,40 @@ class GetTxnsOverPeriodProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+mixin GetTxnsOverPeriodRef on AutoDisposeFutureProviderRef<List<Transaction>> {
+  /// The parameter `startDate` of this provider.
+  DateTime get startDate;
+
+  /// The parameter `endDate` of this provider.
+  DateTime get endDate;
+
+  /// The parameter `type` of this provider.
+  TransactionType get type;
+
+  /// The parameter `currency` of this provider.
+  Currency get currency;
+
+  /// The parameter `includeTransfers` of this provider.
+  bool get includeTransfers;
+}
+
+class _GetTxnsOverPeriodProviderElement
+    extends AutoDisposeFutureProviderElement<List<Transaction>>
+    with GetTxnsOverPeriodRef {
+  _GetTxnsOverPeriodProviderElement(super.provider);
+
+  @override
+  DateTime get startDate => (origin as GetTxnsOverPeriodProvider).startDate;
+  @override
+  DateTime get endDate => (origin as GetTxnsOverPeriodProvider).endDate;
+  @override
+  TransactionType get type => (origin as GetTxnsOverPeriodProvider).type;
+  @override
+  Currency get currency => (origin as GetTxnsOverPeriodProvider).currency;
+  @override
+  bool get includeTransfers =>
+      (origin as GetTxnsOverPeriodProvider).includeTransfers;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

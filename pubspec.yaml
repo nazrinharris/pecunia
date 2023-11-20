@@ -11,11 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Remote
+  # Remote and Authentication
   supabase_flutter: ^1.6.2
+  dart_jsonwebtoken: ^2.12.1
 
   # Navigation
-  go_router: ^6.5.0
+  go_router: ^12.1.1
 
   # Business Logic, Dependency Injection
   hooks_riverpod:
@@ -27,7 +28,7 @@ dependencies:
   json_annotation: ^4.8.0
   equatable: ^2.0.5
   uuid:
-  money2: ^3.4.1
+  money2: ^4.0.0
   intl: ^0.18.1
 
   # Local Storage
@@ -37,12 +38,13 @@ dependencies:
   path: ^1.8.3
   drift_db_viewer: ^2.0.0
   shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.0.0
 
   # Functional Programming
-  fpdart: ^0.6.0
+  fpdart: ^1.1.0
 
   # Connectivity and Application Info
-  internet_connection_checker_plus: ^1.0.1
+  internet_connection_checker_plus: ^2.1.0
   package_info_plus: ^4.2.0
 
   # Icons and Splash
@@ -61,21 +63,21 @@ dependencies:
   animated_text_kit: ^4.2.2
   sprung: ^3.0.1
   flutter_speed_dial: ^7.0.0
-  fl_chart: ^0.63.0
+  fl_chart: ^0.64.0
   page_view_dot_indicator: ^2.3.0
 
   # Convenience
-  screwdriver: ^4.1.0
+  screwdriver: ^5.3.0
   flex_color_picker: ^3.3.0
   flutter_iconpicker: ^3.2.4
   email_validator: ^2.1.17
 
   # Testing
-  mocktail: ^0.3.0
+  mocktail: ^1.0.1
   clock: ^1.1.1
 
   # Logging
-  logger: ^1.4.0
+  logger: ^2.0.2+1
   stack_trace: ^1.11.0
 
 dev_dependencies:
@@ -90,8 +92,8 @@ dev_dependencies:
 
   # Linting
   custom_lint:
-  riverpod_lint: ^1.3.2
-  flutter_lints: ^2.0.0
+  riverpod_lint: ^2.3.4
+  flutter_lints: ^3.0.1
   very_good_analysis: ^5.0.0+1
 
   # Local Storage
