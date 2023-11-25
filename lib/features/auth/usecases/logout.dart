@@ -1,6 +1,5 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
-import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'logout.g.dart';
@@ -12,10 +11,10 @@ class Logout extends _$Logout {
     return const Option.none();
   }
 
-  Future<void> logout() async {
+  Future<void> logout(String uid) async {
     state = const AsyncValue.loading();
 
-    (await ref.watch(authRepoProvider).logout(const Session(isValid: false)).run()).fold(
+    (await ref.watch(authRepoProvider).logout(uid).run()).fold(
       (l) => state = AsyncError(l, l.stackTrace),
       (r) => state = const AsyncData(Option.of(unit)),
     );

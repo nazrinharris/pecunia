@@ -1,3 +1,4 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
@@ -24,14 +25,12 @@ abstract interface class AuthRemoteDS {
   TaskEither<AuthFailure, PecuniaUserDTOAndSession> loginWithPassword({
     required String email,
     required String password,
-    required Session currentSession,
   });
 
   TaskEither<AuthFailure, PecuniaUserDTOAndSession> registerWithPassword({
     required String username,
     required String email,
     required String password,
-    required Session currentSession,
   });
 
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser();
@@ -49,13 +48,11 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   TaskEither<AuthFailure, PecuniaUserDTOAndSession> loginWithPassword({
     required String email,
     required String password,
-    required Session currentSession,
   }) {
     return network
         .isConnected()
         .mapLeft(AuthRemoteDSHelper.mapNetworkInfoFailureToAuthFailure)
         .flatMap<AuthResponseAndSession>(_loginIfConnected(
-          currentSession: currentSession,
           email: email,
           password: password,
         ))
@@ -72,7 +69,6 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   TaskEither<AuthFailure, AuthResponseAndSession> Function(bool isConnected) _loginIfConnected({
     required String email,
     required String password,
-    required Session currentSession,
   }) {
     return (isConnected) {
       return isConnected
@@ -82,7 +78,13 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
                   email: email,
                   password: password,
                 );
-                return (response: response, currentSession: const Session(isValid: true));
+                return (
+                  response: response,
+                  currentSession: Session.remote(
+                    uid: response.user!.id,
+                    jwt: JWT.decode(response.session!.accessToken),
+                  )
+                );
               },
               mapSupabaseToFailure,
             )
@@ -98,13 +100,15 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     required String username,
     required String email,
     required String password,
-    required Session currentSession,
   }) {
     return network
         .isConnected()
         .mapLeft(AuthRemoteDSHelper.mapNetworkInfoFailureToAuthFailure)
         .flatMap<AuthResponseAndSession>(_registerIfConnected(
-            currentSession: currentSession, username: username, email: email, password: password))
+          username: username,
+          email: email,
+          password: password,
+        ))
         .flatMap((r) => AuthRemoteDSHelper.getUserFromAuthResponse(
               r.response,
               r.currentSession,
@@ -119,7 +123,6 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     required String username,
     required String email,
     required String password,
-    required Session currentSession,
   }) {
     return (isConnected) {
       return isConnected
@@ -130,7 +133,13 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
                   password: password,
                   data: {'username': username},
                 );
-                return (response: response, currentSession: const Session(isValid: true));
+                return (
+                  response: response,
+                  currentSession: Session.remote(
+                    uid: response.user!.id,
+                    jwt: JWT.decode(response.session!.accessToken),
+                  )
+                );
               },
               mapSupabaseToFailure,
             )
@@ -157,7 +166,7 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
           ? TaskEither.tryCatch(
               () async {
                 await supabaseClient.auth.signOut();
-                return currentSession.copyWith(isValid: false);
+                return currentSession.copyWith(uid: '');
               },
               mapSupabaseToFailure,
             )

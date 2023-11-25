@@ -6,7 +6,7 @@ part of 'auth_local_ds.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authLocalDSHash() => r'23ae152a52411dea06a744475a4fef4e4021c77d';
+String _$authLocalDSHash() => r'e4256e23477f0ed5a6abb9e09e11d0d3e8e40b38';
 
 /// See also [authLocalDS].
 @ProviderFor(authLocalDS)

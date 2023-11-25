@@ -435,6 +435,9 @@ mixin _$AuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -448,6 +451,9 @@ mixin _$AuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -461,6 +467,9 @@ mixin _$AuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -469,6 +478,8 @@ mixin _$AuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -476,6 +487,8 @@ mixin _$AuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -483,6 +496,8 @@ mixin _$AuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -629,6 +644,9 @@ class _$AuthFailureImpl extends _AuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) {
     return $default(stackTrace, message, errorType, rawException);
   }
@@ -645,6 +663,9 @@ class _$AuthFailureImpl extends _AuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) {
     return $default?.call(stackTrace, message, errorType, rawException);
   }
@@ -661,6 +682,9 @@ class _$AuthFailureImpl extends _AuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -675,6 +699,8 @@ class _$AuthFailureImpl extends _AuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) {
     return $default(this);
   }
@@ -685,6 +711,8 @@ class _$AuthFailureImpl extends _AuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) {
     return $default?.call(this);
   }
@@ -695,6 +723,8 @@ class _$AuthFailureImpl extends _AuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -816,6 +846,9 @@ class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) {
     return noInternet(stackTrace, message, errorType, rawException);
   }
@@ -832,6 +865,9 @@ class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) {
     return noInternet?.call(stackTrace, message, errorType, rawException);
   }
@@ -848,6 +884,9 @@ class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (noInternet != null) {
@@ -862,6 +901,8 @@ class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) {
     return noInternet(this);
   }
@@ -872,6 +913,8 @@ class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) {
     return noInternet?.call(this);
   }
@@ -882,6 +925,8 @@ class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (noInternet != null) {
@@ -1002,6 +1047,9 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) {
     return unknown(stackTrace, message, errorType, rawException);
   }
@@ -1018,6 +1066,9 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) {
     return unknown?.call(stackTrace, message, errorType, rawException);
   }
@@ -1034,6 +1085,9 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (unknown != null) {
@@ -1048,6 +1102,8 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) {
     return unknown(this);
   }
@@ -1058,6 +1114,8 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) {
     return unknown?.call(this);
   }
@@ -1068,6 +1126,8 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (unknown != null) {
@@ -1097,4 +1157,212 @@ abstract class _UnknownAuthFailure extends AuthFailure {
   @JsonKey(ignore: true)
   _$$UnknownAuthFailureImplCopyWith<_$UnknownAuthFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$IncorrectCredentialsAuthFailureImplCopyWith<$Res>
+    implements $AuthFailureCopyWith<$Res> {
+  factory _$$IncorrectCredentialsAuthFailureImplCopyWith(
+          _$IncorrectCredentialsAuthFailureImpl value,
+          $Res Function(_$IncorrectCredentialsAuthFailureImpl) then) =
+      __$$IncorrectCredentialsAuthFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {StackTrace stackTrace,
+      String message,
+      AuthErrorType? errorType,
+      Object? rawException});
+}
+
+/// @nodoc
+class __$$IncorrectCredentialsAuthFailureImplCopyWithImpl<$Res>
+    extends _$AuthFailureCopyWithImpl<$Res,
+        _$IncorrectCredentialsAuthFailureImpl>
+    implements _$$IncorrectCredentialsAuthFailureImplCopyWith<$Res> {
+  __$$IncorrectCredentialsAuthFailureImplCopyWithImpl(
+      _$IncorrectCredentialsAuthFailureImpl _value,
+      $Res Function(_$IncorrectCredentialsAuthFailureImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? message = null,
+    Object? errorType = freezed,
+    Object? rawException = freezed,
+  }) {
+    return _then(_$IncorrectCredentialsAuthFailureImpl(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      errorType: freezed == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as AuthErrorType?,
+      rawException:
+          freezed == rawException ? _value.rawException : rawException,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$IncorrectCredentialsAuthFailureImpl
+    extends _IncorrectCredentialsAuthFailure {
+  const _$IncorrectCredentialsAuthFailureImpl(
+      {required this.stackTrace,
+      required this.message,
+      this.errorType = AuthErrorType.incorrectCredentials,
+      this.rawException})
+      : super._();
+
+  @override
+  final StackTrace stackTrace;
+  @override
+  final String message;
+  @override
+  @JsonKey()
+  final AuthErrorType? errorType;
+  @override
+  final Object? rawException;
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$IncorrectCredentialsAuthFailureImplCopyWith<
+          _$IncorrectCredentialsAuthFailureImpl>
+      get copyWith => __$$IncorrectCredentialsAuthFailureImplCopyWithImpl<
+          _$IncorrectCredentialsAuthFailureImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
+        $default, {
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
+        noInternet,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials(stackTrace, message, errorType, rawException);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        noInternet,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials?.call(
+        stackTrace, message, errorType, rawException);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        $default, {
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        noInternet,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
+    required TResult orElse(),
+  }) {
+    if (incorrectCredentials != null) {
+      return incorrectCredentials(stackTrace, message, errorType, rawException);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_AuthFailure value) $default, {
+    required TResult Function(_NoInternetAuthFailure value) noInternet,
+    required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_AuthFailure value)? $default, {
+    TResult? Function(_NoInternetAuthFailure value)? noInternet,
+    TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_AuthFailure value)? $default, {
+    TResult Function(_NoInternetAuthFailure value)? noInternet,
+    TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
+    required TResult orElse(),
+  }) {
+    if (incorrectCredentials != null) {
+      return incorrectCredentials(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _IncorrectCredentialsAuthFailure extends AuthFailure {
+  const factory _IncorrectCredentialsAuthFailure(
+      {required final StackTrace stackTrace,
+      required final String message,
+      final AuthErrorType? errorType,
+      final Object? rawException}) = _$IncorrectCredentialsAuthFailureImpl;
+  const _IncorrectCredentialsAuthFailure._() : super._();
+
+  @override
+  StackTrace get stackTrace;
+  @override
+  String get message;
+  @override
+  AuthErrorType? get errorType;
+  @override
+  Object? get rawException;
+  @override
+  @JsonKey(ignore: true)
+  _$$IncorrectCredentialsAuthFailureImplCopyWith<
+          _$IncorrectCredentialsAuthFailureImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

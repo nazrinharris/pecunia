@@ -24,6 +24,7 @@ class ProviderLogger extends ProviderObserver {
         final failure = newValue.error as Failure;
         debugPrint(
             '(${provider.name}) : ${newValue.runtimeType} ${failure.runtimeType} - ${failure.errorType}');
+        debugPrint(failure.toVerboseString());
         return;
       }
 

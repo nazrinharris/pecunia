@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
-import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
@@ -176,7 +175,6 @@ class RegisterForm extends HookConsumerWidget {
                     username: usernameController.text,
                     password: passwordController.text,
                     confirmPassword: confirmPasswordController.text,
-                    currentSession: const Session(isValid: false),
                   ));
                 }
               },

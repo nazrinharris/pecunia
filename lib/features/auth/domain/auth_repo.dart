@@ -10,35 +10,16 @@ part 'auth_repo.g.dart';
 
 @riverpod
 AuthRepo authRepo(AuthRepoRef ref) {
-  return AuthRepoImpl(
+  return AuthRepo(
     authRemoteDS: ref.watch(authRemoteDSProvider),
     authLocalDS: ref.watch(authLocalDSProvider),
   );
 }
 
-abstract interface class AuthRepo {
-  TaskEither<AuthFailure, PecuniaUserAndSession> loginWithPassword({
-    required String email,
-    required String password,
-    required Session currentSession,
-  });
+typedef PecuniaUserAndSession = ({PecuniaUser user, Session session});
 
-  TaskEither<AuthFailure, PecuniaUserAndSession> registerWithPassword({
-    required String username,
-    required String email,
-    required String password,
-    required Session currentSession,
-  });
-
-  TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser();
-
-  TaskEither<AuthFailure, Session> logout(Session currentSession);
-}
-
-typedef PecuniaUserAndSession = ({PecuniaUser pecuniaUser, Session session});
-
-class AuthRepoImpl implements AuthRepo {
-  AuthRepoImpl({
+class AuthRepo {
+  AuthRepo({
     required this.authRemoteDS,
     required this.authLocalDS,
   });
@@ -46,48 +27,63 @@ class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDS authRemoteDS;
   final AuthLocalDS authLocalDS;
 
-  @override
   TaskEither<AuthFailure, PecuniaUserAndSession> loginWithPassword({
     required String email,
     required String password,
-    required Session currentSession,
   }) {
-    return authRemoteDS
-        .loginWithPassword(email: email, password: password, currentSession: currentSession)
-        .flatMap(
+    return authRemoteDS.loginWithPassword(email: email, password: password).flatMap(
           (r) => authLocalDS.storeSavedUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
-                (_) => (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
+                (_) => (user: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
               ),
         );
   }
 
-  @override
+  TaskEither<AuthFailure, PecuniaUserAndSession> localLoginWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) =>
+      authLocalDS.loginWithEmailAndPassword(email: email, password: password).flatMap(
+            (r) => authLocalDS.storeSavedUser(r.user).map((_) => r),
+          );
+
+  TaskEither<AuthFailure, PecuniaUserAndSession> localRegisterWithEmailAndPassword({
+    required String email,
+    required String username,
+    required String password,
+  }) =>
+      authLocalDS
+          .registerWithEmailAndPassword(
+            email: email,
+            password: password,
+            username: username,
+          )
+          .flatMap(
+            (r) => authLocalDS.storeSavedUser(r.user).map((_) => r),
+          );
+
   TaskEither<AuthFailure, PecuniaUserAndSession> registerWithPassword({
     required String username,
     required String email,
     required String password,
-    required Session currentSession,
   }) {
     return authRemoteDS
         .registerWithPassword(
           username: username,
           email: email,
           password: password,
-          currentSession: currentSession,
         )
         .flatMap(
           (r) => authLocalDS.storeSavedUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
-                (_) => (pecuniaUser: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
+                (_) => (user: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
               ),
         );
   }
 
-  @override
-  TaskEither<AuthFailure, Session> logout(Session currentSession) {
-    return authRemoteDS.logout(currentSession);
+  // TODO: Implement logout for both local and remote
+  TaskEither<AuthFailure, Unit> logout(String uid) {
+    throw UnimplementedError();
   }
 
-  @override
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {
     return authRemoteDS.getLoggedInUser();
   }

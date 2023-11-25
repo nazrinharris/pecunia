@@ -105,9 +105,10 @@ class DebugLocalDBScreen extends ConsumerWidget {
                             backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 83, 10, 10)),
                           ),
                           onPressed: () async {
-                            await ref.read(authRepoProvider).logout(const Session(isValid: true)).run();
+                            await ref.read(authRepoProvider).logout(Session.emptyRemote()).run();
                             ref.read(loginWithEmailAndPasswordProvider.notifier).reset();
                             ref.read(registerWithEmailAndPasswordProvider.notifier).reset();
+                            // ignore: use_build_context_synchronously
                             context.go('/start');
                           },
                           child: const Text('Logout'),
