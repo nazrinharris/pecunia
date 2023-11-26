@@ -26,10 +26,18 @@ class Session with _$Session {
 
   factory Session.emptyRemote() => Session.remote(uid: '', jwt: JWT(''));
 
-  factory Session.fromLocalToken(String uid, String jwtString) {
+  factory Session.fromLocalToken(String jwtString) {
+    final jwt = JWT.decode(jwtString);
+    final uid = (jwt.payload as Map<String, dynamic>)['uid'] as String;
+
     return Session.local(uid: uid, jwt: JWT.decode(jwtString));
   }
 
+  /// This is what is stored in [kPecuniaUserTokenKey]. It is a JWT.
+  ///
+  /// You can also use [Session.key] to get the key to store this accessToken in [FlutterSecureStorage].
+  ///
+  /// Use [Session.fromLocalToken] to decode.
   String get accessToken => when(
         local: (uid, jwt) => jwt.sign(SecretKey(PecuniaSecrets.localJWTKey)),
         remote: (uid, jwt) => jwt.sign(SecretKey(PecuniaSecrets.localJWTKey)),

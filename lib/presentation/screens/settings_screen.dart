@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
-import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/logout.dart';
 import 'package:pecunia/presentation/screens/onboarding_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
@@ -116,7 +115,7 @@ class SettingsScreen extends ConsumerWidget {
                     title: 'Are you sure you want to logout?',
                     icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
                     onConfirm: () async {
-                      await ref.read(logoutProvider.notifier).logout(Session.emptyRemote());
+                      await ref.read(logoutProvider.notifier).logout();
                     },
                     context: context,
                   );

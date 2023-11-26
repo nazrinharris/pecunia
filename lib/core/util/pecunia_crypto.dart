@@ -21,6 +21,9 @@ String kPecuniaUserUidKey(String email) => 'pecunia_user_uid_$email';
 /// [kPecuniaUserTokenKey] is the key for the user's token, stored with `Session.accessToken`. An example of the key is `pecunia_user_token_1234567890`.
 String kPecuniaUserTokenKey(String uid) => 'pecunia_user_token_$uid';
 
+/// [kPecuniaActiveLocalSessionKey] is the key for the user's active local session, stored with `Session.key`.
+const String kPecuniaActiveLocalSessionKey = 'pecunia_active_local_session';
+
 @Riverpod(keepAlive: true)
 PecuniaCrypto pecuniaCrypto(PecuniaCryptoRef ref) {
   return PecuniaCrypto();

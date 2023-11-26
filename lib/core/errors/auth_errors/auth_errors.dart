@@ -89,6 +89,18 @@ enum AuthErrorType {
     'local-failed-delete-user-data-and-credentials',
     'Something went wrong while deleting the user data and credentials.',
   ),
+  localFailedSetLocalActiveSession(
+    'local-failed-set-active-session',
+    'Something went wrong while setting the local active session.',
+  ),
+  localFailedGetLocalActiveSession(
+    'local-failed-get-local-active-session',
+    'Something went wrong while getting the local active session.',
+  ),
+  localFailedRemoveLocalActiveSession(
+    'local-failed-remove-local-active-session',
+    'Something went wrong while removing the local active session.',
+  ),
   incorrectCredentials(
     'incorrect-credentials',
     'Your email or password are incorrect.',

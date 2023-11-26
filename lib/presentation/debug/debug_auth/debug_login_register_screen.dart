@@ -10,6 +10,7 @@ import 'package:pecunia/core/infrastructure/flutter_secure_storage/flutter_secur
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
 import 'package:pecunia/core/util/pecunia_crypto.dart';
 import 'package:pecunia/features/auth/data/auth_local_ds.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
@@ -265,6 +266,7 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              const ActiveSession(),
               const LocalAuthentication(),
               const RemoteAuthentication(),
               ElevatedButton(
@@ -277,6 +279,71 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ActiveSession extends ConsumerWidget {
+  const ActiveSession({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeSession = ref.watch(debugGetActiveSessionProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Active Session'),
+        const SizedBox(height: 14),
+        switch (activeSession) {
+          AsyncLoading() => const Center(
+              child: CupertinoActivityIndicator(),
+            ),
+          AsyncError(:final Failure error) => Text(error.toString()),
+          AsyncData(:final Option<Session> value) when value.isNone() =>
+            const Text('No active session found'),
+          AsyncData(:final Option<Session> value) => Text(value.toString()),
+          _ => const Text('Unknown state'),
+        },
+        const SizedBox(height: 14),
+        Container(
+          height: 36,
+          alignment: Alignment.centerLeft,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  ref.invalidate(debugGetActiveSessionProvider);
+                },
+                child: const Text('Refresh Active Session'),
+              ),
+              const SizedBox(width: 14),
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                        title: 'Remove Active Session',
+                        message:
+                            'This will remove the active session. It will NOT delete the actual session.',
+                        onConfirm: () async {
+                          final sessionManager = AuthLocalSessionManager(
+                              ref.read(pecuniaFlutterSecureStorageProvider).requireValue);
+
+                          await sessionManager.removeActiveSession().run();
+                        },
+                        context: context,
+                      );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  backgroundColor: Colors.red[100]!.withOpacity(0.1),
+                ),
+                child: const Text('REMOVE ACTIVE SESSION'),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -385,6 +452,9 @@ class LocalAuthentication extends HookConsumerWidget {
                 context: context,
                 title: 'Local Login Success!, ${next.value}',
               );
+          ref
+            ..invalidate(debugGetAllSessionsProvider)
+            ..invalidate(debugGetActiveSessionProvider);
         }
       })
       ..listen(debugLocalRegisterWithEmailAndPasswordProvider, (previous, next) {
@@ -452,7 +522,13 @@ class LocalAuthentication extends HookConsumerWidget {
                       ),
                       const SizedBox(width: 24),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await ref.read(authRepoProvider).logout().run();
+
+                          ref
+                            ..invalidate(debugGetAllSessionsProvider)
+                            ..invalidate(debugGetActiveSessionProvider);
+                        },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.red,
                           backgroundColor: Colors.red[100]!.withOpacity(0.1),

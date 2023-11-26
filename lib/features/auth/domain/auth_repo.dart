@@ -80,8 +80,10 @@ class AuthRepo {
   }
 
   // TODO: Implement logout for both local and remote
-  TaskEither<AuthFailure, Unit> logout(String uid) {
-    throw UnimplementedError();
+  TaskEither<AuthFailure, Unit> logout() {
+    return authLocalDS.logout().flatMap(
+          (localUser) => localUser.isNone() ? authRemoteDS.logout() : TaskEither.right(unit),
+        );
   }
 
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {

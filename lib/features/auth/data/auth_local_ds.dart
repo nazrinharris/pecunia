@@ -55,10 +55,7 @@ class AuthLocalDS {
   /// }
   ///```
   ///
-  /// Counter: Since there's a list of local users, (recorded in [kPecuniaUserUidKey] and by extension [kPecuniaUserKey]),
-  /// would this record even be necessary? We can just check if the user's uid is in the list of local users.
-  ///
-  /// Counter to counter: What about remote users? [kPrefsSavedUsers] serve to be the list of BOTH local and remote users.
+  ///[kPrefsSavedUsers] serve to be the list of BOTH local and remote users.
   TaskEither<AuthFailure, Unit> storeSavedUser(PecuniaUser user) {
     return TaskEither.tryCatch(
       () async {
@@ -137,7 +134,10 @@ class AuthLocalDS {
         return (user: user, hashedPassword: hashedPassword, salt: salt);
       },
       (e, s) => AuthFailure.unknown(stackTrace: s, message: 'Uh oh'),
-    ).flatMap(secureStorage.storeUserCredentials).flatMap(sessionManager.createSession);
+    )
+        .flatMap(secureStorage.storeUserCredentials)
+        .flatMap(sessionManager.createSession)
+        .flatMap((r) => sessionManager.setAsLocalActiveSession(r.session).map((_) => r));
   }
 
   TaskEither<AuthFailure, PecuniaUserAndSession> loginWithEmailAndPassword({
@@ -157,31 +157,26 @@ class AuthLocalDS {
           return TaskEither.right(r.uid);
         })
         .flatMap(secureStorage.getUserData)
-        .flatMap(sessionManager.createSession);
+        .flatMap(sessionManager.createSession)
+        .flatMap((r) => sessionManager.setAsLocalActiveSession(r.session).map((_) => r));
   }
 
-  TaskEither<AuthFailure, Unit> logout(String uid) {
-    return sessionManager.getSession(uid).flatMap((r) => sessionManager.removeSession(r.uid));
+  /// Logs the user out, returns [Option.some(PecuniaUser)] if log out was successful, i.e there was an existing session to log out from. Returns [Option.none()] if no session was found.
+  TaskEither<AuthFailure, Option<PecuniaUser>> logout() {
+    return sessionManager.getActiveSession().flatMap((r) => r.fold(
+          () => TaskEither.right(none()),
+          (session) => sessionManager
+              .removeSession(session.uid)
+              .flatMap((_) => sessionManager.removeActiveSession())
+              .map((_) => some(session.getUser())),
+        ));
   }
 
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {
-    return sessionManager.getAllSessions().flatMap((sessions) {
-      // As of now, we only support one session at a time.
-      if (sessions.length > 1) {
-        return TaskEither.left(AuthFailure.unknown(
-          stackTrace: StackTrace.current,
-          message: 'More than one session found.',
+    return sessionManager.getActiveSession().flatMap((r) => r.fold(
+          () => TaskEither.right(none()),
+          (t) => TaskEither.right(some(t.getUser())),
         ));
-      }
-
-      if (sessions.isEmpty) {
-        return TaskEither.right(none());
-      }
-
-      final session = sessions.first;
-
-      return TaskEither.right(some(session.getUser()));
-    });
   }
 }
 
@@ -217,6 +212,51 @@ class AuthLocalSessionManager {
     );
   }
 
+  TaskEither<AuthFailure, Unit> setAsLocalActiveSession(Session session) => TaskEither.tryCatch(
+        () async {
+          await flutterSecureStorage.write(
+            key: kPecuniaActiveLocalSessionKey,
+            value: session.accessToken,
+          );
+          return unit;
+        },
+        (e, s) => AuthFailure(
+          stackTrace: s,
+          message: AuthErrorType.localFailedSetLocalActiveSession.message,
+          errorType: AuthErrorType.localFailedSetLocalActiveSession,
+          rawException: e,
+        ),
+      );
+
+  TaskEither<AuthFailure, Option<Session>> getActiveSession() => TaskEither.tryCatch(
+        () async {
+          final activeSession = await flutterSecureStorage.read(key: kPecuniaActiveLocalSessionKey);
+          if (activeSession == null) {
+            return none();
+          }
+          return Option.of(Session.fromLocalToken(activeSession));
+        },
+        (e, s) => AuthFailure(
+          stackTrace: s,
+          message: AuthErrorType.localFailedGetLocalActiveSession.message,
+          errorType: AuthErrorType.localFailedGetLocalActiveSession,
+          rawException: e,
+        ),
+      );
+
+  TaskEither<AuthFailure, Unit> removeActiveSession() => TaskEither.tryCatch(
+        () async {
+          await flutterSecureStorage.delete(key: kPecuniaActiveLocalSessionKey);
+          return unit;
+        },
+        (e, s) => AuthFailure(
+          stackTrace: s,
+          message: AuthErrorType.localFailedRemoveLocalActiveSession.message,
+          errorType: AuthErrorType.localFailedRemoveLocalActiveSession,
+          rawException: e,
+        ),
+      );
+
   TaskEither<AuthFailure, Session> getSession(String uid) {
     return TaskEither.tryCatch(
       () async => flutterSecureStorage.read(key: Session.sessionStorageKey(uid)),
@@ -234,7 +274,7 @@ class AuthLocalSessionManager {
         ));
       }
 
-      return TaskEither.right(Session.fromLocalToken(uid, token));
+      return TaskEither.right(Session.fromLocalToken(token));
     });
   }
 
@@ -258,7 +298,7 @@ class AuthLocalSessionManager {
       () async {
         final allSessions = await flutterSecureStorage.readAll();
         final sessionKeys = allSessions.keys.where((key) => key.contains('pecunia_user_token_'));
-        final sessions = sessionKeys.map((key) => Session.fromLocalToken(key, allSessions[key]!)).toList();
+        final sessions = sessionKeys.map((key) => Session.fromLocalToken(allSessions[key]!)).toList();
 
         return sessions;
       },

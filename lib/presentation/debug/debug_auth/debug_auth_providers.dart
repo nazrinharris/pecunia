@@ -118,3 +118,14 @@ Future<List<Session>> debugGetAllSessions(DebugGetAllSessionsRef ref) async {
     (r) => r,
   );
 }
+
+@riverpod
+Future<Option<Session>> debugGetActiveSession(DebugGetActiveSessionRef ref) async {
+  final sessionManager = AuthLocalSessionManager(ref.read(pecuniaFlutterSecureStorageProvider).requireValue);
+  final failureOrSession = await sessionManager.getActiveSession().run();
+
+  return failureOrSession.fold(
+    (failure) => Future.error(failure, failure.stackTrace),
+    (r) => r,
+  );
+}

@@ -40,6 +40,24 @@ final debugGetAllSessionsProvider =
 );
 
 typedef DebugGetAllSessionsRef = AutoDisposeFutureProviderRef<List<Session>>;
+String _$debugGetActiveSessionHash() =>
+    r'9a02ec3cd7b1e8a470c959ddc7a8312c7047eb46';
+
+/// See also [debugGetActiveSession].
+@ProviderFor(debugGetActiveSession)
+final debugGetActiveSessionProvider =
+    AutoDisposeFutureProvider<Option<Session>>.internal(
+  debugGetActiveSession,
+  name: r'debugGetActiveSessionProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$debugGetActiveSessionHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DebugGetActiveSessionRef
+    = AutoDisposeFutureProviderRef<Option<Session>>;
 String _$navigateToDebugLocalDBHash() =>
     r'1b8043ac7036b81a6babfa33d88dc3106f466c55';
 

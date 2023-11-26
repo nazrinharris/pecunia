@@ -35,7 +35,7 @@ abstract interface class AuthRemoteDS {
 
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser();
 
-  TaskEither<AuthFailure, Session> logout(Session currentSession);
+  TaskEither<AuthFailure, Unit> logout();
 }
 
 class SupabaseAuthRemoteDS implements AuthRemoteDS {
@@ -151,22 +151,20 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
   }
 
   @override
-  TaskEither<AuthFailure, Session> logout(Session currentSession) {
+  TaskEither<AuthFailure, Unit> logout() {
     return network
         .isConnected()
         .mapLeft(AuthRemoteDSHelper.mapNetworkInfoFailureToAuthFailure)
-        .flatMap<Session>(logoutIfConnected(currentSession: currentSession));
+        .flatMap<Unit>(logoutIfConnected());
   }
 
-  TaskEither<AuthFailure, Session> Function(bool isConnected) logoutIfConnected({
-    required Session currentSession,
-  }) {
+  TaskEither<AuthFailure, Unit> Function(bool isConnected) logoutIfConnected() {
     return (isConnected) {
       return isConnected
           ? TaskEither.tryCatch(
               () async {
                 await supabaseClient.auth.signOut();
-                return currentSession.copyWith(uid: '');
+                return unit;
               },
               mapSupabaseToFailure,
             )

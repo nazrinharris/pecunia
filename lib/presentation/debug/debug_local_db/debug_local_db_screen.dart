@@ -17,7 +17,6 @@ import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
-import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/presentation/screens/primary_screens/accounts_screen.dart';
@@ -105,7 +104,7 @@ class DebugLocalDBScreen extends ConsumerWidget {
                             backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 83, 10, 10)),
                           ),
                           onPressed: () async {
-                            await ref.read(authRepoProvider).logout(Session.emptyRemote()).run();
+                            await ref.read(authRepoProvider).logout().run();
                             ref.read(loginWithEmailAndPasswordProvider.notifier).reset();
                             ref.read(registerWithEmailAndPasswordProvider.notifier).reset();
                             // ignore: use_build_context_synchronously

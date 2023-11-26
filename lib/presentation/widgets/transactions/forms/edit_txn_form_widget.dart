@@ -169,7 +169,7 @@ class EditTxnForm extends HookConsumerWidget {
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: RadioListTile<TransactionType>(
-                    title: Text(type.toDescription()),
+                    title: Text(type.toDisplayName()),
                     value: type,
                     groupValue: txnType.value,
                     activeColor: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],

@@ -11,10 +11,10 @@ class Logout extends _$Logout {
     return const Option.none();
   }
 
-  Future<void> logout(String uid) async {
+  Future<void> logout() async {
     state = const AsyncValue.loading();
 
-    (await ref.watch(authRepoProvider).logout(uid).run()).fold(
+    (await ref.watch(authRepoProvider).logout().run()).fold(
       (l) => state = AsyncError(l, l.stackTrace),
       (r) => state = const AsyncData(Option.of(unit)),
     );
