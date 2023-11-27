@@ -77,7 +77,10 @@ class DebugLocalDBScreen extends ConsumerWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          context.pushNamed('drift-db-viewer', extra: ref.read(pecuniaDBProvider));
+                          context.pushNamed(
+                            'drift-db-viewer',
+                            extra: ref.read(pecuniaDBProvider).requireValue,
+                          );
                         },
                         child: const Text('Inspect DB'),
                       ),

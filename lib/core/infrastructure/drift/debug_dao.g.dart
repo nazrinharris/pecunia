@@ -16,7 +16,7 @@ mixin _$DebugDAOMixin on DatabaseAccessor<PecuniaDB> {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debugDAOHash() => r'2e4d17fa3aed614eac9e040e40786069d5f42f71';
+String _$debugDAOHash() => r'411eef45c70cfaafc53f9e232d9c1f556c2b9fc1';
 
 /// See also [debugDAO].
 @ProviderFor(debugDAO)

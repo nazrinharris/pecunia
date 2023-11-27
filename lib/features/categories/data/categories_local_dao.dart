@@ -10,7 +10,7 @@ part 'categories_local_dao.g.dart';
 
 @riverpod
 CategoriesLocalDAO categoriesLocalDAO(CategoriesLocalDAORef ref) =>
-    CategoriesLocalDAO(ref.watch(pecuniaDBProvider));
+    ref.watch(pecuniaDBProvider).requireValue.categoriesLocalDAO;
 
 @DataClassName('CategoryDTO')
 class CategoriesTable extends Table {

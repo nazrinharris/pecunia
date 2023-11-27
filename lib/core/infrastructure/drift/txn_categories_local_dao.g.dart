@@ -17,7 +17,7 @@ mixin _$TxnCategoriesLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
 // **************************************************************************
 
 String _$txnCategoriesLocalDAOHash() =>
-    r'13d298ed01727a2a78d482a48240ead5f2284a32';
+    r'f657bcf48248d029b17357cab9d9562abef14816';
 
 /// See also [txnCategoriesLocalDAO].
 @ProviderFor(txnCategoriesLocalDAO)

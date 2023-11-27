@@ -17,7 +17,7 @@ part 'transactions_local_dao.g.dart';
 
 @riverpod
 TransactionsLocalDAO transactionsLocalDAO(TransactionsLocalDAORef ref) =>
-    ref.watch(pecuniaDBProvider).transactionsLocalDAO;
+    ref.watch(pecuniaDBProvider).requireValue.transactionsLocalDAO;
 
 @DataClassName('TransactionDTO')
 class TransactionsTable extends Table {

@@ -12,7 +12,7 @@ mixin _$CategoriesLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
 // **************************************************************************
 
 String _$categoriesLocalDAOHash() =>
-    r'face134f7fdf97748f8daa5cdbdd29791e7c99c3';
+    r'2792d66da19b18fb7dcd99222f552fc9de05d8e8';
 
 /// See also [categoriesLocalDAO].
 @ProviderFor(categoriesLocalDAO)

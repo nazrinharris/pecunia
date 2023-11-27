@@ -13,7 +13,7 @@ mixin _$AccountsLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accountsLocalDAOHash() => r'd345b468835a386d6dc8a8eb3d9cda52a2d92113';
+String _$accountsLocalDAOHash() => r'e29149b2ca8c98b0e83be072d8a26a526c26aabe';
 
 /// See also [accountsLocalDAO].
 @ProviderFor(accountsLocalDAO)

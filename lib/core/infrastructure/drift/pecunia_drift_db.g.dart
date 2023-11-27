@@ -1818,11 +1818,11 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDBHash() => r'12ac2257a15a1170557c84b0a17e9fec85a5182e';
+String _$pecuniaDBHash() => r'5c6b6aabe67ffeba2ec97fd9661f19180d09bd8b';
 
 /// See also [pecuniaDB].
 @ProviderFor(pecuniaDB)
-final pecuniaDBProvider = Provider<PecuniaDB>.internal(
+final pecuniaDBProvider = FutureProvider<PecuniaDB>.internal(
   pecuniaDB,
   name: r'pecuniaDBProvider',
   debugGetCreateSourceHash:
@@ -1831,6 +1831,6 @@ final pecuniaDBProvider = Provider<PecuniaDB>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef PecuniaDBRef = ProviderRef<PecuniaDB>;
+typedef PecuniaDBRef = FutureProviderRef<PecuniaDB>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

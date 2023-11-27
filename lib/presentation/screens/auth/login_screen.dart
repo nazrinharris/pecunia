@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/local_login_with_email_and_password.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
@@ -28,6 +29,7 @@ class LoginScreen extends ConsumerWidget {
               );
         }
         if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
+          ref.watch(pecuniaDBProvider);
           context.goNamed('main');
         }
       })
@@ -40,6 +42,7 @@ class LoginScreen extends ConsumerWidget {
               );
         }
         if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
+          ref.watch(pecuniaDBProvider);
           context.goNamed('main');
         }
       });

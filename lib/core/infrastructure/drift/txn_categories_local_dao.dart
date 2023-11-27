@@ -11,7 +11,7 @@ part 'txn_categories_local_dao.g.dart';
 
 @riverpod
 TxnCategoriesLocalDAO txnCategoriesLocalDAO(TxnCategoriesLocalDAORef ref) =>
-    ref.watch(pecuniaDBProvider).txnCategoriesLocalDAO;
+    ref.watch(pecuniaDBProvider).requireValue.txnCategoriesLocalDAO;
 
 @DataClassName('TransactionCategoryDTO')
 class TxnCategoriesTable extends Table {

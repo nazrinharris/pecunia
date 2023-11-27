@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/app_info/app_info.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/main.dart';
@@ -24,6 +25,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         final result = await ref.watch(getLoggedInUserProvider.future);
 
         if (result.isSome()) {
+          ref.watch(pecuniaDBProvider);
           context.goNamed('main');
         } else {
           debugPrint('No user logged in, checking if first open');
