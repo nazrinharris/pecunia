@@ -450,7 +450,7 @@ class LocalAuthentication extends HookConsumerWidget {
         if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
           ref.read(pecuniaDialogsProvider).showSuccessToast(
                 context: context,
-                title: 'Local Login Success!, ${next.value}',
+                title: 'Local Login Success!',
               );
           ref
             ..invalidate(debugGetAllSessionsProvider)

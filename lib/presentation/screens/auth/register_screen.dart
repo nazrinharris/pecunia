@@ -6,7 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/usecases/local_register_with_email_and_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
+import 'package:pecunia/presentation/screens/auth/login_screen.dart';
+import 'package:pecunia/presentation/widgets/common/scale_button.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 
 class RegisterScreen extends ConsumerWidget {
@@ -14,18 +17,31 @@ class RegisterScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(registerWithEmailAndPasswordProvider, (prev, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureToast(
-              context: context,
-              title: "We couldn't register you.",
-              failure: next.error as AuthFailure?,
-            );
-      }
-      if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
-        context.goNamed('main');
-      }
-    });
+    ref
+      ..listen(registerWithEmailAndPasswordProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureToast(
+                context: context,
+                title: "We couldn't register you.",
+                failure: next.error as AuthFailure?,
+              );
+        }
+        if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
+          context.goNamed('main');
+        }
+      })
+      ..listen(localRegisterWithEmailAndPasswordProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureToast(
+                context: context,
+                title: "We couldn't register you.",
+                failure: next.error as AuthFailure?,
+              );
+        }
+        if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
+          context.goNamed('main');
+        }
+      });
 
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -58,11 +74,44 @@ class RegisterHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Register 👋',
-            style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Register 👋',
+                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              ScaleButton(
+                onTap: () {
+                  context.go('/start/login');
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary,
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           Padding(
@@ -130,12 +179,19 @@ class RegisterForm extends HookConsumerWidget {
     final passwordController = useTextEditingController();
     final confirmPasswordController = useTextEditingController();
 
+    final localBool = useState(false);
+
     return Form(
       key: formKey.value,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
+            LocalAccountToggle(
+              localBool,
+              message:
+                  'This will create a local user account on your device. This account will not be saved in the remote database and will be deleted if you uninstall the app.',
+            ),
             TextFormField(
               controller: emailController,
               decoration: const InputDecoration(
@@ -170,12 +226,22 @@ class RegisterForm extends HookConsumerWidget {
             ElevatedButton(
               onPressed: () {
                 if (formKey.value.currentState!.validate()) {
-                  ref.read(registerWithEmailAndPasswordProvider.notifier).registerWithEmailAndPassword((
-                    email: emailController.text,
-                    username: usernameController.text,
-                    password: passwordController.text,
-                    confirmPassword: confirmPasswordController.text,
-                  ));
+                  if (localBool.value == false) {
+                    ref.read(registerWithEmailAndPasswordProvider.notifier).registerWithEmailAndPassword((
+                      email: emailController.text,
+                      username: usernameController.text,
+                      password: passwordController.text,
+                      confirmPassword: confirmPasswordController.text,
+                    ));
+                  } else {
+                    ref
+                        .read(localRegisterWithEmailAndPasswordProvider.notifier)
+                        .localRegisterWithEmailAndPassword(
+                          email: emailController.text,
+                          username: usernameController.text,
+                          confirmPassword: confirmPasswordController.text,
+                        );
+                  }
                 }
               },
               child: const Text('Register'),

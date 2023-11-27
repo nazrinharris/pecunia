@@ -34,19 +34,30 @@ final router = GoRouter(
       ),
     ),
     GoRoute(
-      path: '/start',
-      name: 'start',
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: const StartScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
-            child: child,
-          );
-        },
-      ),
-    ),
+        path: '/start',
+        name: 'start',
+        pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const StartScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                  child: child,
+                );
+              },
+            ),
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'login',
+            name: 'login',
+            builder: (context, state) => const LoginScreen(),
+          ),
+          GoRoute(
+            path: 'register',
+            name: 'register',
+            builder: (context, state) => const RegisterScreen(),
+          ),
+        ]),
     GoRoute(
       path: '/onboarding',
       name: 'onboarding',
@@ -61,16 +72,16 @@ final router = GoRouter(
         },
       ),
     ),
-    GoRoute(
-      path: '/login',
-      name: 'login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/register',
-      name: 'register',
-      builder: (context, state) => const RegisterScreen(),
-    ),
+    // GoRoute(
+    //   path: '/login',
+    //   name: 'login',
+    //   builder: (context, state) => const LoginScreen(),
+    // ),
+    // GoRoute(
+    //   path: '/register',
+    //   name: 'register',
+    //   builder: (context, state) => const RegisterScreen(),
+    // ),
     GoRoute(
       path: '/main',
       name: 'main',

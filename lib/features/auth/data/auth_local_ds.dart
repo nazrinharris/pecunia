@@ -198,7 +198,7 @@ class AuthLocalSessionManager {
     return removeSession(user.uid).flatMap(
       (r) => TaskEither.tryCatch(
         () async {
-          final session = Session.remote(uid: user.uid, jwt: Session.createLocalToken(user));
+          final session = Session.local(uid: user.uid, jwt: Session.createLocalToken(user));
           await flutterSecureStorage.write(key: session.key, value: session.accessToken);
           return (user: user, session: session);
         },

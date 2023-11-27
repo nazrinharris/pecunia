@@ -87,6 +87,8 @@ class AuthRepo {
   }
 
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {
-    return authRemoteDS.getLoggedInUser();
+    return authLocalDS.getLoggedInUser().flatMap(
+          (localUser) => localUser.isNone() ? authRemoteDS.getLoggedInUser() : TaskEither.right(localUser),
+        );
   }
 }
