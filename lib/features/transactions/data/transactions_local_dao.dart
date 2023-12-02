@@ -62,7 +62,7 @@ class TransactionsTable extends Table {
   CategoriesTable,
   TxnCategoriesTable,
 ])
-class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsLocalDAOMixin {
+class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$TransactionsLocalDAOMixin {
   TransactionsLocalDAO(super.db);
 
   TaskEither<Failure, Unit> createTransaction(Transaction txn, Category? category) {

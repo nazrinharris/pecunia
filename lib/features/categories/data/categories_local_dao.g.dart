@@ -3,7 +3,7 @@
 part of 'categories_local_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$CategoriesLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
+mixin _$CategoriesLocalDAOMixin on DatabaseAccessor<PecuniaDriftDB> {
   $CategoriesTableTable get categoriesTable => attachedDatabase.categoriesTable;
 }
 

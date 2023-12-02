@@ -18,19 +18,35 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'pecunia_drift_db.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<PecuniaDB> pecuniaDB(PecuniaDBRef ref) async {
-  final user = await ref.read(authRepoProvider).getLoggedInUser().run();
+class PecuniaDB extends _$PecuniaDB {
+  PecuniaDriftDB? _db;
 
-  return user.fold(
-    (l) => Future.error(l, l.stackTrace),
-    (r) => r.fold(
-      () => Future.error(
-        Exception('Attempted to open database without a logged in user'),
-        StackTrace.current,
+  @override
+  Future<PecuniaDriftDB> build() async {
+    _dispose();
+
+    final user = await ref.read(authRepoProvider).getLoggedInUser().run();
+
+    return user.fold(
+      (l) => Future.error(l, l.stackTrace),
+      (r) => r.fold(
+        () => Future.error(
+          Exception('Attempted to open database without a logged in user'),
+          StackTrace.current,
+        ),
+        (t) {
+          return _db = PecuniaDriftDB(_openConnection(t.uid));
+        },
       ),
-      (t) => PecuniaDB(_openConnection(t.uid)),
-    ),
-  );
+    );
+  }
+
+  void _dispose() {
+    ref.onDispose(() async {
+      debugPrint('Closing database connection...');
+      await _db?.close();
+    });
+  }
 }
 
 @DriftDatabase(
@@ -50,8 +66,8 @@ Future<PecuniaDB> pecuniaDB(PecuniaDBRef ref) async {
     DebugDAO,
   ],
 )
-class PecuniaDB extends _$PecuniaDB {
-  PecuniaDB(super.e);
+class PecuniaDriftDB extends _$PecuniaDriftDB {
+  PecuniaDriftDB(super.e);
 
   @override
   int get schemaVersion => 1;
@@ -74,20 +90,27 @@ Future<File> maybeMigrateDatabase(Directory dbFolder, String uid) async {
 
   if (oldFile.existsSync() && !newFile.existsSync()) {
     debugPrint('Copying data from pecunia.db to pecunia_$uid.db');
-    await oldFile.copy(newFile.path);
+    await oldFile.copy(newFile.path).then((_) async => oldFile.delete());
+  }
+
+  if (oldFile.existsSync()) {
+    debugPrint('pecunia.db exists, not doing anything');
+  } else {
+    debugPrint('pecunia.db does not exist, not doing anything');
   }
 
   if (newFile.existsSync()) {
-    if (oldFile.existsSync()) {
-      debugPrint('pecunia.db exists, not doing anything');
-    }
     debugPrint('pecunia_$uid.db exists, opening...');
   } else {
-    if (oldFile.existsSync()) {
-      debugPrint('pecunia.db exists, not doing anything');
-    }
     debugPrint('pecunia_$uid.db does not exist, creating...');
   }
 
   return newFile;
+}
+
+Future<List<String>> listDbFiles() async {
+  final dbFolder = await getApplicationDocumentsDirectory();
+  final dbFiles = dbFolder.listSync().where((file) => file.path.endsWith('.db')).toList();
+
+  return dbFiles.map((file) => file.path).toList();
 }

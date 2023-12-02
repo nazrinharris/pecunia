@@ -131,7 +131,7 @@ final router = GoRouter(
       path: '/drift-db-viewer',
       name: 'drift-db-viewer',
       builder: (context, state) {
-        final db = state.extra! as PecuniaDB;
+        final db = state.extra! as PecuniaDriftDB;
         return DriftDbViewer(db);
       },
     ),

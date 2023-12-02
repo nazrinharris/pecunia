@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
 import 'package:pecunia/features/auth/usecases/logout.dart';
 import 'package:pecunia/presentation/screens/onboarding_screen.dart';
@@ -24,6 +25,7 @@ class SettingsScreen extends ConsumerWidget {
       }
       if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
         context.goNamed('start');
+        ref.invalidate(pecuniaDBProvider);
       }
     });
 

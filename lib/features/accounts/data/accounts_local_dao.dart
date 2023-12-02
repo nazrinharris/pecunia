@@ -32,7 +32,7 @@ class AccountsTable extends Table {
 }
 
 @DriftAccessor(tables: [AccountsTable, TransactionsTable])
-class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalDAOMixin {
+class AccountsLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$AccountsLocalDAOMixin {
   AccountsLocalDAO(super.db);
 
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {

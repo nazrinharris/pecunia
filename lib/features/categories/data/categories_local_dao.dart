@@ -28,7 +28,7 @@ class CategoriesTable extends Table {
 }
 
 @DriftAccessor(tables: [CategoriesTable])
-class CategoriesLocalDAO extends DatabaseAccessor<PecuniaDB> with _$CategoriesLocalDAOMixin {
+class CategoriesLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$CategoriesLocalDAOMixin {
   CategoriesLocalDAO(super.db);
 
   TaskEither<CategoriesFailure, Unit> createCategory(Category category) {

@@ -29,7 +29,9 @@ class LoginScreen extends ConsumerWidget {
               );
         }
         if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
-          ref.watch(pecuniaDBProvider);
+          ref
+            ..invalidate(pecuniaDBProvider)
+            ..watch(pecuniaDBProvider);
           context.goNamed('main');
         }
       })
@@ -42,7 +44,9 @@ class LoginScreen extends ConsumerWidget {
               );
         }
         if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
-          ref.watch(pecuniaDBProvider);
+          ref
+            ..invalidate(pecuniaDBProvider)
+            ..watch(pecuniaDBProvider);
           context.goNamed('main');
         }
       });

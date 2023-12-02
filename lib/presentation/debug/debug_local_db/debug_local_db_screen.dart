@@ -23,6 +23,7 @@ import 'package:pecunia/presentation/screens/primary_screens/accounts_screen.dar
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO: Show a list of db stored in device
 class DebugLocalDBScreen extends ConsumerWidget {
   const DebugLocalDBScreen({super.key});
 

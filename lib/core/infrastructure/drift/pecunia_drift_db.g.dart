@@ -1788,8 +1788,8 @@ class TxnCategoriesTableCompanion
   }
 }
 
-abstract class _$PecuniaDB extends GeneratedDatabase {
-  _$PecuniaDB(QueryExecutor e) : super(e);
+abstract class _$PecuniaDriftDB extends GeneratedDatabase {
+  _$PecuniaDriftDB(QueryExecutor e) : super(e);
   late final $AccountsTableTable accountsTable = $AccountsTableTable(this);
   late final $TransactionsTableTable transactionsTable =
       $TransactionsTableTable(this);
@@ -1798,14 +1798,14 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
   late final $TxnCategoriesTableTable txnCategoriesTable =
       $TxnCategoriesTableTable(this);
   late final AccountsLocalDAO accountsLocalDAO =
-      AccountsLocalDAO(this as PecuniaDB);
+      AccountsLocalDAO(this as PecuniaDriftDB);
   late final TransactionsLocalDAO transactionsLocalDAO =
-      TransactionsLocalDAO(this as PecuniaDB);
+      TransactionsLocalDAO(this as PecuniaDriftDB);
   late final CategoriesLocalDAO categoriesLocalDAO =
-      CategoriesLocalDAO(this as PecuniaDB);
+      CategoriesLocalDAO(this as PecuniaDriftDB);
   late final TxnCategoriesLocalDAO txnCategoriesLocalDAO =
-      TxnCategoriesLocalDAO(this as PecuniaDB);
-  late final DebugDAO debugDAO = DebugDAO(this as PecuniaDB);
+      TxnCategoriesLocalDAO(this as PecuniaDriftDB);
+  late final DebugDAO debugDAO = DebugDAO(this as PecuniaDriftDB);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1818,12 +1818,13 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDBHash() => r'5c6b6aabe67ffeba2ec97fd9661f19180d09bd8b';
+String _$pecuniaDBHash() => r'e5f6d907f358b11bb27a8c5cebb5ca57513540a2';
 
-/// See also [pecuniaDB].
-@ProviderFor(pecuniaDB)
-final pecuniaDBProvider = FutureProvider<PecuniaDB>.internal(
-  pecuniaDB,
+/// See also [PecuniaDB].
+@ProviderFor(PecuniaDB)
+final pecuniaDBProvider =
+    AsyncNotifierProvider<PecuniaDB, PecuniaDriftDB>.internal(
+  PecuniaDB.new,
   name: r'pecuniaDBProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$pecuniaDBHash,
@@ -1831,6 +1832,6 @@ final pecuniaDBProvider = FutureProvider<PecuniaDB>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef PecuniaDBRef = FutureProviderRef<PecuniaDB>;
+typedef _$PecuniaDB = AsyncNotifier<PecuniaDriftDB>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

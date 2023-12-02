@@ -25,7 +25,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         final result = await ref.watch(getLoggedInUserProvider.future);
 
         if (result.isSome()) {
-          ref.watch(pecuniaDBProvider);
+          ref
+            ..invalidate(pecuniaDBProvider)
+            ..watch(pecuniaDBProvider);
           context.goNamed('main');
         } else {
           debugPrint('No user logged in, checking if first open');

@@ -27,7 +27,7 @@ class TxnCategoriesTable extends Table {
   TransactionsTable,
   CategoriesTable,
 ])
-class TxnCategoriesLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TxnCategoriesLocalDAOMixin {
+class TxnCategoriesLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$TxnCategoriesLocalDAOMixin {
   TxnCategoriesLocalDAO(super.db);
 
   TaskEither<TxnCategoriesFailure, Unit> addCategoryToTxn(String transactionId, String categoryId) {

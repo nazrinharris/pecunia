@@ -3,7 +3,7 @@
 part of 'debug_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$DebugDAOMixin on DatabaseAccessor<PecuniaDB> {
+mixin _$DebugDAOMixin on DatabaseAccessor<PecuniaDriftDB> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
   $CategoriesTableTable get categoriesTable => attachedDatabase.categoriesTable;
   $TransactionsTableTable get transactionsTable =>
