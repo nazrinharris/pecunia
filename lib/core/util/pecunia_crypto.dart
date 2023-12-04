@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:bcrypt/bcrypt.dart';
 import 'package:crypto/crypto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,12 +37,17 @@ class PecuniaCrypto {
     return base64Url.encode(values);
   }
 
-  String hashPassword({
+  String hashPasswordBCrypt({
     required String password,
-    required String salt,
   }) {
-    final bytes = utf8.encode(salt + password);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
+    return BCrypt.hashpw(password, BCrypt.gensalt());
+  }
+
+  bool verifyPassword({
+    required String password,
+    required String hashedPassword,
+  }) {
+    // Attempt BCrypt hash comparison
+    return BCrypt.checkpw(password, hashedPassword);
   }
 }

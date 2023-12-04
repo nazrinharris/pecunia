@@ -42,6 +42,7 @@ dependencies:
 
   # Security
   crypto: ^3.0.3
+  bcrypt: ^1.1.3
 
   # Functional Programming
   fpdart: ^1.1.0
