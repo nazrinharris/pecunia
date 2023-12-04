@@ -122,8 +122,7 @@ class AuthLocalDS {
   }) {
     return TaskEither<AuthFailure, ({PecuniaUser user, String hashedPassword, String salt})>.tryCatch(
       () async {
-        final salt = pecuniaCrypto.generateSalt();
-        final hashedPassword = pecuniaCrypto.hashPassword(password: password, salt: salt);
+        final hashedPassword = pecuniaCrypto.hashPasswordBCrypt(password: password);
         final user = PecuniaUser(
           uid: uuid.v4(),
           username: username,
@@ -147,8 +146,12 @@ class AuthLocalDS {
     return secureStorage
         .getUserCredentials(email)
         .flatMap<String>((r) {
-          final hashedPassword = pecuniaCrypto.hashPassword(password: password, salt: r.salt);
-          if (hashedPassword != r.hashedPassword) {
+          final isCorrectPass = pecuniaCrypto.verifyPassword(
+            password: password,
+            salt: r.salt,
+            hashedPassword: r.hashedPassword,
+          );
+          if (!isCorrectPass) {
             return TaskEither.left(AuthFailure.incorrectCredentials(
               stackTrace: StackTrace.current,
               message: 'Incorrect password.',
