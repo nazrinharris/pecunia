@@ -81,8 +81,8 @@ enum AuthErrorType {
     'local-failed-get-user-data',
     'Something went wrong while getting the user data.',
   ),
-  localMissingHashedPasswordOrSalt(
-    'local-missing-hashed-password-or-salt',
+  localMissingHashedPassword(
+    'local-missing-hashed-password',
     "Something went wrong while getting the user's credentials",
   ),
   localFailedDeleteUserDataAndCredentials(

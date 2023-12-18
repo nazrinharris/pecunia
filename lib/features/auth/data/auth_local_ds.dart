@@ -120,7 +120,7 @@ class AuthLocalDS {
     required String email,
     required String password,
   }) {
-    return TaskEither<AuthFailure, ({PecuniaUser user, String hashedPassword, String salt})>.tryCatch(
+    return TaskEither<AuthFailure, ({PecuniaUser user, String hashedPassword})>.tryCatch(
       () async {
         final hashedPassword = pecuniaCrypto.hashPasswordBCrypt(password: password);
         final user = PecuniaUser(
@@ -130,7 +130,7 @@ class AuthLocalDS {
           dateCreated: DateTime.now(),
         );
 
-        return (user: user, hashedPassword: hashedPassword, salt: salt);
+        return (user: user, hashedPassword: hashedPassword);
       },
       (e, s) => AuthFailure.unknown(stackTrace: s, message: 'Uh oh'),
     )
@@ -148,7 +148,6 @@ class AuthLocalDS {
         .flatMap<String>((r) {
           final isCorrectPass = pecuniaCrypto.verifyPassword(
             password: password,
-            salt: r.salt,
             hashedPassword: r.hashedPassword,
           );
           if (!isCorrectPass) {
@@ -183,8 +182,6 @@ class AuthLocalDS {
   }
 }
 
-/// `AuthLocalSessionManager` is a helper class which manages the storing of the session in the device through
-/// the [FlutterSecureStorage] plugin.
 class AuthLocalSessionManager {
   AuthLocalSessionManager(this.flutterSecureStorage);
 
@@ -315,10 +312,6 @@ class AuthLocalSessionManager {
   }
 }
 
-/// `AuthSecuredStorageManager` is a helper class which manages the storing of the user's data in the device through
-/// the [FlutterSecureStorage] plugin.
-///
-/// This class is used to store the user's credentials.
 class AuthSecuredStorageManager {
   AuthSecuredStorageManager(this.flutterSecureStorage);
 
@@ -327,7 +320,6 @@ class AuthSecuredStorageManager {
   TaskEither<AuthFailure, PecuniaUser> storeUserCredentials(
     ({
       String hashedPassword,
-      String salt,
       PecuniaUser user,
     }) args,
   ) {
@@ -337,7 +329,6 @@ class AuthSecuredStorageManager {
             key: kPecuniaUserKey(args.user.uid), value: jsonEncode(args.user.toJson()));
         await flutterSecureStorage.write(
             key: kPecuniaUserHashedPasswordKey(args.user.uid), value: args.hashedPassword);
-        await flutterSecureStorage.write(key: kPecuniaUserSaltKey(args.user.uid), value: args.salt);
         await flutterSecureStorage.write(key: kPecuniaUserUidKey(args.user.email!), value: args.user.uid);
 
         return args.user;
@@ -375,7 +366,6 @@ class AuthSecuredStorageManager {
 
         await flutterSecureStorage.delete(key: kPecuniaUserKey(uid!));
         await flutterSecureStorage.delete(key: kPecuniaUserHashedPasswordKey(uid));
-        await flutterSecureStorage.delete(key: kPecuniaUserSaltKey(uid));
         await flutterSecureStorage.delete(key: kPecuniaUserUidKey(uid));
 
         return PecuniaUser.empty();
@@ -389,20 +379,12 @@ class AuthSecuredStorageManager {
     );
   }
 
-  /// Retrieves the user credentials (uid, hashedPassword, salt) associated with the given email address.
-  ///
-  /// This method first obtains the user ID based on the email and then fetches
-  /// the user's credentials (hashed password and salt) associated with that ID.
-  ///
-  /// [email] The email address of the user whose credentials are being retrieved.
-  ///
-  /// Returns a [TaskEither] that holds either [AuthFailure] on failure or
-  /// a map containing user's UID, hashed password, and salt on success.
+  /// Retrieves the user credentials (uid, hashedPassword) associated with the given email address.
   ///
   /// 1. Returns [AuthFailure] of type [AuthErrorType.incorrectCredentials] if no user is found with the given email
-  /// 2. Returns [AuthFailure] of type [AuthErrorType.localMissingHashedPasswordOrSalt] if a user is found but no hashed password or salt is found.
+  /// 2. Returns [AuthFailure] of type [AuthErrorType.localMissingHashedPassword] if a user is found but no hashed password is found.
   /// 3. Returns [AuthFailure] of type [AuthErrorType.localFailedGetUserCredentials] if something else went wrong.
-  TaskEither<AuthFailure, ({String uid, String hashedPassword, String salt})> getUserCredentials(
+  TaskEither<AuthFailure, ({String uid, String hashedPassword})> getUserCredentials(
     String email,
   ) {
     return TaskEither.tryCatch(
@@ -426,9 +408,8 @@ class AuthSecuredStorageManager {
       (uid) => TaskEither.tryCatch(
         () async {
           final hashedPassword = await flutterSecureStorage.read(key: kPecuniaUserHashedPasswordKey(uid));
-          final salt = await flutterSecureStorage.read(key: kPecuniaUserSaltKey(uid));
 
-          return (uid: uid, hashedPassword: hashedPassword, salt: salt);
+          return (uid: uid, hashedPassword: hashedPassword);
         },
         (e, s) => AuthFailure(
           stackTrace: s,
@@ -437,14 +418,14 @@ class AuthSecuredStorageManager {
           rawException: e,
         ),
       ).flatMap((r) {
-        if (r.hashedPassword == null || r.salt == null) {
+        if (r.hashedPassword == null) {
           return TaskEither.left(AuthFailure(
             stackTrace: StackTrace.current,
-            errorType: AuthErrorType.localMissingHashedPasswordOrSalt,
-            message: 'User with uid $uid was found but no hashed password or salt was found.',
+            errorType: AuthErrorType.localMissingHashedPassword,
+            message: 'User with uid $uid was found but no hashed password was found.',
           ));
         }
-        return TaskEither.right((uid: r.uid, hashedPassword: r.hashedPassword!, salt: r.salt!));
+        return TaskEither.right((uid: r.uid, hashedPassword: r.hashedPassword!));
       }),
     );
   }

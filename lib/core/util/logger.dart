@@ -22,8 +22,8 @@ class ProviderLogger extends ProviderObserver {
     if (newValue is AsyncError) {
       if (newValue.error is AuthFailure) {
         final failure = newValue.error as Failure;
-        debugPrint(
-            '(${provider.name}) : ${newValue.runtimeType} ${failure.runtimeType} - ${failure.errorType}');
+        // debugPrint(
+        //     '(${provider.name}) : ${newValue.runtimeType} ${failure.runtimeType} - ${failure.errorType}');
         debugPrint(failure.toVerboseString());
         return;
       }
