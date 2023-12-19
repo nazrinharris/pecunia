@@ -63,4 +63,3 @@ class _PecuniaAppState extends ConsumerState<PecuniaApp> {
 /// Comment for UI general usability - ui-general-usability
 /// Comment for version management - version-management
 /// Comment for local/guest account - local-guest-account
-

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:bcrypt/bcrypt.dart';
-import 'package:crypto/crypto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pecunia_crypto.g.dart';
@@ -12,9 +11,6 @@ String kPecuniaUserKey(String uid) => 'pecunia_user_$uid';
 
 /// [kPecuniaUserHashedPasswordKey] is the key for the user's hashed password, stored with `PecuniaCrypto.hashPassword()`. An example of the key is `pecunia_user_hashed_password_1234567890`.
 String kPecuniaUserHashedPasswordKey(String uid) => 'pecunia_user_hashed_password_$uid';
-
-/// [kPecuniaUserSaltKey] is the key for the user's salt, stored with `PecuniaCrypto.generateSalt()`. An example of the key is `pecunia_user_salt_1234567890`.
-String kPecuniaUserSaltKey(String uid) => 'pecunia_user_salt_$uid';
 
 /// [kPecuniaUserUidKey] is the key for the user's uid, stored with `PecuniaUser.uid`. An example of the key is `pecunia_user_uid_myepicemail@mail.com`.
 String kPecuniaUserUidKey(String email) => 'pecunia_user_uid_$email';
