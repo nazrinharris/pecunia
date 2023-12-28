@@ -322,6 +322,16 @@ class DebugDialogsButtons extends ConsumerWidget {
             ],
           ),
         ),
+        const SizedBox(height: 14),
+        ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 2, 33)),
+          ),
+          onPressed: () {
+            context.pushNamed('debug-dialog');
+          },
+          child: const Text('Navigate to /debug-dialog'),
+        ),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:fl_toast/fl_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -193,9 +194,12 @@ class PecuniaDialogs {
                   color: Colors.red[200],
                 ),
               ),
-              content: Text(
-                message ?? '',
-                textAlign: TextAlign.center,
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Text(
+                  message ?? '',
+                  textAlign: TextAlign.center,
+                ),
               ),
               actions: [
                 TextButton(
@@ -216,6 +220,44 @@ class PecuniaDialogs {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Future<void> showTextEntryConfirmationDialog({
+    required BuildContext context,
+    required String title,
+    required String description,
+    required void Function() onConfirm,
+    String? entryConfirmationText,
+    String? confirmButtonText,
+    String? cancelButtonText,
+    void Function()? onCancel,
+  }) async {
+    await showGeneralDialog<void>(
+      context: context,
+      pageBuilder: (context, anim1, anim2) => const SizedBox(),
+      transitionBuilder: (context, a1, a2, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(
+            parent: a1,
+            curve: Curves.easeOutCubic,
+          ),
+          child: FadeTransition(
+              opacity: CurvedAnimation(
+                parent: a1,
+                curve: Curves.easeOutCubic,
+              ),
+              child: TextEntryConfirmationDialog(
+                title: title,
+                description: description,
+                onConfirm: onConfirm,
+                entryConfirmationText: entryConfirmationText,
+                confirmButtonText: confirmButtonText,
+                cancelButtonText: cancelButtonText,
+                onCancel: onCancel,
+              )),
         );
       },
     );
@@ -380,6 +422,83 @@ class FailureDialog extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class TextEntryConfirmationDialog extends HookConsumerWidget {
+  const TextEntryConfirmationDialog({
+    required this.title,
+    required this.description,
+    required this.onConfirm,
+    this.entryConfirmationText,
+    this.confirmButtonText,
+    this.cancelButtonText,
+    this.onCancel,
+    super.key,
+  });
+
+  final String title;
+  final String description;
+  final String? entryConfirmationText;
+  final String? confirmButtonText;
+  final String? cancelButtonText;
+  final void Function() onConfirm;
+  final void Function()? onCancel;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isTextEntryValid = useState(false);
+    final textEntryController = useTextEditingController();
+
+    return AlertDialog(
+      icon: Icon(Icons.warning_amber_rounded, color: Colors.red[200], size: 48),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.red[200],
+        ),
+      ),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              description,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: textEntryController,
+              onChanged: (value) => isTextEntryValid.value = value == entryConfirmationText,
+              decoration: InputDecoration(
+                labelText: 'Type "$entryConfirmationText" to continue',
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: onCancel ?? () => Navigator.of(context).pop(),
+          child: Text(cancelButtonText ?? 'Cancel'),
+        ),
+        ElevatedButton.icon(
+          onPressed: isTextEntryValid.value ? onConfirm : null,
+          icon: Icon(
+            Icons.delete_forever,
+            color: isTextEntryValid.value ? Colors.red[200] : Colors.grey[500],
+          ),
+          label: Text(
+            confirmButtonText ?? 'Confirm',
+            style: TextStyle(
+              color: isTextEntryValid.value ? Colors.red[200] : Colors.grey[500],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

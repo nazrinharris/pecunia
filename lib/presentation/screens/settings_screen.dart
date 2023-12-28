@@ -124,6 +124,61 @@ class SettingsScreen extends ConsumerWidget {
             },
           ),
           const Divider(),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+            child: Text(
+              'Danger Zone',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.delete_forever_rounded,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            title: Text(
+              'Delete Account',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+            onTap: () {
+              ref.read(pecuniaDialogsProvider).showTextEntryConfirmationDialog(
+                    context: context,
+                    title: 'Delete your account?',
+                    description:
+                        'This will delete your account and all your data. This action cannot be undone.',
+                    entryConfirmationText: 'DELETE ACCOUNT',
+                    onConfirm: () {},
+                  );
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.delete_forever_rounded,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            title: Text(
+              'Delete Local Data',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+            onTap: () {
+              ref.read(pecuniaDialogsProvider).showTextEntryConfirmationDialog(
+                    context: context,
+                    title: 'Delete your local data?',
+                    description:
+                        'This will delete all your transactions, accounts, budgets, etc. This action cannot be undone.',
+                    entryConfirmationText: 'DELETE LOCAL DATA',
+                    onConfirm: () {},
+                  );
+            },
+          ),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.bug_report),
             title: Text('Navigate to Debug Mode', style: Theme.of(context).textTheme.bodyMedium),
