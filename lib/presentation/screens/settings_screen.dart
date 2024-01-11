@@ -115,6 +115,7 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () {
               ref.read(pecuniaDialogsProvider).showConfirmationDialog(
                     title: 'Are you sure you want to logout?',
+                    message: 'If so then have a nice day! Just make sure to not forget your password buddy.',
                     icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
                     onConfirm: () async {
                       await ref.read(logoutProvider.notifier).logout();
@@ -162,7 +163,7 @@ class SettingsScreen extends ConsumerWidget {
               color: Theme.of(context).colorScheme.error,
             ),
             title: Text(
-              'Delete Local Data',
+              'Delete Finance Data',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Theme.of(context).colorScheme.error,
                   ),
@@ -170,10 +171,10 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () {
               ref.read(pecuniaDialogsProvider).showTextEntryConfirmationDialog(
                     context: context,
-                    title: 'Delete your local data?',
+                    title: 'Delete your finance data?',
                     description:
                         'This will delete all your transactions, accounts, budgets, etc. This action cannot be undone.',
-                    entryConfirmationText: 'DELETE LOCAL DATA',
+                    entryConfirmationText: 'DELETE FINANCE DATA',
                     onConfirm: () {},
                   );
             },

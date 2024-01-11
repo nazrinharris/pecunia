@@ -44,6 +44,7 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 
 (`0.2.0`)
 
+- [ ] Goals (Piggybank-like)
 - [ ] Nested categories
 - [ ] Simple timed budget creation, deletion, editing, and viewing.
 - [ ] Implementing recurring budgets.

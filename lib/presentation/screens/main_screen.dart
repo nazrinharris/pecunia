@@ -2,11 +2,11 @@ import 'package:bottom_nav_layout/bottom_nav_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/presentation/screens/primary_screens/accounts_screen.dart';
-import 'package:pecunia/presentation/screens/primary_screens/analytics_screen.dart';
-import 'package:pecunia/presentation/screens/primary_screens/dashboard_screen.dart';
-import 'package:pecunia/presentation/screens/primary_screens/finance_screen.dart';
-import 'package:pecunia/presentation/screens/primary_screens/profile_screen.dart';
+import 'package:pecunia/presentation/screens/primary/accounts_screen.dart';
+import 'package:pecunia/presentation/screens/primary/analytics_screen.dart';
+import 'package:pecunia/presentation/screens/primary/dashboard_screen.dart';
+import 'package:pecunia/presentation/screens/primary/finance_screen.dart';
+import 'package:pecunia/presentation/screens/primary/profile_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_fab.dart';
 import 'package:simple_animations/simple_animations.dart';
 

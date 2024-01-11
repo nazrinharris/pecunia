@@ -10,6 +10,7 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/local_login_with_email_and_password.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
+import 'package:pecunia/presentation/widgets/accounts/saved_users_list_widget.dart';
 import 'package:pecunia/presentation/widgets/common/scale_button.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:simple_animations/simple_animations.dart';
@@ -157,6 +158,7 @@ class LoginForm extends HookConsumerWidget {
               message:
                   'Local user accounts are the accounts you have made on your current device. They are not stored in the remote database.',
             ),
+            SavedUsersListWidget(),
             SizedBox(height: 14),
             TextFormField(
               controller: emailController,
@@ -229,6 +231,17 @@ class LocalAccountToggle extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final control = useState(Control.stop);
+    final toggleTween = MovieTween()
+      ..tween(
+        'opacity',
+        Tween<double>(begin: 0, end: 1),
+        duration: const Duration(milliseconds: 100),
+      )
+      ..tween(
+        'size',
+        Tween<double>(begin: 0, end: 1),
+        duration: const Duration(milliseconds: 100),
+      );
 
     localBool.addListener(() {
       if (localBool.value) {
@@ -238,62 +251,60 @@ class LocalAccountToggle extends HookConsumerWidget {
       }
     });
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: 600),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: InkWell(
-          onTap: () {
-            localBool.value = !localBool.value;
-          },
-          borderRadius: BorderRadius.circular(24),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    return CustomAnimationBuilder(
+      control: control.value,
+      duration: Duration(milliseconds: 300),
+      tween: toggleTween,
+      curve: Curves.easeInOutCirc,
+      builder: (context, value, child) => ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 700),
+        child: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          child: InkWell(
+            onTap: () {
+              localBool.value = !localBool.value;
+            },
+            borderRadius: BorderRadius.circular(24),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Text(
-                      'Use Local User Account',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    Spacer(),
-                    Switch(
-                      value: localBool.value,
-                      onChanged: (val) {
-                        localBool.value = val;
-                      },
-                    ),
-                  ],
-                ),
-                CustomAnimationBuilder(
-                  control: control.value,
-                  curve: Curves.easeInOutCirc,
-                  tween: MovieTween()
-                    ..tween(
-                      'opacity',
-                      Tween<double>(begin: 0, end: 1),
-                      duration: const Duration(milliseconds: 100),
-                    )
-                    ..tween(
-                      'height',
-                      Tween<double>(begin: 0, end: maxHeight),
-                      duration: const Duration(milliseconds: 100),
-                    ),
-                  builder: (context, value, child) => Opacity(
-                    opacity: value.get('opacity'),
-                    child: SizedBox(
-                      height: value.get('height'),
-                      child: child,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 14, bottom: 14),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Use Local User Account',
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                      Spacer(),
+                      Switch(
+                        value: localBool.value,
+                        onChanged: (val) {
+                          localBool.value = val;
+                        },
+                      ),
+                    ],
                   ),
-                  duration: Duration(milliseconds: 300),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 14, bottom: 14),
-                    child: Text(
-                      message,
+                ),
+                Opacity(
+                  opacity: value.get('opacity'),
+                  child: ClipRect(
+                    child: Align(
+                      heightFactor: value.get('size'),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 22),
+                            child: Text(
+                              message,
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

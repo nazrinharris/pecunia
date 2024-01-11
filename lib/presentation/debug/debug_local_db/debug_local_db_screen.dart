@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/debug_dao.dart';
@@ -19,7 +20,7 @@ import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
-import 'package:pecunia/presentation/screens/primary_screens/accounts_screen.dart';
+import 'package:pecunia/presentation/screens/primary/accounts_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -173,6 +174,10 @@ class DebugLocalDBScreen extends ConsumerWidget {
             const SizedBox(height: 14),
             const Divider(),
             const SizedBox(height: 14),
+            const DebugLocalDatabases(),
+            const SizedBox(height: 14),
+            const Divider(),
+            const SizedBox(height: 14),
             const CreateAccountFormWidget(),
             const SizedBox(height: 14),
             const Divider(),
@@ -180,6 +185,59 @@ class DebugLocalDBScreen extends ConsumerWidget {
             const AccountsList(),
           ],
         ));
+  }
+}
+
+Future<List<String>> getLocalDatabases() async {
+  final dbFolder = await getApplicationDocumentsDirectory();
+  final databases = await dbFolder.list().toList();
+
+  return databases.map((file) => file.path).toList();
+}
+
+class DebugLocalDatabases extends ConsumerWidget {
+  const DebugLocalDatabases({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        const Align(
+          child: Text(
+            'Local Databases',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        FutureBuilder(
+            future: getLocalDatabases(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final databases = snapshot.data!;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: databases.length,
+                  itemBuilder: (context, index) => ListTile(
+                    title: Text(
+                      databases[index],
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {},
+                    ),
+                  ),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            }),
+      ],
+    );
   }
 }
 

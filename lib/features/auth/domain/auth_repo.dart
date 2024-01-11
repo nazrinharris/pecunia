@@ -91,4 +91,9 @@ class AuthRepo {
           (localUser) => localUser.isNone() ? authRemoteDS.getLoggedInUser() : TaskEither.right(localUser),
         );
   }
+
+  TaskEither<AuthFailure, List<PecuniaUser>> getSavedUsers() {
+    throw UnimplementedError();
+    // return authLocalDS.getAllSavedUsers();
+  }
 }
