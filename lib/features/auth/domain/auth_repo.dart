@@ -93,7 +93,6 @@ class AuthRepo {
   }
 
   TaskEither<AuthFailure, List<PecuniaUser>> getSavedUsers() {
-    throw UnimplementedError();
-    // return authLocalDS.getAllSavedUsers();
+    return authLocalDS.getAllSavedUsers();
   }
 }

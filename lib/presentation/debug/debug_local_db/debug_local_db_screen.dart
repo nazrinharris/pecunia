@@ -214,6 +214,7 @@ class DebugLocalDatabases extends ConsumerWidget {
             future: getLocalDatabases(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                debugPrint('snapshot.data: ${snapshot.data}');
                 final databases = snapshot.data!;
                 return ListView.builder(
                   shrinkWrap: true,

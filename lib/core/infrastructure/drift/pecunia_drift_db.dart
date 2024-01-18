@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show IconData;
+import 'package:fpdart/fpdart.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:pecunia/core/infrastructure/drift/debug_dao.dart';
@@ -108,9 +109,32 @@ Future<File> maybeMigrateDatabase(Directory dbFolder, String uid) async {
   return newFile;
 }
 
-Future<List<String>> listDbFiles() async {
+Future<List<String>> listDbFilePaths() async {
   final dbFolder = await getApplicationDocumentsDirectory();
   final dbFiles = dbFolder.listSync().where((file) => file.path.endsWith('.db')).toList();
 
   return dbFiles.map((file) => file.path).toList();
+}
+
+Option<String> getUIDFromPath(String path) {
+  // Define the regex pattern to extract the UID
+  final regExp = RegExp('pecunia_(.*).db');
+
+  // Try to match the pattern in the given path
+  final match = regExp.firstMatch(path);
+
+  // If a match is found, return the UID (group 1 from the match)
+  if (match != null) {
+    return Some(match.group(1)!);
+  } else {
+    // If no match is found, return an empty string or handle accordingly
+    return const None();
+  }
+}
+
+Option<List<String>> getUIDsFromPaths(List<String> paths) {
+  final uids = paths.map(getUIDFromPath).toList();
+
+  final uidValues = uids.map((uid) => uid.getOrElse(() => '')).where((uid) => uid != '').toList();
+  return Some(uidValues);
 }

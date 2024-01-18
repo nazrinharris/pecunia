@@ -6,6 +6,12 @@ Pecunia is a cross-platform personal finance management app built with Flutter. 
 
 ---
 
+```
+TODO: Talk about current features
+TODO: Talk about Discussions, Wiki, and Projects
+TODO: Update README to look less like a marketing page
+```
+
 ## Features
 
 1. Transaction Tracking: Keep a record of all your income and expenses, each associated with a specific account.
@@ -38,17 +44,19 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Multi-currency transactions.
 - [x] Transaction categories.
 - [ ] Basic UI capabilities (as in, similar looks and functionality to mockup) 
-- [ ] Guest/Local Account
+- [ ] Local Authentication and Multi-User-Account capability
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 
 (`0.2.0`)
 
+- [ ] Improved logging and crashlytics (Using `sentry` possibly?)
 - [ ] Goals (Piggybank-like)
+- [ ] Debt/Loan Tracking
 - [ ] Nested categories
 - [ ] Simple timed budget creation, deletion, editing, and viewing.
+- [ ] More diverse visual analytics
 - [ ] Implementing recurring budgets.
-- [ ] Visual analytics and reports.
 - [ ] Sub-Budgets (Multi-category budgeting).
 
 (`0.2.1`)
@@ -64,14 +72,10 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [ ] Budget exception handling (transactions that don't fit budget criterion, but still wants to be included in a budget.)
 - [ ] Alerts, reminders, notifications, etc.
 
-### 💨 Phase 4: Performance Optimization
-
-- [ ] Whatever tuning I can do from here.
-
 ### 🔥 Future Capabilities
 
 - [ ] Remote Sync.
-- [ ] GPT4 (woo woo)?
+- [ ] GPT4 (ooo the ai buzzword)
 - [ ] More interactive and advanced data visualization.
 - [ ] Desktop apps? Mac and Windows or even Web?
 
@@ -83,6 +87,5 @@ Here's a couple of recommendations (my setup):
 2. Enabling the `File Nesting` setting (`"explorer.fileNesting.enabled": true`)
 3. Disabling auto-expand nested files (`"explorer.fileNesting.expand": false`)
 4. Setting the capture for `File Nesting` to `.freezed` and `.g` files.
-5. (Possibly) setting the capture to `*_widget.dart` files, if possible and practical
 
 > Unfortunately, it doesn't seem like I can disable auto-expand if a folder only has one file (provided that the other files in the folder is nested under one file)

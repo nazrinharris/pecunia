@@ -51,7 +51,7 @@ class AuthLocalDS {
   /// The structure of the stored data is of type JSON, and is as follows:
   /// ```json
   /// <kPrefsSavedUsers> : {
-  ///  "uid": "username",
+  ///  "uid": <PecuniaUser.toJson()>,
   /// }
   ///```
   ///
@@ -61,7 +61,7 @@ class AuthLocalDS {
       () async {
         final allUsersString = prefs.getString(kPrefsSavedUsers) ?? '{}';
         final allUsers = jsonDecode(allUsersString) as Map<String, dynamic>;
-        allUsers[user.uid] = user.username;
+        allUsers[user.uid] = user.toJson();
         await prefs.setString(kPrefsSavedUsers, jsonEncode(allUsers));
 
         return unit;
@@ -98,11 +98,22 @@ class AuthLocalDS {
     );
   }
 
-  TaskEither<AuthFailure, Map<String, dynamic>> getAllSavedUsers() {
+  TaskEither<AuthFailure, List<PecuniaUser>> getAllSavedUsers() {
     return TaskEither.tryCatch(
       () async {
         final allUsersString = prefs.getString(kPrefsSavedUsers) ?? '{}';
-        final allUsers = jsonDecode(allUsersString) as Map<String, dynamic>;
+        final allUsersMap = jsonDecode(allUsersString) as Map<String, dynamic>;
+        final allUsers = allUsersMap.keys.map((key) {
+          try {
+            return PecuniaUser.fromJson(allUsersMap[key] as Map<String, dynamic>);
+          } catch (e) {
+            return PecuniaUser(
+              uid: key,
+              username: allUsersMap[key] as String,
+              dateCreated: DateTime.now(),
+            );
+          }
+        }).toList();
 
         return allUsers;
       },

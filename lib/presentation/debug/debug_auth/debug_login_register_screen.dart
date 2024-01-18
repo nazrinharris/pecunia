@@ -353,6 +353,7 @@ class StoredSavedUserDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: Allow to clear all saved users
     return FutureBuilder(
       future: ref.watch(authLocalDSProvider).getAllSavedUsers().run(),
       builder: (context, snapshot) {
@@ -360,12 +361,11 @@ class StoredSavedUserDetails extends ConsumerWidget {
           return snapshot.data!.fold(
             (l) => Text(l.toString()),
             (r) {
-              final userList = List.of(r.values.toList());
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: r.length,
                 itemBuilder: (context, index) {
-                  return Text(userList[index].toString());
+                  return Text(r[index].toString());
                 },
               );
             },
@@ -425,7 +425,131 @@ class LocalUsers extends ConsumerWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: value.length,
           itemBuilder: (context, index) {
-            return Text(value[index].toString());
+            return Card(
+              child: ListTile(
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(value[index].uid,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontStyle: FontStyle.italic,
+                            )),
+                    RichText(
+                      text: TextSpan(
+                        text: 'username: ',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                            ),
+                        children: [
+                          TextSpan(
+                            text: value[index].username,
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'email: ',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                            ),
+                        children: [
+                          TextSpan(
+                            text: value[index].email ?? 'null',
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    FutureBuilder<({String? hashedPassword, String? salt})>(future: () async {
+                      final hashedPassword = await ref
+                          .read(pecuniaFlutterSecureStorageProvider)
+                          .requireValue
+                          .read(key: 'pecunia_user_hashed_password_${value[index].uid}');
+                      final salt = await ref
+                          .read(pecuniaFlutterSecureStorageProvider)
+                          .requireValue
+                          .read(key: 'pecunia_user_salt_${value[index].uid}');
+                      return (hashedPassword: hashedPassword, salt: salt);
+                    }(), builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: 'hashed_password: ',
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                    ),
+                                children: [
+                                  TextSpan(
+                                    text: snapshot.data!.hashedPassword,
+                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                text: 'salt: ',
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                    ),
+                                children: [
+                                  TextSpan(
+                                    text: snapshot.data!.salt ?? 'null',
+                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (snapshot.data!.salt != null)
+                              Container(
+                                width: 160,
+                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.warning, color: Colors.yellow, size: 14),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Deprecated Local User',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(color: Colors.yellow),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      } else {
+                        return const Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      }
+                    })
+                  ],
+                ),
+              ),
+            );
           },
         ),
       _ => const Text('Unknown state'),

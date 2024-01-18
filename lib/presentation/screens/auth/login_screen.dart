@@ -158,7 +158,7 @@ class LoginForm extends HookConsumerWidget {
               message:
                   'Local user accounts are the accounts you have made on your current device. They are not stored in the remote database.',
             ),
-            SavedUsersListWidget(),
+            SavedUsersListWidget(isDebugMode: true),
             SizedBox(height: 14),
             TextFormField(
               controller: emailController,
