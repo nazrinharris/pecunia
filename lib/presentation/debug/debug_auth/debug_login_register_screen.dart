@@ -354,6 +354,7 @@ class StoredSavedUserDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: Allow to clear all saved users
+    // TODO: Add a debug method to clear saved users that do not have database and/or local user data
     return FutureBuilder(
       future: ref.watch(authLocalDSProvider).getAllSavedUsers().run(),
       builder: (context, snapshot) {

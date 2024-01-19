@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:bcrypt/bcrypt.dart';
+import 'package:crypto/crypto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pecunia_crypto.g.dart';
@@ -17,6 +18,11 @@ String kPecuniaUserUidKey(String email) => 'pecunia_user_uid_$email';
 
 /// [kPecuniaUserTokenKey] is the key for the user's token, stored with `Session.accessToken`. An example of the key is `pecunia_user_token_1234567890`.
 String kPecuniaUserTokenKey(String uid) => 'pecunia_user_token_$uid';
+
+/// [kPecuniaUserSaltKey] is the key for the user's salt, stored with `PecuniaCrypto.generateSalt()`. An example of the key is `pecunia_user_salt_1234567890`.
+@Deprecated(
+    'Use kPecuniaUserHashedPasswordKey() instead, salt should already be stored with the hashed password when used with hashPasswordBCrypt()')
+String kPecuniaUserSaltKey(String uid) => 'pecunia_user_salt_$uid';
 
 /// [kPecuniaActiveLocalSessionKey] is the key for the user's active local session, stored with `Session.key`.
 const String kPecuniaActiveLocalSessionKey = 'pecunia_active_local_session';
@@ -39,10 +45,26 @@ class PecuniaCrypto {
     return BCrypt.hashpw(password, BCrypt.gensalt());
   }
 
+  @Deprecated('Use hashPasswordBCrypt() instead')
+  String hashPasswordSHA256({
+    required String password,
+    required String salt,
+  }) {
+    final bytes = utf8.encode(salt + password);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
   bool verifyPassword({
     required String password,
     required String hashedPassword,
+    String? salt,
   }) {
+    // Attempt SHA256 hash comparison
+    if (salt != null) {
+      return hashPasswordSHA256(password: password, salt: salt) == hashedPassword;
+    }
+
     // Attempt BCrypt hash comparison
     return BCrypt.checkpw(password, hashedPassword);
   }

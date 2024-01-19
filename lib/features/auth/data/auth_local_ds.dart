@@ -160,6 +160,7 @@ class AuthLocalDS {
           final isCorrectPass = pecuniaCrypto.verifyPassword(
             password: password,
             hashedPassword: r.hashedPassword,
+            salt: r.salt,
           );
           if (!isCorrectPass) {
             return TaskEither.left(AuthFailure.incorrectCredentials(
@@ -395,7 +396,7 @@ class AuthSecuredStorageManager {
   /// 1. Returns [AuthFailure] of type [AuthErrorType.incorrectCredentials] if no user is found with the given email
   /// 2. Returns [AuthFailure] of type [AuthErrorType.localMissingHashedPassword] if a user is found but no hashed password is found.
   /// 3. Returns [AuthFailure] of type [AuthErrorType.localFailedGetUserCredentials] if something else went wrong.
-  TaskEither<AuthFailure, ({String uid, String hashedPassword})> getUserCredentials(
+  TaskEither<AuthFailure, ({String uid, String hashedPassword, String? salt})> getUserCredentials(
     String email,
   ) {
     return TaskEither.tryCatch(
@@ -419,8 +420,9 @@ class AuthSecuredStorageManager {
       (uid) => TaskEither.tryCatch(
         () async {
           final hashedPassword = await flutterSecureStorage.read(key: kPecuniaUserHashedPasswordKey(uid));
+          final salt = await flutterSecureStorage.read(key: kPecuniaUserSaltKey(uid));
 
-          return (uid: uid, hashedPassword: hashedPassword);
+          return (uid: uid, hashedPassword: hashedPassword, salt: salt);
         },
         (e, s) => AuthFailure(
           stackTrace: s,
@@ -436,7 +438,7 @@ class AuthSecuredStorageManager {
             message: 'User with uid $uid was found but no hashed password was found.',
           ));
         }
-        return TaskEither.right((uid: r.uid, hashedPassword: r.hashedPassword!));
+        return TaskEither.right((uid: r.uid, hashedPassword: r.hashedPassword!, salt: r.salt));
       }),
     );
   }
