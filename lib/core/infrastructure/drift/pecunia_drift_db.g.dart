@@ -1818,7 +1818,7 @@ abstract class _$PecuniaDriftDB extends GeneratedDatabase {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDBHash() => r'e5f6d907f358b11bb27a8c5cebb5ca57513540a2';
+String _$pecuniaDBHash() => r'a49858ad03f263a1bac68f421bb0a0f834002017';
 
 /// See also [PecuniaDB].
 @ProviderFor(PecuniaDB)

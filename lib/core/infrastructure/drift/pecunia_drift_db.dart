@@ -18,6 +18,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'pecunia_drift_db.g.dart';
 
+String kPecuniaDBKey(String uid) => 'pecunia_$uid.db';
+
 @Riverpod(keepAlive: true)
 class PecuniaDB extends _$PecuniaDB {
   PecuniaDriftDB? _db;
@@ -26,6 +28,7 @@ class PecuniaDB extends _$PecuniaDB {
   Future<PecuniaDriftDB> build() async {
     _dispose();
 
+    // TODO: This has a circular dependency, it depends on authRepo which depends on authLocalDS which depends on pecuniaDB
     final user = await ref.read(authRepoProvider).getLoggedInUser().run();
 
     return user.fold(
@@ -35,8 +38,8 @@ class PecuniaDB extends _$PecuniaDB {
           Exception('Attempted to open database without a logged in user'),
           StackTrace.current,
         ),
-        (t) {
-          return _db = PecuniaDriftDB(_openConnection(t.uid));
+        (user) {
+          return _db = PecuniaDriftDB(_openConnection(user.uid));
         },
       ),
     );
@@ -72,6 +75,19 @@ class PecuniaDriftDB extends _$PecuniaDriftDB {
 
   @override
   int get schemaVersion => 1;
+
+  //TODO:  If the database is not found, shouldn't an error be thrown?
+  Future<void> deleteDatabase(String uid) async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final dbFile = File(p.join(dbFolder.path, kPecuniaDBKey(uid)));
+
+    if (dbFile.existsSync()) {
+      debugPrint('Deleting database ${kPecuniaDBKey(uid)}');
+      await dbFile.delete();
+    } else {
+      debugPrint('Database ${kPecuniaDBKey(uid)} does not exist, not deleting');
+    }
+  }
 }
 
 LazyDatabase _openConnection(String uid) {

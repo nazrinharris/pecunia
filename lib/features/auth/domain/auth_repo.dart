@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/data/auth_local_ds.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
@@ -94,5 +95,16 @@ class AuthRepo {
 
   TaskEither<AuthFailure, List<PecuniaUser>> getSavedUsers() {
     return authLocalDS.getAllSavedUsers();
+  }
+
+  TaskEither<AuthFailure, Unit> deleteAllUserData(PecuniaDriftDB db) {
+    return authLocalDS.getLoggedInUser().flatMap(
+      (maybeUser) {
+        return maybeUser.fold(
+          () => throw UnimplementedError(),
+          (user) => authLocalDS.deleteAllUserData(user, db),
+        );
+      },
+    );
   }
 }

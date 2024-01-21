@@ -101,6 +101,14 @@ enum AuthErrorType {
     'local-failed-remove-local-active-session',
     'Something went wrong while removing the local active session.',
   ),
+  localAttemptedDeleteLocalUserWithNoEmail(
+    'local-attempted-delete-local-user-with-no-email',
+    'Attempted to delete a local user with no email. This should never happen.', // because all local users have emails.
+  ),
+  localFailedDeleteUserDatabase(
+    'local-failed-delete-user-database',
+    'Something went wrong while deleting the user database.',
+  ),
   incorrectCredentials(
     'incorrect-credentials',
     'Your email or password are incorrect.',
@@ -138,7 +146,7 @@ class AuthException with _$AuthException implements Exception {
 
   factory AuthException.unknown({
     required StackTrace stackTrace,
-    required AuthErrorType errorType,
+    @Default(AuthErrorType.unknown) AuthErrorType errorType,
   }) = _UnknownAuthException;
 }
 
@@ -166,7 +174,7 @@ class AuthFailure with _$AuthFailure implements Failure {
 
   const factory AuthFailure.unknown({
     required StackTrace stackTrace,
-    required String message,
+    @Default(defaultUnknownAuthErrorMessage) String message,
     @Default(AuthErrorType.unknown) AuthErrorType? errorType,
     Object? rawException,
   }) = _UnknownAuthFailure;

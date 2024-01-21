@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
@@ -126,6 +127,7 @@ class AuthLocalDS {
     );
   }
 
+  // TODO: Add check for already existing user email
   TaskEither<AuthFailure, PecuniaUserAndSession> registerWithEmailAndPassword({
     required String username,
     required String email,
@@ -191,6 +193,52 @@ class AuthLocalDS {
           () => TaskEither.right(none()),
           (t) => TaskEither.right(some(t.getUser())),
         ));
+  }
+
+  /// This method will completely wipe all the user's data, which includes:
+  ///
+  /// 1. User's Session
+  /// 2. User's Credentials
+  /// 3. User's Record in [kPrefsSavedUsers]
+  /// 4. User's Database
+  ///
+  /// On a successful deletion, this method will return [Unit] and logout should be properly handled.
+  /// The database will be closed, and the user will be logged out.
+  ///
+  /// Note: This method requires the current instance of [PecuniaDriftDB] because it cannot be injected
+  /// into [AuthLocalDS] due to circular dependency. Currently, [AuthLocalDS] does NOT depend on [PecuniaDriftDB],
+  ///
+  /// [PecuniaDB] -> [AuthRepo] -> [AuthLocalDS] -> [PecuniaDB]
+  ///
+  /// This is specifically due to [PecuniaDB] requiring the logged in `uid` to open the database.
+  TaskEither<AuthFailure, Unit> deleteAllUserData(PecuniaUser user, PecuniaDriftDB pecuniaDriftDB) {
+    if (user.email == null) {
+      return TaskEither.left(AuthFailure(
+        stackTrace: StackTrace.current,
+        message: AuthErrorType.localAttemptedDeleteLocalUserWithNoEmail.message,
+        errorType: AuthErrorType.localAttemptedDeleteLocalUserWithNoEmail,
+      ));
+    }
+
+    return sessionManager
+        .removeActiveSession()
+        .flatMap((_) => sessionManager.removeSession(user.uid))
+        .flatMap((_) => secureStorage.deleteUserDataAndCredentials(user.email!))
+        .flatMap((_) => removeSavedUser(user.uid))
+        .flatMap((_) {
+      return TaskEither<AuthFailure, Unit>.tryCatch(
+        () async => pecuniaDriftDB
+            .close()
+            .then((_) async => pecuniaDriftDB.deleteDatabase(user.uid))
+            .then((_) => unit),
+        (error, stackTrace) => AuthFailure(
+          stackTrace: stackTrace,
+          message: AuthErrorType.localFailedDeleteUserDatabase.message,
+          errorType: AuthErrorType.localFailedDeleteUserDatabase,
+          rawException: error,
+        ),
+      );
+    });
   }
 }
 
@@ -378,7 +426,7 @@ class AuthSecuredStorageManager {
 
         await flutterSecureStorage.delete(key: kPecuniaUserKey(uid!));
         await flutterSecureStorage.delete(key: kPecuniaUserHashedPasswordKey(uid));
-        await flutterSecureStorage.delete(key: kPecuniaUserUidKey(uid));
+        await flutterSecureStorage.delete(key: kPecuniaUserUidKey(email));
 
         return PecuniaUser.empty();
       },

@@ -301,12 +301,13 @@ class __$$UnknownAuthExceptionImplCopyWithImpl<$Res>
 
 class _$UnknownAuthExceptionImpl extends _UnknownAuthException {
   _$UnknownAuthExceptionImpl(
-      {required this.stackTrace, required this.errorType})
+      {required this.stackTrace, this.errorType = AuthErrorType.unknown})
       : super._();
 
   @override
   final StackTrace stackTrace;
   @override
+  @JsonKey()
   final AuthErrorType errorType;
 
   @override
@@ -405,7 +406,7 @@ class _$UnknownAuthExceptionImpl extends _UnknownAuthException {
 abstract class _UnknownAuthException extends AuthException {
   factory _UnknownAuthException(
       {required final StackTrace stackTrace,
-      required final AuthErrorType errorType}) = _$UnknownAuthExceptionImpl;
+      final AuthErrorType errorType}) = _$UnknownAuthExceptionImpl;
   _UnknownAuthException._() : super._();
 
   @override
@@ -1013,7 +1014,7 @@ class __$$UnknownAuthFailureImplCopyWithImpl<$Res>
 class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
   const _$UnknownAuthFailureImpl(
       {required this.stackTrace,
-      required this.message,
+      this.message = defaultUnknownAuthErrorMessage,
       this.errorType = AuthErrorType.unknown,
       this.rawException})
       : super._();
@@ -1021,6 +1022,7 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
   @override
   final StackTrace stackTrace;
   @override
+  @JsonKey()
   final String message;
   @override
   @JsonKey()
@@ -1140,7 +1142,7 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
 abstract class _UnknownAuthFailure extends AuthFailure {
   const factory _UnknownAuthFailure(
       {required final StackTrace stackTrace,
-      required final String message,
+      final String message,
       final AuthErrorType? errorType,
       final Object? rawException}) = _$UnknownAuthFailureImpl;
   const _UnknownAuthFailure._() : super._();

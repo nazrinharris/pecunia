@@ -8,6 +8,7 @@ import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
+import 'package:pecunia/core/util/logger.dart';
 import 'package:pecunia/core/util/pecunia_crypto.dart';
 import 'package:pecunia/features/auth/data/auth_local_ds.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
@@ -212,7 +213,8 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
                       onPressed: () async {
                         final secure = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
                         final allRead = await secure.readAll();
-                        debugPrint('All Read: $allRead');
+                        debugPrint('All Read');
+                        prettyPrintJson(allRead);
                       },
                       child: const Text('Print All Read'),
                     ),

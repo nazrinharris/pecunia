@@ -298,6 +298,33 @@ class DebugFlutterSecureStorage extends HookConsumerWidget {
             child: const Text('Read (replaces the value in text field with stored value)'),
           ),
           const SizedBox(width: 10),
+          TextField(
+            controller: textController,
+            decoration: const InputDecoration(
+              labelText: 'Enter a key entry, and I will delete or print it out',
+              hintText: 'Enter something',
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await storage.delete(key: textController.value.text);
+                },
+                child: const Text('Delete'),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  final value = await storage.read(key: textController.value.text);
+                  debugPrint('value: $value');
+                },
+                child: const Text('Print'),
+              ),
+            ],
+          ),
         ],
       ),
     );

@@ -116,7 +116,6 @@ class _DebugSavedUsersList extends ConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: userList.length,
                   itemBuilder: (context, index) {
-                    print(dbPathsList);
                     return ListTile(
                       title:
                           Text("${userList[index].email ?? 'Unknown Email'} - ${userList[index].username}"),
@@ -161,10 +160,6 @@ class _DebugSavedUsersList extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.login),
-                        onPressed: () {},
-                      ),
                     );
                   }),
             if (userList.isEmpty)
@@ -183,7 +178,7 @@ class _DebugSavedUsersList extends ConsumerWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  'There are ${dbPathsList.length - userList.length} databases that are not associated with a user}',
+                  'There are ${dbPathsList.length - userList.length} databases that are not associated with a user',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                       ),
