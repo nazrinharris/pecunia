@@ -30,16 +30,16 @@ class SettingsScreen extends ConsumerWidget {
           ref.invalidate(pecuniaDBProvider);
         }
       })
-      ..listen(deleteUserAccountAndDataProvider, (prev, next) {
+      ..listen(deleteUserAccountAndDataProvider, (prev, next) async {
         if (next is AsyncError) {
-          ref.read(pecuniaDialogsProvider).showFailureToast(
+          await ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
                 title: 'Deletion Failed',
                 failure: next.error as AuthFailure?,
               );
         }
         if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          context.goNamed('start');
+          await ref.read(logoutProvider.notifier).logout();
           ref.invalidate(pecuniaDBProvider);
         }
       });
