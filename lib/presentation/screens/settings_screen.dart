@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
-import 'package:pecunia/features/auth/usecases/delete_all_user_data.dart';
+import 'package:pecunia/features/auth/usecases/delete_user_account_and_data.dart';
 import 'package:pecunia/features/auth/usecases/logout.dart';
 import 'package:pecunia/presentation/screens/onboarding_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
@@ -30,7 +30,7 @@ class SettingsScreen extends ConsumerWidget {
           ref.invalidate(pecuniaDBProvider);
         }
       })
-      ..listen(deleteAllUserDataProvider, (prev, next) {
+      ..listen(deleteUserAccountAndDataProvider, (prev, next) {
         if (next is AsyncError) {
           ref.read(pecuniaDialogsProvider).showFailureToast(
                 context: context,
@@ -169,7 +169,7 @@ class SettingsScreen extends ConsumerWidget {
                         'This will delete your account and all your data. This action cannot be undone.',
                     entryConfirmationText: 'DELETE ACCOUNT',
                     onConfirm: () async {
-                      await ref.read(deleteAllUserDataProvider.notifier).deleteAllUserData();
+                      await ref.read(deleteUserAccountAndDataProvider.notifier).deleteUserAccountAndData();
                     },
                   );
             },

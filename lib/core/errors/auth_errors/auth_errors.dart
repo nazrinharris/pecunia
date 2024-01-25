@@ -53,6 +53,10 @@ enum AuthErrorType {
     'failed-store-user-credentials',
     'Something went wrong while storing the user credentials.',
   ),
+  attemptedDeleteWithNoLoggedInUser(
+    'attempted-delete-with-no-logged-in-user',
+    'Attempted to delete a user with no logged in user. This should never happen.', // because all logged in users have a logged in user.
+  ),
   localFailedStoreSession(
     'local-failed-store-session',
     'Something went wrong while storing the session.',

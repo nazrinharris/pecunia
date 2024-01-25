@@ -211,7 +211,7 @@ class AuthLocalDS {
   /// [PecuniaDB] -> [AuthRepo] -> [AuthLocalDS] -> [PecuniaDB]
   ///
   /// This is specifically due to [PecuniaDB] requiring the logged in `uid` to open the database.
-  TaskEither<AuthFailure, Unit> deleteAllUserData(PecuniaUser user, PecuniaDriftDB pecuniaDriftDB) {
+  TaskEither<AuthFailure, Unit> deleteAllLocalUserData(PecuniaUser user, PecuniaDriftDB pecuniaDriftDB) {
     if (user.email == null) {
       return TaskEither.left(AuthFailure(
         stackTrace: StackTrace.current,
@@ -239,6 +239,35 @@ class AuthLocalDS {
         ),
       );
     });
+  }
+
+  /// This method will completely wipe all the local-related user's data, this does NOT delete
+  /// the user's data from the remote database.
+  ///
+  /// This method will delete:
+  ///
+  /// 1. User's Session
+  /// 2. User's Record in [kPrefsSavedUsers]
+  /// 3. User's Database
+  ///
+  /// On a successful deletion, this method will return [Unit] and logout should be properly handled.
+  TaskEither<AuthFailure, Unit> deleteAllRemoteUserData(PecuniaUser user, PecuniaDriftDB pecuniaDriftDB) {
+    return sessionManager.removeSession(user.uid).flatMap((_) => removeSavedUser(user.uid)).flatMap(
+      (_) {
+        return TaskEither<AuthFailure, Unit>.tryCatch(
+          () async => pecuniaDriftDB
+              .close()
+              .then((_) async => pecuniaDriftDB.deleteDatabase(user.uid))
+              .then((_) => unit),
+          (error, stackTrace) => AuthFailure(
+            stackTrace: stackTrace,
+            message: AuthErrorType.localFailedDeleteUserDatabase.message,
+            errorType: AuthErrorType.localFailedDeleteUserDatabase,
+            rawException: error,
+          ),
+        );
+      },
+    );
   }
 }
 

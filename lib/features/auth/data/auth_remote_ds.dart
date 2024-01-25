@@ -36,6 +36,8 @@ abstract interface class AuthRemoteDS {
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser();
 
   TaskEither<AuthFailure, Unit> logout();
+
+  TaskEither<AuthFailure, Unit> deleteRemoteUserAccount(PecuniaUser user);
 }
 
 class SupabaseAuthRemoteDS implements AuthRemoteDS {
@@ -183,6 +185,17 @@ class SupabaseAuthRemoteDS implements AuthRemoteDS {
     }
     return AuthRemoteDSHelper.mapSupaUserToDTO(user)
         .flatMap((r) => TaskEither.of(Option.of(PecuniaUser.fromDTO(r))));
+  }
+
+  @override
+  TaskEither<AuthFailure, Unit> deleteRemoteUserAccount(PecuniaUser user) {
+    return TaskEither.tryCatch(
+      () async {
+        await supabaseClient.functions.invoke('delete_user_account');
+        return unit;
+      },
+      mapSupabaseToFailure,
+    );
   }
 }
 

@@ -79,7 +79,9 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
           child: ListView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             children: [
-              const Text('Users saved in "$kPrefsSavedUsers" in shared_preferences:'),
+              Center(
+                child: const Text('Users saved in "$kPrefsSavedUsers" in shared_preferences:'),
+              ),
               const StoredSavedUserDetails(),
               const SizedBox(height: 24),
               const Text('Sessions saved in flutter_secure_storage:'),
@@ -355,8 +357,6 @@ class StoredSavedUserDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Allow to clear all saved users
-    // TODO: Add a debug method to clear saved users that do not have database and/or local user data
     return FutureBuilder(
       future: ref.watch(authLocalDSProvider).getAllSavedUsers().run(),
       builder: (context, snapshot) {
@@ -366,9 +366,48 @@ class StoredSavedUserDetails extends ConsumerWidget {
             (r) {
               return ListView.builder(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: r.length,
                 itemBuilder: (context, index) {
-                  return Text(r[index].toString());
+                  return Card(
+                      child: ListTile(
+                    title: Row(
+                      children: [
+                        Text(r[index].username,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 4),
+                        Text(r[index].email ?? 'null', style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                    subtitle: Text(r[index].uid,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
+                            )),
+                    trailing: IconButton(
+                      onPressed: () {
+                        ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                              title: 'Delete Saved User',
+                              message:
+                                  'This will delete the saved user. This will not delete any sessions or the user-specific database data.',
+                              onConfirm: () async {
+                                await ref
+                                    .read(authLocalDSProvider)
+                                    .removeSavedUser(r[index].uid)
+                                    .run()
+                                    .then((value) {
+                                  ref.invalidate(debugGetLocalUsersProvider);
+                                });
+                              },
+                              context: context,
+                            );
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ));
                 },
               );
             },

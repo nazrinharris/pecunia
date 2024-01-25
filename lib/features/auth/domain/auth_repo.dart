@@ -97,12 +97,21 @@ class AuthRepo {
     return authLocalDS.getAllSavedUsers();
   }
 
-  TaskEither<AuthFailure, Unit> deleteAllUserData(PecuniaDriftDB db) {
+  TaskEither<AuthFailure, Unit> deleteUserAccountAndData(PecuniaDriftDB db) {
     return authLocalDS.getLoggedInUser().flatMap(
-      (maybeUser) {
-        return maybeUser.fold(
-          () => throw UnimplementedError(),
-          (user) => authLocalDS.deleteAllUserData(user, db),
+      (maybeLocalUser) {
+        return maybeLocalUser.fold(
+          () => authRemoteDS.getLoggedInUser().flatMap((maybeRemoteUser) => maybeRemoteUser.fold(
+                () => TaskEither.left(AuthFailure(
+                  stackTrace: StackTrace.current,
+                  message: AuthErrorType.attemptedDeleteWithNoLoggedInUser.message,
+                  errorType: AuthErrorType.attemptedDeleteWithNoLoggedInUser,
+                )),
+                (remoteUser) => authRemoteDS.deleteRemoteUserAccount(remoteUser).flatMap(
+                      (_) => authLocalDS.deleteAllRemoteUserData(remoteUser, db),
+                    ),
+              )),
+          (localUser) => authLocalDS.deleteAllLocalUserData(localUser, db),
         );
       },
     );
