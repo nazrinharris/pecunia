@@ -223,11 +223,11 @@ class AuthRemoteDSHelper {
       TaskEither.tryCatch(
         () async {
           return PecuniaUserDTO(
-            uid: user.id,
-            email: user.email,
-            username: user.userMetadata!['username'] as String,
-            dateCreated: DateTime.parse(user.createdAt),
-          );
+              uid: user.id,
+              email: user.email,
+              username: user.userMetadata!['username'] as String,
+              dateCreated: DateTime.parse(user.createdAt),
+              userType: UserType.remote);
         },
         mapSupabaseToFailure,
       );
@@ -241,11 +241,11 @@ class AuthRemoteDSHelper {
         () async {
           return (
             pecuniaUserDTO: PecuniaUserDTO(
-              uid: user.id,
-              email: user.email,
-              username: user.userMetadata!['username'] as String,
-              dateCreated: DateTime.parse(user.createdAt),
-            ),
+                uid: user.id,
+                email: user.email,
+                username: user.userMetadata!['username'] as String,
+                dateCreated: DateTime.parse(user.createdAt),
+                userType: UserType.remote),
             newSession: newSession
           );
         },

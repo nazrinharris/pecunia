@@ -155,6 +155,25 @@ class ProfileMetadataCard extends ConsumerWidget {
                       ),
                     ],
                   )),
+                  const SizedBox(height: 4),
+                  RichText(
+                      text: TextSpan(
+                    text: 'userType: ',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: value.match(() => 'null', (t) => t.userType.typeAsString),
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: Colors.grey.withOpacity(0.8),
+                        ),
+                      ),
+                    ],
+                  )),
                 ],
               ),
             ),

@@ -55,6 +55,7 @@ class Session with _$Session {
       'username': user.username,
       'email': user.email,
       'dateCreated': user.dateCreated.toIso8601String(),
+      'userType': user.userType.typeAsString,
     });
   }
 
@@ -65,6 +66,7 @@ class Session with _$Session {
       username: payload['username'] as String,
       email: payload['email'] as String?,
       dateCreated: DateTime.parse(payload['dateCreated'] as String),
+      userType: UserType.fromString(payload['userType'] as String),
     );
   }
 

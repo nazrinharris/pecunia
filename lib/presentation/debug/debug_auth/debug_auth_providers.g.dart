@@ -7,7 +7,7 @@ part of 'debug_auth_providers.dart';
 // **************************************************************************
 
 String _$debugGetLocalUsersHash() =>
-    r'6ea86ed62635ea80e5f93c9e5175be45fdd71efe';
+    r'baa2be1b20160f636cf11fa1b20824b0694f66ae';
 
 /// See also [debugGetLocalUsers].
 @ProviderFor(debugGetLocalUsers)

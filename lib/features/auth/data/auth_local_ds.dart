@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
@@ -62,7 +63,7 @@ class AuthLocalDS {
       () async {
         final allUsersString = prefs.getString(kPrefsSavedUsers) ?? '{}';
         final allUsers = jsonDecode(allUsersString) as Map<String, dynamic>;
-        allUsers[user.uid] = user.toJson();
+        allUsers[user.uid] = PecuniaUserDTO.fromDomain(user).toJson();
         await prefs.setString(kPrefsSavedUsers, jsonEncode(allUsers));
 
         return unit;
@@ -105,15 +106,7 @@ class AuthLocalDS {
         final allUsersString = prefs.getString(kPrefsSavedUsers) ?? '{}';
         final allUsersMap = jsonDecode(allUsersString) as Map<String, dynamic>;
         final allUsers = allUsersMap.keys.map((key) {
-          try {
-            return PecuniaUser.fromJson(allUsersMap[key] as Map<String, dynamic>);
-          } catch (e) {
-            return PecuniaUser(
-              uid: key,
-              username: allUsersMap[key] as String,
-              dateCreated: DateTime.now(),
-            );
-          }
+          return PecuniaUserDTO.fromJson(allUsersMap[key] as Map<String, dynamic>).toDomain();
         }).toList();
 
         return allUsers;
@@ -141,6 +134,7 @@ class AuthLocalDS {
           username: username,
           email: email,
           dateCreated: DateTime.now(),
+          userType: UserType.local,
         );
 
         return (user: user, hashedPassword: hashedPassword);
@@ -268,6 +262,26 @@ class AuthLocalDS {
         );
       },
     );
+  }
+
+  TaskEither<AuthFailure, Unit> migrateUserFromUnknownToLocal(PecuniaUser providedUser) {
+    debugPrint('Migrating user from unknown to local');
+
+    if (providedUser.email == null) {
+      return TaskEither.left(AuthFailure.unknown(
+        stackTrace: StackTrace.current,
+        message: 'Provided user should be a local user, but no email was found, this should never happen',
+      ));
+    }
+
+    return secureStorage
+        .getUserCredentials(providedUser.email!)
+        .flatMap((val) => secureStorage.storeUserCredentials(
+              (hashedPassword: val.hashedPassword, user: providedUser.copyWith(userType: UserType.local)),
+            ))
+        .flatMap(sessionManager.createSession)
+        .flatMap((val) => sessionManager.setAsLocalActiveSession(val.session))
+        .flatMap((_) => TaskEither.right(unit));
   }
 }
 
@@ -415,7 +429,7 @@ class AuthSecuredStorageManager {
     return TaskEither.tryCatch(
       () async {
         await flutterSecureStorage.write(
-            key: kPecuniaUserKey(args.user.uid), value: jsonEncode(args.user.toJson()));
+            key: kPecuniaUserKey(args.user.uid), value: jsonEncode(args.user.toDTO().toJson()));
         await flutterSecureStorage.write(
             key: kPecuniaUserHashedPasswordKey(args.user.uid), value: args.hashedPassword);
         await flutterSecureStorage.write(key: kPecuniaUserUidKey(args.user.email!), value: args.user.uid);
@@ -433,19 +447,27 @@ class AuthSecuredStorageManager {
 
   TaskEither<AuthFailure, PecuniaUser> getUserData(String uid) {
     return TaskEither.tryCatch(
-      () async {
-        final userDataString = await flutterSecureStorage.read(key: kPecuniaUserKey(uid));
-        final userData = jsonDecode(userDataString!) as Map<String, dynamic>;
-
-        return PecuniaUser.fromJson(userData);
-      },
+      () async => flutterSecureStorage.read(key: kPecuniaUserKey(uid)),
       (e, s) => AuthFailure(
         stackTrace: s,
         message: AuthErrorType.localFailedGetUserData.message,
         errorType: AuthErrorType.localFailedGetUserData,
         rawException: e,
       ),
-    );
+    ).flatMap((userDataString) {
+      if (userDataString == null) {
+        return TaskEither.left(AuthFailure(
+          stackTrace: StackTrace.current,
+          message: AuthErrorType.localCannotFindUserData.message,
+          errorType: AuthErrorType.localCannotFindUserData,
+        ));
+      }
+      final userData = jsonDecode(userDataString) as Map<String, dynamic>;
+
+      final user = PecuniaUserDTO.fromJson(userData).toDomain();
+
+      return TaskEither.right(user);
+    });
   }
 
   TaskEither<AuthFailure, PecuniaUser> deleteUserDataAndCredentials(String email) {

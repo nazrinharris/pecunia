@@ -508,6 +508,22 @@ class LocalUsers extends ConsumerWidget {
                         ],
                       ),
                     ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'userType: ',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                            ),
+                        children: [
+                          TextSpan(
+                            text: value[index].userType.typeAsString,
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
                     const Divider(),
                     FutureBuilder<({String? hashedPassword, String? salt})>(future: () async {
                       final hashedPassword = await ref

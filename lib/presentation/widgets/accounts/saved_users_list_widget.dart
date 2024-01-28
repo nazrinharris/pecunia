@@ -116,9 +116,11 @@ class _DebugSavedUsersList extends ConsumerWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: userList.length,
                   itemBuilder: (context, index) {
+                    final isUnknownUserType = userList[index].userType == UserType.unknown;
+                    final user = userList[index];
+
                     return ListTile(
-                      title:
-                          Text("${userList[index].email ?? 'Unknown Email'} - ${userList[index].username}"),
+                      title: Text("${user.email ?? 'Unknown Email'} - ${user.username}"),
                       subtitle: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -126,7 +128,7 @@ class _DebugSavedUsersList extends ConsumerWidget {
                             width: 100,
                             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                             decoration: BoxDecoration(
-                              color: dbPathsList.contains(userList[index].uid)
+                              color: dbPathsList.contains(user.uid)
                                   ? Colors.green.withOpacity(0.1)
                                   : Colors.red.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(50),
@@ -134,18 +136,42 @@ class _DebugSavedUsersList extends ConsumerWidget {
                             child: Row(
                               children: [
                                 Icon(
-                                  dbPathsList.contains(userList[index].uid) ? Icons.check : Icons.close,
-                                  color:
-                                      dbPathsList.contains(userList[index].uid) ? Colors.green : Colors.red,
+                                  dbPathsList.contains(user.uid) ? Icons.check : Icons.close,
+                                  color: dbPathsList.contains(user.uid) ? Colors.green : Colors.red,
                                   size: 14,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   'Database',
                                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                        color: dbPathsList.contains(userList[index].uid)
-                                            ? Colors.green
-                                            : Colors.red,
+                                        color: dbPathsList.contains(user.uid) ? Colors.green : Colors.red,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            width: isUnknownUserType ? 165 : 80,
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: isUnknownUserType
+                                  ? Colors.red.withOpacity(0.1)
+                                  : Colors.green.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  isUnknownUserType ? Icons.close : Icons.check,
+                                  color: isUnknownUserType ? Colors.red : Colors.green,
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  isUnknownUserType ? 'Unknown User Type' : user.userType.typeAsString,
+                                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                        color: isUnknownUserType ? Colors.red : Colors.green,
                                       ),
                                 ),
                               ],
@@ -153,7 +179,7 @@ class _DebugSavedUsersList extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${userList[index].uid.substring(0, 8)}...',
+                            '${user.uid.substring(0, 8)}...',
                             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                   color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                                 ),
@@ -165,9 +191,10 @@ class _DebugSavedUsersList extends ConsumerWidget {
             if (userList.isEmpty)
               Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
                 child: Text(
                   'You have no saved users, try logging in or signing up!',
+                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
                       ),

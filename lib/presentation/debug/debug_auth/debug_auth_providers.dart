@@ -101,7 +101,7 @@ Future<List<PecuniaUser>> debugGetLocalUsers(DebugGetLocalUsersRef ref) async {
     final userJson = await storage.read(key: kPecuniaUserKey(uid!));
     debugPrint('Attempting to read from key: ${kPecuniaUserKey(uid)}}');
     debugPrint(userJson);
-    final user = PecuniaUser.fromJson(jsonDecode(userJson!) as Map<String, dynamic>);
+    final user = PecuniaUserDTO.fromJson(jsonDecode(userJson!) as Map<String, dynamic>).toDomain();
     userList.add(user);
   }
 

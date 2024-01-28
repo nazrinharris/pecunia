@@ -57,6 +57,10 @@ enum AuthErrorType {
     'attempted-delete-with-no-logged-in-user',
     'Attempted to delete a user with no logged in user. This should never happen.', // because all logged in users have a logged in user.
   ),
+  attemptedMigrateUserWithNoLoggedInUser(
+    'attempted-migrate-with-no-logged-in-user',
+    'Attempted to migrate a user with no logged in user. This should never happen.', // because all logged in users have a logged in user.
+  ),
   localFailedStoreSession(
     'local-failed-store-session',
     'Something went wrong while storing the session.',
@@ -84,6 +88,14 @@ enum AuthErrorType {
   localFailedGetUserData(
     'local-failed-get-user-data',
     'Something went wrong while getting the user data.',
+  ),
+  localFailedMigrateUserFromUnknownToLocal(
+    'local-failed-migrate-user-from-unknown-to-local',
+    'Something went wrong while migrating the user from unknown to local.',
+  ),
+  localCannotFindUserData(
+    'local-cannot-find-user-data',
+    'Cannot find the user data.',
   ),
   localMissingHashedPassword(
     'local-missing-hashed-password',

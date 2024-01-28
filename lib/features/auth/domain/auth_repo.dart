@@ -116,4 +116,29 @@ class AuthRepo {
       },
     );
   }
+
+  TaskEither<AuthFailure, Unit> maybeMigratePecuniaUser() {
+    return getLoggedInUser().flatMap(
+      (maybeUser) => maybeUser.match(
+        () => TaskEither.left(AuthFailure(
+          stackTrace: StackTrace.current,
+          message: AuthErrorType.attemptedMigrateUserWithNoLoggedInUser.message,
+          errorType: AuthErrorType.attemptedMigrateUserWithNoLoggedInUser,
+        )),
+        _migrateIfUserTypeUnknown,
+      ),
+    );
+  }
+
+  /// This method should only be used in [maybeMigratePecuniaUser] as it expects a [PecuniaUser] to be present.
+  ///
+  /// [user] should also always technically be a local user. This is because [UserType.remote] is always present
+  /// when [getLoggedInUser] returns a remote user. Specifically due to [AuthRemoteDSHelper.mapSupaUserToDTO] and
+  /// [AuthRemoteDSHelper.mapSupaUserToDTOWithSession]
+  TaskEither<AuthFailure, Unit> _migrateIfUserTypeUnknown(PecuniaUser user) {
+    if (user.userType == UserType.unknown) {
+      return authLocalDS.migrateUserFromUnknownToLocal(user);
+    }
+    return TaskEither.right(unit);
+  }
 }
