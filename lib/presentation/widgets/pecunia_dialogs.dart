@@ -486,7 +486,12 @@ class TextEntryConfirmationDialog extends HookConsumerWidget {
           child: Text(cancelButtonText ?? 'Cancel'),
         ),
         ElevatedButton.icon(
-          onPressed: isTextEntryValid.value ? onConfirm : null,
+          onPressed: isTextEntryValid.value
+              ? () {
+                  onConfirm();
+                  Navigator.of(context).pop();
+                }
+              : null,
           icon: Icon(
             Icons.delete_forever,
             color: isTextEntryValid.value ? Colors.red[200] : Colors.grey[500],

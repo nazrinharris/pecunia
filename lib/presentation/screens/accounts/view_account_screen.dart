@@ -658,9 +658,11 @@ class BuildAccountActionsGrid extends ConsumerWidget {
           height: 84,
           width: 84,
           child: ScaleButton(
-            onTap: () => ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+            onTap: () => ref.read(pecuniaDialogsProvider).showTextEntryConfirmationDialog(
                 title: 'Are you sure you want to delete this account?',
-                message: 'This is irreversible',
+                description: 'This action cannot be undone.',
+                entryConfirmationText: 'DELETE',
+                confirmButtonText: 'Delete',
                 onConfirm: () {
                   ref.read(deleteAccountProvider.notifier).deleteAccount(account);
                 },
