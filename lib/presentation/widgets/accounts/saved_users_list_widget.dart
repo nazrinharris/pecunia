@@ -152,7 +152,11 @@ class _DebugSavedUsersList extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            width: isUnknownUserType ? 165 : 80,
+                            width: isUnknownUserType
+                                ? 165
+                                : user.userType == UserType.local
+                                    ? 70
+                                    : 80,
                             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                             decoration: BoxDecoration(
                               color: isUnknownUserType
