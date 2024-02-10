@@ -1818,9 +1818,12 @@ abstract class _$PecuniaDriftDB extends GeneratedDatabase {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDBHash() => r'a49858ad03f263a1bac68f421bb0a0f834002017';
+String _$pecuniaDBHash() => r'0796e00bf9f528cd389681c8a8100dfcaf1b856a';
 
-/// See also [PecuniaDB].
+/// [pecuniaDBProvider] depends on [authRepoProvider], specifically, it wants to read the logged in user. So
+/// make sure that [authRepoProvider] is initialized before [pecuniaDBProvider] is.
+///
+/// Copied from [PecuniaDB].
 @ProviderFor(PecuniaDB)
 final pecuniaDBProvider =
     AsyncNotifierProvider<PecuniaDB, PecuniaDriftDB>.internal(

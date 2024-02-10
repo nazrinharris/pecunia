@@ -1,15 +1,63 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/app_info_errors/app_info_errors.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
-import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
-import 'package:pecunia/features/app_info/app_info.dart';
+import 'package:pecunia/features/app_info/domain/app_info_repo.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
-import 'package:pecunia/features/auth/usecases/maybe_migrate_pecunia_user.dart';
-import 'package:pecunia/main.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'entry_screen.g.dart';
+part 'entry_screen.freezed.dart';
+
+@freezed
+class EntryState with _$EntryState {
+  const EntryState._();
+  const factory EntryState.loading() = _Loading;
+  const factory EntryState.noLoggedInUser(Option<bool> maybeIsFirstOpen) = _NoLoggedInUser;
+  const factory EntryState.completedEntry() = _CompletedEntry;
+  const factory EntryState.error(Failure failure) = _Error;
+}
+
+@riverpod
+class Entry extends _$Entry {
+  @override
+  Future<EntryState> build() async {
+    return const EntryState.loading();
+  }
+
+  Future<void> entry() async {
+    state = const AsyncLoading();
+
+    (await _getLoggedInUser()).fold(
+      (f) => state = AsyncError(EntryState.error(f), f.stackTrace),
+      (maybeUser) async => maybeUser.match(
+        () async => (await _getIsFirstOpen()).fold(
+          (f) => state = AsyncError(f, f.stackTrace),
+          (maybeIsFirstOpen) => state = AsyncData(EntryState.noLoggedInUser(maybeIsFirstOpen)),
+        ),
+        (maybeUser) async => (await _maybeMigrateUser()).fold(
+          (f) => state = AsyncError(EntryState.error(f), f.stackTrace),
+          (_) => state = const AsyncData(EntryState.completedEntry()),
+        ),
+      ),
+    );
+  }
+
+  Future<Either<AuthFailure, Option<PecuniaUser>>> _getLoggedInUser() =>
+      ref.read(authRepoProvider).getLoggedInUser().run();
+
+  Future<Either<AppInfoFailure, Option<bool>>> _getIsFirstOpen() =>
+      ref.read(appInfoRepoProvider).getIsFirstOpen().run();
+
+  Future<Either<AuthFailure, Unit>> _maybeMigrateUser() =>
+      ref.read(authRepoProvider).maybeMigratePecuniaUser().run();
+}
 
 class EntryScreen extends StatefulHookConsumerWidget {
   const EntryScreen({super.key});
@@ -22,91 +70,21 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   @override
   void initState() {
     super.initState();
-    if (isDebugMode) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await ref.watch(getLoggedInUserProvider.future).then((maybeUser) {
-          maybeUser.match(
-            () async {
-              debugPrint('No user logged in, checking if first open');
-              try {
-                await ref
-                    .watch(getIsFirstOpenProvider.future)
-                    .then((maybeIsFirstOpen) => maybeIsFirstOpen.match(
-                          () => unit,
-                          (isFirstOpen) =>
-                              isFirstOpen ? context.goNamed('onboarding') : context.goNamed('start'),
-                        ));
-              } catch (e) {
-                // This is handled in the build method. If the try-catch is not here, it's
-                // kind of considered a non-caught exception.
-              }
-            },
-            (user) async {
-              debugPrint('User logged in, maybe migrating user');
-
-              ref
-                ..invalidate(pecuniaDBProvider)
-                ..watch(pecuniaDBProvider);
-
-              await ref.read(maybeMigratePecuniaUserProvider.notifier).maybeMigratePecuniaUser();
-            },
-          );
-        });
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(entryProvider.notifier).entry();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    ref
-      ..listen(
-        getIsFirstOpenProvider,
-        (previous, next) {
-          switch (next) {
-            case AsyncError(:final Failure error):
-              showDialog<void>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text(
-                      'Oops! We encountered an issue while setting up your app for the first time'),
-                  content: Text(error.message),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              ).then((value) => context.goNamed('start'));
-            case AsyncError(:final Exception error):
-              showDialog<void>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text(
-                      'Oops! We encountered an issue while setting up your app for the first time'),
-                  content: Text(error.toString()),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        context.pop();
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              ).then((value) => context.goNamed('start'));
-          }
-        },
-      )
-      ..listen(maybeMigratePecuniaUserProvider, (previous, next) {
-        if (next is AsyncError) {
+    ref.listen(entryProvider, (previous, next) {
+      switch (next) {
+        case AsyncError(error: final Failure f):
           showDialog<void>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Oops! We encountered an issue while migrating your account data'),
-              content: Text(next.error.toString()),
+              title: const Text('Oops! We encountered an issue while setting up your app for the first time'),
+              content: Text(f.message),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -117,14 +95,16 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
               ],
             ),
           ).then((value) => context.goNamed('start'));
-        }
-
-        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-          debugPrint('Checking for user migration complete, going to main');
+        case AsyncData(value: final _NoLoggedInUser state):
+          state.maybeIsFirstOpen.match(
+            () => null,
+            (isFirstOpen) => isFirstOpen ? context.goNamed('onboarding') : context.goNamed('start'),
+          );
+        case AsyncData(value: final _CompletedEntry _):
           ref.invalidate(getLoggedInUserProvider);
           context.goNamed('main');
-        }
-      });
+      }
+    });
 
     return const Scaffold(
       body: Center(

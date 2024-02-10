@@ -7,6 +7,7 @@ import 'package:flutter/material.dart' show IconData;
 import 'package:fpdart/fpdart.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/infrastructure/drift/debug_dao.dart';
 import 'package:pecunia/core/infrastructure/drift/icon_data_converter.dart';
 import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
@@ -20,22 +21,25 @@ part 'pecunia_drift_db.g.dart';
 
 String kPecuniaDBKey(String uid) => 'pecunia_$uid.db';
 
+/// [pecuniaDBProvider] depends on [authRepoProvider], specifically, it wants to read the logged in user. So
+/// make sure that [authRepoProvider] is initialized before [pecuniaDBProvider] is.
 @Riverpod(keepAlive: true)
 class PecuniaDB extends _$PecuniaDB {
   PecuniaDriftDB? _db;
 
   @override
   Future<PecuniaDriftDB> build() async {
-    _dispose();
+    _onDispose();
 
-    // TODO: This has a circular dependency, it depends on authRepo which depends on authLocalDS which depends on pecuniaDB
     final user = await ref.read(authRepoProvider).getLoggedInUser().run();
 
     return user.fold(
       (l) => Future.error(l, l.stackTrace),
       (r) => r.fold(
         () => Future.error(
-          Exception('Attempted to open database without a logged in user'),
+          AuthFailure.unknown(
+              message: 'Attempted to open database connection without a logged in user',
+              stackTrace: StackTrace.current),
           StackTrace.current,
         ),
         (user) {
@@ -45,7 +49,7 @@ class PecuniaDB extends _$PecuniaDB {
     );
   }
 
-  void _dispose() {
+  void _onDispose() {
     ref.onDispose(() async {
       debugPrint('Closing database connection...');
       await _db?.close();

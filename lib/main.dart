@@ -6,8 +6,6 @@ import 'package:pecunia/core/util/logger.dart';
 import 'package:pecunia/presentation/router/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
-const bool isDebugMode = true;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
