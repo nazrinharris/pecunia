@@ -281,6 +281,7 @@ class TransactionsList extends ConsumerWidget {
                 );
               }
 
+              // TODO: Optimize category retrieval
               final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
 
               return switch (categoryValue) {

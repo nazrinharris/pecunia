@@ -38,7 +38,7 @@ class TransactionsRepo {
     required String creatorUid,
     required DateTime transactionDate,
     required String accountId,
-    required String type,
+    required TransactionType type,
     required double baseAmount,
     required String baseCurrency,
     required double? exchangeRate,
@@ -54,7 +54,7 @@ class TransactionsRepo {
       transactionDate: transactionDate,
       accountId: accountId,
       fundDetails: FundDetails(
-        transactionType: TransactionType.fromString(type),
+        transactionType: type,
         baseAmount: baseAmount,
         baseCurrency: PecuniaCurrencies.fromString(baseCurrency),
         exchangeRate: exchangeRate,
@@ -161,6 +161,25 @@ class TransactionsRepo {
       type: type,
       currency: currency,
       includeTransfers: includeTransfers,
+    );
+  }
+
+  TaskEither<TransactionsFailure, List<Transaction>> getTxnsCurrentMonth({
+    required TransactionType type,
+    required Currency currency,
+    bool includeTransfers = false,
+  }) {
+    final now = DateTime.now();
+    final startDate = DateTime(now.year, now.month);
+    final endDate = DateTime(now.year, now.month + 1, 0);
+
+    f.debugPrint('startDate: $startDate, endDate: $endDate');
+
+    return getTxnsOverPeriod(
+      startDate: startDate,
+      endDate: endDate,
+      type: type,
+      currency: currency,
     );
   }
 }

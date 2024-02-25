@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
@@ -14,14 +16,21 @@ import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
+import 'package:pecunia/core/infrastructure/uuid/pecunia_uuid.dart';
+import 'package:pecunia/core/shared/description.dart';
+import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/get_all_accounts.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
+import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
+import 'package:pecunia/features/transactions/domain/transactions_repo.dart';
 import 'package:pecunia/presentation/screens/primary/accounts_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
+import 'package:pecunia/presentation/widgets/transactions/forms/create_txn_form_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // TODO: Show a list of db stored in device
@@ -165,6 +174,8 @@ class DebugLocalDBScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 14),
             const Divider(),
+            const RandomTransactions(),
+            const Divider(),
             const SizedBox(height: 7),
             const DebugDialogsButtons(),
             const SizedBox(height: 14),
@@ -185,6 +196,146 @@ class DebugLocalDBScreen extends ConsumerWidget {
             const AccountsList(),
           ],
         ));
+  }
+}
+
+class RandomTransactions extends HookConsumerWidget {
+  const RandomTransactions({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final accountsListState = ref.watch(getAllAccountsProvider);
+
+    return switch (accountsListState) {
+      AsyncLoading() => const Center(child: CircularProgressIndicator()),
+      AsyncError(error: final Failure f) => Center(child: Text(f.message)),
+      AsyncData(value: final List<Account> accountsList) =>
+        buildRandomTransactions(ref, useState(accountsList.first), accountsList),
+      _ => Center(
+          child: Text('Unexpected state: $accountsListState'),
+        ),
+    };
+  }
+
+  Column buildRandomTransactions(
+    WidgetRef ref,
+    ValueNotifier<Account> chosenAccount,
+    List<Account> accountsList,
+  ) {
+    return Column(
+      children: [
+        const Align(
+          child: Text(
+            'Random Transactions',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        ChooseAccountField(chosenAccount: chosenAccount, accountsList: accountsList),
+        const SizedBox(height: 14),
+        ElevatedButton(
+          onPressed: () async {
+            for (var i = 0; i < 31; i++) {
+              final amount = Random().nextDouble() * 100;
+              final randomTxnType = Random().nextBool() ? TransactionType.credit : TransactionType.debit;
+
+              final txn = Transaction.newTransaction(
+                creatorUid:
+                    ref.watch(getLoggedInUserProvider).requireValue.getOrElse(() => throw Exception()).uid,
+                name: 'Random Transaction $i',
+                transactionDescription: Description('Random Transaction Description $i'),
+                transactionDate: DateTime.now().subtract(Duration(days: i)),
+                accountId: chosenAccount.value.id,
+                fundDetails: FundDetails(
+                  baseAmount: amount,
+                  baseCurrency: chosenAccount.value.currency,
+                  transactionType: randomTxnType,
+                  exchangeRate: null,
+                  targetAmount: null,
+                  targetCurrency: null,
+                ),
+                uuid: ref.watch(uuidProvider),
+                transferDetails: null,
+              );
+
+              debugPrint(
+                  'Transaction $i: ${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}, ${txn.transactionDate}');
+
+              await ref
+                  .read(transactionsRepoProvider)
+                  .createTransaction(
+                    name: txn.name,
+                    creatorUid: txn.creatorUid,
+                    transactionDate: txn.transactionDate,
+                    accountId: txn.accountId,
+                    type: txn.fundDetails.transactionType,
+                    baseAmount: txn.fundDetails.baseAmount,
+                    baseCurrency: txn.fundDetails.baseCurrency.code,
+                    exchangeRate: txn.fundDetails.exchangeRate,
+                    targetAmount: txn.fundDetails.targetAmount,
+                    targetCurrency: txn.fundDetails.targetCurrency?.code,
+                    transactionDescription: txn.transactionDescription.value,
+                    category: null,
+                  )
+                  .run();
+            }
+          },
+          child: const Text('31 txns after today'),
+        ),
+        const SizedBox(height: 7),
+        ElevatedButton(
+          onPressed: () async {
+            for (var i = 0; i < 31; i++) {
+              final amount = Random().nextDouble() * 1000;
+              final randomTxnType = Random().nextBool() ? TransactionType.credit : TransactionType.debit;
+
+              final txn = Transaction.newTransaction(
+                creatorUid:
+                    ref.watch(getLoggedInUserProvider).requireValue.getOrElse(() => throw Exception()).uid,
+                name: 'Random Transaction $i',
+                transactionDescription: Description('Random Transaction Description $i'),
+                transactionDate: DateTime.now().add(Duration(days: i)),
+                accountId: chosenAccount.value.id,
+                fundDetails: FundDetails(
+                  baseAmount: amount,
+                  baseCurrency: chosenAccount.value.currency,
+                  transactionType: randomTxnType,
+                  exchangeRate: null,
+                  targetAmount: null,
+                  targetCurrency: null,
+                ),
+                uuid: ref.watch(uuidProvider),
+                transferDetails: null,
+              );
+
+              debugPrint(
+                  'Transaction $i: ${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}, ${txn.transactionDate}');
+
+              await ref
+                  .read(transactionsRepoProvider)
+                  .createTransaction(
+                    name: txn.name,
+                    creatorUid: txn.creatorUid,
+                    transactionDate: txn.transactionDate,
+                    accountId: txn.accountId,
+                    type: txn.fundDetails.transactionType,
+                    baseAmount: txn.fundDetails.baseAmount,
+                    baseCurrency: txn.fundDetails.baseCurrency.code,
+                    exchangeRate: txn.fundDetails.exchangeRate,
+                    targetAmount: txn.fundDetails.targetAmount,
+                    targetCurrency: txn.fundDetails.targetCurrency?.code,
+                    transactionDescription: txn.transactionDescription.value,
+                    category: null,
+                  )
+                  .run();
+            }
+          },
+          child: const Text('31 txns after today'),
+        ),
+      ],
+    );
   }
 }
 

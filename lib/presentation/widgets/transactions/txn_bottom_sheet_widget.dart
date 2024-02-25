@@ -241,7 +241,7 @@ class BuildTxnAmountText extends ConsumerWidget {
           children: [
             if (isCredit)
               Text(
-                '+${txn.fundDetails.transactionAmount}',
+                '+${txn.fundDetails.transactionAmount.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: Colors.green[300],
                   fontSize: 14,
@@ -250,7 +250,7 @@ class BuildTxnAmountText extends ConsumerWidget {
               ),
             if (!isCredit)
               Text(
-                '-${txn.fundDetails.transactionAmount}',
+                '-${txn.fundDetails.transactionAmount.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: Colors.red[300],
                   fontSize: 14,
@@ -275,7 +275,7 @@ class BuildTxnAmountText extends ConsumerWidget {
             children: [
               if (isCredit)
                 Text(
-                  '+${txn.fundDetails.exchangedAmount}',
+                  '+${txn.fundDetails.exchangedAmount.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: Colors.green[300]!.withOpacity(0.3),
                     fontSize: 14,
@@ -284,7 +284,7 @@ class BuildTxnAmountText extends ConsumerWidget {
                 ),
               if (!isCredit)
                 Text(
-                  '-${txn.fundDetails.exchangedAmount}',
+                  '-${txn.fundDetails.exchangedAmount.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: Colors.red[300]!.withOpacity(0.3),
                     fontSize: 14,
