@@ -98,7 +98,7 @@ class BuildMonthlyTxnModule extends ConsumerWidget {
                     child: Column(
                       children: [
                         Text(
-                          '\$${sumUpTxns(monthlyIncomesList)}',
+                          '\$${sumUpTxns(monthlyIncomesList).toStringAsFixed(2)}',
                           style: TextStyle(
                             color: Colors.green[100],
                             fontWeight: FontWeight.bold,
@@ -123,7 +123,7 @@ class BuildMonthlyTxnModule extends ConsumerWidget {
                     child: Column(
                       children: [
                         Text(
-                          '\$${sumUpTxns(monthlyExpensesList)}',
+                          '\$${sumUpTxns(monthlyExpensesList).toStringAsFixed(2)}',
                           style: TextStyle(
                             color: Colors.red[100],
                             fontWeight: FontWeight.bold,

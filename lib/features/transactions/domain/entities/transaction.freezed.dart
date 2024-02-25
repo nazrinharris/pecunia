@@ -130,11 +130,11 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
 }
 
 /// @nodoc
-abstract class _$$_TransactionCopyWith<$Res>
+abstract class _$$TransactionImplCopyWith<$Res>
     implements $TransactionCopyWith<$Res> {
-  factory _$$_TransactionCopyWith(
-          _$_Transaction value, $Res Function(_$_Transaction) then) =
-      __$$_TransactionCopyWithImpl<$Res>;
+  factory _$$TransactionImplCopyWith(
+          _$TransactionImpl value, $Res Function(_$TransactionImpl) then) =
+      __$$TransactionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -154,11 +154,11 @@ abstract class _$$_TransactionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TransactionCopyWithImpl<$Res>
-    extends _$TransactionCopyWithImpl<$Res, _$_Transaction>
-    implements _$$_TransactionCopyWith<$Res> {
-  __$$_TransactionCopyWithImpl(
-      _$_Transaction _value, $Res Function(_$_Transaction) _then)
+class __$$TransactionImplCopyWithImpl<$Res>
+    extends _$TransactionCopyWithImpl<$Res, _$TransactionImpl>
+    implements _$$TransactionImplCopyWith<$Res> {
+  __$$TransactionImplCopyWithImpl(
+      _$TransactionImpl _value, $Res Function(_$TransactionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -173,7 +173,7 @@ class __$$_TransactionCopyWithImpl<$Res>
     Object? fundDetails = null,
     Object? transferDetails = freezed,
   }) {
-    return _then(_$_Transaction(
+    return _then(_$TransactionImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -212,8 +212,8 @@ class __$$_TransactionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Transaction extends _Transaction with DiagnosticableTreeMixin {
-  const _$_Transaction(
+class _$TransactionImpl extends _Transaction with DiagnosticableTreeMixin {
+  const _$TransactionImpl(
       {required this.id,
       required this.creatorUid,
       required this.name,
@@ -266,7 +266,7 @@ class _$_Transaction extends _Transaction with DiagnosticableTreeMixin {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Transaction &&
+            other is _$TransactionImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.creatorUid, creatorUid) ||
                 other.creatorUid == creatorUid) &&
@@ -298,8 +298,8 @@ class _$_Transaction extends _Transaction with DiagnosticableTreeMixin {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TransactionCopyWith<_$_Transaction> get copyWith =>
-      __$$_TransactionCopyWithImpl<_$_Transaction>(this, _$identity);
+  _$$TransactionImplCopyWith<_$TransactionImpl> get copyWith =>
+      __$$TransactionImplCopyWithImpl<_$TransactionImpl>(this, _$identity);
 }
 
 abstract class _Transaction extends Transaction {
@@ -311,7 +311,7 @@ abstract class _Transaction extends Transaction {
       required final DateTime transactionDate,
       required final String accountId,
       required final FundDetails fundDetails,
-      required final TransferDetails? transferDetails}) = _$_Transaction;
+      required final TransferDetails? transferDetails}) = _$TransactionImpl;
   const _Transaction._() : super._();
 
   @override
@@ -332,7 +332,7 @@ abstract class _Transaction extends Transaction {
   TransferDetails? get transferDetails;
   @override
   @JsonKey(ignore: true)
-  _$$_TransactionCopyWith<_$_Transaction> get copyWith =>
+  _$$TransactionImplCopyWith<_$TransactionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -415,11 +415,11 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
 }
 
 /// @nodoc
-abstract class _$$_FundDetailsCopyWith<$Res>
+abstract class _$$FundDetailsImplCopyWith<$Res>
     implements $FundDetailsCopyWith<$Res> {
-  factory _$$_FundDetailsCopyWith(
-          _$_FundDetails value, $Res Function(_$_FundDetails) then) =
-      __$$_FundDetailsCopyWithImpl<$Res>;
+  factory _$$FundDetailsImplCopyWith(
+          _$FundDetailsImpl value, $Res Function(_$FundDetailsImpl) then) =
+      __$$FundDetailsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -432,11 +432,11 @@ abstract class _$$_FundDetailsCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_FundDetailsCopyWithImpl<$Res>
-    extends _$FundDetailsCopyWithImpl<$Res, _$_FundDetails>
-    implements _$$_FundDetailsCopyWith<$Res> {
-  __$$_FundDetailsCopyWithImpl(
-      _$_FundDetails _value, $Res Function(_$_FundDetails) _then)
+class __$$FundDetailsImplCopyWithImpl<$Res>
+    extends _$FundDetailsCopyWithImpl<$Res, _$FundDetailsImpl>
+    implements _$$FundDetailsImplCopyWith<$Res> {
+  __$$FundDetailsImplCopyWithImpl(
+      _$FundDetailsImpl _value, $Res Function(_$FundDetailsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -449,7 +449,7 @@ class __$$_FundDetailsCopyWithImpl<$Res>
     Object? targetAmount = freezed,
     Object? targetCurrency = freezed,
   }) {
-    return _then(_$_FundDetails(
+    return _then(_$FundDetailsImpl(
       baseAmount: null == baseAmount
           ? _value.baseAmount
           : baseAmount // ignore: cast_nullable_to_non_nullable
@@ -480,8 +480,8 @@ class __$$_FundDetailsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FundDetails extends _FundDetails with DiagnosticableTreeMixin {
-  const _$_FundDetails(
+class _$FundDetailsImpl extends _FundDetails with DiagnosticableTreeMixin {
+  const _$FundDetailsImpl(
       {required this.baseAmount,
       required this.baseCurrency,
       required this.transactionType,
@@ -533,7 +533,7 @@ class _$_FundDetails extends _FundDetails with DiagnosticableTreeMixin {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FundDetails &&
+            other is _$FundDetailsImpl &&
             (identical(other.baseAmount, baseAmount) ||
                 other.baseAmount == baseAmount) &&
             (identical(other.baseCurrency, baseCurrency) ||
@@ -555,8 +555,8 @@ class _$_FundDetails extends _FundDetails with DiagnosticableTreeMixin {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FundDetailsCopyWith<_$_FundDetails> get copyWith =>
-      __$$_FundDetailsCopyWithImpl<_$_FundDetails>(this, _$identity);
+  _$$FundDetailsImplCopyWith<_$FundDetailsImpl> get copyWith =>
+      __$$FundDetailsImplCopyWithImpl<_$FundDetailsImpl>(this, _$identity);
 }
 
 abstract class _FundDetails extends FundDetails {
@@ -566,7 +566,7 @@ abstract class _FundDetails extends FundDetails {
       required final TransactionType transactionType,
       required final double? exchangeRate,
       required final double? targetAmount,
-      required final Currency? targetCurrency}) = _$_FundDetails;
+      required final Currency? targetCurrency}) = _$FundDetailsImpl;
   const _FundDetails._() : super._();
 
   @override
@@ -583,7 +583,7 @@ abstract class _FundDetails extends FundDetails {
   Currency? get targetCurrency;
   @override
   @JsonKey(ignore: true)
-  _$$_FundDetailsCopyWith<_$_FundDetails> get copyWith =>
+  _$$FundDetailsImplCopyWith<_$FundDetailsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -646,11 +646,11 @@ class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
 }
 
 /// @nodoc
-abstract class _$$_TransferDetailsCopyWith<$Res>
+abstract class _$$TransferDetailsImplCopyWith<$Res>
     implements $TransferDetailsCopyWith<$Res> {
-  factory _$$_TransferDetailsCopyWith(
-          _$_TransferDetails value, $Res Function(_$_TransferDetails) then) =
-      __$$_TransferDetailsCopyWithImpl<$Res>;
+  factory _$$TransferDetailsImplCopyWith(_$TransferDetailsImpl value,
+          $Res Function(_$TransferDetailsImpl) then) =
+      __$$TransferDetailsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -660,11 +660,11 @@ abstract class _$$_TransferDetailsCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TransferDetailsCopyWithImpl<$Res>
-    extends _$TransferDetailsCopyWithImpl<$Res, _$_TransferDetails>
-    implements _$$_TransferDetailsCopyWith<$Res> {
-  __$$_TransferDetailsCopyWithImpl(
-      _$_TransferDetails _value, $Res Function(_$_TransferDetails) _then)
+class __$$TransferDetailsImplCopyWithImpl<$Res>
+    extends _$TransferDetailsCopyWithImpl<$Res, _$TransferDetailsImpl>
+    implements _$$TransferDetailsImplCopyWith<$Res> {
+  __$$TransferDetailsImplCopyWithImpl(
+      _$TransferDetailsImpl _value, $Res Function(_$TransferDetailsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -674,7 +674,7 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
     Object? linkedTransactionId = null,
     Object? transferDescription = null,
   }) {
-    return _then(_$_TransferDetails(
+    return _then(_$TransferDetailsImpl(
       linkedAccountId: null == linkedAccountId
           ? _value.linkedAccountId
           : linkedAccountId // ignore: cast_nullable_to_non_nullable
@@ -693,8 +693,9 @@ class __$$_TransferDetailsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TransferDetails extends _TransferDetails with DiagnosticableTreeMixin {
-  const _$_TransferDetails(
+class _$TransferDetailsImpl extends _TransferDetails
+    with DiagnosticableTreeMixin {
+  const _$TransferDetailsImpl(
       {required this.linkedAccountId,
       required this.linkedTransactionId,
       required this.transferDescription})
@@ -730,7 +731,7 @@ class _$_TransferDetails extends _TransferDetails with DiagnosticableTreeMixin {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TransferDetails &&
+            other is _$TransferDetailsImpl &&
             (identical(other.linkedAccountId, linkedAccountId) ||
                 other.linkedAccountId == linkedAccountId) &&
             (identical(other.linkedTransactionId, linkedTransactionId) ||
@@ -746,8 +747,9 @@ class _$_TransferDetails extends _TransferDetails with DiagnosticableTreeMixin {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
-      __$$_TransferDetailsCopyWithImpl<_$_TransferDetails>(this, _$identity);
+  _$$TransferDetailsImplCopyWith<_$TransferDetailsImpl> get copyWith =>
+      __$$TransferDetailsImplCopyWithImpl<_$TransferDetailsImpl>(
+          this, _$identity);
 }
 
 abstract class _TransferDetails extends TransferDetails {
@@ -755,7 +757,7 @@ abstract class _TransferDetails extends TransferDetails {
           {required final String linkedAccountId,
           required final String linkedTransactionId,
           required final TransferDescription transferDescription}) =
-      _$_TransferDetails;
+      _$TransferDetailsImpl;
   const _TransferDetails._() : super._();
 
   @override
@@ -766,6 +768,6 @@ abstract class _TransferDetails extends TransferDetails {
   TransferDescription get transferDescription;
   @override
   @JsonKey(ignore: true)
-  _$$_TransferDetailsCopyWith<_$_TransferDetails> get copyWith =>
+  _$$TransferDetailsImplCopyWith<_$TransferDetailsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

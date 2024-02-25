@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pecunia/features/app_info/app_info.dart';
+import 'package:pecunia/features/app_info/usecase/is_first_open.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -17,9 +17,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showOnboardingBottomSheet(context).then((_) {
+      showOnboardingBottomSheet(context).then((_) async {
         context.goNamed('start');
-        ref.read(setIsFirstOpenProvider(false));
+        await ref.read(isFirstOpenProvider.notifier).setIsFirstOpen(false);
       });
     });
   }

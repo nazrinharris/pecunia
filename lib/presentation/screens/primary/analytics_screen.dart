@@ -4,10 +4,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
+import 'package:pecunia/core/util/transactions_util.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
-import 'package:pecunia/features/transactions/usecases/get_all_expense_txns.dart';
-import 'package:pecunia/features/transactions/usecases/get_all_income_txns.dart';
+import 'package:pecunia/features/transactions/usecases/get_txns_current_month.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -15,10 +17,14 @@ class AnalyticsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        body: RefreshIndicator(
+        body: RefreshIndicator.adaptive(
       displacement: 100,
       onRefresh: () async {
-        ref.invalidate(getAllIncomeTxnsProvider);
+        ref
+          ..invalidate(
+              getTxnsCurrentMonthProvider(type: TransactionType.credit, currency: PecuniaCurrencies.usd))
+          ..invalidate(
+              getTxnsCurrentMonthProvider(type: TransactionType.debit, currency: PecuniaCurrencies.usd));
       },
       child: ListView(
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -77,9 +83,10 @@ class AllIncomeChart extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final incomeValue = ref.watch(getAllIncomeTxnsProvider);
+    final thisMonthIncomeValue =
+        ref.watch(getTxnsCurrentMonthProvider(type: TransactionType.credit, currency: PecuniaCurrencies.usd));
 
-    return switch (incomeValue) {
+    return switch (thisMonthIncomeValue) {
       AsyncLoading() => Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           child: CupertinoActivityIndicator(),
@@ -112,48 +119,35 @@ class AllIncomeLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 34, bottom: 34, right: 14),
-        child: AspectRatio(
-          aspectRatio: 1.7,
+    debugPrint('txns: ${txns.length}');
+
+    final aggregate = aggregateTransactionsIntoDays(txns);
+
+    return SizedBox(
+      height: 400,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 34, bottom: 34, right: 14),
           child: BarChart(
             BarChartData(
               barTouchData: BarTouchData(),
-              gridData: FlGridData(
-                horizontalInterval: 10,
-                verticalInterval: 10,
-                getDrawingHorizontalLine: (value) {
-                  return FlLine(
-                    color: Theme.of(context).dividerColor.withOpacity(0.2),
-                    strokeWidth: 1,
-                  );
-                },
-                getDrawingVerticalLine: (value) {
-                  return FlLine(
-                    color: Theme.of(context).dividerColor.withOpacity(0.2),
-                    strokeWidth: 1,
-                  );
-                },
-              ),
               titlesData: FlTitlesData(
                 rightTitles: const AxisTitles(),
                 topTitles: const AxisTitles(),
-                bottomTitles: const AxisTitles(),
+                bottomTitles: AxisTitles(sideTitles: _bottomTitles(aggregate, context), axisNameSize: 8),
               ),
               borderData: FlBorderData(
                 show: false,
               ),
-              barGroups: txns
+              barGroups: aggregate
                   .map(
                     (e) => BarChartGroupData(
-                      x: txns.indexOf(e),
+                      x: aggregate.indexOf(e),
                       barRods: [
                         BarChartRodData(
-                          toY: e.fundDetails.transactionAmount,
+                          toY: e.value,
                           color: Colors.green[300],
-                          width: 42,
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(16),
                             topRight: Radius.circular(16),
@@ -171,6 +165,21 @@ class AllIncomeLineChart extends StatelessWidget {
       ),
     );
   }
+
+  SideTitles _bottomTitles(List<MapEntry<DateTime, double>> aggregate, BuildContext context) {
+    return SideTitles(
+      showTitles: true,
+      getTitlesWidget: (value, meta) => Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Text(
+          value.toInt().isEven ? DateFormat('MM/dd').format(aggregate[value.toInt()].key) : '',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5),
+              ),
+        ),
+      ),
+    );
+  }
 }
 
 class AllExpenseChart extends ConsumerWidget {
@@ -178,9 +187,10 @@ class AllExpenseChart extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final incomeValue = ref.watch(getAllExpenseTxnsProvider);
+    final thisMonthExpenseValue =
+        ref.watch(getTxnsCurrentMonthProvider(type: TransactionType.debit, currency: PecuniaCurrencies.usd));
 
-    return switch (incomeValue) {
+    return switch (thisMonthExpenseValue) {
       AsyncLoading() => Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           child: CupertinoActivityIndicator(),
@@ -222,22 +232,6 @@ class AllExpenseLineChart extends StatelessWidget {
           child: BarChart(
             BarChartData(
               barTouchData: BarTouchData(),
-              gridData: FlGridData(
-                horizontalInterval: 10,
-                verticalInterval: 10,
-                getDrawingHorizontalLine: (value) {
-                  return FlLine(
-                    color: Theme.of(context).dividerColor.withOpacity(0.2),
-                    strokeWidth: 1,
-                  );
-                },
-                getDrawingVerticalLine: (value) {
-                  return FlLine(
-                    color: Theme.of(context).dividerColor.withOpacity(0.2),
-                    strokeWidth: 1,
-                  );
-                },
-              ),
               titlesData: FlTitlesData(
                 rightTitles: const AxisTitles(),
                 topTitles: const AxisTitles(),
@@ -254,7 +248,6 @@ class AllExpenseLineChart extends StatelessWidget {
                         BarChartRodData(
                           toY: e.fundDetails.transactionAmount,
                           color: Colors.red[300],
-                          width: 42,
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(16),
                             topRight: Radius.circular(16),

@@ -50,7 +50,7 @@ class CreateTransaction extends _$CreateTransaction {
                 creatorUid: pecuniaUser.getOrElse(() => throw Exception()).uid,
                 transactionDate: DateTime.now(),
                 accountId: accountId,
-                type: transactionType.typeAsString,
+                type: transactionType,
                 baseAmount: baseAmount,
                 baseCurrency: baseCurrency,
                 transactionDescription: description,

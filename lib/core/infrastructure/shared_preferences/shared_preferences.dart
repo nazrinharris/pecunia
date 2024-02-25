@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'shared_preferences.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class PecuniaSharedPreferences extends _$PecuniaSharedPreferences {
   @override
   Future<SharedPreferences> build() async {

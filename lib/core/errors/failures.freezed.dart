@@ -63,22 +63,22 @@ class _$CriticalExceptionCopyWithImpl<$Res, $Val extends CriticalException>
 }
 
 /// @nodoc
-abstract class _$$_CriticalExceptionCopyWith<$Res>
+abstract class _$$CriticalExceptionImplCopyWith<$Res>
     implements $CriticalExceptionCopyWith<$Res> {
-  factory _$$_CriticalExceptionCopyWith(_$_CriticalException value,
-          $Res Function(_$_CriticalException) then) =
-      __$$_CriticalExceptionCopyWithImpl<$Res>;
+  factory _$$CriticalExceptionImplCopyWith(_$CriticalExceptionImpl value,
+          $Res Function(_$CriticalExceptionImpl) then) =
+      __$$CriticalExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({StackTrace stackTrace, String? message});
 }
 
 /// @nodoc
-class __$$_CriticalExceptionCopyWithImpl<$Res>
-    extends _$CriticalExceptionCopyWithImpl<$Res, _$_CriticalException>
-    implements _$$_CriticalExceptionCopyWith<$Res> {
-  __$$_CriticalExceptionCopyWithImpl(
-      _$_CriticalException _value, $Res Function(_$_CriticalException) _then)
+class __$$CriticalExceptionImplCopyWithImpl<$Res>
+    extends _$CriticalExceptionCopyWithImpl<$Res, _$CriticalExceptionImpl>
+    implements _$$CriticalExceptionImplCopyWith<$Res> {
+  __$$CriticalExceptionImplCopyWithImpl(_$CriticalExceptionImpl _value,
+      $Res Function(_$CriticalExceptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +87,7 @@ class __$$_CriticalExceptionCopyWithImpl<$Res>
     Object? stackTrace = null,
     Object? message = freezed,
   }) {
-    return _then(_$_CriticalException(
+    return _then(_$CriticalExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -102,8 +102,8 @@ class __$$_CriticalExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CriticalException implements _CriticalException {
-  _$_CriticalException(
+class _$CriticalExceptionImpl implements _CriticalException {
+  _$CriticalExceptionImpl(
       {required this.stackTrace,
       this.message = 'This operation should never fail'});
 
@@ -122,7 +122,7 @@ class _$_CriticalException implements _CriticalException {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CriticalException &&
+            other is _$CriticalExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.message, message) || other.message == message));
@@ -134,15 +134,15 @@ class _$_CriticalException implements _CriticalException {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CriticalExceptionCopyWith<_$_CriticalException> get copyWith =>
-      __$$_CriticalExceptionCopyWithImpl<_$_CriticalException>(
+  _$$CriticalExceptionImplCopyWith<_$CriticalExceptionImpl> get copyWith =>
+      __$$CriticalExceptionImplCopyWithImpl<_$CriticalExceptionImpl>(
           this, _$identity);
 }
 
 abstract class _CriticalException implements CriticalException {
   factory _CriticalException(
       {required final StackTrace stackTrace,
-      final String? message}) = _$_CriticalException;
+      final String? message}) = _$CriticalExceptionImpl;
 
   @override
   StackTrace get stackTrace;
@@ -150,6 +150,6 @@ abstract class _CriticalException implements CriticalException {
   String? get message;
   @override
   @JsonKey(ignore: true)
-  _$$_CriticalExceptionCopyWith<_$_CriticalException> get copyWith =>
+  _$$CriticalExceptionImplCopyWith<_$CriticalExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

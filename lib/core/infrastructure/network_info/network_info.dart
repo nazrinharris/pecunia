@@ -6,8 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'network_info.g.dart';
 
 @Riverpod(keepAlive: true)
-InternetConnectionCheckerPlus internetConnectionCheckerPlus(InternetConnectionCheckerPlusRef ref) {
-  return InternetConnectionCheckerPlus();
+InternetConnection internetConnectionCheckerPlus(InternetConnectionCheckerPlusRef ref) {
+  return InternetConnection();
 }
 
 @riverpod
@@ -24,11 +24,11 @@ abstract interface class NetworkInfo {
 class NetworkInfoImpl implements NetworkInfo {
   NetworkInfoImpl(this.connectionChecker);
 
-  final InternetConnectionCheckerPlus connectionChecker;
+  final InternetConnection connectionChecker;
 
   @override
   TaskEither<NetworkInfoFailure, bool> isConnected() => TaskEither.tryCatch(
-        () => connectionChecker.hasConnection,
+        () => connectionChecker.hasInternetAccess,
         (error, stackTrace) => NetworkInfoFailure(
           stackTrace: stackTrace,
           rawException: error,

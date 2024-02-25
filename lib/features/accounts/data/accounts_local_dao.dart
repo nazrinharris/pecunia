@@ -13,7 +13,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'accounts_local_dao.g.dart';
 
 @riverpod
-AccountsLocalDAO accountsLocalDAO(AccountsLocalDAORef ref) => ref.watch(pecuniaDBProvider).accountsLocalDAO;
+AccountsLocalDAO accountsLocalDAO(AccountsLocalDAORef ref) =>
+    ref.watch(pecuniaDBProvider).requireValue.accountsLocalDAO;
 
 @DataClassName('AccountDTO')
 class AccountsTable extends Table {
@@ -31,7 +32,7 @@ class AccountsTable extends Table {
 }
 
 @DriftAccessor(tables: [AccountsTable, TransactionsTable])
-class AccountsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$AccountsLocalDAOMixin {
+class AccountsLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$AccountsLocalDAOMixin {
   AccountsLocalDAO(super.db);
 
   TaskEither<AccountsFailure, List<AccountDTO>> getAccounts() {

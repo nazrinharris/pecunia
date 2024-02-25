@@ -15,6 +15,7 @@ class TxnListTile extends HookConsumerWidget {
     this.enableTopDivider = false,
     this.enableBottomDivider = true,
     this.hideAccountName = false,
+    this.hideDate = false,
     this.onTap,
     super.key,
   });
@@ -25,6 +26,7 @@ class TxnListTile extends HookConsumerWidget {
   final bool enableTopDivider;
   final bool enableBottomDivider;
   final bool hideAccountName;
+  final bool hideDate;
   final void Function()? onTap;
 
   @override
@@ -41,6 +43,13 @@ class TxnListTile extends HookConsumerWidget {
               if (!hideAccountName)
                 Text(
                   account.name,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              if (!hideDate)
+                Text(
+                  txn.transactionDate.formatted,
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

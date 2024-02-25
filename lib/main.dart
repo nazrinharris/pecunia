@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/infrastructure/flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences.dart';
 import 'package:pecunia/core/util/logger.dart';
 import 'package:pecunia/presentation/router/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
-
-const bool isDebugMode = true;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +33,10 @@ class PecuniaApp extends ConsumerStatefulWidget {
 class _PecuniaAppState extends ConsumerState<PecuniaApp> {
   @override
   Widget build(BuildContext context) {
-    // TODO: Maybe implement eager initialization to avoid unnecessary rebuilds
-    ref.watch(pecuniaSharedPreferencesProvider);
+    // TODO: Maybe implement eager initialization to avoid unnecessary rebuilds and error handling
+    ref
+      ..watch(pecuniaSharedPreferencesProvider)
+      ..watch(pecuniaFlutterSecureStorageProvider);
 
     return MaterialApp.router(
       darkTheme: ThemeData.dark(
@@ -59,4 +60,4 @@ class _PecuniaAppState extends ConsumerState<PecuniaApp> {
 /// Comment for transaction categories feature - transaction-categories
 /// Comment for UI general usability - ui-general-usability
 /// Comment for version management - version-management
-
+/// Comment for local/guest account - local-guest-account

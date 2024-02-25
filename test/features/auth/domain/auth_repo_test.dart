@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/features/auth/data/auth_local_ds.dart';
 import 'package:pecunia/features/auth/data/auth_remote_ds.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
@@ -11,9 +12,12 @@ import '../../../matcher/auth_matchers.dart';
 
 class MockAuthRemoteDS extends Mock implements AuthRemoteDS {}
 
+class MockAuthLocalDS extends Mock implements AuthLocalDS {}
+
 void main() {
   late AuthRepoImpl authRepo;
   late MockAuthRemoteDS mockAuthRemoteDS;
+  late MockAuthLocalDS mockAuthLocalDS;
 
   setUpAll(() {
     registerFallbackValue(const Session(isValid: true));
@@ -21,7 +25,8 @@ void main() {
 
   setUp(() {
     mockAuthRemoteDS = MockAuthRemoteDS();
-    authRepo = AuthRepoImpl(authRemoteDS: mockAuthRemoteDS);
+    mockAuthLocalDS = MockAuthLocalDS();
+    authRepo = AuthRepoImpl(authRemoteDS: mockAuthRemoteDS, authLocalDS: mockAuthLocalDS);
   });
 
   group('AuthRepoImpl -', () {

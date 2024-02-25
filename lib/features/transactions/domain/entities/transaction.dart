@@ -33,22 +33,6 @@ enum TransactionType {
     );
   }
 
-  /// Returns a more detailed string representation of the transaction type.
-  ///
-  /// For each transaction type, this method appends additional context
-  /// to the basic type. For instance, a credit transaction is mapped
-  /// to 'Income (Credit)' and a debit transaction to 'Expense (Debit)'.
-  /// This method is useful when a more descriptive representation of
-  /// the transaction type is needed.
-  String toDescription() {
-    switch (this) {
-      case TransactionType.credit:
-        return 'Income';
-      case TransactionType.debit:
-        return 'Expense';
-    }
-  }
-
   /// Returns a user-friendly string representation of the transaction type.
   ///
   /// This method maps each transaction type to a string that is meant to be

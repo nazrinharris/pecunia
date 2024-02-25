@@ -14,6 +14,10 @@ const defaultUnknownAppInfoErrorMessage = 'An unknown error occurred while fetch
 
 enum AppInfoErrorType {
   unknown(defaultUnknownAppInfoErrorCode, defaultUnknownAppInfoErrorMessage),
+  failedGetIsFirstOpen(
+      'failed_get_is_first_open', 'An error occurred while checking if the app is opened for the first time'),
+  failedSetIsFirstOpen(
+      'failed_set_is_first_open', 'An error occurred while setting the app as opened for the first time'),
   errorGettingSharedPrefs('error_getting_shared_prefs', 'An error occurred while getting shared preferences');
 
   const AppInfoErrorType(this.code, this.message);

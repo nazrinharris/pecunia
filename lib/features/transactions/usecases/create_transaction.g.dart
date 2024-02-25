@@ -6,7 +6,7 @@ part of 'create_transaction.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createTransactionHash() => r'34785517ba5f2215b6b561758dcaea670ce5591d';
+String _$createTransactionHash() => r'2a91ab39679547d2712ac551732c81bf0ce68250';
 
 /// See also [CreateTransaction].
 @ProviderFor(CreateTransaction)
@@ -22,4 +22,5 @@ final createTransactionProvider =
 );
 
 typedef _$CreateTransaction = AutoDisposeAsyncNotifier<Option<Unit>>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

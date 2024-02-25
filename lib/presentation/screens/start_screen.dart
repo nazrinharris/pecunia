@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_animation_text/flutter_gradient_animation_text.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/simple_animations.dart';
 
@@ -375,7 +376,7 @@ class AuthButtons extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   final shared = await SharedPreferences.getInstance();
-                  await shared.setBool('is_first_open', true);
+                  await shared.setBool(kPrefsIsFirstOpen, true);
                   debugPrint('is_first_open set to true');
                   // ignore: use_build_context_synchronously
                   context.go('/');

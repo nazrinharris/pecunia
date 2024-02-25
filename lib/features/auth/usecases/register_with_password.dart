@@ -1,7 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
-import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'register_with_password.g.dart';
 
@@ -10,7 +9,6 @@ typedef RegisterParams = ({
   String username,
   String password,
   String confirmPassword,
-  Session currentSession,
 });
 
 @riverpod
@@ -29,13 +27,12 @@ class RegisterWithEmailAndPassword extends _$RegisterWithEmailAndPassword {
           email: registerParams.email,
           username: registerParams.username,
           password: registerParams.confirmPassword,
-          currentSession: registerParams.currentSession,
         )
         .run();
 
     return failureOrPecuniaUserAndSession.fold(
       (failure) => state = AsyncValue.error(failure, failure.stackTrace),
-      (r) => state = AsyncValue.data(Option.of(r.pecuniaUser)),
+      (r) => state = AsyncValue.data(Option.of(r.user)),
     );
   }
 
