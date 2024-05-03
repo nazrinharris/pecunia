@@ -12,7 +12,7 @@ part of 'entry_screen.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$EntryState {
@@ -43,26 +43,26 @@ mixin _$EntryState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_NoLoggedInUser value) noLoggedInUser,
-    required TResult Function(_CompletedEntry value) completedEntry,
-    required TResult Function(_Error value) error,
+    required TResult Function(EntryLoading value) loading,
+    required TResult Function(NoLoggedInUser value) noLoggedInUser,
+    required TResult Function(CompletedEntry value) completedEntry,
+    required TResult Function(EntryError value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult? Function(_CompletedEntry value)? completedEntry,
-    TResult? Function(_Error value)? error,
+    TResult? Function(EntryLoading value)? loading,
+    TResult? Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult? Function(CompletedEntry value)? completedEntry,
+    TResult? Function(EntryError value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult Function(_CompletedEntry value)? completedEntry,
-    TResult Function(_Error value)? error,
+    TResult Function(EntryLoading value)? loading,
+    TResult Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult Function(CompletedEntry value)? completedEntry,
+    TResult Function(EntryError value)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -87,25 +87,25 @@ class _$EntryStateCopyWithImpl<$Res, $Val extends EntryState>
 }
 
 /// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
+abstract class _$$EntryLoadingImplCopyWith<$Res> {
+  factory _$$EntryLoadingImplCopyWith(
+          _$EntryLoadingImpl value, $Res Function(_$EntryLoadingImpl) then) =
+      __$$EntryLoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$EntryStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+class __$$EntryLoadingImplCopyWithImpl<$Res>
+    extends _$EntryStateCopyWithImpl<$Res, _$EntryLoadingImpl>
+    implements _$$EntryLoadingImplCopyWith<$Res> {
+  __$$EntryLoadingImplCopyWithImpl(
+      _$EntryLoadingImpl _value, $Res Function(_$EntryLoadingImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$LoadingImpl extends _Loading {
-  const _$LoadingImpl() : super._();
+class _$EntryLoadingImpl extends EntryLoading {
+  const _$EntryLoadingImpl() : super._();
 
   @override
   String toString() {
@@ -113,9 +113,9 @@ class _$LoadingImpl extends _Loading {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
+        (other.runtimeType == runtimeType && other is _$EntryLoadingImpl);
   }
 
   @override
@@ -161,10 +161,10 @@ class _$LoadingImpl extends _Loading {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_NoLoggedInUser value) noLoggedInUser,
-    required TResult Function(_CompletedEntry value) completedEntry,
-    required TResult Function(_Error value) error,
+    required TResult Function(EntryLoading value) loading,
+    required TResult Function(NoLoggedInUser value) noLoggedInUser,
+    required TResult Function(CompletedEntry value) completedEntry,
+    required TResult Function(EntryError value) error,
   }) {
     return loading(this);
   }
@@ -172,10 +172,10 @@ class _$LoadingImpl extends _Loading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult? Function(_CompletedEntry value)? completedEntry,
-    TResult? Function(_Error value)? error,
+    TResult? Function(EntryLoading value)? loading,
+    TResult? Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult? Function(CompletedEntry value)? completedEntry,
+    TResult? Function(EntryError value)? error,
   }) {
     return loading?.call(this);
   }
@@ -183,10 +183,10 @@ class _$LoadingImpl extends _Loading {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult Function(_CompletedEntry value)? completedEntry,
-    TResult Function(_Error value)? error,
+    TResult Function(EntryLoading value)? loading,
+    TResult Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult Function(CompletedEntry value)? completedEntry,
+    TResult Function(EntryError value)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -196,9 +196,9 @@ class _$LoadingImpl extends _Loading {
   }
 }
 
-abstract class _Loading extends EntryState {
-  const factory _Loading() = _$LoadingImpl;
-  const _Loading._() : super._();
+abstract class EntryLoading extends EntryState {
+  const factory EntryLoading() = _$EntryLoadingImpl;
+  const EntryLoading._() : super._();
 }
 
 /// @nodoc
@@ -234,7 +234,7 @@ class __$$NoLoggedInUserImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$NoLoggedInUserImpl extends _NoLoggedInUser {
+class _$NoLoggedInUserImpl extends NoLoggedInUser {
   const _$NoLoggedInUserImpl(this.maybeIsFirstOpen) : super._();
 
   @override
@@ -246,7 +246,7 @@ class _$NoLoggedInUserImpl extends _NoLoggedInUser {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NoLoggedInUserImpl &&
@@ -304,10 +304,10 @@ class _$NoLoggedInUserImpl extends _NoLoggedInUser {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_NoLoggedInUser value) noLoggedInUser,
-    required TResult Function(_CompletedEntry value) completedEntry,
-    required TResult Function(_Error value) error,
+    required TResult Function(EntryLoading value) loading,
+    required TResult Function(NoLoggedInUser value) noLoggedInUser,
+    required TResult Function(CompletedEntry value) completedEntry,
+    required TResult Function(EntryError value) error,
   }) {
     return noLoggedInUser(this);
   }
@@ -315,10 +315,10 @@ class _$NoLoggedInUserImpl extends _NoLoggedInUser {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult? Function(_CompletedEntry value)? completedEntry,
-    TResult? Function(_Error value)? error,
+    TResult? Function(EntryLoading value)? loading,
+    TResult? Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult? Function(CompletedEntry value)? completedEntry,
+    TResult? Function(EntryError value)? error,
   }) {
     return noLoggedInUser?.call(this);
   }
@@ -326,10 +326,10 @@ class _$NoLoggedInUserImpl extends _NoLoggedInUser {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult Function(_CompletedEntry value)? completedEntry,
-    TResult Function(_Error value)? error,
+    TResult Function(EntryLoading value)? loading,
+    TResult Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult Function(CompletedEntry value)? completedEntry,
+    TResult Function(EntryError value)? error,
     required TResult orElse(),
   }) {
     if (noLoggedInUser != null) {
@@ -339,10 +339,10 @@ class _$NoLoggedInUserImpl extends _NoLoggedInUser {
   }
 }
 
-abstract class _NoLoggedInUser extends EntryState {
-  const factory _NoLoggedInUser(final Option<bool> maybeIsFirstOpen) =
+abstract class NoLoggedInUser extends EntryState {
+  const factory NoLoggedInUser(final Option<bool> maybeIsFirstOpen) =
       _$NoLoggedInUserImpl;
-  const _NoLoggedInUser._() : super._();
+  const NoLoggedInUser._() : super._();
 
   Option<bool> get maybeIsFirstOpen;
   @JsonKey(ignore: true)
@@ -368,7 +368,7 @@ class __$$CompletedEntryImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$CompletedEntryImpl extends _CompletedEntry {
+class _$CompletedEntryImpl extends CompletedEntry {
   const _$CompletedEntryImpl() : super._();
 
   @override
@@ -377,7 +377,7 @@ class _$CompletedEntryImpl extends _CompletedEntry {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$CompletedEntryImpl);
   }
@@ -425,10 +425,10 @@ class _$CompletedEntryImpl extends _CompletedEntry {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_NoLoggedInUser value) noLoggedInUser,
-    required TResult Function(_CompletedEntry value) completedEntry,
-    required TResult Function(_Error value) error,
+    required TResult Function(EntryLoading value) loading,
+    required TResult Function(NoLoggedInUser value) noLoggedInUser,
+    required TResult Function(CompletedEntry value) completedEntry,
+    required TResult Function(EntryError value) error,
   }) {
     return completedEntry(this);
   }
@@ -436,10 +436,10 @@ class _$CompletedEntryImpl extends _CompletedEntry {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult? Function(_CompletedEntry value)? completedEntry,
-    TResult? Function(_Error value)? error,
+    TResult? Function(EntryLoading value)? loading,
+    TResult? Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult? Function(CompletedEntry value)? completedEntry,
+    TResult? Function(EntryError value)? error,
   }) {
     return completedEntry?.call(this);
   }
@@ -447,10 +447,10 @@ class _$CompletedEntryImpl extends _CompletedEntry {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult Function(_CompletedEntry value)? completedEntry,
-    TResult Function(_Error value)? error,
+    TResult Function(EntryLoading value)? loading,
+    TResult Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult Function(CompletedEntry value)? completedEntry,
+    TResult Function(EntryError value)? error,
     required TResult orElse(),
   }) {
     if (completedEntry != null) {
@@ -460,26 +460,26 @@ class _$CompletedEntryImpl extends _CompletedEntry {
   }
 }
 
-abstract class _CompletedEntry extends EntryState {
-  const factory _CompletedEntry() = _$CompletedEntryImpl;
-  const _CompletedEntry._() : super._();
+abstract class CompletedEntry extends EntryState {
+  const factory CompletedEntry() = _$CompletedEntryImpl;
+  const CompletedEntry._() : super._();
 }
 
 /// @nodoc
-abstract class _$$ErrorImplCopyWith<$Res> {
-  factory _$$ErrorImplCopyWith(
-          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
-      __$$ErrorImplCopyWithImpl<$Res>;
+abstract class _$$EntryErrorImplCopyWith<$Res> {
+  factory _$$EntryErrorImplCopyWith(
+          _$EntryErrorImpl value, $Res Function(_$EntryErrorImpl) then) =
+      __$$EntryErrorImplCopyWithImpl<$Res>;
   @useResult
   $Res call({Failure failure});
 }
 
 /// @nodoc
-class __$$ErrorImplCopyWithImpl<$Res>
-    extends _$EntryStateCopyWithImpl<$Res, _$ErrorImpl>
-    implements _$$ErrorImplCopyWith<$Res> {
-  __$$ErrorImplCopyWithImpl(
-      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
+class __$$EntryErrorImplCopyWithImpl<$Res>
+    extends _$EntryStateCopyWithImpl<$Res, _$EntryErrorImpl>
+    implements _$$EntryErrorImplCopyWith<$Res> {
+  __$$EntryErrorImplCopyWithImpl(
+      _$EntryErrorImpl _value, $Res Function(_$EntryErrorImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -487,7 +487,7 @@ class __$$ErrorImplCopyWithImpl<$Res>
   $Res call({
     Object? failure = null,
   }) {
-    return _then(_$ErrorImpl(
+    return _then(_$EntryErrorImpl(
       null == failure
           ? _value.failure
           : failure // ignore: cast_nullable_to_non_nullable
@@ -498,8 +498,8 @@ class __$$ErrorImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ErrorImpl extends _Error {
-  const _$ErrorImpl(this.failure) : super._();
+class _$EntryErrorImpl extends EntryError {
+  const _$EntryErrorImpl(this.failure) : super._();
 
   @override
   final Failure failure;
@@ -510,10 +510,10 @@ class _$ErrorImpl extends _Error {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ErrorImpl &&
+            other is _$EntryErrorImpl &&
             (identical(other.failure, failure) || other.failure == failure));
   }
 
@@ -523,8 +523,8 @@ class _$ErrorImpl extends _Error {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
-      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
+  _$$EntryErrorImplCopyWith<_$EntryErrorImpl> get copyWith =>
+      __$$EntryErrorImplCopyWithImpl<_$EntryErrorImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -566,10 +566,10 @@ class _$ErrorImpl extends _Error {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_NoLoggedInUser value) noLoggedInUser,
-    required TResult Function(_CompletedEntry value) completedEntry,
-    required TResult Function(_Error value) error,
+    required TResult Function(EntryLoading value) loading,
+    required TResult Function(NoLoggedInUser value) noLoggedInUser,
+    required TResult Function(CompletedEntry value) completedEntry,
+    required TResult Function(EntryError value) error,
   }) {
     return error(this);
   }
@@ -577,10 +577,10 @@ class _$ErrorImpl extends _Error {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult? Function(_CompletedEntry value)? completedEntry,
-    TResult? Function(_Error value)? error,
+    TResult? Function(EntryLoading value)? loading,
+    TResult? Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult? Function(CompletedEntry value)? completedEntry,
+    TResult? Function(EntryError value)? error,
   }) {
     return error?.call(this);
   }
@@ -588,10 +588,10 @@ class _$ErrorImpl extends _Error {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_NoLoggedInUser value)? noLoggedInUser,
-    TResult Function(_CompletedEntry value)? completedEntry,
-    TResult Function(_Error value)? error,
+    TResult Function(EntryLoading value)? loading,
+    TResult Function(NoLoggedInUser value)? noLoggedInUser,
+    TResult Function(CompletedEntry value)? completedEntry,
+    TResult Function(EntryError value)? error,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -601,12 +601,12 @@ class _$ErrorImpl extends _Error {
   }
 }
 
-abstract class _Error extends EntryState {
-  const factory _Error(final Failure failure) = _$ErrorImpl;
-  const _Error._() : super._();
+abstract class EntryError extends EntryState {
+  const factory EntryError(final Failure failure) = _$EntryErrorImpl;
+  const EntryError._() : super._();
 
   Failure get failure;
   @JsonKey(ignore: true)
-  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+  _$$EntryErrorImplCopyWith<_$EntryErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

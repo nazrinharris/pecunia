@@ -178,14 +178,15 @@ class AuthLocalDS {
           (session) => sessionManager
               .removeSession(session.uid)
               .flatMap((_) => sessionManager.removeActiveSession())
-              .map((_) => some(session.getUser())),
+              .flatMap((_) => session.getUser())
+              .map(some),
         ));
   }
 
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {
     return sessionManager.getActiveSession().flatMap((r) => r.fold(
           () => TaskEither.right(none()),
-          (t) => TaskEither.right(some(t.getUser())),
+          (session) => session.getUser().map(some),
         ));
   }
 

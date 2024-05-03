@@ -18,26 +18,22 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - sign_in_with_apple (0.0.1):
-    - Flutter
-  - sqlite3 (3.44.0):
-    - sqlite3/common (= 3.44.0)
-  - sqlite3/common (3.44.0)
-  - sqlite3/fts5 (3.44.0):
+  - sqlite3 (3.45.1):
+    - sqlite3/common (= 3.45.1)
+  - sqlite3/common (3.45.1)
+  - sqlite3/fts5 (3.45.1):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.44.0):
+  - sqlite3/perf-threadsafe (3.45.1):
     - sqlite3/common
-  - sqlite3/rtree (3.44.0):
+  - sqlite3/rtree (3.45.1):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
-    - sqlite3 (~> 3.44.0)
+    - sqlite3 (~> 3.45.1)
     - sqlite3/fts5
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
   - url_launcher_ios (0.0.1):
-    - Flutter
-  - webview_flutter_wkwebview (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -49,10 +45,8 @@ DEPENDENCIES:
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
 SPEC REPOS:
   trunk:
@@ -76,31 +70,25 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-  sign_in_with_apple:
-    :path: ".symlinks/plugins/sign_in_with_apple/ios"
   sqlite3_flutter_libs:
     :path: ".symlinks/plugins/sqlite3_flutter_libs/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
-  webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
   app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
-  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
-  sqlite3: 6e2d4a4879854d0ec86b476bf3c3e30870bac273
-  sqlite3_flutter_libs: eb769059df0356dc52ddda040f09cacc9391a7cf
-  url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
-  webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
+  sqlite3: 73b7fc691fdc43277614250e04d183740cb15078
+  sqlite3_flutter_libs: af0e8fe9bce48abddd1ffdbbf839db0302d72d80
+  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
 
 PODFILE CHECKSUM: 7be2f5f74864d463a8ad433546ed1de7e0f29aef
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.3

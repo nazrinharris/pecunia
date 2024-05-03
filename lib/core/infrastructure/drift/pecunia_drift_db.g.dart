@@ -1382,8 +1382,8 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
     }
     map['primary_color'] = Variable<String>(primaryColor);
     if (!nullToAbsent || icon != null) {
-      final converter = $CategoriesTableTable.$convertericonn;
-      map['icon'] = Variable<String>(converter.toSql(icon));
+      map['icon'] =
+          Variable<String>($CategoriesTableTable.$convertericonn.toSql(icon));
     }
     if (!nullToAbsent || parentId != null) {
       map['parent_id'] = Variable<String>(parentId);
@@ -1557,9 +1557,8 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoryDTO> {
       map['primary_color'] = Variable<String>(primaryColor.value);
     }
     if (icon.present) {
-      final converter = $CategoriesTableTable.$convertericonn;
-
-      map['icon'] = Variable<String>(converter.toSql(icon.value));
+      map['icon'] = Variable<String>(
+          $CategoriesTableTable.$convertericonn.toSql(icon.value));
     }
     if (parentId.present) {
       map['parent_id'] = Variable<String>(parentId.value);

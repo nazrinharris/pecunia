@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pecunia/core/errors/failures.dart';
@@ -10,6 +10,7 @@ import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/core/util/transactions_util.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_txns_current_month.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -106,76 +107,45 @@ class AllIncomeChart extends ConsumerWidget {
             ),
           ),
         ),
-      AsyncData(:final List<Transaction> value) => AllIncomeLineChart(value),
+      AsyncData(:final List<Transaction> value) => AllIncomeBarChart(value),
       _ => const Center(child: Text('Something went wrong')),
     };
   }
 }
 
-class AllIncomeLineChart extends StatelessWidget {
-  const AllIncomeLineChart(this.txns, {super.key});
+class AllIncomeBarChart extends HookWidget {
+  const AllIncomeBarChart(this.txns, {super.key});
 
   final List<Transaction> txns;
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('txns: ${txns.length}');
+    final aggregate = useState(aggregateTransactionsIntoDays(txns));
 
-    final aggregate = aggregateTransactionsIntoDays(txns);
-
-    return SizedBox(
-      height: 400,
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: 400, minHeight: 200, maxWidth: 600, minWidth: 400),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Padding(
           padding: const EdgeInsets.only(top: 34, bottom: 34, right: 14),
-          child: BarChart(
-            BarChartData(
-              barTouchData: BarTouchData(),
-              titlesData: FlTitlesData(
-                rightTitles: const AxisTitles(),
-                topTitles: const AxisTitles(),
-                bottomTitles: AxisTitles(sideTitles: _bottomTitles(aggregate, context), axisNameSize: 8),
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              barGroups: aggregate
-                  .map(
-                    (e) => BarChartGroupData(
-                      x: aggregate.indexOf(e),
-                      barRods: [
-                        BarChartRodData(
-                          toY: e.value,
-                          color: Colors.green[300],
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                            bottomLeft: Radius.circular(4),
-                            bottomRight: Radius.circular(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+          child: SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            primaryYAxis: NumericAxis(
+              numberFormat: NumberFormat.currency(symbol: txns[0].fundDetails.transactionCurrency.symbol),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  SideTitles _bottomTitles(List<MapEntry<DateTime, double>> aggregate, BuildContext context) {
-    return SideTitles(
-      showTitles: true,
-      getTitlesWidget: (value, meta) => Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Text(
-          value.toInt().isEven ? DateFormat('MM/dd').format(aggregate[value.toInt()].key) : '',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.5),
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <CartesianSeries<MapEntry<DateTime, double>, String>>[
+              ColumnSeries<MapEntry<DateTime, double>, String>(
+                name: '${DateFormat('MMMM').format(DateTime.now())} Income',
+                dataSource: aggregate.value,
+                xValueMapper: (MapEntry<DateTime, double> entry, _) => DateFormat('M/d').format(entry.key),
+                yValueMapper: (MapEntry<DateTime, double> entry, _) => entry.value,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+                color: Colors.green[300],
+                animationDuration: 300,
               ),
+            ],
+          ),
         ),
       ),
     );
@@ -216,50 +186,38 @@ class AllExpenseChart extends ConsumerWidget {
   }
 }
 
-class AllExpenseLineChart extends StatelessWidget {
+class AllExpenseLineChart extends HookWidget {
   const AllExpenseLineChart(this.txns, {super.key});
 
   final List<Transaction> txns;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 34, bottom: 34, right: 14),
-        child: AspectRatio(
-          aspectRatio: 1.7,
-          child: BarChart(
-            BarChartData(
-              barTouchData: BarTouchData(),
-              titlesData: FlTitlesData(
-                rightTitles: const AxisTitles(),
-                topTitles: const AxisTitles(),
-                bottomTitles: const AxisTitles(),
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              barGroups: txns
-                  .map(
-                    (e) => BarChartGroupData(
-                      x: txns.indexOf(e),
-                      barRods: [
-                        BarChartRodData(
-                          toY: e.fundDetails.transactionAmount,
-                          color: Colors.red[300],
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                            bottomLeft: Radius.circular(4),
-                            bottomRight: Radius.circular(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+    final aggregate = useState(aggregateTransactionsIntoDays(txns));
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: 400, minHeight: 200, maxWidth: 600, minWidth: 400),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 34, bottom: 34, right: 14),
+          child: SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            primaryYAxis: NumericAxis(
+              numberFormat: NumberFormat.currency(symbol: txns[0].fundDetails.transactionCurrency.symbol),
             ),
+            tooltipBehavior: TooltipBehavior(enable: true),
+            series: <CartesianSeries<MapEntry<DateTime, double>, String>>[
+              ColumnSeries<MapEntry<DateTime, double>, String>(
+                name: '${DateFormat('MMMM').format(DateTime.now())} Expenses',
+                dataSource: aggregate.value,
+                xValueMapper: (MapEntry<DateTime, double> entry, _) => DateFormat('M/d').format(entry.key),
+                yValueMapper: (MapEntry<DateTime, double> entry, _) => entry.value,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+                color: Colors.red[300],
+                animationDuration: 300,
+              ),
+            ],
           ),
         ),
       ),

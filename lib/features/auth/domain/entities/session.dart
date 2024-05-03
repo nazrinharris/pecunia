@@ -1,7 +1,9 @@
 // ignore_for_file: comment_references
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/util/pecunia_crypto.dart';
 import 'package:pecunia/core/util/secret.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
@@ -59,16 +61,25 @@ class Session with _$Session {
     });
   }
 
-  PecuniaUser getUser() {
-    final payload = jwt.payload as Map<String, dynamic>;
-    return PecuniaUser(
-      uid: payload['uid'] as String,
-      username: payload['username'] as String,
-      email: payload['email'] as String?,
-      dateCreated: DateTime.parse(payload['dateCreated'] as String),
-      userType: UserType.fromString(payload['userType'] as String),
-    );
-  }
+  TaskEither<AuthFailure, PecuniaUser> getUser() => TaskEither.tryCatch(
+        () async {
+          final payload = jwt.payload as Map<String, dynamic>;
+          final userType = UserType.fromString(payload['userType'] as String? ?? 'unknown');
+
+          return PecuniaUser(
+            uid: payload['uid'] as String,
+            username: payload['username'] as String,
+            email: payload['email'] as String?,
+            dateCreated: DateTime.parse(payload['dateCreated'] as String),
+            userType: userType,
+          );
+        },
+        (error, stackTrace) => AuthFailure.unknown(
+          message: 'Something went wrong while retrieving user from session',
+          stackTrace: stackTrace,
+          rawException: error,
+        ),
+      );
 
   static String sessionStorageKey(String uid) => 'pecunia_user_token_$uid';
 

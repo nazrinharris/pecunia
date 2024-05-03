@@ -18,10 +18,10 @@ part 'entry_screen.freezed.dart';
 @freezed
 class EntryState with _$EntryState {
   const EntryState._();
-  const factory EntryState.loading() = _Loading;
-  const factory EntryState.noLoggedInUser(Option<bool> maybeIsFirstOpen) = _NoLoggedInUser;
-  const factory EntryState.completedEntry() = _CompletedEntry;
-  const factory EntryState.error(Failure failure) = _Error;
+  const factory EntryState.loading() = EntryLoading;
+  const factory EntryState.noLoggedInUser(Option<bool> maybeIsFirstOpen) = NoLoggedInUser;
+  const factory EntryState.completedEntry() = CompletedEntry;
+  const factory EntryState.error(Failure failure) = EntryError;
 }
 
 @riverpod
@@ -78,13 +78,17 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(entryProvider, (previous, next) {
+      if (next is AsyncError) {
+        print((next.error! as EntryError).failure.rawException);
+        print(next.error);
+      }
       switch (next) {
-        case AsyncError(error: final Failure f):
+        case AsyncError(error: final EntryError f):
           showDialog<void>(
             context: context,
             builder: (context) => AlertDialog(
               title: const Text('Oops! We encountered an issue while setting up your app for the first time'),
-              content: Text(f.message),
+              content: Text(f.failure.message),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -95,12 +99,12 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
               ],
             ),
           ).then((value) => context.goNamed('start'));
-        case AsyncData(value: final _NoLoggedInUser state):
+        case AsyncData(value: final NoLoggedInUser state):
           state.maybeIsFirstOpen.match(
             () => null,
             (isFirstOpen) => isFirstOpen ? context.goNamed('onboarding') : context.goNamed('start'),
           );
-        case AsyncData(value: final _CompletedEntry _):
+        case AsyncData(value: final CompletedEntry _):
           ref.invalidate(getLoggedInUserProvider);
           context.goNamed('main');
       }

@@ -235,10 +235,10 @@ class IconPickerWidget extends HookConsumerWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(28),
         onTap: () async {
-          final icon = await FlutterIconPicker.showIconPicker(
+          final icon = await showIconPicker(
             context,
             adaptiveDialog: true,
-            iconPackModes: [IconPack.material, IconPack.cupertino],
+            iconPackModes: [IconPack.allMaterial, IconPack.cupertino],
             iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(44)),
           );
 
