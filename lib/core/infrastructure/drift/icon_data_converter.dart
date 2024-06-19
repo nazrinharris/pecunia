@@ -9,11 +9,12 @@ class IconDataConverter extends TypeConverter<IconData, String> {
 
   @override
   IconData fromSql(String fromDb) {
-    return deserializeIcon(json.decode(fromDb) as Map<String, dynamic>) ?? Icons.question_mark;
+    return deserializeIcon(json.decode(fromDb) as Map<String, dynamic>, iconPack: IconPack.allMaterial) ??
+        Icons.question_mark;
   }
 
   @override
   String toSql(IconData value) {
-    return json.encode(serializeIcon(value));
+    return json.encode(serializeIcon(value, iconPack: IconPack.allMaterial));
   }
 }

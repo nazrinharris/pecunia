@@ -15,6 +15,7 @@ import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/accounts/usecases/get_account_by_id_and_all_accounts.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
+import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
 import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
@@ -249,6 +250,8 @@ class TransactionsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final txnList = ref.watch(getTransactionsByAccountIdProvider(account.id));
+    final categoriesList = ref.watch(getAllCategoriesProvider);
+
     return txnList.when(
       data: (txnList) {
         if (txnList.isEmpty) {
@@ -280,6 +283,19 @@ class TransactionsList extends ConsumerWidget {
                   ),
                 );
               }
+
+              // return MonthHeader(
+              //   txn: txn,
+              //   prevTxn: index == 0 ? null : txnList[index - 1],
+              //   child: TxnListTile(
+              //     account: account,
+              //     txn: txn,
+              //     category: null,
+              //     enableTopDivider: index == 0,
+              //     enableBottomDivider: index == sortedTxnList.length - 1,
+              //     hideAccountName: true,
+              //   ),
+              // );
 
               // TODO: Optimize category retrieval
               final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
