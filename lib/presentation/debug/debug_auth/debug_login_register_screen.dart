@@ -79,8 +79,8 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
           child: ListView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             children: [
-              Center(
-                child: const Text('Users saved in "$kPrefsSavedUsers" in shared_preferences:'),
+              const Center(
+                child: Text('Users saved in "$kPrefsSavedUsers" in shared_preferences:'),
               ),
               const StoredSavedUserDetails(),
               const SizedBox(height: 24),
@@ -574,7 +574,6 @@ class LocalUsers extends ConsumerWidget {
                             ),
                             if (snapshot.data!.salt != null)
                               Container(
-                                width: 160,
                                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                                 decoration: BoxDecoration(
                                   color: Colors.yellow.withOpacity(0.1),
@@ -585,7 +584,7 @@ class LocalUsers extends ConsumerWidget {
                                     const Icon(Icons.warning, color: Colors.yellow, size: 14),
                                     const SizedBox(width: 4),
                                     Text(
-                                      'Deprecated Local User',
+                                      'Current User Not Using Bcrypt (PecuniaUser V1)',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall!
@@ -594,6 +593,171 @@ class LocalUsers extends ConsumerWidget {
                                   ],
                                 ),
                               ),
+                            if (value[index].userType == UserType.unknown)
+                              Container(
+                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.warning, color: Colors.yellow, size: 14),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'No UserType Set (likely PecuniaUser V1)',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(color: Colors.yellow),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            TextButton(
+                              child: const Text('Migrate user password to Bcrypt'),
+                              onPressed: () async {
+                                if (snapshot.data!.salt == null) {
+                                  await ref.read(pecuniaDialogsProvider).showSuccessToast(
+                                        context: context,
+                                        title: 'User already uses Bcrypt!',
+                                      );
+                                } else {
+                                  final textEntryController = TextEditingController();
+
+                                  await showGeneralDialog<void>(
+                                    context: context,
+                                    pageBuilder: (context, anim1, anim2) => const SizedBox(),
+                                    transitionBuilder: (context, a1, a2, child) {
+                                      return ScaleTransition(
+                                        scale: CurvedAnimation(
+                                          parent: a1,
+                                          curve: Curves.easeOutCubic,
+                                        ),
+                                        child: FadeTransition(
+                                          opacity: CurvedAnimation(
+                                            parent: a1,
+                                            curve: Curves.easeOutCubic,
+                                          ),
+                                          child: AlertDialog(
+                                            icon: Icon(Icons.warning_amber_rounded,
+                                                color: Colors.red[200], size: 48),
+                                            title: Text(
+                                              'Migrate Password to Bcrypt',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.red[200],
+                                              ),
+                                            ),
+                                            content: ConstrainedBox(
+                                              constraints: const BoxConstraints(maxWidth: 500),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                    'Enter your current password',
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  const SizedBox(height: 16),
+                                                  TextField(
+                                                    controller: textEntryController,
+                                                    obscureText: true,
+                                                    decoration: const InputDecoration(
+                                                      labelText:
+                                                          "Enter the current logged in user's password",
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).pop(),
+                                                child: const Text('Cancel'),
+                                              ),
+                                              ElevatedButton.icon(
+                                                onPressed: () async {
+                                                  final isValidPassword = PecuniaCrypto().verifyPassword(
+                                                      password: textEntryController.text,
+                                                      hashedPassword: snapshot.data!.hashedPassword!,
+                                                      salt: snapshot.data!.salt);
+
+                                                  if (isValidPassword) {
+                                                    Navigator.of(context).pop();
+
+                                                    await ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                                                          context: context,
+                                                          title: 'Correct Password!',
+                                                          message:
+                                                              'Password should have migrated, if not, good luck.',
+                                                        );
+
+                                                    final newHashedPassword = PecuniaCrypto()
+                                                        .hashPasswordBCrypt(
+                                                            password: textEntryController.text);
+
+                                                    final secureStorage = ref
+                                                        .read(pecuniaFlutterSecureStorageProvider)
+                                                        .requireValue;
+
+                                                    // Temporarily Store
+                                                    await secureStorage.write(
+                                                      key:
+                                                          '${kPecuniaUserHashedPasswordKey(value[index].uid)}_temp_old',
+                                                      value: snapshot.data!.hashedPassword,
+                                                    );
+
+                                                    await secureStorage.write(
+                                                      key: kPecuniaUserHashedPasswordKey(value[index].uid),
+                                                      value: newHashedPassword,
+                                                    );
+
+                                                    // sanity check
+                                                    final hashed = await secureStorage.read(
+                                                        key: kPecuniaUserHashedPasswordKey(value[index].uid));
+                                                    final isReplacementValid = PecuniaCrypto().verifyPassword(
+                                                        password: textEntryController.text,
+                                                        hashedPassword: hashed!);
+
+                                                    debugPrint(
+                                                        'Did replacement succeed : $isReplacementValid');
+
+                                                    if (isReplacementValid) {
+                                                      await secureStorage.delete(
+                                                        key:
+                                                            '${kPecuniaUserHashedPasswordKey(value[index].uid)}_temp_old',
+                                                      );
+                                                      await secureStorage.delete(
+                                                          key: kPecuniaUserSaltKey(value[index].uid));
+                                                    } else {
+                                                      debugPrint(
+                                                          'CRITICAL WHY THE HECK IT NOT WORK, REVERTING');
+
+                                                      await secureStorage.write(
+                                                        key: kPecuniaUserHashedPasswordKey(value[index].uid),
+                                                        value: snapshot.data!.hashedPassword,
+                                                      );
+                                                    }
+                                                  } else {
+                                                    await ref.read(pecuniaDialogsProvider).showFailureDialog(
+                                                          context: context,
+                                                          title: 'Wrong Password!',
+                                                          message: 'Try again bruh',
+                                                        );
+                                                  }
+                                                },
+                                                icon: const Icon(Icons.arrow_forward),
+                                                label: const Text('Continue'),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            ),
                           ],
                         );
                       } else if (snapshot.hasError) {

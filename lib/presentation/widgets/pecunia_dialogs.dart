@@ -263,6 +263,95 @@ class PecuniaDialogs {
     );
   }
 
+  Future<void> showSuccessDialog({
+    required String title,
+    required BuildContext context,
+    Icon? icon,
+    String? message,
+  }) async {
+    await showGeneralDialog<void>(
+      context: context,
+      pageBuilder: (context, anim1, anim2) => const SizedBox(),
+      barrierDismissible: true,
+      barrierLabel: 'yes',
+      transitionBuilder: (context, a1, a2, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(
+            parent: a1,
+            curve: Curves.easeOutCubic,
+          ),
+          child: FadeTransition(
+            opacity: CurvedAnimation(
+              parent: a1,
+              curve: Curves.easeOutCubic,
+            ),
+            child: AlertDialog(
+              icon: Icon(Icons.check, color: Colors.green[200], size: 48),
+              title: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[200],
+                ),
+              ),
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Text(
+                  message ?? '',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> showFailureDialog({
+    required BuildContext context,
+    String? title,
+    String? message,
+  }) async {
+    await showGeneralDialog<void>(
+      context: context,
+      pageBuilder: (context, anim1, anim2) => const SizedBox(),
+      barrierDismissible: true,
+      barrierLabel: 'yes',
+      transitionBuilder: (context, a1, a2, child) {
+        return ScaleTransition(
+          scale: CurvedAnimation(
+            parent: a1,
+            curve: Curves.easeOutCubic,
+          ),
+          child: FadeTransition(
+            opacity: CurvedAnimation(
+              parent: a1,
+              curve: Curves.easeOutCubic,
+            ),
+            child: AlertDialog(
+              icon: Icon(Icons.dangerous, color: Colors.red[200], size: 48),
+              title: Text(
+                title ?? 'An error occured',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red[200],
+                ),
+              ),
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Text(
+                  message ?? '',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> showDebugPositionedDialog(BuildContext context) async {
     final toastKey = GlobalKey<ToastState>();
 
@@ -337,94 +426,6 @@ class PecuniaDialogs {
 /// ******************************************************************************************************
 /// * UI Components for Pecunia Dialogs
 /// ******************************************************************************************************
-
-class FailureDialog extends ConsumerWidget {
-  const FailureDialog({
-    this.failure,
-    this.title,
-    this.message,
-    super.key,
-  });
-
-  final Failure? failure;
-  final String? title;
-  final String? message;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final chosenMessage = message ?? failure?.message;
-    const bg = Color.fromARGB(255, 61, 4, 0);
-    final overlayColor = calculateOverlayColor(bg, 0.15);
-
-    return Container(
-      padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            overlayColor,
-            bg,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        borderRadius: BorderRadius.circular(32),
-      ),
-      child: Container(
-        padding: const EdgeInsets.only(top: 16),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(32),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.red[100]),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 34),
-              child: Text(
-                title ?? 'Uh oh, something went wrong!',
-                style: TextStyle(
-                  color: Colors.red[100],
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            if (chosenMessage != null) ...[
-              const SizedBox(height: 4),
-              Divider(color: Colors.white.withOpacity(0.1)),
-              const SizedBox(height: 4),
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 44),
-                child: Text(
-                  chosenMessage,
-                  style: TextStyle(
-                    color: Colors.red[100],
-                    fontSize: 14,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-            const SizedBox(height: 24),
-            Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              width: 50,
-              height: 3,
-              decoration: BoxDecoration(
-                color: Colors.red[100]!.withOpacity(0.5),
-                borderRadius: const BorderRadius.all(Radius.circular(12)),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class TextEntryConfirmationDialog extends HookConsumerWidget {
   const TextEntryConfirmationDialog({
