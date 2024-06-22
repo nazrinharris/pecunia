@@ -427,7 +427,10 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$Trans
       }
     }
 
-    if (calculatedBalance != account.balance) {
+    final difference = (calculatedBalance - account.balance).abs();
+    const epsilon = 0.00001; // Small tolerance to handle potential floating point errors
+
+    if (difference > epsilon) {
       print(TransactionsErrorType.mismatchAccountBalance.message);
       print(StackTrace.current);
       throw TransactionsException(
