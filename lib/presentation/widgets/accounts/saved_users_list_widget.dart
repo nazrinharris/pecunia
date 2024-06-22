@@ -121,11 +121,9 @@ class _DebugSavedUsersList extends ConsumerWidget {
 
                     return ListTile(
                       title: Text("${user.email ?? 'Unknown Email'} - ${user.username}"),
-                      subtitle: Row(
-                        mainAxisSize: MainAxisSize.min,
+                      subtitle: Wrap(
                         children: [
                           Container(
-                            width: 100,
                             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                             decoration: BoxDecoration(
                               color: dbPathsList.contains(user.uid)
@@ -134,6 +132,7 @@ class _DebugSavedUsersList extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(50),
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   dbPathsList.contains(user.uid) ? Icons.check : Icons.close,
@@ -150,13 +149,8 @@ class _DebugSavedUsersList extends ConsumerWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 4),
                           Container(
-                            width: isUnknownUserType
-                                ? 165
-                                : user.userType == UserType.local
-                                    ? 70
-                                    : 80,
                             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                             decoration: BoxDecoration(
                               color: isUnknownUserType
@@ -165,6 +159,7 @@ class _DebugSavedUsersList extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(50),
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   isUnknownUserType ? Icons.close : Icons.check,
@@ -181,12 +176,19 @@ class _DebugSavedUsersList extends ConsumerWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${user.uid.substring(0, 8)}...',
-                            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
-                                ),
+                          const SizedBox(width: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Text(
+                              '${user.uid.substring(0, 8)}...',
+                              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                  ),
+                            ),
                           ),
                         ],
                       ),
