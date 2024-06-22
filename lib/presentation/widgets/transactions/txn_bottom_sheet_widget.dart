@@ -105,7 +105,8 @@ class TxnBottomSheet extends ConsumerWidget {
                                 ),
                           ),
                           TextSpan(
-                            text: '$sign${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}',
+                            text:
+                                '$sign${txn.fundDetails.baseAmount.toStringAsFixed(2)} ${txn.fundDetails.baseCurrency.code}',
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: txn.fundDetails.transactionType == TransactionType.credit
