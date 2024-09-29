@@ -376,10 +376,11 @@ class AuthButtons extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   final shared = await SharedPreferences.getInstance();
-                  await shared.setBool(kPrefsIsFirstOpen, true);
+                  await shared
+                      .setBool(kPrefsIsFirstOpen, true)
+                      .then((value) => context.goNamed('onboarding'));
                   debugPrint('is_first_open set to true');
                   // ignore: use_build_context_synchronously
-                  context.go('/');
                 },
                 icon: const Icon(Icons.verified_outlined),
               ),

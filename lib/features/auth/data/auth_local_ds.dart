@@ -184,6 +184,12 @@ class AuthLocalDS {
   }
 
   TaskEither<AuthFailure, Option<PecuniaUser>> getLoggedInUser() {
+    // return TaskEither.left(AuthFailure(
+    //   stackTrace: StackTrace.current,
+    //   message: 'Something went wrong while retrieving local logged in user',
+    //   errorType: AuthErrorType.unknown,
+    // ));
+
     return sessionManager.getActiveSession().flatMap((r) => r.fold(
           () => TaskEither.right(none()),
           (session) => session.getUser().map(some),

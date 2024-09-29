@@ -1817,7 +1817,7 @@ abstract class _$PecuniaDriftDB extends GeneratedDatabase {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDBHash() => r'0796e00bf9f528cd389681c8a8100dfcaf1b856a';
+String _$pecuniaDBHash() => r'44366f215c67f21b1f7de50837421efca3a60834';
 
 /// [pecuniaDBProvider] depends on [authRepoProvider], specifically, it wants to read the logged in user. So
 /// make sure that [authRepoProvider] is initialized before [pecuniaDBProvider] is.

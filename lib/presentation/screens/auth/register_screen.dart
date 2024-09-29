@@ -5,6 +5,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/local_register_with_email_and_password.dart';
@@ -45,8 +46,23 @@ class RegisterScreen extends ConsumerWidget {
         if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
           ref
             ..invalidate(pecuniaDBProvider)
-            ..watch(pecuniaDBProvider);
-          context.goNamed('main');
+            ..watch(pecuniaDBProvider)
+            ..listenManual(pecuniaDBProvider, (previous, next) async {
+              switch (next) {
+                case AsyncLoading():
+                  debugPrint('Loading PecuniaDB');
+                case AsyncData():
+                  context.goNamed('main');
+                case AsyncError(:final Failure error):
+                  await ref
+                      .read(pecuniaDialogsProvider)
+                      .showFailureDialog(context, failure: error, title: 'Database Error Occured');
+                case _:
+                  await ref.read(pecuniaDialogsProvider).showFailureDialog(context,
+                      title: 'Unexpected State',
+                      message: 'An unexpected state was emitted when loading up the database');
+              }
+            });
         }
       });
 

@@ -740,7 +740,7 @@ class LocalUsers extends ConsumerWidget {
                                                     }
                                                   } else {
                                                     await ref.read(pecuniaDialogsProvider).showFailureDialog(
-                                                          context: context,
+                                                          context,
                                                           title: 'Wrong Password!',
                                                           message: 'Try again bruh',
                                                         );

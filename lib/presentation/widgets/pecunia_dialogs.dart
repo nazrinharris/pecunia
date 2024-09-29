@@ -308,8 +308,9 @@ class PecuniaDialogs {
     );
   }
 
-  Future<void> showFailureDialog({
-    required BuildContext context,
+  Future<void> showFailureDialog(
+    BuildContext context, {
+    Failure? failure,
     String? title,
     String? message,
   }) async {
@@ -341,7 +342,7 @@ class PecuniaDialogs {
               content: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: Text(
-                  message ?? '',
+                  failure?.message ?? message ?? '',
                   textAlign: TextAlign.center,
                 ),
               ),

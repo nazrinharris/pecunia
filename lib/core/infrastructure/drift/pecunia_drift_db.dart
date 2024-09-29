@@ -8,6 +8,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/debug_dao.dart';
 import 'package:pecunia/core/infrastructure/drift/icon_data_converter.dart';
 import 'package:pecunia/core/infrastructure/drift/txn_categories_local_dao.dart';
@@ -30,6 +31,7 @@ class PecuniaDB extends _$PecuniaDB {
   @override
   Future<PecuniaDriftDB> build() async {
     _onDispose();
+    state = const AsyncLoading();
 
     final user = await ref.read(authRepoProvider).getLoggedInUser().run();
 
@@ -43,6 +45,12 @@ class PecuniaDB extends _$PecuniaDB {
           StackTrace.current,
         ),
         (user) {
+          // return Future.error(
+          //     UnexpectedFailure(
+          //       stackTrace: StackTrace.current,
+          //       message: "Something unexpected intentionally occurred, but basically we couldn't access your local database.",
+          //     ),
+          //     StackTrace.current);
           return _db = PecuniaDriftDB(_openConnection(user.uid));
         },
       ),
@@ -80,7 +88,6 @@ class PecuniaDriftDB extends _$PecuniaDriftDB {
   @override
   int get schemaVersion => 1;
 
-  //TODO:  If the database is not found, shouldn't an error be thrown?
   Future<void> deleteDatabase(String uid) async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final dbFile = File(p.join(dbFolder.path, kPecuniaDBKey(uid)));

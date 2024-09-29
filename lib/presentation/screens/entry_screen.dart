@@ -6,10 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/app_info_errors/app_info_errors.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/app_info/domain/app_info_repo.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'entry_screen.g.dart';
@@ -79,8 +81,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   Widget build(BuildContext context) {
     ref.listen(entryProvider, (previous, next) {
       if (next is AsyncError) {
-        print((next.error! as EntryError).failure.rawException);
-        print(next.error);
+        debugPrint('${(next.error! as EntryError).failure.rawException}');
+        debugPrint('${next.error}');
       }
       switch (next) {
         case AsyncError(error: final EntryError f):
@@ -104,9 +106,30 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             () => null,
             (isFirstOpen) => isFirstOpen ? context.goNamed('onboarding') : context.goNamed('start'),
           );
-        case AsyncData(value: final CompletedEntry _):
+        case AsyncData(value: final CompletedEntry e):
           ref.invalidate(getLoggedInUserProvider);
-          context.goNamed('main');
+
+          debugPrint(e.toString());
+
+          ref.listenManual(pecuniaDBProvider, (previous, next) async {
+            switch (next) {
+              case AsyncLoading():
+                debugPrint('Loading PecuniaDB');
+              case AsyncData():
+                context.goNamed('main');
+              case AsyncError(:final Failure error):
+                await ref
+                    .read(pecuniaDialogsProvider)
+                    .showFailureDialog(context, failure: error, title: 'Database Error Occured')
+                    .then(
+                      (value) => context.goNamed('start'),
+                    );
+              case _:
+                await ref.read(pecuniaDialogsProvider).showFailureDialog(context,
+                    title: 'Unexpected State',
+                    message: 'An unexpected state was emitted when loading up the database');
+            }
+          });
       }
     });
 

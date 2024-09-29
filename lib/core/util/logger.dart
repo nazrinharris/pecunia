@@ -37,11 +37,12 @@ class ProviderLogger extends ProviderObserver {
         debugPrint('(${provider.name}) : $failure');
         return;
       } else {
-        debugPrint('(${provider.name}) : ${newValue.error.runtimeType}');
+        debugPrint('(${provider.name}) : ${newValue.error.runtimeType} : ${newValue.error}');
         return;
       }
     } else if (newValue is AsyncData) {
-      debugPrint('(${provider.name}) : ${newValue.toString().truncate()}...');
+      // debugPrint('(${provider.name}) : ${newValue.toString().truncate()}...');
+      debugPrint('(${provider.name}) : $newValue');
     } else {
       debugPrint('(${provider.name}) : ${newValue.runtimeType}');
     }
