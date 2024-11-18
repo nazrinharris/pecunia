@@ -21,7 +21,9 @@ mixin _$NetworkInfoFailure {
   NetworkInfoErrorType get errorType => throw _privateConstructorUsedError;
   Object? get rawException => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NetworkInfoFailureCopyWith<NetworkInfoFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +51,8 @@ class _$NetworkInfoFailureCopyWithImpl<$Res, $Val extends NetworkInfoFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,6 +103,8 @@ class __$$NetworkInfoFailureImplCopyWithImpl<$Res>
       $Res Function(_$NetworkInfoFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,7 +153,9 @@ class _$NetworkInfoFailureImpl extends _NetworkInfoFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NetworkInfoFailureImplCopyWith<_$NetworkInfoFailureImpl> get copyWith =>
@@ -171,8 +179,11 @@ abstract class _NetworkInfoFailure extends NetworkInfoFailure {
   NetworkInfoErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NetworkInfoFailureImplCopyWith<_$NetworkInfoFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

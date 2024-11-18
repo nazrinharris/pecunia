@@ -84,6 +84,9 @@ class _$EntryStateCopyWithImpl<$Res, $Val extends EntryState>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -100,6 +103,9 @@ class __$$EntryLoadingImplCopyWithImpl<$Res>
   __$$EntryLoadingImplCopyWithImpl(
       _$EntryLoadingImpl _value, $Res Function(_$EntryLoadingImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -218,6 +224,8 @@ class __$$NoLoggedInUserImplCopyWithImpl<$Res>
       _$NoLoggedInUserImpl _value, $Res Function(_$NoLoggedInUserImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -257,7 +265,9 @@ class _$NoLoggedInUserImpl extends NoLoggedInUser {
   @override
   int get hashCode => Object.hash(runtimeType, maybeIsFirstOpen);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NoLoggedInUserImplCopyWith<_$NoLoggedInUserImpl> get copyWith =>
@@ -345,7 +355,10 @@ abstract class NoLoggedInUser extends EntryState {
   const NoLoggedInUser._() : super._();
 
   Option<bool> get maybeIsFirstOpen;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NoLoggedInUserImplCopyWith<_$NoLoggedInUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -364,6 +377,9 @@ class __$$CompletedEntryImplCopyWithImpl<$Res>
   __$$CompletedEntryImplCopyWithImpl(
       _$CompletedEntryImpl _value, $Res Function(_$CompletedEntryImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -482,6 +498,8 @@ class __$$EntryErrorImplCopyWithImpl<$Res>
       _$EntryErrorImpl _value, $Res Function(_$EntryErrorImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -520,7 +538,9 @@ class _$EntryErrorImpl extends EntryError {
   @override
   int get hashCode => Object.hash(runtimeType, failure);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EntryErrorImplCopyWith<_$EntryErrorImpl> get copyWith =>
@@ -606,7 +626,10 @@ abstract class EntryError extends EntryState {
   const EntryError._() : super._();
 
   Failure get failure;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EntryState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EntryErrorImplCopyWith<_$EntryErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -70,7 +70,9 @@ mixin _$TxnCategoriesException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TxnCategoriesExceptionCopyWith<TxnCategoriesException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -98,6 +100,8 @@ class _$TxnCategoriesExceptionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,6 +151,8 @@ class __$$TxnCategoriesExceptionImplCopyWithImpl<$Res>
       $Res Function(_$TxnCategoriesExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -204,7 +210,9 @@ class _$TxnCategoriesExceptionImpl implements _TxnCategoriesException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TxnCategoriesExceptionImplCopyWith<_$TxnCategoriesExceptionImpl>
@@ -298,8 +306,11 @@ abstract class _TxnCategoriesException implements TxnCategoriesException {
   TxnCategoriesErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TxnCategoriesExceptionImplCopyWith<_$TxnCategoriesExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -329,6 +340,8 @@ class __$$UnknownTxnCategoriesExceptionImplCopyWithImpl<$Res>
       $Res Function(_$UnknownTxnCategoriesExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -390,7 +403,9 @@ class _$UnknownTxnCategoriesExceptionImpl
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownTxnCategoriesExceptionImplCopyWith<
@@ -486,8 +501,11 @@ abstract class _UnknownTxnCategoriesException
   TxnCategoriesErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of TxnCategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownTxnCategoriesExceptionImplCopyWith<
           _$UnknownTxnCategoriesExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -550,7 +568,9 @@ mixin _$TxnCategoriesFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TxnCategoriesFailureCopyWith<TxnCategoriesFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -579,6 +599,8 @@ class _$TxnCategoriesFailureCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -629,6 +651,8 @@ class __$$TxnCategoriesFailureImplCopyWithImpl<$Res>
       $Res Function(_$TxnCategoriesFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -675,7 +699,9 @@ class _$TxnCategoriesFailureImpl extends _TxnCategoriesFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TxnCategoriesFailureImplCopyWith<_$TxnCategoriesFailureImpl>
@@ -774,8 +800,11 @@ abstract class _TxnCategoriesFailure extends TxnCategoriesFailure {
   TxnCategoriesErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TxnCategoriesFailureImplCopyWith<_$TxnCategoriesFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -806,6 +835,8 @@ class __$$UnknownTxnCategoriesFailureImplCopyWithImpl<$Res>
       $Res Function(_$UnknownTxnCategoriesFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -853,7 +884,9 @@ class _$UnknownTxnCategoriesFailureImpl extends _UnknownTxnCategoriesFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownTxnCategoriesFailureImplCopyWith<_$UnknownTxnCategoriesFailureImpl>
@@ -951,8 +984,11 @@ abstract class _UnknownTxnCategoriesFailure extends TxnCategoriesFailure {
   TxnCategoriesErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of TxnCategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownTxnCategoriesFailureImplCopyWith<_$UnknownTxnCategoriesFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

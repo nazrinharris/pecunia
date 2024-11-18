@@ -70,7 +70,9 @@ mixin _$CategoriesException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoriesExceptionCopyWith<CategoriesException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -95,6 +97,8 @@ class _$CategoriesExceptionCopyWithImpl<$Res, $Val extends CategoriesException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,6 +143,8 @@ class __$$CategoriesExceptionImplCopyWithImpl<$Res>
       $Res Function(_$CategoriesExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -196,7 +202,9 @@ class _$CategoriesExceptionImpl implements _CategoriesException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoriesExceptionImplCopyWith<_$CategoriesExceptionImpl> get copyWith =>
@@ -290,8 +298,11 @@ abstract class _CategoriesException implements CategoriesException {
   CategoriesErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoriesExceptionImplCopyWith<_$CategoriesExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -319,6 +330,8 @@ class __$$UnknownCategoriesExceptionImplCopyWithImpl<$Res>
       $Res Function(_$UnknownCategoriesExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -379,7 +392,9 @@ class _$UnknownCategoriesExceptionImpl implements _UnknownCategoriesException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownCategoriesExceptionImplCopyWith<_$UnknownCategoriesExceptionImpl>
@@ -473,8 +488,11 @@ abstract class _UnknownCategoriesException implements CategoriesException {
   CategoriesErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownCategoriesExceptionImplCopyWith<_$UnknownCategoriesExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -536,7 +554,9 @@ mixin _$CategoriesFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoriesFailureCopyWith<CategoriesFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -564,6 +584,8 @@ class _$CategoriesFailureCopyWithImpl<$Res, $Val extends CategoriesFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -614,6 +636,8 @@ class __$$CategoriesFailureImplCopyWithImpl<$Res>
       $Res Function(_$CategoriesFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -660,7 +684,9 @@ class _$CategoriesFailureImpl extends _CategoriesFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoriesFailureImplCopyWith<_$CategoriesFailureImpl> get copyWith =>
@@ -758,8 +784,11 @@ abstract class _CategoriesFailure extends CategoriesFailure {
   CategoriesErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoriesFailureImplCopyWith<_$CategoriesFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -790,6 +819,8 @@ class __$$UnknownCategoriesFailureImplCopyWithImpl<$Res>
       $Res Function(_$UnknownCategoriesFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -837,7 +868,9 @@ class _$UnknownCategoriesFailureImpl extends _UnknownCategoriesFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownCategoriesFailureImplCopyWith<_$UnknownCategoriesFailureImpl>
@@ -935,8 +968,11 @@ abstract class _UnknownCategoriesFailure extends CategoriesFailure {
   CategoriesErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownCategoriesFailureImplCopyWith<_$UnknownCategoriesFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -71,7 +71,9 @@ mixin _$AppInfoFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppInfoFailureCopyWith<AppInfoFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -99,6 +101,8 @@ class _$AppInfoFailureCopyWithImpl<$Res, $Val extends AppInfoFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,6 +153,8 @@ class __$$AppInfoFailureImplCopyWithImpl<$Res>
       _$AppInfoFailureImpl _value, $Res Function(_$AppInfoFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -195,7 +201,9 @@ class _$AppInfoFailureImpl extends _AppInfoFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AppInfoFailureImplCopyWith<_$AppInfoFailureImpl> get copyWith =>
@@ -293,8 +301,11 @@ abstract class _AppInfoFailure extends AppInfoFailure {
   AppInfoErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AppInfoFailureImplCopyWith<_$AppInfoFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -323,6 +334,8 @@ class __$$UnknownAppInfoFailureImplCopyWithImpl<$Res>
       $Res Function(_$UnknownAppInfoFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -370,7 +383,9 @@ class _$UnknownAppInfoFailureImpl extends _UnknownAppInfoFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownAppInfoFailureImplCopyWith<_$UnknownAppInfoFailureImpl>
@@ -468,8 +483,11 @@ abstract class _UnknownAppInfoFailure extends AppInfoFailure {
   AppInfoErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AppInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownAppInfoFailureImplCopyWith<_$UnknownAppInfoFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -530,7 +548,9 @@ mixin _$AppInfoException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppInfoExceptionCopyWith<AppInfoException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -555,6 +575,8 @@ class _$AppInfoExceptionCopyWithImpl<$Res, $Val extends AppInfoException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -599,6 +621,8 @@ class __$$AppInfoExceptionImplCopyWithImpl<$Res>
       $Res Function(_$AppInfoExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -657,7 +681,9 @@ class _$AppInfoExceptionImpl extends _AppInfoException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AppInfoExceptionImplCopyWith<_$AppInfoExceptionImpl> get copyWith =>
@@ -752,8 +778,11 @@ abstract class _AppInfoException extends AppInfoException {
   AppInfoErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AppInfoExceptionImplCopyWith<_$AppInfoExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -780,6 +809,8 @@ class __$$UnknownAppInfoExceptionImplCopyWithImpl<$Res>
       $Res Function(_$UnknownAppInfoExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -838,7 +869,9 @@ class _$UnknownAppInfoExceptionImpl extends _UnknownAppInfoException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownAppInfoExceptionImplCopyWith<_$UnknownAppInfoExceptionImpl>
@@ -933,8 +966,11 @@ abstract class _UnknownAppInfoException extends AppInfoException {
   AppInfoErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of AppInfoException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownAppInfoExceptionImplCopyWith<_$UnknownAppInfoExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

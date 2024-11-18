@@ -282,7 +282,7 @@ class PecuniaCurrencies {
 
   static Currency fromString(String code) {
     return toList().firstWhere(
-      (c) => c.code == code,
+      (c) => c.isoCode == code,
       orElse: () => throw Exception('Invalid currency code: $code'),
     );
   }

@@ -19,7 +19,9 @@ mixin _$CriticalException {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CriticalExceptionCopyWith<CriticalException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -43,6 +45,8 @@ class _$CriticalExceptionCopyWithImpl<$Res, $Val extends CriticalException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,6 +85,8 @@ class __$$CriticalExceptionImplCopyWithImpl<$Res>
       $Res Function(_$CriticalExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -131,7 +137,9 @@ class _$CriticalExceptionImpl implements _CriticalException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CriticalExceptionImplCopyWith<_$CriticalExceptionImpl> get copyWith =>
@@ -148,8 +156,11 @@ abstract class _CriticalException implements CriticalException {
   StackTrace get stackTrace;
   @override
   String? get message;
+
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CriticalExceptionImplCopyWith<_$CriticalExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

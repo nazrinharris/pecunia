@@ -60,7 +60,9 @@ mixin _$AuthException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuthExceptionCopyWith<AuthException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -84,6 +86,8 @@ class _$AuthExceptionCopyWithImpl<$Res, $Val extends AuthException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -122,6 +126,8 @@ class __$$AuthExceptionImplCopyWithImpl<$Res>
       _$AuthExceptionImpl _value, $Res Function(_$AuthExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -171,7 +177,9 @@ class _$AuthExceptionImpl extends _AuthException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AuthExceptionImplCopyWith<_$AuthExceptionImpl> get copyWith =>
@@ -253,8 +261,11 @@ abstract class _AuthException extends AuthException {
   StackTrace get stackTrace;
   @override
   AuthErrorType get errorType;
+
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuthExceptionImplCopyWith<_$AuthExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -278,6 +289,8 @@ class __$$UnknownAuthExceptionImplCopyWithImpl<$Res>
       $Res Function(_$UnknownAuthExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -329,7 +342,9 @@ class _$UnknownAuthExceptionImpl extends _UnknownAuthException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownAuthExceptionImplCopyWith<_$UnknownAuthExceptionImpl>
@@ -413,8 +428,11 @@ abstract class _UnknownAuthException extends AuthException {
   StackTrace get stackTrace;
   @override
   AuthErrorType get errorType;
+
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownAuthExceptionImplCopyWith<_$UnknownAuthExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -503,7 +521,9 @@ mixin _$AuthFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuthFailureCopyWith<AuthFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -531,6 +551,8 @@ class _$AuthFailureCopyWithImpl<$Res, $Val extends AuthFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -581,6 +603,8 @@ class __$$AuthFailureImplCopyWithImpl<$Res>
       _$AuthFailureImpl _value, $Res Function(_$AuthFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -627,7 +651,9 @@ class _$AuthFailureImpl extends _AuthFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AuthFailureImplCopyWith<_$AuthFailureImpl> get copyWith =>
@@ -751,8 +777,11 @@ abstract class _AuthFailure extends AuthFailure {
   AuthErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuthFailureImplCopyWith<_$AuthFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -781,6 +810,8 @@ class __$$NoInternetAuthFailureImplCopyWithImpl<$Res>
       $Res Function(_$NoInternetAuthFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -828,7 +859,9 @@ class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NoInternetAuthFailureImplCopyWith<_$NoInternetAuthFailureImpl>
@@ -953,8 +986,11 @@ abstract class _NoInternetAuthFailure extends AuthFailure {
   AuthErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NoInternetAuthFailureImplCopyWith<_$NoInternetAuthFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -982,6 +1018,8 @@ class __$$UnknownAuthFailureImplCopyWithImpl<$Res>
       $Res Function(_$UnknownAuthFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1030,7 +1068,9 @@ class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownAuthFailureImplCopyWith<_$UnknownAuthFailureImpl> get copyWith =>
@@ -1155,8 +1195,11 @@ abstract class _UnknownAuthFailure extends AuthFailure {
   AuthErrorType? get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownAuthFailureImplCopyWith<_$UnknownAuthFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1187,6 +1230,8 @@ class __$$IncorrectCredentialsAuthFailureImplCopyWithImpl<$Res>
       $Res Function(_$IncorrectCredentialsAuthFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1235,7 +1280,9 @@ class _$IncorrectCredentialsAuthFailureImpl
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IncorrectCredentialsAuthFailureImplCopyWith<
@@ -1362,8 +1409,11 @@ abstract class _IncorrectCredentialsAuthFailure extends AuthFailure {
   AuthErrorType? get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IncorrectCredentialsAuthFailureImplCopyWith<
           _$IncorrectCredentialsAuthFailureImpl>
       get copyWith => throw _privateConstructorUsedError;

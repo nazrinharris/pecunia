@@ -70,7 +70,9 @@ mixin _$TransactionsException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TransactionsExceptionCopyWith<TransactionsException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -98,6 +100,8 @@ class _$TransactionsExceptionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,6 +150,8 @@ class __$$TransactionsExceptionImplCopyWithImpl<$Res>
       $Res Function(_$TransactionsExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -204,7 +210,9 @@ class _$TransactionsExceptionImpl extends _TransactionsException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TransactionsExceptionImplCopyWith<_$TransactionsExceptionImpl>
@@ -299,8 +307,11 @@ abstract class _TransactionsException extends TransactionsException {
   TransactionsErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TransactionsExceptionImplCopyWith<_$TransactionsExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -330,6 +341,8 @@ class __$$UnknownTransactionsExceptionImplCopyWithImpl<$Res>
       $Res Function(_$UnknownTransactionsExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -388,7 +401,9 @@ class _$UnknownTransactionsExceptionImpl extends _UnknownTransactionsException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownTransactionsExceptionImplCopyWith<
@@ -484,8 +499,11 @@ abstract class _UnknownTransactionsException extends TransactionsException {
   TransactionsErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of TransactionsException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownTransactionsExceptionImplCopyWith<
           _$UnknownTransactionsExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -548,7 +566,9 @@ mixin _$TransactionsFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TransactionsFailureCopyWith<TransactionsFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -576,6 +596,8 @@ class _$TransactionsFailureCopyWithImpl<$Res, $Val extends TransactionsFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -626,6 +648,8 @@ class __$$TransactionsFailureImplCopyWithImpl<$Res>
       $Res Function(_$TransactionsFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -672,7 +696,9 @@ class _$TransactionsFailureImpl extends _TransactionsFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TransactionsFailureImplCopyWith<_$TransactionsFailureImpl> get copyWith =>
@@ -770,8 +796,11 @@ abstract class _TransactionsFailure extends TransactionsFailure {
   TransactionsErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TransactionsFailureImplCopyWith<_$TransactionsFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -802,6 +831,8 @@ class __$$UnknownTransactionsFailureImplCopyWithImpl<$Res>
       $Res Function(_$UnknownTransactionsFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -849,7 +880,9 @@ class _$UnknownTransactionsFailureImpl extends _UnknownTransactionsFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownTransactionsFailureImplCopyWith<_$UnknownTransactionsFailureImpl>
@@ -947,8 +980,11 @@ abstract class _UnknownTransactionsFailure extends TransactionsFailure {
   TransactionsErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of TransactionsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownTransactionsFailureImplCopyWith<_$UnknownTransactionsFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

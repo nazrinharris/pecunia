@@ -375,7 +375,8 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$Trans
         var query = select(transactionsTable)
           ..where((tbl) => tbl.transactionType.equals(type.typeAsString))
           ..where((tbl) => tbl.transactionDate.isBetweenValues(startDate, endDate))
-          ..where((tbl) => tbl.baseCurrency.equals(currency.code) | tbl.targetCurrency.equals(currency.code));
+          ..where((tbl) =>
+              tbl.baseCurrency.equals(currency.isoCode) | tbl.targetCurrency.equals(currency.isoCode));
 
         if (!includeTransfers) {
           query = query..where((tbl) => tbl.linkedAccountId.isNull() & tbl.linkedTransactionId.isNull());

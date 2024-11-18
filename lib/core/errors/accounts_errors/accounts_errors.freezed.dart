@@ -71,7 +71,9 @@ mixin _$AccountsFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AccountsFailureCopyWith<AccountsFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -99,6 +101,8 @@ class _$AccountsFailureCopyWithImpl<$Res, $Val extends AccountsFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,6 +153,8 @@ class __$$AccountsFailureImplCopyWithImpl<$Res>
       _$AccountsFailureImpl _value, $Res Function(_$AccountsFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -195,7 +201,9 @@ class _$AccountsFailureImpl extends _AccountsFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AccountsFailureImplCopyWith<_$AccountsFailureImpl> get copyWith =>
@@ -293,8 +301,11 @@ abstract class _AccountsFailure extends AccountsFailure {
   AccountsErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AccountsFailureImplCopyWith<_$AccountsFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -324,6 +335,8 @@ class __$$UnknownAccountsFailureImplCopyWithImpl<$Res>
       $Res Function(_$UnknownAccountsFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -371,7 +384,9 @@ class _$UnknownAccountsFailureImpl extends _UnknownAccountsFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownAccountsFailureImplCopyWith<_$UnknownAccountsFailureImpl>
@@ -469,8 +484,11 @@ abstract class _UnknownAccountsFailure extends AccountsFailure {
   AccountsErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownAccountsFailureImplCopyWith<_$UnknownAccountsFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -531,7 +549,9 @@ mixin _$AccountsException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AccountsExceptionCopyWith<AccountsException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -556,6 +576,8 @@ class _$AccountsExceptionCopyWithImpl<$Res, $Val extends AccountsException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -600,6 +622,8 @@ class __$$AccountsExceptionImplCopyWithImpl<$Res>
       $Res Function(_$AccountsExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -658,7 +682,9 @@ class _$AccountsExceptionImpl extends _AccountsException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AccountsExceptionImplCopyWith<_$AccountsExceptionImpl> get copyWith =>
@@ -753,8 +779,11 @@ abstract class _AccountsException extends AccountsException {
   AccountsErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AccountsExceptionImplCopyWith<_$AccountsExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -782,6 +811,8 @@ class __$$UnknownAccountsExceptionImplCopyWithImpl<$Res>
       $Res Function(_$UnknownAccountsExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -840,7 +871,9 @@ class _$UnknownAccountsExceptionImpl extends _UnknownAccountsException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$UnknownAccountsExceptionImplCopyWith<_$UnknownAccountsExceptionImpl>
@@ -935,8 +968,11 @@ abstract class _UnknownAccountsException extends AccountsException {
   AccountsErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnknownAccountsExceptionImplCopyWith<_$UnknownAccountsExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -162,7 +162,7 @@ class AccountDetails extends ConsumerWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: ' ${account.currency.code}',
+                            text: ' ${account.currency.isoCode}',
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -200,7 +200,7 @@ class AccountDetails extends ConsumerWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: ' ${account.currency.code}',
+                            text: ' ${account.currency.isoCode}',
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,

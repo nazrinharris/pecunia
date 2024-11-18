@@ -261,7 +261,7 @@ class RandomTransactions extends HookConsumerWidget {
               );
 
               debugPrint(
-                  'Transaction $i: ${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}, ${txn.transactionDate}');
+                  'Transaction $i: ${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.isoCode}, ${txn.transactionDate}');
 
               await ref
                   .read(transactionsRepoProvider)
@@ -272,10 +272,10 @@ class RandomTransactions extends HookConsumerWidget {
                     accountId: txn.accountId,
                     type: txn.fundDetails.transactionType,
                     baseAmount: txn.fundDetails.baseAmount,
-                    baseCurrency: txn.fundDetails.baseCurrency.code,
+                    baseCurrency: txn.fundDetails.baseCurrency.isoCode,
                     exchangeRate: txn.fundDetails.exchangeRate,
                     targetAmount: txn.fundDetails.targetAmount,
-                    targetCurrency: txn.fundDetails.targetCurrency?.code,
+                    targetCurrency: txn.fundDetails.targetCurrency?.isoCode,
                     transactionDescription: txn.transactionDescription.value,
                     category: null,
                   )
@@ -311,7 +311,7 @@ class RandomTransactions extends HookConsumerWidget {
               );
 
               debugPrint(
-                  'Transaction $i: ${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}, ${txn.transactionDate}');
+                  'Transaction $i: ${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.isoCode}, ${txn.transactionDate}');
 
               await ref
                   .read(transactionsRepoProvider)
@@ -322,10 +322,10 @@ class RandomTransactions extends HookConsumerWidget {
                     accountId: txn.accountId,
                     type: txn.fundDetails.transactionType,
                     baseAmount: txn.fundDetails.baseAmount,
-                    baseCurrency: txn.fundDetails.baseCurrency.code,
+                    baseCurrency: txn.fundDetails.baseCurrency.isoCode,
                     exchangeRate: txn.fundDetails.exchangeRate,
                     targetAmount: txn.fundDetails.targetAmount,
-                    targetCurrency: txn.fundDetails.targetCurrency?.code,
+                    targetCurrency: txn.fundDetails.targetCurrency?.isoCode,
                     transactionDescription: txn.transactionDescription.value,
                     category: null,
                   )
@@ -631,7 +631,7 @@ class CreateAccountFormWidget extends HookConsumerWidget {
                       return PecuniaCurrencies.toList().map<PopupMenuItem<Currency>>((Currency c) {
                         return PopupMenuItem<Currency>(
                           value: c,
-                          child: Text('${c.code} - ${c.name}', textAlign: TextAlign.center),
+                          child: Text('${c.isoCode} - ${c.name}', textAlign: TextAlign.center),
                         );
                       }).toList();
                     },
@@ -641,7 +641,7 @@ class CreateAccountFormWidget extends HookConsumerWidget {
                         children: [
                           Expanded(
                               child: Text(
-                            '${currency.value.code} - ${currency.value.name}',
+                            '${currency.value.isoCode} - ${currency.value.name}',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -681,7 +681,7 @@ class CreateAccountFormWidget extends HookConsumerWidget {
                   ref.read(createAccountProvider.notifier).createAccount(
                         name: nameController.value.text,
                         initialBalance: double.parse(initialBalanceController.value.text),
-                        currency: currency.value.code,
+                        currency: currency.value.isoCode,
                         description: descriptionController.value.text,
                       );
                 }

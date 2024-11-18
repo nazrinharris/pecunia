@@ -57,7 +57,9 @@ mixin _$Session {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SessionCopyWith<Session> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -79,6 +81,8 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -117,6 +121,8 @@ class __$$LocalSessionImplCopyWithImpl<$Res>
       _$LocalSessionImpl _value, $Res Function(_$LocalSessionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -158,7 +164,9 @@ class _$LocalSessionImpl extends LocalSession {
   @override
   int get hashCode => Object.hash(runtimeType, uid, jwt);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LocalSessionImplCopyWith<_$LocalSessionImpl> get copyWith =>
@@ -236,8 +244,11 @@ abstract class LocalSession extends Session {
   String get uid;
   @override
   JWT get jwt;
+
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LocalSessionImplCopyWith<_$LocalSessionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -261,6 +272,8 @@ class __$$RemoteSessionImplCopyWithImpl<$Res>
       _$RemoteSessionImpl _value, $Res Function(_$RemoteSessionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -302,7 +315,9 @@ class _$RemoteSessionImpl extends RemoteSession {
   @override
   int get hashCode => Object.hash(runtimeType, uid, jwt);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RemoteSessionImplCopyWith<_$RemoteSessionImpl> get copyWith =>
@@ -380,8 +395,11 @@ abstract class RemoteSession extends Session {
   String get uid;
   @override
   JWT get jwt;
+
+  /// Create a copy of Session
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RemoteSessionImplCopyWith<_$RemoteSessionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

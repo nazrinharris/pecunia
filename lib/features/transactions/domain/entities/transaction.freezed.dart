@@ -25,7 +25,9 @@ mixin _$Transaction {
   FundDetails get fundDetails => throw _privateConstructorUsedError;
   TransferDetails? get transferDetails => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TransactionCopyWith<Transaction> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,6 +62,8 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -108,6 +112,8 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     ) as $Val);
   }
 
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $FundDetailsCopyWith<$Res> get fundDetails {
@@ -116,6 +122,8 @@ class _$TransactionCopyWithImpl<$Res, $Val extends Transaction>
     });
   }
 
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $TransferDetailsCopyWith<$Res>? get transferDetails {
@@ -161,6 +169,8 @@ class __$$TransactionImplCopyWithImpl<$Res>
       _$TransactionImpl _value, $Res Function(_$TransactionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -295,7 +305,9 @@ class _$TransactionImpl extends _Transaction with DiagnosticableTreeMixin {
       fundDetails,
       transferDetails);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TransactionImplCopyWith<_$TransactionImpl> get copyWith =>
@@ -330,8 +342,11 @@ abstract class _Transaction extends Transaction {
   FundDetails get fundDetails;
   @override
   TransferDetails? get transferDetails;
+
+  /// Create a copy of Transaction
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TransactionImplCopyWith<_$TransactionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -345,7 +360,9 @@ mixin _$FundDetails {
   double? get targetAmount => throw _privateConstructorUsedError;
   Currency? get targetCurrency => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FundDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FundDetailsCopyWith<FundDetails> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -375,6 +392,8 @@ class _$FundDetailsCopyWithImpl<$Res, $Val extends FundDetails>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FundDetails
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -439,6 +458,8 @@ class __$$FundDetailsImplCopyWithImpl<$Res>
       _$FundDetailsImpl _value, $Res Function(_$FundDetailsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FundDetails
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -552,7 +573,9 @@ class _$FundDetailsImpl extends _FundDetails with DiagnosticableTreeMixin {
   int get hashCode => Object.hash(runtimeType, baseAmount, baseCurrency,
       transactionType, exchangeRate, targetAmount, targetCurrency);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FundDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FundDetailsImplCopyWith<_$FundDetailsImpl> get copyWith =>
@@ -581,8 +604,11 @@ abstract class _FundDetails extends FundDetails {
   double? get targetAmount;
   @override
   Currency? get targetCurrency;
+
+  /// Create a copy of FundDetails
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FundDetailsImplCopyWith<_$FundDetailsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -594,7 +620,9 @@ mixin _$TransferDetails {
   TransferDescription get transferDescription =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransferDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TransferDetailsCopyWith<TransferDetails> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -621,6 +649,8 @@ class _$TransferDetailsCopyWithImpl<$Res, $Val extends TransferDetails>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TransferDetails
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -667,6 +697,8 @@ class __$$TransferDetailsImplCopyWithImpl<$Res>
       _$TransferDetailsImpl _value, $Res Function(_$TransferDetailsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TransferDetails
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -744,7 +776,9 @@ class _$TransferDetailsImpl extends _TransferDetails
   int get hashCode => Object.hash(
       runtimeType, linkedAccountId, linkedTransactionId, transferDescription);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TransferDetails
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TransferDetailsImplCopyWith<_$TransferDetailsImpl> get copyWith =>
@@ -766,8 +800,11 @@ abstract class _TransferDetails extends TransferDetails {
   String get linkedTransactionId;
   @override
   TransferDescription get transferDescription;
+
+  /// Create a copy of TransferDetails
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TransferDetailsImplCopyWith<_$TransferDetailsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

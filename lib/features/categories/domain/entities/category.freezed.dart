@@ -26,7 +26,9 @@ mixin _$Category {
   IconData? get icon => throw _privateConstructorUsedError;
   String? get parentId => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryCopyWith<Category> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,6 +57,8 @@ class _$CategoryCopyWithImpl<$Res, $Val extends Category>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,6 +123,8 @@ class __$$CategoryImplCopyWithImpl<$Res>
       _$CategoryImpl _value, $Res Function(_$CategoryImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -211,7 +217,9 @@ class _$CategoryImpl extends _Category {
   int get hashCode => Object.hash(
       runtimeType, id, name, description, primaryColor, icon, parentId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
@@ -228,20 +236,25 @@ abstract class _Category extends Category {
       final String? parentId}) = _$CategoryImpl;
   const _Category._() : super._();
 
-  @override // ========================= Seperation For Brevity =========================
+// ========================= Seperation For Brevity =========================
+  @override
   String get id;
   @override
   String get name;
   @override
-  Description get description;
-  @override // Hex Alpha Format (e.g. #FF0000FF)
-  String get primaryColor;
-  @override // ========================= Seperation For Brevity =========================
+  Description get description; // Hex Alpha Format (e.g. #FF0000FF)
+  @override
+  String
+      get primaryColor; // ========================= Seperation For Brevity =========================
+  @override
   IconData? get icon;
   @override
   String? get parentId;
+
+  /// Create a copy of Category
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryImplCopyWith<_$CategoryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

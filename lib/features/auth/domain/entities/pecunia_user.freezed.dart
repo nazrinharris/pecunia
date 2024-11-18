@@ -22,7 +22,9 @@ mixin _$PecuniaUser {
   UserType get userType => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PecuniaUser
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PecuniaUserCopyWith<PecuniaUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +53,8 @@ class _$PecuniaUserCopyWithImpl<$Res, $Val extends PecuniaUser>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PecuniaUser
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -109,6 +113,8 @@ class __$$PecuniaUserImplCopyWithImpl<$Res>
       _$PecuniaUserImpl _value, $Res Function(_$PecuniaUserImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PecuniaUser
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -201,7 +207,9 @@ class _$PecuniaUserImpl extends _PecuniaUser with DiagnosticableTreeMixin {
   int get hashCode =>
       Object.hash(runtimeType, uid, username, dateCreated, userType, email);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PecuniaUser
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PecuniaUserImplCopyWith<_$PecuniaUserImpl> get copyWith =>
@@ -227,8 +235,11 @@ abstract class _PecuniaUser extends PecuniaUser {
   UserType get userType;
   @override
   String? get email;
+
+  /// Create a copy of PecuniaUser
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PecuniaUserImplCopyWith<_$PecuniaUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -245,8 +256,12 @@ mixin _$PecuniaUserDTO {
   UserType get userType => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
 
+  /// Serializes this PecuniaUserDTO to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PecuniaUserDTO
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PecuniaUserDTOCopyWith<PecuniaUserDTO> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -275,6 +290,8 @@ class _$PecuniaUserDTOCopyWithImpl<$Res, $Val extends PecuniaUserDTO>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PecuniaUserDTO
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -333,6 +350,8 @@ class __$$PecuniaUserDTOImplCopyWithImpl<$Res>
       _$PecuniaUserDTOImpl _value, $Res Function(_$PecuniaUserDTOImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PecuniaUserDTO
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -425,12 +444,14 @@ class _$PecuniaUserDTOImpl extends _PecuniaUserDTO
             (identical(other.email, email) || other.email == email));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, uid, username, dateCreated, userType, email);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PecuniaUserDTO
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PecuniaUserDTOImplCopyWith<_$PecuniaUserDTOImpl> get copyWith =>
@@ -467,8 +488,11 @@ abstract class _PecuniaUserDTO extends PecuniaUserDTO {
   UserType get userType;
   @override
   String? get email;
+
+  /// Create a copy of PecuniaUserDTO
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PecuniaUserDTOImplCopyWith<_$PecuniaUserDTOImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
