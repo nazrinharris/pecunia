@@ -290,6 +290,34 @@ class AuthLocalDS {
         .flatMap((val) => sessionManager.setAsLocalActiveSession(val.session))
         .flatMap((_) => TaskEither.right(unit));
   }
+
+  TaskEither<AuthFailure, PecuniaUser> continueAsGuest() {
+    return secureStorage.getGuestUserData().flatMap(
+          (user) => user.fold(
+            () => TaskEither<AuthFailure, ({PecuniaUser user, String hashedPassword})>.tryCatch(
+              () async {
+                final hashedPassword = pecuniaCrypto.hashPasswordBCrypt(password: 'guestguest');
+                final user = PecuniaUser(
+                  uid: uuid.v4(),
+                  username: 'Guest',
+                  email: 'guest@guest.guest',
+                  dateCreated: DateTime.now(),
+                  userType: UserType.guest,
+                );
+
+                return (user: user, hashedPassword: hashedPassword);
+              },
+              (e, s) => AuthFailure.unknown(stackTrace: s, message: 'Uh oh'),
+            )
+                .flatMap(secureStorage.storeUserCredentials)
+                .flatMap(sessionManager.createSession)
+                .flatMap((r) => sessionManager.setAsLocalActiveSession(r.session).map((_) => r.user)),
+            (user) => sessionManager
+                .createSession(user)
+                .flatMap((r) => sessionManager.setAsLocalActiveSession(r.session).map((_) => r.user)),
+          ),
+        );
+  }
 }
 
 class AuthLocalSessionManager {
@@ -546,6 +574,47 @@ class AuthSecuredStorageManager {
         }
         return TaskEither.right((uid: r.uid, hashedPassword: r.hashedPassword!, salt: r.salt));
       }),
+    );
+  }
+
+  /// Retrieves the guest user data from secure storage if it exists.
+  ///
+  /// Searches through all stored users in Flutter's secure storage and returns
+  /// the first user with [UserType.guest]. Since there should only be one guest
+  /// account in the system, this is sufficient.
+  TaskEither<AuthFailure, Option<PecuniaUser>> getGuestUserData() {
+    return TaskEither.tryCatch(
+      () async {
+        final allKeys = await flutterSecureStorage.readAll();
+        final userKeys = allKeys.keys
+            .where(
+              (key) =>
+                  key.startsWith('pecunia_user_') &&
+                  !key.startsWith('pecunia_user_hashed_password_') &&
+                  !key.startsWith('pecunia_user_uid_'),
+            )
+            .toList();
+
+        for (final userKey in userKeys) {
+          final userDataString = await flutterSecureStorage.read(key: userKey);
+          if (userDataString != null) {
+            final userData = jsonDecode(userDataString) as Map<String, dynamic>;
+            final user = PecuniaUserDTO.fromJson(userData).toDomain();
+
+            if (user.userType == UserType.guest) {
+              return Some(user);
+            }
+          }
+        }
+
+        return const None();
+      },
+      (e, s) => AuthFailure(
+        stackTrace: s,
+        message: AuthErrorType.localFailedGetGuestUserData.message,
+        errorType: AuthErrorType.localFailedGetGuestUserData,
+        rawException: e,
+      ),
     );
   }
 }

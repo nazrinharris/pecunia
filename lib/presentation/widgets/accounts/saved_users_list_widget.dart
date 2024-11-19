@@ -202,19 +202,20 @@ class _DebugSavedUsersList extends ConsumerWidget {
                   'You have no saved users, try logging in or signing up!',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                       ),
                 ),
               ),
             if (dbPathsList.length > userList.length)
               Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 8, left: 24, right: 24),
                 child: Text(
-                  'There are ${dbPathsList.length - userList.length} databases that are not associated with a user',
+                  'There are ${dbPathsList.length - userList.length} database(s) that are not associated with a user',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                       ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             const SizedBox(height: 16),

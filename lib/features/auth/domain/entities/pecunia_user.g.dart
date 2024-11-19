@@ -28,5 +28,6 @@ Map<String, dynamic> _$$PecuniaUserDTOImplToJson(
 const _$UserTypeEnumMap = {
   UserType.remote: 'remote',
   UserType.local: 'local',
+  UserType.guest: 'guest',
   UserType.unknown: 'unknown',
 };

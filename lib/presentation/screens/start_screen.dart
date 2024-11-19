@@ -3,16 +3,55 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_animation_text/flutter_gradient_animation_text.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/usecases/continue_as_guest.dart';
+import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/simple_animations.dart';
 
-class StartScreen extends HookWidget {
+class StartScreen extends HookConsumerWidget {
   const StartScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(continueAsGuestProvider, (prev, next) async {
+      if (next is AsyncError) {
+        await ref.read(pecuniaDialogsProvider).showFailureToast(
+              context: context,
+              title: "Couldn't continue as guest",
+              failure: next.error as AuthFailure?,
+            );
+      }
+      if (next is AsyncData<fp.Option<PecuniaUser>> && next.value.isSome()) {
+        ref
+          ..invalidate(pecuniaDBProvider)
+          ..watch(pecuniaDBProvider)
+          ..listenManual(pecuniaDBProvider, (previous, next) async {
+            switch (next) {
+              case AsyncLoading():
+                debugPrint('Loading PecuniaDB');
+              case AsyncData():
+                context.goNamed('main');
+              case AsyncError(:final Failure error):
+                await ref
+                    .read(pecuniaDialogsProvider)
+                    .showFailureDialog(context, failure: error, title: 'Database Error Occured');
+              case _:
+                await ref.read(pecuniaDialogsProvider).showFailureDialog(context,
+                    title: 'Unexpected State',
+                    message: 'An unexpected state was emitted when loading up the database');
+            }
+          });
+      }
+    });
+
     final control = useState(Control.play);
 
     return Scaffold(
@@ -301,13 +340,13 @@ class DescriptionText extends StatelessWidget {
   }
 }
 
-class AuthButtons extends StatelessWidget {
+class AuthButtons extends ConsumerWidget {
   const AuthButtons(this.control, {super.key});
 
   final ValueNotifier<Control> control;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return CustomAnimationBuilder(
       control: control.value,
       tween: Tween<Offset>(begin: const Offset(0, 500), end: Offset.zero),
@@ -329,60 +368,71 @@ class AuthButtons extends StatelessWidget {
             )),
         child: Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 34, top: 24),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
             children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-                  foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
-                  splashFactory: InkRipple.splashFactory,
-                ),
-                onPressed: () {
-                  context.pushNamed('login');
-                },
-                child: Text('Login',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    )),
-              ),
-              const SizedBox(width: 14),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-                  foregroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
-                  splashFactory: InkRipple.splashFactory,
-                ),
-                onPressed: () {
-                  context.pushNamed('register');
-                },
-                child: Text(
-                  'Register',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
+                      foregroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.onSecondary),
+                      splashFactory: InkRipple.splashFactory,
+                    ),
+                    onPressed: () {
+                      context.pushNamed('login');
+                    },
+                    child: Text('Login',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                        )),
                   ),
-                ),
+                  const SizedBox(width: 14),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
+                      foregroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.onSecondary),
+                      splashFactory: InkRipple.splashFactory,
+                    ),
+                    onPressed: () {
+                      context.pushNamed('register');
+                    },
+                    child: Text(
+                      'Register',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  IconButton(
+                    onPressed: () async {
+                      control.value = Control.playReverse;
+                      await Future<void>.delayed(const Duration(milliseconds: 2000));
+                      control.value = Control.play;
+                    },
+                    icon: const Icon(Icons.restart_alt_rounded),
+                  ),
+                  const SizedBox(width: 14),
+                  IconButton(
+                    onPressed: () async {
+                      final shared = await SharedPreferences.getInstance();
+                      await shared
+                          .setBool(kPrefsIsFirstOpen, true)
+                          .then((value) => context.goNamed('onboarding'));
+                      debugPrint('is_first_open set to true');
+                      // ignore: use_build_context_synchronously
+                    },
+                    icon: const Icon(Icons.verified_outlined),
+                  ),
+                ],
               ),
-              const SizedBox(width: 14),
-              IconButton(
+              const SizedBox(height: 8),
+              OutlinedButton(
                 onPressed: () async {
-                  control.value = Control.playReverse;
-                  await Future<void>.delayed(const Duration(milliseconds: 2000));
-                  control.value = Control.play;
+                  await ref.read(continueAsGuestProvider.notifier).continueAsGuest();
                 },
-                icon: const Icon(Icons.restart_alt_rounded),
-              ),
-              const SizedBox(width: 14),
-              IconButton(
-                onPressed: () async {
-                  final shared = await SharedPreferences.getInstance();
-                  await shared
-                      .setBool(kPrefsIsFirstOpen, true)
-                      .then((value) => context.goNamed('onboarding'));
-                  debugPrint('is_first_open set to true');
-                  // ignore: use_build_context_synchronously
-                },
-                icon: const Icon(Icons.verified_outlined),
+                child: const Text('Continue as Guest'),
               ),
             ],
           ),

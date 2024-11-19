@@ -75,7 +75,7 @@ class AuthRepo {
         )
         .flatMap(
           (r) => authLocalDS.storeSavedUser(PecuniaUser.fromDTO(r.pecuniaUserDTO)).map(
-                (_) => (user: PecuniaUser.fromDTO(r.pecuniaUserDTO), session: r.newSession),
+                (_) => (user: r.pecuniaUserDTO.toDomain(), session: r.newSession),
               ),
         );
   }
@@ -140,5 +140,11 @@ class AuthRepo {
       return authLocalDS.migrateUserFromUnknownToLocal(user);
     }
     return TaskEither.right(unit);
+  }
+
+  TaskEither<AuthFailure, PecuniaUser> continueAsGuest() {
+    return authLocalDS.continueAsGuest().flatMap(
+          (r) => authLocalDS.storeSavedUser(r).map((_) => r),
+        );
   }
 }

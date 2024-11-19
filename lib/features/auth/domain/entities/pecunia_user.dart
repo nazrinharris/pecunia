@@ -7,6 +7,7 @@ part 'pecunia_user.g.dart';
 enum UserType {
   remote('remote'),
   local('local'),
+  guest('guest'),
   unknown('unknown');
 
   const UserType(this.typeAsString);

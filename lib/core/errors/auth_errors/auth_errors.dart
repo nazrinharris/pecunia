@@ -125,6 +125,10 @@ enum AuthErrorType {
     'local-failed-delete-user-database',
     'Something went wrong while deleting the user database.',
   ),
+  localFailedGetGuestUserData(
+    'local-failed-get-guest-user-data',
+    'Something went wrong while retrieving guest user data',
+  ),
   incorrectCredentials(
     'incorrect-credentials',
     'Your email or password are incorrect.',
