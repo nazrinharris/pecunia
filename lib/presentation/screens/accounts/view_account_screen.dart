@@ -75,7 +75,17 @@ class ViewAccountScreen extends ConsumerWidget {
 
     switch (res) {
       case AsyncLoading(:final value) when value == null:
-        return const Center(child: CupertinoActivityIndicator());
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                context.pop();
+              },
+              icon: const Icon(Icons.arrow_back),
+            ),
+          ),
+          body: const Center(child: CupertinoActivityIndicator()),
+        );
       case AsyncLoading(:final value) when value != null:
         return AccountDetails(value.account, value.accountsList);
       case AsyncError():

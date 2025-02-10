@@ -7,7 +7,7 @@ part of 'get_account_by_id_and_all_accounts.dart';
 // **************************************************************************
 
 String _$getAccountByIdAndAllAccountsHash() =>
-    r'230982f998d581cf5a3e9786f8c37a9b81a82ccc';
+    r'850fb8d759968aa82b69308b0162f2d36fbac2d9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -148,6 +148,8 @@ class GetAccountByIdAndAllAccountsProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin GetAccountByIdAndAllAccountsRef
     on AutoDisposeFutureProviderRef<AccountAndList> {
   /// The parameter `accountId` of this provider.
@@ -164,4 +166,4 @@ class _GetAccountByIdAndAllAccountsProviderElement
       (origin as GetAccountByIdAndAllAccountsProvider).accountId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

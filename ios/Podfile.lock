@@ -3,9 +3,8 @@ PODS:
     - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
-    - FlutterMacOS
   - Flutter (1.0.0)
-  - flutter_native_splash (0.0.1):
+  - flutter_native_splash (2.4.3):
     - Flutter
   - flutter_secure_storage (6.0.0):
     - Flutter
@@ -17,20 +16,21 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - "sqlite3 (3.46.1+1)":
-    - "sqlite3/common (= 3.46.1+1)"
-  - "sqlite3/common (3.46.1+1)"
-  - "sqlite3/dbstatvtab (3.46.1+1)":
+  - sqlite3 (3.49.0):
+    - sqlite3/common (= 3.49.0)
+  - sqlite3/common (3.49.0)
+  - sqlite3/dbstatvtab (3.49.0):
     - sqlite3/common
-  - "sqlite3/fts5 (3.46.1+1)":
+  - sqlite3/fts5 (3.49.0):
     - sqlite3/common
-  - "sqlite3/perf-threadsafe (3.46.1+1)":
+  - sqlite3/perf-threadsafe (3.49.0):
     - sqlite3/common
-  - "sqlite3/rtree (3.46.1+1)":
+  - sqlite3/rtree (3.49.0):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
-    - "sqlite3 (~> 3.46.0+1)"
+    - FlutterMacOS
+    - sqlite3 (~> 3.49.0)
     - sqlite3/dbstatvtab
     - sqlite3/fts5
     - sqlite3/perf-threadsafe
@@ -40,14 +40,14 @@ PODS:
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
-  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/ios`)
+  - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -58,7 +58,7 @@ EXTERNAL SOURCES:
   app_links:
     :path: ".symlinks/plugins/app_links/ios"
   connectivity_plus:
-    :path: ".symlinks/plugins/connectivity_plus/darwin"
+    :path: ".symlinks/plugins/connectivity_plus/ios"
   Flutter:
     :path: Flutter
   flutter_native_splash:
@@ -72,23 +72,23 @@ EXTERNAL SOURCES:
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqlite3_flutter_libs:
-    :path: ".symlinks/plugins/sqlite3_flutter_libs/ios"
+    :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  app_links: e7a6750a915a9e161c58d91bc610e8cd1d4d0ad0
-  connectivity_plus: ddd7f30999e1faaef5967c23d5b6d503d10434db
+  app_links: 3da4c36b46cac3bf24eb897f1a6ce80bda109874
+  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
-  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
-  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  sqlite3: 0bb0e6389d824e40296f531b858a2a0b71c0d2fb
-  sqlite3_flutter_libs: c00457ebd31e59fa6bb830380ddba24d44fbcd3b
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  flutter_native_splash: 6cad9122ea0fad137d23137dd14b937f3e90b145
+  flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sqlite3: 4922312598b67e1825c6a6c821296dcbf6783046
+  sqlite3_flutter_libs: 3c323550ef3b928bc0aa9513c841e45a7d242832
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: 7be2f5f74864d463a8ad433546ed1de7e0f29aef
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.16.2

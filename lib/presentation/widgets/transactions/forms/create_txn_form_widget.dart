@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -172,6 +173,8 @@ class CreateTxnForm extends HookConsumerWidget {
     final nameNode = useFocusNode();
     final descriptionNode = useFocusNode();
 
+    final chosenDate = useState(DateTime.now());
+
     useEffect(() {
       baseCurrency.value = chosenAccount.value.currency;
       targetCurrency.value = chosenAccount.value.currency;
@@ -255,6 +258,8 @@ class CreateTxnForm extends HookConsumerWidget {
             ),
             const SizedBox(height: 14),
             CategoryField(chosenCategory),
+            const SizedBox(height: 14),
+            DateField(chosenDate),
             const SizedBox(height: 14),
             const Align(
               alignment: Alignment.centerLeft,
@@ -384,17 +389,58 @@ class CreateTxnForm extends HookConsumerWidget {
                         targetCurrency: targetCurrencyInput,
                         targetAmount: targetAmountInput,
                         category: chosenCategory.value,
+                        transactionDate: chosenDate.value,
                       );
                 }
               },
               style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
+                  backgroundColor: WidgetStatePropertyAll(
                 Theme.of(context).colorScheme.onSecondary,
               )),
               child: const Text('Create Transaction'),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DateField extends ConsumerWidget {
+  const DateField(this.date, {super.key});
+
+  final ValueNotifier<DateTime> date;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dateFormat = DateFormat('MMM dd, yyyy');
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Display formatted date
+          Text(
+            dateFormat.format(date.value),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          // Date picker button
+          IconButton(
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: date.value,
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+              );
+              if (picked != null && picked != date.value) {
+                date.value = picked;
+              }
+            },
+            icon: const Icon(Icons.calendar_today),
+          ),
+        ],
       ),
     );
   }

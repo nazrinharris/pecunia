@@ -43,8 +43,8 @@ View the [Figma Project File](https://www.figma.com/file/eSFHv1qQIq0d7z23L45xiK/
 - [x] Transferring funds between accounts.
 - [x] Multi-currency transactions.
 - [x] Transaction categories.
-- [ ] Basic UI capabilities (as in, similar looks and functionality to mockup) 
-- [ ] Local Authentication and Multi-User-Account capability
+- [x] Basic UI capabilities (as in, similar looks and functionality to mockup) 
+- [x] Local Authentication and Multi-User-Account capability
 
 ### 🧑🏼‍💻 Phase 2: Advanced Features
 

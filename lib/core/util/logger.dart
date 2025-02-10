@@ -42,7 +42,9 @@ class ProviderLogger extends ProviderObserver {
       }
     } else if (newValue is AsyncData) {
       // debugPrint('(${provider.name}) : ${newValue.toString().truncate()}...');
-      debugPrint('(${provider.name}) : $newValue');
+      // debugPrint('(${provider.name}) : $newValue');
+      if (newValue is List) debugPrint('(${provider.name}) : AsyncData<List<any>>');
+      debugPrint('(${provider.name}) : ${newValue.runtimeType}');
     } else {
       debugPrint('(${provider.name}) : ${newValue.runtimeType}');
     }

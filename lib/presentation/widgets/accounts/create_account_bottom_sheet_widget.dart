@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
@@ -50,7 +51,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
         ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: 'Unable to create account.',
-              failure: next.error as TransactionsFailure?,
+              failure: next.error as Failure?,
             );
       }
 

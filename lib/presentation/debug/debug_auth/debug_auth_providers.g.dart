@@ -22,6 +22,8 @@ final debugGetLocalUsersProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DebugGetLocalUsersRef = AutoDisposeFutureProviderRef<List<PecuniaUser>>;
 String _$debugGetAllSessionsHash() =>
     r'364cd4c76f0925ff7d8d4d7ea09b285ce3154e51';
@@ -39,6 +41,8 @@ final debugGetAllSessionsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DebugGetAllSessionsRef = AutoDisposeFutureProviderRef<List<Session>>;
 String _$debugGetActiveSessionHash() =>
     r'9a02ec3cd7b1e8a470c959ddc7a8312c7047eb46';
@@ -56,6 +60,8 @@ final debugGetActiveSessionProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DebugGetActiveSessionRef
     = AutoDisposeFutureProviderRef<Option<Session>>;
 String _$navigateToDebugLocalDBHash() =>
@@ -114,4 +120,4 @@ final debugLocalRegisterWithEmailAndPasswordProvider =
 typedef _$DebugLocalRegisterWithEmailAndPassword
     = AutoDisposeAsyncNotifier<Option<PecuniaUser>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
