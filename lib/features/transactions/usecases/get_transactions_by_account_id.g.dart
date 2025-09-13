@@ -30,9 +30,6 @@ class _SystemHash {
   }
 }
 
-typedef GetTransactionsByAccountIdRef
-    = AutoDisposeFutureProviderRef<List<Transaction>>;
-
 /// See also [getTransactionsByAccountId].
 @ProviderFor(getTransactionsByAccountId)
 const getTransactionsByAccountIdProvider = GetTransactionsByAccountIdFamily();
@@ -81,10 +78,10 @@ class GetTransactionsByAccountIdProvider
     extends AutoDisposeFutureProvider<List<Transaction>> {
   /// See also [getTransactionsByAccountId].
   GetTransactionsByAccountIdProvider(
-    this.accountId,
-  ) : super.internal(
+    String accountId,
+  ) : this._internal(
           (ref) => getTransactionsByAccountId(
-            ref,
+            ref as GetTransactionsByAccountIdRef,
             accountId,
           ),
           from: getTransactionsByAccountIdProvider,
@@ -96,9 +93,44 @@ class GetTransactionsByAccountIdProvider
           dependencies: GetTransactionsByAccountIdFamily._dependencies,
           allTransitiveDependencies:
               GetTransactionsByAccountIdFamily._allTransitiveDependencies,
+          accountId: accountId,
         );
 
+  GetTransactionsByAccountIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.accountId,
+  }) : super.internal();
+
   final String accountId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Transaction>> Function(GetTransactionsByAccountIdRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetTransactionsByAccountIdProvider._internal(
+        (ref) => create(ref as GetTransactionsByAccountIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        accountId: accountId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Transaction>> createElement() {
+    return _GetTransactionsByAccountIdProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -114,4 +146,23 @@ class GetTransactionsByAccountIdProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GetTransactionsByAccountIdRef
+    on AutoDisposeFutureProviderRef<List<Transaction>> {
+  /// The parameter `accountId` of this provider.
+  String get accountId;
+}
+
+class _GetTransactionsByAccountIdProviderElement
+    extends AutoDisposeFutureProviderElement<List<Transaction>>
+    with GetTransactionsByAccountIdRef {
+  _GetTransactionsByAccountIdProviderElement(super.provider);
+
+  @override
+  String get accountId =>
+      (origin as GetTransactionsByAccountIdProvider).accountId;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

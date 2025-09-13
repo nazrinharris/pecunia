@@ -4,7 +4,11 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
+import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/usecases/delete_user_account_and_data.dart';
+import 'package:pecunia/features/auth/usecases/get_logged_in_user.dart';
 import 'package:pecunia/features/auth/usecases/logout.dart';
 import 'package:pecunia/presentation/screens/onboarding_screen.dart';
 import 'package:pecunia/presentation/widgets/pecunia_dialogs.dart';
@@ -14,18 +18,33 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(logoutProvider, (prev, next) {
-      if (next is AsyncError) {
-        ref.read(pecuniaDialogsProvider).showFailureToast(
-              context: context,
-              title: 'Logout Failed',
-              failure: next.error as AuthFailure?,
-            );
-      }
-      if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
-        context.goNamed('start');
-      }
-    });
+    ref
+      ..listen(logoutProvider, (prev, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureToast(
+                context: context,
+                title: 'Logout Failed',
+                failure: next.error as AuthFailure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          context.goNamed('start');
+          ref.invalidate(pecuniaDBProvider);
+        }
+      })
+      ..listen(deleteUserAccountAndDataProvider, (prev, next) async {
+        if (next is AsyncError) {
+          await ref.read(pecuniaDialogsProvider).showFailureToast(
+                context: context,
+                title: 'Deletion Failed',
+                failure: next.error as AuthFailure?,
+              );
+        }
+        if (next is AsyncData<Option<Unit>> && next.value.isSome()) {
+          await ref.read(logoutProvider.notifier).logout();
+          ref.invalidate(pecuniaDBProvider);
+        }
+      });
 
     return Scaffold(
       appBar: AppBar(
@@ -44,13 +63,6 @@ class SettingsScreen extends ConsumerWidget {
       ),
       body: ListView(
         children: <Widget>[
-          ListTile(
-            leading: const Icon(Icons.lock),
-            title: Text('Change Password', style: Theme.of(context).textTheme.bodyMedium),
-            onTap: () {
-              // TODO: Implement change password functionality
-            },
-          ),
           ListTile(
             leading: const Icon(Icons.verified_outlined),
             title: Text("Show what's new in this version", style: Theme.of(context).textTheme.bodyMedium),
@@ -99,28 +111,10 @@ class SettingsScreen extends ConsumerWidget {
                       ));
             },
           ),
-          ListTile(
-            leading: Icon(
-              Icons.logout_rounded,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            title: Text(
-              'Logout',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-            ),
-            onTap: () {
-              ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                    title: 'Are you sure you want to logout?',
-                    icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
-                    onConfirm: () async {
-                      await ref.read(logoutProvider.notifier).logout();
-                    },
-                    context: context,
-                  );
-            },
-          ),
+          const Divider(),
+          const AccountSection(),
+          const Divider(),
+          const DangerZoneSection(),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.bug_report),
@@ -141,6 +135,192 @@ class SettingsScreen extends ConsumerWidget {
           const PecuniaAppMetadata(),
         ],
       ),
+    );
+  }
+}
+
+class AccountSection extends ConsumerWidget {
+  const AccountSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userValue = ref.watch(getLoggedInUserProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+          child: Text(
+            'Account',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
+        switch (userValue) {
+          AsyncLoading() => const ChangePasswordListTile(null),
+          AsyncError(error: _, stackTrace: _) => const ChangePasswordListTile(null),
+          AsyncData(:final Option<PecuniaUser> value) => ChangePasswordListTile(value),
+          _ => const UnexpectedStateListTile(),
+        },
+        ListTile(
+          leading: Icon(
+            Icons.logout_rounded,
+            color: Theme.of(context).colorScheme.error,
+          ),
+          title: Text(
+            'Logout',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+          ),
+          onTap: () {
+            ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                  title: 'Are you sure you want to logout?',
+                  message: 'If so then have a nice day! Just make sure to not forget your password buddy.',
+                  icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
+                  onConfirm: () async {
+                    await ref.read(logoutProvider.notifier).logout();
+                  },
+                  context: context,
+                );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ChangePasswordListTile extends ConsumerWidget {
+  const ChangePasswordListTile(this.user, {super.key});
+  final Option<PecuniaUser>? user;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (user == null) {
+      return ListTile(
+        enabled: false,
+        leading: const Icon(Icons.lock),
+        title: Text('Change Password', style: Theme.of(context).textTheme.bodyMedium),
+      );
+    }
+
+    return user!.fold(UnexpectedStateListTile.new, (r) {
+      if (r.userType == UserType.guest) {
+        return ListTile(
+          enabled: false,
+          leading: Icon(Icons.lock, color: Colors.grey.withOpacity(0.5)),
+          title: Text('Change Password',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(0.3))),
+          trailing: Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.yellow.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Text(
+              'Guest Account',
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: Colors.yellow,
+                  ),
+            ),
+          ),
+        );
+      } else {
+        return ListTile(
+          leading: const Icon(Icons.lock),
+          title: Text('Change Password', style: Theme.of(context).textTheme.bodyMedium),
+          onTap: () {
+            // TODO: Implement change password functionality
+          },
+        );
+      }
+    });
+  }
+}
+
+class UnexpectedStateListTile extends ConsumerWidget {
+  const UnexpectedStateListTile({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListTile(
+      enabled: false,
+      leading: const Icon(Icons.warning),
+      title: Text('Error: Unexpected State', style: Theme.of(context).textTheme.bodyMedium),
+    );
+  }
+}
+
+class DangerZoneSection extends ConsumerWidget {
+  const DangerZoneSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+          child: Text(
+            'Danger Zone',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.delete_forever_rounded,
+            color: Theme.of(context).colorScheme.error,
+          ),
+          title: Text(
+            'Delete Account',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+          ),
+          onTap: () {
+            ref.read(pecuniaDialogsProvider).showTextEntryConfirmationDialog(
+                  context: context,
+                  title: 'Delete your account?',
+                  description:
+                      'This will delete your account and all your data. This action cannot be undone.',
+                  entryConfirmationText: 'DELETE ACCOUNT',
+                  onConfirm: () async {
+                    await ref.read(deleteUserAccountAndDataProvider.notifier).deleteUserAccountAndData();
+                  },
+                );
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.delete_forever_rounded,
+            color: Theme.of(context).colorScheme.error,
+          ),
+          title: Text(
+            'Delete Finance Data',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+          ),
+          onTap: () {
+            ref.read(pecuniaDialogsProvider).showTextEntryConfirmationDialog(
+                  context: context,
+                  title: 'Delete your finance data?',
+                  description:
+                      'This will delete all your transactions, accounts, budgets, etc. This action cannot be undone.',
+                  entryConfirmationText: 'DELETE FINANCE DATA',
+                  onConfirm: () {},
+                );
+          },
+        ),
+      ],
     );
   }
 }

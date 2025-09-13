@@ -12,14 +12,16 @@ part of 'failures.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$CriticalException {
   StackTrace get stackTrace => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CriticalExceptionCopyWith<CriticalException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -43,6 +45,8 @@ class _$CriticalExceptionCopyWithImpl<$Res, $Val extends CriticalException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -63,31 +67,33 @@ class _$CriticalExceptionCopyWithImpl<$Res, $Val extends CriticalException>
 }
 
 /// @nodoc
-abstract class _$$_CriticalExceptionCopyWith<$Res>
+abstract class _$$CriticalExceptionImplCopyWith<$Res>
     implements $CriticalExceptionCopyWith<$Res> {
-  factory _$$_CriticalExceptionCopyWith(_$_CriticalException value,
-          $Res Function(_$_CriticalException) then) =
-      __$$_CriticalExceptionCopyWithImpl<$Res>;
+  factory _$$CriticalExceptionImplCopyWith(_$CriticalExceptionImpl value,
+          $Res Function(_$CriticalExceptionImpl) then) =
+      __$$CriticalExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({StackTrace stackTrace, String? message});
 }
 
 /// @nodoc
-class __$$_CriticalExceptionCopyWithImpl<$Res>
-    extends _$CriticalExceptionCopyWithImpl<$Res, _$_CriticalException>
-    implements _$$_CriticalExceptionCopyWith<$Res> {
-  __$$_CriticalExceptionCopyWithImpl(
-      _$_CriticalException _value, $Res Function(_$_CriticalException) _then)
+class __$$CriticalExceptionImplCopyWithImpl<$Res>
+    extends _$CriticalExceptionCopyWithImpl<$Res, _$CriticalExceptionImpl>
+    implements _$$CriticalExceptionImplCopyWith<$Res> {
+  __$$CriticalExceptionImplCopyWithImpl(_$CriticalExceptionImpl _value,
+      $Res Function(_$CriticalExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? stackTrace = null,
     Object? message = freezed,
   }) {
-    return _then(_$_CriticalException(
+    return _then(_$CriticalExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -102,8 +108,8 @@ class __$$_CriticalExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CriticalException implements _CriticalException {
-  _$_CriticalException(
+class _$CriticalExceptionImpl implements _CriticalException {
+  _$CriticalExceptionImpl(
       {required this.stackTrace,
       this.message = 'This operation should never fail'});
 
@@ -119,10 +125,10 @@ class _$_CriticalException implements _CriticalException {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CriticalException &&
+            other is _$CriticalExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.message, message) || other.message == message));
@@ -131,25 +137,30 @@ class _$_CriticalException implements _CriticalException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CriticalExceptionCopyWith<_$_CriticalException> get copyWith =>
-      __$$_CriticalExceptionCopyWithImpl<_$_CriticalException>(
+  _$$CriticalExceptionImplCopyWith<_$CriticalExceptionImpl> get copyWith =>
+      __$$CriticalExceptionImplCopyWithImpl<_$CriticalExceptionImpl>(
           this, _$identity);
 }
 
 abstract class _CriticalException implements CriticalException {
   factory _CriticalException(
       {required final StackTrace stackTrace,
-      final String? message}) = _$_CriticalException;
+      final String? message}) = _$CriticalExceptionImpl;
 
   @override
   StackTrace get stackTrace;
   @override
   String? get message;
+
+  /// Create a copy of CriticalException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_CriticalExceptionCopyWith<_$_CriticalException> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CriticalExceptionImplCopyWith<_$CriticalExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -70,7 +70,7 @@ class TransferTxnBottomSheet extends ConsumerWidget {
                         style: Theme.of(context).textTheme.headlineSmall,
                         children: [
                           TextSpan(
-                            text: '${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}',
+                            text: '${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.isoCode}',
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: txn.fundDetails.transactionType == TransactionType.credit
@@ -366,7 +366,7 @@ class ExpandableTxnMetadata extends ConsumerWidget {
                             ),
                         children: <TextSpan>[
                           TextSpan(
-                              text: txn.fundDetails.baseCurrency.code,
+                              text: txn.fundDetails.baseCurrency.isoCode,
                               style: DefaultTextStyle.of(context).style),
                         ],
                       ),
@@ -396,7 +396,7 @@ class ExpandableTxnMetadata extends ConsumerWidget {
                             ),
                         children: <TextSpan>[
                           TextSpan(
-                              text: txn.fundDetails.targetCurrency?.code ?? 'null',
+                              text: txn.fundDetails.targetCurrency?.isoCode ?? 'null',
                               style: DefaultTextStyle.of(context).style),
                         ],
                       ),

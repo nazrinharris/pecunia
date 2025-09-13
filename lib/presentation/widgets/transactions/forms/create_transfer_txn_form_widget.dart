@@ -368,7 +368,7 @@ class SourceAmountField extends HookConsumerWidget {
                     ),
                   ),
                   TextSpan(
-                    text: sourceCurrency.code,
+                    text: sourceCurrency.isoCode,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -420,7 +420,7 @@ class DestinationAmountField extends HookConsumerWidget {
                 children: <TextSpan>[
                   TextSpan(text: 'Amount ', style: TextStyle(fontSize: 16, color: Colors.green[100])),
                   TextSpan(
-                      text: destinationAccount?.currency.code ?? '---',
+                      text: destinationAccount?.currency.isoCode ?? '---',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green[100])),
                 ],
               ),

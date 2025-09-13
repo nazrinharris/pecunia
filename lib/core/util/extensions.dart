@@ -1,5 +1,6 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 
 extension NumericExtension on String {
   bool get isNumeric {
@@ -36,6 +37,28 @@ extension ColorExtension on Color {
     // Compute the luminance of the color and determine if the color is bright or dark
     final luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255;
     return luminance < 0.5;
+  }
+}
+
+extension DateTimeExtension on DateTime {
+  String get formatted {
+    final now = DateTime.now();
+    final difference = now.difference(this);
+
+    if (difference.inDays == 0) {
+      return 'Today';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays > 1 && difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    }
+    return '$month/$day/$year';
+  }
+}
+
+extension TransactionExtenstion on List<Transaction> {
+  List<Transaction> get sortedByMostRecent {
+    return this..sort((a, b) => b.transactionDate.compareTo(a.transactionDate));
   }
 }
 

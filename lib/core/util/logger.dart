@@ -22,8 +22,9 @@ class ProviderLogger extends ProviderObserver {
     if (newValue is AsyncError) {
       if (newValue.error is AuthFailure) {
         final failure = newValue.error as Failure;
-        debugPrint(
-            '(${provider.name}) : ${newValue.runtimeType} ${failure.runtimeType} - ${failure.errorType}');
+        // debugPrint(
+        //     '(${provider.name}) : ${newValue.runtimeType} ${failure.runtimeType} - ${failure.errorType}');
+        debugPrint(failure.toVerboseString());
         return;
       }
 
@@ -36,11 +37,14 @@ class ProviderLogger extends ProviderObserver {
         debugPrint('(${provider.name}) : $failure');
         return;
       } else {
-        debugPrint('(${provider.name}) : ${newValue.error.runtimeType}');
+        debugPrint('(${provider.name}) : ${newValue.error.runtimeType} : ${newValue.error}');
         return;
       }
     } else if (newValue is AsyncData) {
-      debugPrint('(${provider.name}) : ${newValue.toString().truncate()}...');
+      // debugPrint('(${provider.name}) : ${newValue.toString().truncate()}...');
+      // debugPrint('(${provider.name}) : $newValue');
+      if (newValue is List) debugPrint('(${provider.name}) : AsyncData<List<any>>');
+      debugPrint('(${provider.name}) : ${newValue.runtimeType}');
     } else {
       debugPrint('(${provider.name}) : ${newValue.runtimeType}');
     }

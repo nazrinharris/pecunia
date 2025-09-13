@@ -7,7 +7,7 @@ part of 'get_account_by_id_and_all_accounts.dart';
 // **************************************************************************
 
 String _$getAccountByIdAndAllAccountsHash() =>
-    r'230982f998d581cf5a3e9786f8c37a9b81a82ccc';
+    r'850fb8d759968aa82b69308b0162f2d36fbac2d9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,17 +30,14 @@ class _SystemHash {
   }
 }
 
-typedef GetAccountByIdAndAllAccountsRef = AutoDisposeFutureProviderRef<
-    ({Account account, List<Account> accountsList})>;
-
 /// See also [getAccountByIdAndAllAccounts].
 @ProviderFor(getAccountByIdAndAllAccounts)
 const getAccountByIdAndAllAccountsProvider =
     GetAccountByIdAndAllAccountsFamily();
 
 /// See also [getAccountByIdAndAllAccounts].
-class GetAccountByIdAndAllAccountsFamily extends Family<
-    AsyncValue<({Account account, List<Account> accountsList})>> {
+class GetAccountByIdAndAllAccountsFamily
+    extends Family<AsyncValue<AccountAndList>> {
   /// See also [getAccountByIdAndAllAccounts].
   const GetAccountByIdAndAllAccountsFamily();
 
@@ -78,14 +75,14 @@ class GetAccountByIdAndAllAccountsFamily extends Family<
 }
 
 /// See also [getAccountByIdAndAllAccounts].
-class GetAccountByIdAndAllAccountsProvider extends AutoDisposeFutureProvider<
-    ({Account account, List<Account> accountsList})> {
+class GetAccountByIdAndAllAccountsProvider
+    extends AutoDisposeFutureProvider<AccountAndList> {
   /// See also [getAccountByIdAndAllAccounts].
   GetAccountByIdAndAllAccountsProvider(
-    this.accountId,
-  ) : super.internal(
+    String accountId,
+  ) : this._internal(
           (ref) => getAccountByIdAndAllAccounts(
-            ref,
+            ref as GetAccountByIdAndAllAccountsRef,
             accountId,
           ),
           from: getAccountByIdAndAllAccountsProvider,
@@ -97,9 +94,44 @@ class GetAccountByIdAndAllAccountsProvider extends AutoDisposeFutureProvider<
           dependencies: GetAccountByIdAndAllAccountsFamily._dependencies,
           allTransitiveDependencies:
               GetAccountByIdAndAllAccountsFamily._allTransitiveDependencies,
+          accountId: accountId,
         );
 
+  GetAccountByIdAndAllAccountsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.accountId,
+  }) : super.internal();
+
   final String accountId;
+
+  @override
+  Override overrideWith(
+    FutureOr<AccountAndList> Function(GetAccountByIdAndAllAccountsRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetAccountByIdAndAllAccountsProvider._internal(
+        (ref) => create(ref as GetAccountByIdAndAllAccountsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        accountId: accountId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<AccountAndList> createElement() {
+    return _GetAccountByIdAndAllAccountsProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -115,4 +147,23 @@ class GetAccountByIdAndAllAccountsProvider extends AutoDisposeFutureProvider<
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GetAccountByIdAndAllAccountsRef
+    on AutoDisposeFutureProviderRef<AccountAndList> {
+  /// The parameter `accountId` of this provider.
+  String get accountId;
+}
+
+class _GetAccountByIdAndAllAccountsProviderElement
+    extends AutoDisposeFutureProviderElement<AccountAndList>
+    with GetAccountByIdAndAllAccountsRef {
+  _GetAccountByIdAndAllAccountsProviderElement(super.provider);
+
+  @override
+  String get accountId =>
+      (origin as GetAccountByIdAndAllAccountsProvider).accountId;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

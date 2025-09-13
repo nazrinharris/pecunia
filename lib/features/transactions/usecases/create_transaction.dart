@@ -26,6 +26,7 @@ class CreateTransaction extends _$CreateTransaction {
     required String? targetCurrency,
     required double? targetAmount,
     required Category? category,
+    required DateTime transactionDate,
   }) async {
     state = const AsyncValue.loading();
 
@@ -48,9 +49,9 @@ class CreateTransaction extends _$CreateTransaction {
                 name: name,
                 // TODO: Make better exception
                 creatorUid: pecuniaUser.getOrElse(() => throw Exception()).uid,
-                transactionDate: DateTime.now(),
+                transactionDate: transactionDate,
                 accountId: accountId,
-                type: transactionType.typeAsString,
+                type: transactionType,
                 baseAmount: baseAmount,
                 baseCurrency: baseCurrency,
                 transactionDescription: description,

@@ -33,22 +33,6 @@ enum TransactionType {
     );
   }
 
-  /// Returns a more detailed string representation of the transaction type.
-  ///
-  /// For each transaction type, this method appends additional context
-  /// to the basic type. For instance, a credit transaction is mapped
-  /// to 'Income (Credit)' and a debit transaction to 'Expense (Debit)'.
-  /// This method is useful when a more descriptive representation of
-  /// the transaction type is needed.
-  String toDescription() {
-    switch (this) {
-      case TransactionType.credit:
-        return 'Income';
-      case TransactionType.debit:
-        return 'Expense';
-    }
-  }
-
   /// Returns a user-friendly string representation of the transaction type.
   ///
   /// This method maps each transaction type to a string that is meant to be
@@ -143,10 +127,10 @@ class Transaction with _$Transaction {
       transactionType: fundDetails.transactionType.typeAsString,
       transactionAmount: fundDetails.transactionAmount,
       baseAmount: fundDetails.baseAmount,
-      baseCurrency: fundDetails.baseCurrency.code,
+      baseCurrency: fundDetails.baseCurrency.isoCode,
       exchangeRate: fundDetails.exchangeRate,
       targetAmount: fundDetails.targetAmount,
-      targetCurrency: fundDetails.targetCurrency?.code,
+      targetCurrency: fundDetails.targetCurrency?.isoCode,
       linkedAccountId: transferDetails?.linkedAccountId,
       linkedTransactionId: transferDetails?.linkedTransactionId,
       transferDescription: transferDetails?.transferDescription.value,

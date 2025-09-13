@@ -267,6 +267,23 @@ class AccountDTO extends DataClass implements Insertable<AccountDTO> {
         createdOn: createdOn ?? this.createdOn,
         description: description.present ? description.value : this.description,
       );
+  AccountDTO copyWithCompanion(AccountsTableCompanion data) {
+    return AccountDTO(
+      id: data.id.present ? data.id.value : this.id,
+      creatorUid:
+          data.creatorUid.present ? data.creatorUid.value : this.creatorUid,
+      name: data.name.present ? data.name.value : this.name,
+      initialBalance: data.initialBalance.present
+          ? data.initialBalance.value
+          : this.initialBalance,
+      balance: data.balance.present ? data.balance.value : this.balance,
+      currency: data.currency.present ? data.currency.value : this.currency,
+      createdOn: data.createdOn.present ? data.createdOn.value : this.createdOn,
+      description:
+          data.description.present ? data.description.value : this.description,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('AccountDTO(')
@@ -942,6 +959,50 @@ class TransactionDTO extends DataClass implements Insertable<TransactionDTO> {
             ? transferDescription.value
             : this.transferDescription,
       );
+  TransactionDTO copyWithCompanion(TransactionsTableCompanion data) {
+    return TransactionDTO(
+      id: data.id.present ? data.id.value : this.id,
+      creatorUid:
+          data.creatorUid.present ? data.creatorUid.value : this.creatorUid,
+      name: data.name.present ? data.name.value : this.name,
+      description:
+          data.description.present ? data.description.value : this.description,
+      transactionDate: data.transactionDate.present
+          ? data.transactionDate.value
+          : this.transactionDate,
+      accountId: data.accountId.present ? data.accountId.value : this.accountId,
+      transactionType: data.transactionType.present
+          ? data.transactionType.value
+          : this.transactionType,
+      transactionAmount: data.transactionAmount.present
+          ? data.transactionAmount.value
+          : this.transactionAmount,
+      baseAmount:
+          data.baseAmount.present ? data.baseAmount.value : this.baseAmount,
+      baseCurrency: data.baseCurrency.present
+          ? data.baseCurrency.value
+          : this.baseCurrency,
+      exchangeRate: data.exchangeRate.present
+          ? data.exchangeRate.value
+          : this.exchangeRate,
+      targetAmount: data.targetAmount.present
+          ? data.targetAmount.value
+          : this.targetAmount,
+      targetCurrency: data.targetCurrency.present
+          ? data.targetCurrency.value
+          : this.targetCurrency,
+      linkedTransactionId: data.linkedTransactionId.present
+          ? data.linkedTransactionId.value
+          : this.linkedTransactionId,
+      linkedAccountId: data.linkedAccountId.present
+          ? data.linkedAccountId.value
+          : this.linkedAccountId,
+      transferDescription: data.transferDescription.present
+          ? data.transferDescription.value
+          : this.transferDescription,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('TransactionDTO(')
@@ -1382,8 +1443,8 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
     }
     map['primary_color'] = Variable<String>(primaryColor);
     if (!nullToAbsent || icon != null) {
-      final converter = $CategoriesTableTable.$convertericonn;
-      map['icon'] = Variable<String>(converter.toSql(icon));
+      map['icon'] =
+          Variable<String>($CategoriesTableTable.$convertericonn.toSql(icon));
     }
     if (!nullToAbsent || parentId != null) {
       map['parent_id'] = Variable<String>(parentId);
@@ -1446,6 +1507,20 @@ class CategoryDTO extends DataClass implements Insertable<CategoryDTO> {
         icon: icon.present ? icon.value : this.icon,
         parentId: parentId.present ? parentId.value : this.parentId,
       );
+  CategoryDTO copyWithCompanion(CategoriesTableCompanion data) {
+    return CategoryDTO(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      description:
+          data.description.present ? data.description.value : this.description,
+      primaryColor: data.primaryColor.present
+          ? data.primaryColor.value
+          : this.primaryColor,
+      icon: data.icon.present ? data.icon.value : this.icon,
+      parentId: data.parentId.present ? data.parentId.value : this.parentId,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('CategoryDTO(')
@@ -1557,8 +1632,8 @@ class CategoriesTableCompanion extends UpdateCompanion<CategoryDTO> {
       map['primary_color'] = Variable<String>(primaryColor.value);
     }
     if (icon.present) {
-      final converter = $CategoriesTableTable.$convertericonn;
-      map['icon'] = Variable<String>(converter.toSql(icon.value));
+      map['icon'] = Variable<String>(
+          $CategoriesTableTable.$convertericonn.toSql(icon.value));
     }
     if (parentId.present) {
       map['parent_id'] = Variable<String>(parentId.value);
@@ -1703,6 +1778,16 @@ class TransactionCategoryDTO extends DataClass
         transactionId: transactionId ?? this.transactionId,
         categoryId: categoryId ?? this.categoryId,
       );
+  TransactionCategoryDTO copyWithCompanion(TxnCategoriesTableCompanion data) {
+    return TransactionCategoryDTO(
+      transactionId: data.transactionId.present
+          ? data.transactionId.value
+          : this.transactionId,
+      categoryId:
+          data.categoryId.present ? data.categoryId.value : this.categoryId,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('TransactionCategoryDTO(')
@@ -1787,8 +1872,9 @@ class TxnCategoriesTableCompanion
   }
 }
 
-abstract class _$PecuniaDB extends GeneratedDatabase {
-  _$PecuniaDB(QueryExecutor e) : super(e);
+abstract class _$PecuniaDriftDB extends GeneratedDatabase {
+  _$PecuniaDriftDB(QueryExecutor e) : super(e);
+  $PecuniaDriftDBManager get managers => $PecuniaDriftDBManager(this);
   late final $AccountsTableTable accountsTable = $AccountsTableTable(this);
   late final $TransactionsTableTable transactionsTable =
       $TransactionsTableTable(this);
@@ -1797,14 +1883,14 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
   late final $TxnCategoriesTableTable txnCategoriesTable =
       $TxnCategoriesTableTable(this);
   late final AccountsLocalDAO accountsLocalDAO =
-      AccountsLocalDAO(this as PecuniaDB);
+      AccountsLocalDAO(this as PecuniaDriftDB);
   late final TransactionsLocalDAO transactionsLocalDAO =
-      TransactionsLocalDAO(this as PecuniaDB);
+      TransactionsLocalDAO(this as PecuniaDriftDB);
   late final CategoriesLocalDAO categoriesLocalDAO =
-      CategoriesLocalDAO(this as PecuniaDB);
+      CategoriesLocalDAO(this as PecuniaDriftDB);
   late final TxnCategoriesLocalDAO txnCategoriesLocalDAO =
-      TxnCategoriesLocalDAO(this as PecuniaDB);
-  late final DebugDAO debugDAO = DebugDAO(this as PecuniaDB);
+      TxnCategoriesLocalDAO(this as PecuniaDriftDB);
+  late final DebugDAO debugDAO = DebugDAO(this as PecuniaDriftDB);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1813,16 +1899,1554 @@ abstract class _$PecuniaDB extends GeneratedDatabase {
       [accountsTable, transactionsTable, categoriesTable, txnCategoriesTable];
 }
 
+typedef $$AccountsTableTableCreateCompanionBuilder = AccountsTableCompanion
+    Function({
+  required String id,
+  required String creatorUid,
+  required String name,
+  required double initialBalance,
+  required double balance,
+  required String currency,
+  required DateTime createdOn,
+  Value<String?> description,
+  Value<int> rowid,
+});
+typedef $$AccountsTableTableUpdateCompanionBuilder = AccountsTableCompanion
+    Function({
+  Value<String> id,
+  Value<String> creatorUid,
+  Value<String> name,
+  Value<double> initialBalance,
+  Value<double> balance,
+  Value<String> currency,
+  Value<DateTime> createdOn,
+  Value<String?> description,
+  Value<int> rowid,
+});
+
+class $$AccountsTableTableFilterComposer
+    extends Composer<_$PecuniaDriftDB, $AccountsTableTable> {
+  $$AccountsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get creatorUid => $composableBuilder(
+      column: $table.creatorUid, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get initialBalance => $composableBuilder(
+      column: $table.initialBalance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get balance => $composableBuilder(
+      column: $table.balance, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdOn => $composableBuilder(
+      column: $table.createdOn, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+}
+
+class $$AccountsTableTableOrderingComposer
+    extends Composer<_$PecuniaDriftDB, $AccountsTableTable> {
+  $$AccountsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get creatorUid => $composableBuilder(
+      column: $table.creatorUid, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get initialBalance => $composableBuilder(
+      column: $table.initialBalance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get balance => $composableBuilder(
+      column: $table.balance, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdOn => $composableBuilder(
+      column: $table.createdOn, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+}
+
+class $$AccountsTableTableAnnotationComposer
+    extends Composer<_$PecuniaDriftDB, $AccountsTableTable> {
+  $$AccountsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get creatorUid => $composableBuilder(
+      column: $table.creatorUid, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<double> get initialBalance => $composableBuilder(
+      column: $table.initialBalance, builder: (column) => column);
+
+  GeneratedColumn<double> get balance =>
+      $composableBuilder(column: $table.balance, builder: (column) => column);
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdOn =>
+      $composableBuilder(column: $table.createdOn, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+}
+
+class $$AccountsTableTableTableManager extends RootTableManager<
+    _$PecuniaDriftDB,
+    $AccountsTableTable,
+    AccountDTO,
+    $$AccountsTableTableFilterComposer,
+    $$AccountsTableTableOrderingComposer,
+    $$AccountsTableTableAnnotationComposer,
+    $$AccountsTableTableCreateCompanionBuilder,
+    $$AccountsTableTableUpdateCompanionBuilder,
+    (
+      AccountDTO,
+      BaseReferences<_$PecuniaDriftDB, $AccountsTableTable, AccountDTO>
+    ),
+    AccountDTO,
+    PrefetchHooks Function()> {
+  $$AccountsTableTableTableManager(
+      _$PecuniaDriftDB db, $AccountsTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AccountsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AccountsTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AccountsTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> creatorUid = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<double> initialBalance = const Value.absent(),
+            Value<double> balance = const Value.absent(),
+            Value<String> currency = const Value.absent(),
+            Value<DateTime> createdOn = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AccountsTableCompanion(
+            id: id,
+            creatorUid: creatorUid,
+            name: name,
+            initialBalance: initialBalance,
+            balance: balance,
+            currency: currency,
+            createdOn: createdOn,
+            description: description,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String creatorUid,
+            required String name,
+            required double initialBalance,
+            required double balance,
+            required String currency,
+            required DateTime createdOn,
+            Value<String?> description = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AccountsTableCompanion.insert(
+            id: id,
+            creatorUid: creatorUid,
+            name: name,
+            initialBalance: initialBalance,
+            balance: balance,
+            currency: currency,
+            createdOn: createdOn,
+            description: description,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$AccountsTableTableProcessedTableManager = ProcessedTableManager<
+    _$PecuniaDriftDB,
+    $AccountsTableTable,
+    AccountDTO,
+    $$AccountsTableTableFilterComposer,
+    $$AccountsTableTableOrderingComposer,
+    $$AccountsTableTableAnnotationComposer,
+    $$AccountsTableTableCreateCompanionBuilder,
+    $$AccountsTableTableUpdateCompanionBuilder,
+    (
+      AccountDTO,
+      BaseReferences<_$PecuniaDriftDB, $AccountsTableTable, AccountDTO>
+    ),
+    AccountDTO,
+    PrefetchHooks Function()>;
+typedef $$TransactionsTableTableCreateCompanionBuilder
+    = TransactionsTableCompanion Function({
+  required String id,
+  required String creatorUid,
+  required String name,
+  Value<String?> description,
+  required DateTime transactionDate,
+  required String accountId,
+  required String transactionType,
+  required double transactionAmount,
+  required double baseAmount,
+  required String baseCurrency,
+  Value<double?> exchangeRate,
+  Value<double?> targetAmount,
+  Value<String?> targetCurrency,
+  Value<String?> linkedTransactionId,
+  Value<String?> linkedAccountId,
+  Value<String?> transferDescription,
+  Value<int> rowid,
+});
+typedef $$TransactionsTableTableUpdateCompanionBuilder
+    = TransactionsTableCompanion Function({
+  Value<String> id,
+  Value<String> creatorUid,
+  Value<String> name,
+  Value<String?> description,
+  Value<DateTime> transactionDate,
+  Value<String> accountId,
+  Value<String> transactionType,
+  Value<double> transactionAmount,
+  Value<double> baseAmount,
+  Value<String> baseCurrency,
+  Value<double?> exchangeRate,
+  Value<double?> targetAmount,
+  Value<String?> targetCurrency,
+  Value<String?> linkedTransactionId,
+  Value<String?> linkedAccountId,
+  Value<String?> transferDescription,
+  Value<int> rowid,
+});
+
+final class $$TransactionsTableTableReferences extends BaseReferences<
+    _$PecuniaDriftDB, $TransactionsTableTable, TransactionDTO> {
+  $$TransactionsTableTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $AccountsTableTable _accountIdTable(_$PecuniaDriftDB db) =>
+      db.accountsTable.createAlias($_aliasNameGenerator(
+          db.transactionsTable.accountId, db.accountsTable.id));
+
+  $$AccountsTableTableProcessedTableManager get accountId {
+    final $_column = $_itemColumn<String>('account_id')!;
+
+    final manager = $$AccountsTableTableTableManager($_db, $_db.accountsTable)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_accountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $TransactionsTableTable _linkedTransactionIdTable(
+          _$PecuniaDriftDB db) =>
+      db.transactionsTable.createAlias($_aliasNameGenerator(
+          db.transactionsTable.linkedTransactionId, db.transactionsTable.id));
+
+  $$TransactionsTableTableProcessedTableManager? get linkedTransactionId {
+    final $_column = $_itemColumn<String>('linked_transaction_id');
+    if ($_column == null) return null;
+    final manager =
+        $$TransactionsTableTableTableManager($_db, $_db.transactionsTable)
+            .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_linkedTransactionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $AccountsTableTable _linkedAccountIdTable(_$PecuniaDriftDB db) =>
+      db.accountsTable.createAlias($_aliasNameGenerator(
+          db.transactionsTable.linkedAccountId, db.accountsTable.id));
+
+  $$AccountsTableTableProcessedTableManager? get linkedAccountId {
+    final $_column = $_itemColumn<String>('linked_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableTableManager($_db, $_db.accountsTable)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_linkedAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$TxnCategoriesTableTable,
+      List<TransactionCategoryDTO>> _txnCategoriesTableRefsTable(
+          _$PecuniaDriftDB db) =>
+      MultiTypedResultKey.fromTable(db.txnCategoriesTable,
+          aliasName: $_aliasNameGenerator(
+              db.transactionsTable.id, db.txnCategoriesTable.transactionId));
+
+  $$TxnCategoriesTableTableProcessedTableManager get txnCategoriesTableRefs {
+    final manager = $$TxnCategoriesTableTableTableManager(
+            $_db, $_db.txnCategoriesTable)
+        .filter(
+            (f) => f.transactionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_txnCategoriesTableRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$TransactionsTableTableFilterComposer
+    extends Composer<_$PecuniaDriftDB, $TransactionsTableTable> {
+  $$TransactionsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get creatorUid => $composableBuilder(
+      column: $table.creatorUid, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get transactionDate => $composableBuilder(
+      column: $table.transactionDate,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get transactionType => $composableBuilder(
+      column: $table.transactionType,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get transactionAmount => $composableBuilder(
+      column: $table.transactionAmount,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get baseAmount => $composableBuilder(
+      column: $table.baseAmount, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get baseCurrency => $composableBuilder(
+      column: $table.baseCurrency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get exchangeRate => $composableBuilder(
+      column: $table.exchangeRate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get targetAmount => $composableBuilder(
+      column: $table.targetAmount, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get targetCurrency => $composableBuilder(
+      column: $table.targetCurrency,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get transferDescription => $composableBuilder(
+      column: $table.transferDescription,
+      builder: (column) => ColumnFilters(column));
+
+  $$AccountsTableTableFilterComposer get accountId {
+    final $$AccountsTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.accountId,
+        referencedTable: $db.accountsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableTableFilterComposer(
+              $db: $db,
+              $table: $db.accountsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$TransactionsTableTableFilterComposer get linkedTransactionId {
+    final $$TransactionsTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.linkedTransactionId,
+        referencedTable: $db.transactionsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableTableFilterComposer(
+              $db: $db,
+              $table: $db.transactionsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableTableFilterComposer get linkedAccountId {
+    final $$AccountsTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.linkedAccountId,
+        referencedTable: $db.accountsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableTableFilterComposer(
+              $db: $db,
+              $table: $db.accountsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> txnCategoriesTableRefs(
+      Expression<bool> Function($$TxnCategoriesTableTableFilterComposer f) f) {
+    final $$TxnCategoriesTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.txnCategoriesTable,
+        getReferencedColumn: (t) => t.transactionId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TxnCategoriesTableTableFilterComposer(
+              $db: $db,
+              $table: $db.txnCategoriesTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$TransactionsTableTableOrderingComposer
+    extends Composer<_$PecuniaDriftDB, $TransactionsTableTable> {
+  $$TransactionsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get creatorUid => $composableBuilder(
+      column: $table.creatorUid, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get transactionDate => $composableBuilder(
+      column: $table.transactionDate,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get transactionType => $composableBuilder(
+      column: $table.transactionType,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get transactionAmount => $composableBuilder(
+      column: $table.transactionAmount,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get baseAmount => $composableBuilder(
+      column: $table.baseAmount, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get baseCurrency => $composableBuilder(
+      column: $table.baseCurrency,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get exchangeRate => $composableBuilder(
+      column: $table.exchangeRate,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get targetAmount => $composableBuilder(
+      column: $table.targetAmount,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get targetCurrency => $composableBuilder(
+      column: $table.targetCurrency,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get transferDescription => $composableBuilder(
+      column: $table.transferDescription,
+      builder: (column) => ColumnOrderings(column));
+
+  $$AccountsTableTableOrderingComposer get accountId {
+    final $$AccountsTableTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.accountId,
+        referencedTable: $db.accountsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableTableOrderingComposer(
+              $db: $db,
+              $table: $db.accountsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$TransactionsTableTableOrderingComposer get linkedTransactionId {
+    final $$TransactionsTableTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.linkedTransactionId,
+        referencedTable: $db.transactionsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableTableOrderingComposer(
+              $db: $db,
+              $table: $db.transactionsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableTableOrderingComposer get linkedAccountId {
+    final $$AccountsTableTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.linkedAccountId,
+        referencedTable: $db.accountsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableTableOrderingComposer(
+              $db: $db,
+              $table: $db.accountsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$TransactionsTableTableAnnotationComposer
+    extends Composer<_$PecuniaDriftDB, $TransactionsTableTable> {
+  $$TransactionsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get creatorUid => $composableBuilder(
+      column: $table.creatorUid, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get transactionDate => $composableBuilder(
+      column: $table.transactionDate, builder: (column) => column);
+
+  GeneratedColumn<String> get transactionType => $composableBuilder(
+      column: $table.transactionType, builder: (column) => column);
+
+  GeneratedColumn<double> get transactionAmount => $composableBuilder(
+      column: $table.transactionAmount, builder: (column) => column);
+
+  GeneratedColumn<double> get baseAmount => $composableBuilder(
+      column: $table.baseAmount, builder: (column) => column);
+
+  GeneratedColumn<String> get baseCurrency => $composableBuilder(
+      column: $table.baseCurrency, builder: (column) => column);
+
+  GeneratedColumn<double> get exchangeRate => $composableBuilder(
+      column: $table.exchangeRate, builder: (column) => column);
+
+  GeneratedColumn<double> get targetAmount => $composableBuilder(
+      column: $table.targetAmount, builder: (column) => column);
+
+  GeneratedColumn<String> get targetCurrency => $composableBuilder(
+      column: $table.targetCurrency, builder: (column) => column);
+
+  GeneratedColumn<String> get transferDescription => $composableBuilder(
+      column: $table.transferDescription, builder: (column) => column);
+
+  $$AccountsTableTableAnnotationComposer get accountId {
+    final $$AccountsTableTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.accountId,
+        referencedTable: $db.accountsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableTableAnnotationComposer(
+              $db: $db,
+              $table: $db.accountsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$TransactionsTableTableAnnotationComposer get linkedTransactionId {
+    final $$TransactionsTableTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.linkedTransactionId,
+            referencedTable: $db.transactionsTable,
+            getReferencedColumn: (t) => t.id,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$TransactionsTableTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.transactionsTable,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return composer;
+  }
+
+  $$AccountsTableTableAnnotationComposer get linkedAccountId {
+    final $$AccountsTableTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.linkedAccountId,
+        referencedTable: $db.accountsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableTableAnnotationComposer(
+              $db: $db,
+              $table: $db.accountsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> txnCategoriesTableRefs<T extends Object>(
+      Expression<T> Function($$TxnCategoriesTableTableAnnotationComposer a) f) {
+    final $$TxnCategoriesTableTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.txnCategoriesTable,
+            getReferencedColumn: (t) => t.transactionId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$TxnCategoriesTableTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.txnCategoriesTable,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+}
+
+class $$TransactionsTableTableTableManager extends RootTableManager<
+    _$PecuniaDriftDB,
+    $TransactionsTableTable,
+    TransactionDTO,
+    $$TransactionsTableTableFilterComposer,
+    $$TransactionsTableTableOrderingComposer,
+    $$TransactionsTableTableAnnotationComposer,
+    $$TransactionsTableTableCreateCompanionBuilder,
+    $$TransactionsTableTableUpdateCompanionBuilder,
+    (TransactionDTO, $$TransactionsTableTableReferences),
+    TransactionDTO,
+    PrefetchHooks Function(
+        {bool accountId,
+        bool linkedTransactionId,
+        bool linkedAccountId,
+        bool txnCategoriesTableRefs})> {
+  $$TransactionsTableTableTableManager(
+      _$PecuniaDriftDB db, $TransactionsTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TransactionsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TransactionsTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TransactionsTableTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> creatorUid = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<DateTime> transactionDate = const Value.absent(),
+            Value<String> accountId = const Value.absent(),
+            Value<String> transactionType = const Value.absent(),
+            Value<double> transactionAmount = const Value.absent(),
+            Value<double> baseAmount = const Value.absent(),
+            Value<String> baseCurrency = const Value.absent(),
+            Value<double?> exchangeRate = const Value.absent(),
+            Value<double?> targetAmount = const Value.absent(),
+            Value<String?> targetCurrency = const Value.absent(),
+            Value<String?> linkedTransactionId = const Value.absent(),
+            Value<String?> linkedAccountId = const Value.absent(),
+            Value<String?> transferDescription = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TransactionsTableCompanion(
+            id: id,
+            creatorUid: creatorUid,
+            name: name,
+            description: description,
+            transactionDate: transactionDate,
+            accountId: accountId,
+            transactionType: transactionType,
+            transactionAmount: transactionAmount,
+            baseAmount: baseAmount,
+            baseCurrency: baseCurrency,
+            exchangeRate: exchangeRate,
+            targetAmount: targetAmount,
+            targetCurrency: targetCurrency,
+            linkedTransactionId: linkedTransactionId,
+            linkedAccountId: linkedAccountId,
+            transferDescription: transferDescription,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String creatorUid,
+            required String name,
+            Value<String?> description = const Value.absent(),
+            required DateTime transactionDate,
+            required String accountId,
+            required String transactionType,
+            required double transactionAmount,
+            required double baseAmount,
+            required String baseCurrency,
+            Value<double?> exchangeRate = const Value.absent(),
+            Value<double?> targetAmount = const Value.absent(),
+            Value<String?> targetCurrency = const Value.absent(),
+            Value<String?> linkedTransactionId = const Value.absent(),
+            Value<String?> linkedAccountId = const Value.absent(),
+            Value<String?> transferDescription = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TransactionsTableCompanion.insert(
+            id: id,
+            creatorUid: creatorUid,
+            name: name,
+            description: description,
+            transactionDate: transactionDate,
+            accountId: accountId,
+            transactionType: transactionType,
+            transactionAmount: transactionAmount,
+            baseAmount: baseAmount,
+            baseCurrency: baseCurrency,
+            exchangeRate: exchangeRate,
+            targetAmount: targetAmount,
+            targetCurrency: targetCurrency,
+            linkedTransactionId: linkedTransactionId,
+            linkedAccountId: linkedAccountId,
+            transferDescription: transferDescription,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$TransactionsTableTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {accountId = false,
+              linkedTransactionId = false,
+              linkedAccountId = false,
+              txnCategoriesTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (txnCategoriesTableRefs) db.txnCategoriesTable
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (accountId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.accountId,
+                    referencedTable:
+                        $$TransactionsTableTableReferences._accountIdTable(db),
+                    referencedColumn: $$TransactionsTableTableReferences
+                        ._accountIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (linkedTransactionId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.linkedTransactionId,
+                    referencedTable: $$TransactionsTableTableReferences
+                        ._linkedTransactionIdTable(db),
+                    referencedColumn: $$TransactionsTableTableReferences
+                        ._linkedTransactionIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (linkedAccountId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.linkedAccountId,
+                    referencedTable: $$TransactionsTableTableReferences
+                        ._linkedAccountIdTable(db),
+                    referencedColumn: $$TransactionsTableTableReferences
+                        ._linkedAccountIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (txnCategoriesTableRefs)
+                    await $_getPrefetchedData<TransactionDTO,
+                            $TransactionsTableTable, TransactionCategoryDTO>(
+                        currentTable: table,
+                        referencedTable: $$TransactionsTableTableReferences
+                            ._txnCategoriesTableRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$TransactionsTableTableReferences(db, table, p0)
+                                .txnCategoriesTableRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.transactionId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$TransactionsTableTableProcessedTableManager = ProcessedTableManager<
+    _$PecuniaDriftDB,
+    $TransactionsTableTable,
+    TransactionDTO,
+    $$TransactionsTableTableFilterComposer,
+    $$TransactionsTableTableOrderingComposer,
+    $$TransactionsTableTableAnnotationComposer,
+    $$TransactionsTableTableCreateCompanionBuilder,
+    $$TransactionsTableTableUpdateCompanionBuilder,
+    (TransactionDTO, $$TransactionsTableTableReferences),
+    TransactionDTO,
+    PrefetchHooks Function(
+        {bool accountId,
+        bool linkedTransactionId,
+        bool linkedAccountId,
+        bool txnCategoriesTableRefs})>;
+typedef $$CategoriesTableTableCreateCompanionBuilder = CategoriesTableCompanion
+    Function({
+  required String id,
+  required String name,
+  Value<String?> description,
+  required String primaryColor,
+  Value<IconData?> icon,
+  Value<String?> parentId,
+  Value<int> rowid,
+});
+typedef $$CategoriesTableTableUpdateCompanionBuilder = CategoriesTableCompanion
+    Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String?> description,
+  Value<String> primaryColor,
+  Value<IconData?> icon,
+  Value<String?> parentId,
+  Value<int> rowid,
+});
+
+final class $$CategoriesTableTableReferences extends BaseReferences<
+    _$PecuniaDriftDB, $CategoriesTableTable, CategoryDTO> {
+  $$CategoriesTableTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$TxnCategoriesTableTable,
+      List<TransactionCategoryDTO>> _txnCategoriesTableRefsTable(
+          _$PecuniaDriftDB db) =>
+      MultiTypedResultKey.fromTable(db.txnCategoriesTable,
+          aliasName: $_aliasNameGenerator(
+              db.categoriesTable.id, db.txnCategoriesTable.categoryId));
+
+  $$TxnCategoriesTableTableProcessedTableManager get txnCategoriesTableRefs {
+    final manager = $$TxnCategoriesTableTableTableManager(
+            $_db, $_db.txnCategoriesTable)
+        .filter((f) => f.categoryId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_txnCategoriesTableRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$CategoriesTableTableFilterComposer
+    extends Composer<_$PecuniaDriftDB, $CategoriesTableTable> {
+  $$CategoriesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get primaryColor => $composableBuilder(
+      column: $table.primaryColor, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<IconData?, IconData, String> get icon =>
+      $composableBuilder(
+          column: $table.icon,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get parentId => $composableBuilder(
+      column: $table.parentId, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> txnCategoriesTableRefs(
+      Expression<bool> Function($$TxnCategoriesTableTableFilterComposer f) f) {
+    final $$TxnCategoriesTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.txnCategoriesTable,
+        getReferencedColumn: (t) => t.categoryId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TxnCategoriesTableTableFilterComposer(
+              $db: $db,
+              $table: $db.txnCategoriesTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$CategoriesTableTableOrderingComposer
+    extends Composer<_$PecuniaDriftDB, $CategoriesTableTable> {
+  $$CategoriesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get primaryColor => $composableBuilder(
+      column: $table.primaryColor,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get icon => $composableBuilder(
+      column: $table.icon, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get parentId => $composableBuilder(
+      column: $table.parentId, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CategoriesTableTableAnnotationComposer
+    extends Composer<_$PecuniaDriftDB, $CategoriesTableTable> {
+  $$CategoriesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<String> get primaryColor => $composableBuilder(
+      column: $table.primaryColor, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<IconData?, String> get icon =>
+      $composableBuilder(column: $table.icon, builder: (column) => column);
+
+  GeneratedColumn<String> get parentId =>
+      $composableBuilder(column: $table.parentId, builder: (column) => column);
+
+  Expression<T> txnCategoriesTableRefs<T extends Object>(
+      Expression<T> Function($$TxnCategoriesTableTableAnnotationComposer a) f) {
+    final $$TxnCategoriesTableTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.txnCategoriesTable,
+            getReferencedColumn: (t) => t.categoryId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$TxnCategoriesTableTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.txnCategoriesTable,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+}
+
+class $$CategoriesTableTableTableManager extends RootTableManager<
+    _$PecuniaDriftDB,
+    $CategoriesTableTable,
+    CategoryDTO,
+    $$CategoriesTableTableFilterComposer,
+    $$CategoriesTableTableOrderingComposer,
+    $$CategoriesTableTableAnnotationComposer,
+    $$CategoriesTableTableCreateCompanionBuilder,
+    $$CategoriesTableTableUpdateCompanionBuilder,
+    (CategoryDTO, $$CategoriesTableTableReferences),
+    CategoryDTO,
+    PrefetchHooks Function({bool txnCategoriesTableRefs})> {
+  $$CategoriesTableTableTableManager(
+      _$PecuniaDriftDB db, $CategoriesTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CategoriesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CategoriesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CategoriesTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<String> primaryColor = const Value.absent(),
+            Value<IconData?> icon = const Value.absent(),
+            Value<String?> parentId = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CategoriesTableCompanion(
+            id: id,
+            name: name,
+            description: description,
+            primaryColor: primaryColor,
+            icon: icon,
+            parentId: parentId,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String name,
+            Value<String?> description = const Value.absent(),
+            required String primaryColor,
+            Value<IconData?> icon = const Value.absent(),
+            Value<String?> parentId = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CategoriesTableCompanion.insert(
+            id: id,
+            name: name,
+            description: description,
+            primaryColor: primaryColor,
+            icon: icon,
+            parentId: parentId,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$CategoriesTableTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({txnCategoriesTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (txnCategoriesTableRefs) db.txnCategoriesTable
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (txnCategoriesTableRefs)
+                    await $_getPrefetchedData<CategoryDTO,
+                            $CategoriesTableTable, TransactionCategoryDTO>(
+                        currentTable: table,
+                        referencedTable: $$CategoriesTableTableReferences
+                            ._txnCategoriesTableRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CategoriesTableTableReferences(db, table, p0)
+                                .txnCategoriesTableRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.categoryId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$CategoriesTableTableProcessedTableManager = ProcessedTableManager<
+    _$PecuniaDriftDB,
+    $CategoriesTableTable,
+    CategoryDTO,
+    $$CategoriesTableTableFilterComposer,
+    $$CategoriesTableTableOrderingComposer,
+    $$CategoriesTableTableAnnotationComposer,
+    $$CategoriesTableTableCreateCompanionBuilder,
+    $$CategoriesTableTableUpdateCompanionBuilder,
+    (CategoryDTO, $$CategoriesTableTableReferences),
+    CategoryDTO,
+    PrefetchHooks Function({bool txnCategoriesTableRefs})>;
+typedef $$TxnCategoriesTableTableCreateCompanionBuilder
+    = TxnCategoriesTableCompanion Function({
+  required String transactionId,
+  required String categoryId,
+  Value<int> rowid,
+});
+typedef $$TxnCategoriesTableTableUpdateCompanionBuilder
+    = TxnCategoriesTableCompanion Function({
+  Value<String> transactionId,
+  Value<String> categoryId,
+  Value<int> rowid,
+});
+
+final class $$TxnCategoriesTableTableReferences extends BaseReferences<
+    _$PecuniaDriftDB, $TxnCategoriesTableTable, TransactionCategoryDTO> {
+  $$TxnCategoriesTableTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $TransactionsTableTable _transactionIdTable(_$PecuniaDriftDB db) =>
+      db.transactionsTable.createAlias($_aliasNameGenerator(
+          db.txnCategoriesTable.transactionId, db.transactionsTable.id));
+
+  $$TransactionsTableTableProcessedTableManager get transactionId {
+    final $_column = $_itemColumn<String>('transaction_id')!;
+
+    final manager =
+        $$TransactionsTableTableTableManager($_db, $_db.transactionsTable)
+            .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_transactionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $CategoriesTableTable _categoryIdTable(_$PecuniaDriftDB db) =>
+      db.categoriesTable.createAlias($_aliasNameGenerator(
+          db.txnCategoriesTable.categoryId, db.categoriesTable.id));
+
+  $$CategoriesTableTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<String>('category_id')!;
+
+    final manager =
+        $$CategoriesTableTableTableManager($_db, $_db.categoriesTable)
+            .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$TxnCategoriesTableTableFilterComposer
+    extends Composer<_$PecuniaDriftDB, $TxnCategoriesTableTable> {
+  $$TxnCategoriesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$TransactionsTableTableFilterComposer get transactionId {
+    final $$TransactionsTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.transactionId,
+        referencedTable: $db.transactionsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableTableFilterComposer(
+              $db: $db,
+              $table: $db.transactionsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableTableFilterComposer get categoryId {
+    final $$CategoriesTableTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categoriesTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableTableFilterComposer(
+              $db: $db,
+              $table: $db.categoriesTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$TxnCategoriesTableTableOrderingComposer
+    extends Composer<_$PecuniaDriftDB, $TxnCategoriesTableTable> {
+  $$TxnCategoriesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$TransactionsTableTableOrderingComposer get transactionId {
+    final $$TransactionsTableTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.transactionId,
+        referencedTable: $db.transactionsTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableTableOrderingComposer(
+              $db: $db,
+              $table: $db.transactionsTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableTableOrderingComposer get categoryId {
+    final $$CategoriesTableTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categoriesTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableTableOrderingComposer(
+              $db: $db,
+              $table: $db.categoriesTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$TxnCategoriesTableTableAnnotationComposer
+    extends Composer<_$PecuniaDriftDB, $TxnCategoriesTableTable> {
+  $$TxnCategoriesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  $$TransactionsTableTableAnnotationComposer get transactionId {
+    final $$TransactionsTableTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.transactionId,
+            referencedTable: $db.transactionsTable,
+            getReferencedColumn: (t) => t.id,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$TransactionsTableTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.transactionsTable,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return composer;
+  }
+
+  $$CategoriesTableTableAnnotationComposer get categoryId {
+    final $$CategoriesTableTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categoriesTable,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableTableAnnotationComposer(
+              $db: $db,
+              $table: $db.categoriesTable,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$TxnCategoriesTableTableTableManager extends RootTableManager<
+    _$PecuniaDriftDB,
+    $TxnCategoriesTableTable,
+    TransactionCategoryDTO,
+    $$TxnCategoriesTableTableFilterComposer,
+    $$TxnCategoriesTableTableOrderingComposer,
+    $$TxnCategoriesTableTableAnnotationComposer,
+    $$TxnCategoriesTableTableCreateCompanionBuilder,
+    $$TxnCategoriesTableTableUpdateCompanionBuilder,
+    (TransactionCategoryDTO, $$TxnCategoriesTableTableReferences),
+    TransactionCategoryDTO,
+    PrefetchHooks Function({bool transactionId, bool categoryId})> {
+  $$TxnCategoriesTableTableTableManager(
+      _$PecuniaDriftDB db, $TxnCategoriesTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TxnCategoriesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TxnCategoriesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TxnCategoriesTableTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> transactionId = const Value.absent(),
+            Value<String> categoryId = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TxnCategoriesTableCompanion(
+            transactionId: transactionId,
+            categoryId: categoryId,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String transactionId,
+            required String categoryId,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TxnCategoriesTableCompanion.insert(
+            transactionId: transactionId,
+            categoryId: categoryId,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$TxnCategoriesTableTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({transactionId = false, categoryId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (transactionId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.transactionId,
+                    referencedTable: $$TxnCategoriesTableTableReferences
+                        ._transactionIdTable(db),
+                    referencedColumn: $$TxnCategoriesTableTableReferences
+                        ._transactionIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (categoryId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.categoryId,
+                    referencedTable: $$TxnCategoriesTableTableReferences
+                        ._categoryIdTable(db),
+                    referencedColumn: $$TxnCategoriesTableTableReferences
+                        ._categoryIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$TxnCategoriesTableTableProcessedTableManager = ProcessedTableManager<
+    _$PecuniaDriftDB,
+    $TxnCategoriesTableTable,
+    TransactionCategoryDTO,
+    $$TxnCategoriesTableTableFilterComposer,
+    $$TxnCategoriesTableTableOrderingComposer,
+    $$TxnCategoriesTableTableAnnotationComposer,
+    $$TxnCategoriesTableTableCreateCompanionBuilder,
+    $$TxnCategoriesTableTableUpdateCompanionBuilder,
+    (TransactionCategoryDTO, $$TxnCategoriesTableTableReferences),
+    TransactionCategoryDTO,
+    PrefetchHooks Function({bool transactionId, bool categoryId})>;
+
+class $PecuniaDriftDBManager {
+  final _$PecuniaDriftDB _db;
+  $PecuniaDriftDBManager(this._db);
+  $$AccountsTableTableTableManager get accountsTable =>
+      $$AccountsTableTableTableManager(_db, _db.accountsTable);
+  $$TransactionsTableTableTableManager get transactionsTable =>
+      $$TransactionsTableTableTableManager(_db, _db.transactionsTable);
+  $$CategoriesTableTableTableManager get categoriesTable =>
+      $$CategoriesTableTableTableManager(_db, _db.categoriesTable);
+  $$TxnCategoriesTableTableTableManager get txnCategoriesTable =>
+      $$TxnCategoriesTableTableTableManager(_db, _db.txnCategoriesTable);
+}
+
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pecuniaDBHash() => r'12ac2257a15a1170557c84b0a17e9fec85a5182e';
+String _$pecuniaDBHash() => r'e44388a72e83b430c3d0ca938c32eb368a962a4f';
 
-/// See also [pecuniaDB].
-@ProviderFor(pecuniaDB)
-final pecuniaDBProvider = Provider<PecuniaDB>.internal(
-  pecuniaDB,
+/// [pecuniaDBProvider] depends on [authRepoProvider], specifically, it wants to read the logged in user. So
+/// make sure that [authRepoProvider] is initialized before [pecuniaDBProvider] is.
+///
+/// Copied from [PecuniaDB].
+@ProviderFor(PecuniaDB)
+final pecuniaDBProvider =
+    AsyncNotifierProvider<PecuniaDB, PecuniaDriftDB>.internal(
+  PecuniaDB.new,
   name: r'pecuniaDBProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$pecuniaDBHash,
@@ -1830,5 +3454,6 @@ final pecuniaDBProvider = Provider<PecuniaDB>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef PecuniaDBRef = ProviderRef<PecuniaDB>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+typedef _$PecuniaDB = AsyncNotifier<PecuniaDriftDB>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

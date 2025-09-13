@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:money2/money2.dart';
+import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/errors/transactions_errors/transactions_errors.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
 import 'package:pecunia/features/accounts/usecases/create_account.dart';
@@ -50,7 +51,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
         ref.read(pecuniaDialogsProvider).showFailureToast(
               context: context,
               title: 'Unable to create account.',
-              failure: next.error as TransactionsFailure?,
+              failure: next.error as Failure?,
             );
       }
 
@@ -132,7 +133,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
                       return PecuniaCurrencies.toList().map<PopupMenuItem<Currency>>((Currency c) {
                         return PopupMenuItem<Currency>(
                           value: c,
-                          child: Text('${c.code} - ${c.name}', textAlign: TextAlign.center),
+                          child: Text('${c.isoCode} - ${c.name}', textAlign: TextAlign.center),
                         );
                       }).toList();
                     },
@@ -142,7 +143,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
                         children: [
                           Expanded(
                               child: Text(
-                            '${currency.value.code} - ${currency.value.name}',
+                            '${currency.value.isoCode} - ${currency.value.name}',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
@@ -187,7 +188,7 @@ class CreateAccountBottomSheet extends HookConsumerWidget {
                   ref.read(createAccountProvider.notifier).createAccount(
                         name: nameController.value.text,
                         initialBalance: double.parse(initialBalanceController.value.text),
-                        currency: currency.value.code,
+                        currency: currency.value.isoCode,
                         description: descriptionController.value.text,
                       );
                 }

@@ -105,9 +105,11 @@ class TxnBottomSheet extends ConsumerWidget {
                                 ),
                           ),
                           TextSpan(
-                            text: '$sign${txn.fundDetails.baseAmount} ${txn.fundDetails.baseCurrency.code}',
+                            text:
+                                '$sign${txn.fundDetails.baseAmount.toStringAsFixed(2)} ${txn.fundDetails.baseCurrency.isoCode}',
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  fontFamily: 'DMMono',
                                   color: txn.fundDetails.transactionType == TransactionType.credit
                                       ? Colors.green[300]
                                       : Colors.red[300],
@@ -241,25 +243,27 @@ class BuildTxnAmountText extends ConsumerWidget {
           children: [
             if (isCredit)
               Text(
-                '+${txn.fundDetails.transactionAmount}',
+                '+${txn.fundDetails.transactionAmount.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: Colors.green[300],
                   fontSize: 14,
+                  fontFamily: 'DMMono',
                   fontWeight: FontWeight.bold,
                 ),
               ),
             if (!isCredit)
               Text(
-                '-${txn.fundDetails.transactionAmount}',
+                '-${txn.fundDetails.transactionAmount.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: Colors.red[300],
                   fontSize: 14,
+                  fontFamily: 'DMMono',
                   fontWeight: FontWeight.bold,
                 ),
               ),
             const SizedBox(width: 10),
             Text(
-              txn.fundDetails.transactionCurrency.code,
+              txn.fundDetails.transactionCurrency.isoCode,
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 14,
@@ -275,7 +279,7 @@ class BuildTxnAmountText extends ConsumerWidget {
             children: [
               if (isCredit)
                 Text(
-                  '+${txn.fundDetails.exchangedAmount}',
+                  '+${txn.fundDetails.exchangedAmount.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: Colors.green[300]!.withOpacity(0.3),
                     fontSize: 14,
@@ -284,7 +288,7 @@ class BuildTxnAmountText extends ConsumerWidget {
                 ),
               if (!isCredit)
                 Text(
-                  '-${txn.fundDetails.exchangedAmount}',
+                  '-${txn.fundDetails.exchangedAmount.toStringAsFixed(2)}',
                   style: TextStyle(
                     color: Colors.red[300]!.withOpacity(0.3),
                     fontSize: 14,
@@ -293,7 +297,7 @@ class BuildTxnAmountText extends ConsumerWidget {
                 ),
               const SizedBox(width: 10),
               Text(
-                txn.fundDetails.exchangedCurrency.code,
+                txn.fundDetails.exchangedCurrency.isoCode,
                 style: TextStyle(
                   color: Colors.grey[600]!.withOpacity(0.3),
                   fontSize: 14,

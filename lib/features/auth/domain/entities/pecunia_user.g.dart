@@ -6,34 +6,28 @@ part of 'pecunia_user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PecuniaUser _$$_PecuniaUserFromJson(Map<String, dynamic> json) =>
-    _$_PecuniaUser(
+_$PecuniaUserDTOImpl _$$PecuniaUserDTOImplFromJson(Map<String, dynamic> json) =>
+    _$PecuniaUserDTOImpl(
       uid: json['uid'] as String,
       username: json['username'] as String,
       dateCreated: DateTime.parse(json['dateCreated'] as String),
+      userType: $enumDecode(_$UserTypeEnumMap, json['userType']),
       email: json['email'] as String?,
     );
 
-Map<String, dynamic> _$$_PecuniaUserToJson(_$_PecuniaUser instance) =>
+Map<String, dynamic> _$$PecuniaUserDTOImplToJson(
+        _$PecuniaUserDTOImpl instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'username': instance.username,
       'dateCreated': instance.dateCreated.toIso8601String(),
+      'userType': _$UserTypeEnumMap[instance.userType]!,
       'email': instance.email,
     };
 
-_$_PecuniaUserDTO _$$_PecuniaUserDTOFromJson(Map<String, dynamic> json) =>
-    _$_PecuniaUserDTO(
-      uid: json['uid'] as String,
-      username: json['username'] as String,
-      dateCreated: DateTime.parse(json['dateCreated'] as String),
-      email: json['email'] as String?,
-    );
-
-Map<String, dynamic> _$$_PecuniaUserDTOToJson(_$_PecuniaUserDTO instance) =>
-    <String, dynamic>{
-      'uid': instance.uid,
-      'username': instance.username,
-      'dateCreated': instance.dateCreated.toIso8601String(),
-      'email': instance.email,
-    };
+const _$UserTypeEnumMap = {
+  UserType.remote: 'remote',
+  UserType.local: 'local',
+  UserType.guest: 'guest',
+  UserType.unknown: 'unknown',
+};

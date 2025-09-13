@@ -68,7 +68,7 @@ class EditAccountScreen extends HookConsumerWidget {
                     color: Colors.transparent,
                     child: ListTile(
                       title: Text(
-                        '${currency.value.code} - ${currency.value.name}',
+                        '${currency.value.isoCode} - ${currency.value.name}',
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                       ),
                       trailing: Tooltip(

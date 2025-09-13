@@ -1,9 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/infrastructure/flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
+import 'package:pecunia/core/util/logger.dart';
+import 'package:pecunia/core/util/pecunia_crypto.dart';
+import 'package:pecunia/features/auth/data/auth_local_ds.dart';
+import 'package:pecunia/features/auth/domain/auth_repo.dart';
+import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
+import 'package:pecunia/features/auth/domain/entities/session.dart';
 import 'package:pecunia/features/auth/usecases/login_with_password.dart';
 import 'package:pecunia/features/auth/usecases/register_with_password.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_auth_providers.dart';
@@ -61,26 +71,1039 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
             context.pop();
           },
         ),
-        title: const Text('Debug Login & Register'),
+        title: const Row(
+          children: [
+            Text('Debug'),
+            SizedBox(width: 8),
+            Icon(Icons.bug_report),
+          ],
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            children: [
-              const LoginForm(),
-              const LoginDetails(),
-              const RegisterForm(),
-              const RegisterDetails(),
-              ElevatedButton(
-                onPressed: () {
-                  context.pushNamed('debug-local-db');
-                },
-                child: const Text('Navigate to DebugLocalDB'),
-              )
-            ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: ListView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              children: [
+                const Text('Other Debug Menus', style: TextStyle(fontFamily: 'Instrument', fontSize: 28)),
+                const Divider(),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        context.pushNamed('debug-local-db');
+                      },
+                      child: const Text('Debug Local DB'),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.pushNamed('debug-theme');
+                      },
+                      child: const Text('Debug Theme'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                const Text('Authentication', style: TextStyle(fontFamily: 'Instrument', fontSize: 28)),
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.only(top: 14, bottom: 8),
+                  child: Text('Local Auth Information',
+                      style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                ),
+                const Text(
+                  'Stored "$kPrefsSavedUsers" in shared_preferences:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.start,
+                ),
+                const StoredSavedUserDetails(),
+                const SizedBox(height: 8),
+                const Text('Sessions saved in flutter_secure_storage:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const LocalSessions(),
+                const Padding(
+                  padding: EdgeInsets.only(top: 14, bottom: 8),
+                  child: Text('Local Auth Actions', style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final buttonWidth = (constraints.maxWidth - 8) / 2; // 2 columns with 8px gap
+                    return Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              ref.invalidate(debugGetAllSessionsProvider);
+                            },
+                            child: const Text('Refresh Sessions'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+
+                              final allRead = await storage.readAll();
+                              final sessions =
+                                  allRead.keys.where((key) => key.contains('pecunia_user_token_'));
+                              debugPrint('Sessions: $sessions : ${allRead[sessions.first]}');
+                            },
+                            child: const Text('Print Sessions'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final crypto = ref.read(pecuniaCryptoProvider);
+                              final key = crypto.generateSalt();
+                              debugPrint(key);
+                            },
+                            child: const Text('Print Random Key'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+
+                              final allRead = await storage.readAll();
+                              debugPrint('All Read: $allRead');
+
+                              final uids = allRead.keys.where((key) => key.contains('pecunia_user_uid_'));
+                              for (final element in uids) {
+                                debugPrint('UID: $element : ${allRead[element]}');
+                              }
+                            },
+                            child: const Text('Print Local Users'),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: 14),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                              title: 'Clear All Sessions',
+                              message: 'This will delete all sessions.',
+                              onConfirm: () async {
+                                final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+
+                                final allRead = await storage.readAll();
+                                final sessions =
+                                    allRead.keys.where((key) => key.contains('pecunia_user_token_'));
+
+                                for (final session in sessions) {
+                                  await storage
+                                      .delete(key: session)
+                                      .then((_) => debugPrint('Deleted $session'));
+                                }
+                              },
+                              context: context,
+                            );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.error,
+                        backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                      ),
+                      child: const Text('CLEAR ALL SESSIONS'),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                              title: 'Clear Flutter Secure Storage',
+                              message:
+                                  'Are you sure you want to clear all data in Flutter Secure Storage?, This will delete all local user credentials and all sessions. May have unintended consequences. User-specific database data will not be deleted.',
+                              onConfirm: () async {
+                                await ref.read(pecuniaFlutterSecureStorageProvider).requireValue.deleteAll();
+                                ref.invalidate(debugGetAllSessionsProvider);
+                              },
+                              context: context,
+                            );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Theme.of(context).colorScheme.error,
+                        backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                      ),
+                      child: const Text('CLEAR FLUTTER SECURE STORAGE'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                const Text('Existing Local Users', style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                const LocalUsers(),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ref.invalidate(debugGetLocalUsersProvider);
+                        },
+                        child: const Text('Refresh Local Users'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final secure = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+                        final allRead = await secure.readAll();
+                        debugPrint('All Read');
+                        prettyPrintJson(allRead);
+                      },
+                      child: const Text('Print All Read'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                          title: 'Delete All Local Users',
+                          message:
+                              'This will delete all local users. This will not delete any sessions or the user-specific database data.',
+                          onConfirm: () async {
+                            final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+
+                            final allRead = await storage.readAll();
+                            final uids = allRead.keys.where((key) => key.contains('pecunia_user_uid_'));
+
+                            for (final uidKey in uids) {
+                              debugPrint(allRead[uidKey]);
+                              final securedStorageManager = AuthSecuredStorageManager(storage);
+                              (await securedStorageManager
+                                      .deleteUserDataAndCredentials(allRead[uidKey]!)
+                                      .run())
+                                  .fold(
+                                (l) => debugPrint(l.toString()),
+                                (r) => debugPrint('Deleted $r'),
+                              );
+                            }
+
+                            ref.invalidate(debugGetLocalUsersProvider);
+                          },
+                          context: context,
+                        );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                  ),
+                  child: const Text('DELETE ALL LOCAL USERS'),
+                ),
+                const SizedBox(height: 24),
+                const Text('Current Active Session',
+                    style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                const ActiveSession(),
+                //const LocalAuthentication(),
+                //const RemoteAuthentication(),
+              ],
+            ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ActiveSession extends ConsumerWidget {
+  const ActiveSession({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeSession = ref.watch(debugGetActiveSessionProvider);
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Active Session',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            switch (activeSession) {
+              AsyncLoading() => const Center(
+                  child: CupertinoActivityIndicator(),
+                ),
+              AsyncError(:final Failure error) => Text(
+                  error.toString(),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              AsyncData(:final Option<Session> value) when value.isNone() => Text(
+                  'No active session found',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              AsyncData(:final Option<Session> value) => Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    value.toString(),
+                    style: TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              _ => const Text('Unknown state'),
+            },
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      ref.invalidate(debugGetActiveSessionProvider);
+                    },
+                    child: const Text('Refresh'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                            title: 'Remove Active Session',
+                            message:
+                                'This will remove the active session. It will NOT delete the actual session.',
+                            onConfirm: () async {
+                              final sessionManager = AuthLocalSessionManager(
+                                  ref.read(pecuniaFlutterSecureStorageProvider).requireValue);
+                              await sessionManager.removeActiveSession().run();
+                            },
+                            context: context,
+                          );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.error,
+                      backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                    ),
+                    child: const Text('REMOVE'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StoredSavedUserDetails extends ConsumerWidget {
+  const StoredSavedUserDetails({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FutureBuilder(
+      future: ref.watch(authLocalDSProvider).getAllSavedUsers().run(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data!.fold(
+            (l) => Text(l.toString()),
+            (r) {
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: r.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                      child: ListTile(
+                    title: Row(
+                      children: [
+                        Text(r[index].username,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 4),
+                        Text(r[index].email ?? 'null', style: Theme.of(context).textTheme.bodyMedium),
+                      ],
+                    ),
+                    subtitle: Text(r[index].uid,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.3),
+                            )),
+                    trailing: IconButton(
+                      onPressed: () {
+                        ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                              title: 'Delete Saved User',
+                              message:
+                                  'This will delete the saved user. This will not delete any sessions or the user-specific database data.',
+                              onConfirm: () async {
+                                await ref
+                                    .read(authLocalDSProvider)
+                                    .removeSavedUser(r[index].uid)
+                                    .run()
+                                    .then((value) {
+                                  ref.invalidate(debugGetLocalUsersProvider);
+                                });
+                              },
+                              context: context,
+                            );
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ));
+                },
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        return const Center(
+          child: CupertinoActivityIndicator(),
+        );
+      },
+    );
+  }
+}
+
+class LocalSessions extends ConsumerWidget {
+  const LocalSessions({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sessions = ref.watch(debugGetAllSessionsProvider);
+
+    return switch (sessions) {
+      AsyncLoading() => const Center(
+          child: CupertinoActivityIndicator(),
+        ),
+      AsyncError(:final Failure error) => Text(error.toString()),
+      AsyncData(:final List<Session> value) when value.isEmpty => const Text('No sessions found'),
+      AsyncData(:final List<Session> value) => ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: value.length, // value is List<Session>
+          itemBuilder: (context, index) {
+            final session = value[index];
+            final payload = session.jwt.payload as Map<String, dynamic>;
+
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: ListTile(
+                title: Row(
+                  children: [
+                    Text(
+                      payload['username'] as String? ?? 'Unknown',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        payload['email'] as String? ?? 'No email',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      session.uid,
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            fontStyle: FontStyle.italic,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                            fontFamily: 'monospace',
+                          ),
+                    ),
+                    if (payload['userType'] != null)
+                      Text(
+                        "UserType: ${payload['userType'] as String}",
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                      ),
+                  ],
+                ),
+                trailing: payload['dateCreated'] != null
+                    ? Text(
+                        (payload['dateCreated'] as String).substring(0, 10),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      )
+                    : null,
+              ),
+            );
+          },
+        ),
+      _ => const Text('Unknown state'),
+    };
+  }
+}
+
+class LocalUsers extends ConsumerWidget {
+  const LocalUsers({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final users = ref.watch(debugGetLocalUsersProvider);
+
+    return switch (users) {
+      AsyncLoading() => const Center(
+          child: CupertinoActivityIndicator(),
+        ),
+      AsyncError(:final Failure error) => Text(error.toString()),
+      AsyncData(:final List<PecuniaUser> value) when value.isEmpty => const Text('No local users found'),
+      AsyncData(:final List<PecuniaUser> value) => ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: value.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(value[index].uid,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontStyle: FontStyle.italic,
+                            )),
+                    RichText(
+                      text: TextSpan(
+                        text: 'username: ',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                            ),
+                        children: [
+                          TextSpan(
+                            text: value[index].username,
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'email: ',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                            ),
+                        children: [
+                          TextSpan(
+                            text: value[index].email ?? 'null',
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: 'userType: ',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                            ),
+                        children: [
+                          TextSpan(
+                            text: value[index].userType.typeAsString,
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    FutureBuilder<({String? hashedPassword, String? salt})>(future: () async {
+                      final hashedPassword = await ref
+                          .read(pecuniaFlutterSecureStorageProvider)
+                          .requireValue
+                          .read(key: 'pecunia_user_hashed_password_${value[index].uid}');
+                      final salt = await ref
+                          .read(pecuniaFlutterSecureStorageProvider)
+                          .requireValue
+                          .read(key: 'pecunia_user_salt_${value[index].uid}');
+                      return (hashedPassword: hashedPassword, salt: salt);
+                    }(), builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: 'hashed_password: ',
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                    ),
+                                children: [
+                                  TextSpan(
+                                    text: snapshot.data!.hashedPassword,
+                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                text: 'salt: ',
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                      color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+                                    ),
+                                children: [
+                                  TextSpan(
+                                    text: snapshot.data!.salt ?? 'null',
+                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (snapshot.data!.salt != null)
+                              Container(
+                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.warning, color: Colors.yellow, size: 14),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Current User Not Using Bcrypt (PecuniaUser V1)',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(color: Colors.yellow),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            if (value[index].userType == UserType.unknown)
+                              Container(
+                                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.warning, color: Colors.yellow, size: 14),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'No UserType Set (likely PecuniaUser V1)',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(color: Colors.yellow),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            TextButton(
+                              child: const Text('Migrate user password to Bcrypt'),
+                              onPressed: () async {
+                                if (snapshot.data!.salt == null) {
+                                  await ref.read(pecuniaDialogsProvider).showSuccessToast(
+                                        context: context,
+                                        title: 'User already uses Bcrypt!',
+                                      );
+                                } else {
+                                  final textEntryController = TextEditingController();
+
+                                  await showGeneralDialog<void>(
+                                    context: context,
+                                    pageBuilder: (context, anim1, anim2) => const SizedBox(),
+                                    transitionBuilder: (context, a1, a2, child) {
+                                      return ScaleTransition(
+                                        scale: CurvedAnimation(
+                                          parent: a1,
+                                          curve: Curves.easeOutCubic,
+                                        ),
+                                        child: FadeTransition(
+                                          opacity: CurvedAnimation(
+                                            parent: a1,
+                                            curve: Curves.easeOutCubic,
+                                          ),
+                                          child: AlertDialog(
+                                            icon: Icon(Icons.warning_amber_rounded,
+                                                color: Colors.red[200], size: 48),
+                                            title: Text(
+                                              'Migrate Password to Bcrypt',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.red[200],
+                                              ),
+                                            ),
+                                            content: ConstrainedBox(
+                                              constraints: const BoxConstraints(maxWidth: 500),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                    'Enter your current password',
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  const SizedBox(height: 16),
+                                                  TextField(
+                                                    controller: textEntryController,
+                                                    obscureText: true,
+                                                    decoration: const InputDecoration(
+                                                      labelText:
+                                                          "Enter the current logged in user's password",
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).pop(),
+                                                child: const Text('Cancel'),
+                                              ),
+                                              ElevatedButton.icon(
+                                                onPressed: () async {
+                                                  final isValidPassword = PecuniaCrypto().verifyPassword(
+                                                      password: textEntryController.text,
+                                                      hashedPassword: snapshot.data!.hashedPassword!,
+                                                      salt: snapshot.data!.salt);
+
+                                                  if (isValidPassword) {
+                                                    Navigator.of(context).pop();
+
+                                                    await ref.read(pecuniaDialogsProvider).showSuccessDialog(
+                                                          context: context,
+                                                          title: 'Correct Password!',
+                                                          message:
+                                                              'Password should have migrated, if not, good luck.',
+                                                        );
+
+                                                    final newHashedPassword = PecuniaCrypto()
+                                                        .hashPasswordBCrypt(
+                                                            password: textEntryController.text);
+
+                                                    final secureStorage = ref
+                                                        .read(pecuniaFlutterSecureStorageProvider)
+                                                        .requireValue;
+
+                                                    // Temporarily Store
+                                                    await secureStorage.write(
+                                                      key:
+                                                          '${kPecuniaUserHashedPasswordKey(value[index].uid)}_temp_old',
+                                                      value: snapshot.data!.hashedPassword,
+                                                    );
+
+                                                    await secureStorage.write(
+                                                      key: kPecuniaUserHashedPasswordKey(value[index].uid),
+                                                      value: newHashedPassword,
+                                                    );
+
+                                                    // sanity check
+                                                    final hashed = await secureStorage.read(
+                                                        key: kPecuniaUserHashedPasswordKey(value[index].uid));
+                                                    final isReplacementValid = PecuniaCrypto().verifyPassword(
+                                                        password: textEntryController.text,
+                                                        hashedPassword: hashed!);
+
+                                                    debugPrint(
+                                                        'Did replacement succeed : $isReplacementValid');
+
+                                                    if (isReplacementValid) {
+                                                      await secureStorage.delete(
+                                                        key:
+                                                            '${kPecuniaUserHashedPasswordKey(value[index].uid)}_temp_old',
+                                                      );
+                                                      await secureStorage.delete(
+                                                          key: kPecuniaUserSaltKey(value[index].uid));
+                                                    } else {
+                                                      debugPrint(
+                                                          'CRITICAL WHY THE HECK IT NOT WORK, REVERTING');
+
+                                                      await secureStorage.write(
+                                                        key: kPecuniaUserHashedPasswordKey(value[index].uid),
+                                                        value: snapshot.data!.hashedPassword,
+                                                      );
+                                                    }
+                                                  } else {
+                                                    await ref.read(pecuniaDialogsProvider).showFailureDialog(
+                                                          context,
+                                                          title: 'Wrong Password!',
+                                                          message: 'Try again bruh',
+                                                        );
+                                                  }
+                                                },
+                                                icon: const Icon(Icons.arrow_forward),
+                                                label: const Text('Continue'),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      } else {
+                        return const Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      }
+                    })
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      _ => const Text('Unknown state'),
+    };
+  }
+}
+
+class LocalAuthentication extends HookConsumerWidget {
+  const LocalAuthentication({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref
+      ..listen(debugLocalLoginWithEmailAndPasswordProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureToast(
+                context: context,
+                title: "We couldn't log you in.",
+                failure: next.error as AuthFailure?,
+              );
+        }
+        if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
+          ref.read(pecuniaDialogsProvider).showSuccessToast(
+                context: context,
+                title: 'Local Login Success!',
+              );
+          ref
+            ..invalidate(debugGetAllSessionsProvider)
+            ..invalidate(debugGetActiveSessionProvider);
+        }
+      })
+      ..listen(debugLocalRegisterWithEmailAndPasswordProvider, (previous, next) {
+        if (next is AsyncError) {
+          ref.read(pecuniaDialogsProvider).showFailureToast(
+                context: context,
+                title: "We couldn't register an account for you.",
+                failure: next.error as AuthFailure?,
+              );
+        }
+        if (next is AsyncData<Option<PecuniaUser>> && next.value.isSome()) {
+          ref.read(pecuniaDialogsProvider).showSuccessToast(
+                context: context,
+                title: 'Local Register Success!, ${next.value}',
+              );
+        }
+      });
+
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 14, top: 24, bottom: 14),
+              child: Text(
+                'Local Authentication',
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                    ),
+                  ),
+                  TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(debugLocalLoginWithEmailAndPasswordProvider.notifier)
+                              .debugLoginWithEmailAndPassword(
+                                emailController.text,
+                                passwordController.text,
+                              );
+                        },
+                        child: const Text('Login'),
+                      ),
+                      const SizedBox(width: 24),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await ref.read(authRepoProvider).logout().run();
+
+                          ref
+                            ..invalidate(debugGetAllSessionsProvider)
+                            ..invalidate(debugGetActiveSessionProvider);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          backgroundColor: Colors.red[100]!.withOpacity(0.1),
+                        ),
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  const LocalRegisterForm(),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LocalRegisterForm extends HookConsumerWidget {
+  const LocalRegisterForm({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final formKey = useState(GlobalKey<FormState>());
+    final emailController = useTextEditingController();
+    final usernameController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final confirmPasswordController = useTextEditingController();
+
+    return Form(
+      key: formKey.value,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFormField(
+            controller: emailController,
+            decoration: const InputDecoration(
+              labelText: 'Email',
+            ),
+            validator: RegisterFields.validateEmail,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+          ),
+          TextFormField(
+            controller: usernameController,
+            decoration: const InputDecoration(
+              labelText: 'Username',
+            ),
+            validator: RegisterFields.validateUsername,
+          ),
+          TextFormField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              labelText: 'Password',
+            ),
+            validator: RegisterFields.validatePassword,
+          ),
+          TextFormField(
+            controller: confirmPasswordController,
+            obscureText: true,
+            decoration: const InputDecoration(
+              labelText: 'Confirm Password',
+            ),
+            validator: (val) => RegisterFields.validateConfirmPassword(val, passwordController.text),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              if (formKey.value.currentState!.validate()) {
+                debugPrint(
+                    'Valid form: ${emailController.text}, ${usernameController.text}, ${passwordController.text}, ${confirmPasswordController.text}');
+                ref
+                    .read(debugLocalRegisterWithEmailAndPasswordProvider.notifier)
+                    .debugRegisterWithEmailAndPassword(
+                      usernameController.text,
+                      emailController.text,
+                      confirmPasswordController.text,
+                    );
+              }
+            },
+            child: const Text('Register'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RemoteAuthentication extends ConsumerWidget {
+  const RemoteAuthentication({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 14, top: 24),
+              child: Text(
+                'Remote Authentication',
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            const LoginForm(),
+            const LoginDetails(),
+            const RegisterForm(),
+            const RegisterDetails(),
+          ],
         ),
       ),
     );

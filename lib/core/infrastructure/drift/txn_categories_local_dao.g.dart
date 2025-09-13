@@ -3,7 +3,7 @@
 part of 'txn_categories_local_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$TxnCategoriesLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
+mixin _$TxnCategoriesLocalDAOMixin on DatabaseAccessor<PecuniaDriftDB> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
   $TransactionsTableTable get transactionsTable =>
       attachedDatabase.transactionsTable;
@@ -17,7 +17,7 @@ mixin _$TxnCategoriesLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
 // **************************************************************************
 
 String _$txnCategoriesLocalDAOHash() =>
-    r'13d298ed01727a2a78d482a48240ead5f2284a32';
+    r'f657bcf48248d029b17357cab9d9562abef14816';
 
 /// See also [txnCategoriesLocalDAO].
 @ProviderFor(txnCategoriesLocalDAO)
@@ -32,6 +32,9 @@ final txnCategoriesLocalDAOProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef TxnCategoriesLocalDAORef
     = AutoDisposeProviderRef<TxnCategoriesLocalDAO>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

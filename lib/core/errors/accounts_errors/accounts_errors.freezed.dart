@@ -12,7 +12,7 @@ part of 'accounts_errors.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AccountsFailure {
@@ -71,7 +71,9 @@ mixin _$AccountsFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AccountsFailureCopyWith<AccountsFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -99,6 +101,8 @@ class _$AccountsFailureCopyWithImpl<$Res, $Val extends AccountsFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -127,11 +131,11 @@ class _$AccountsFailureCopyWithImpl<$Res, $Val extends AccountsFailure>
 }
 
 /// @nodoc
-abstract class _$$_AccountsFailureCopyWith<$Res>
+abstract class _$$AccountsFailureImplCopyWith<$Res>
     implements $AccountsFailureCopyWith<$Res> {
-  factory _$$_AccountsFailureCopyWith(
-          _$_AccountsFailure value, $Res Function(_$_AccountsFailure) then) =
-      __$$_AccountsFailureCopyWithImpl<$Res>;
+  factory _$$AccountsFailureImplCopyWith(_$AccountsFailureImpl value,
+          $Res Function(_$AccountsFailureImpl) then) =
+      __$$AccountsFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -142,13 +146,15 @@ abstract class _$$_AccountsFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AccountsFailureCopyWithImpl<$Res>
-    extends _$AccountsFailureCopyWithImpl<$Res, _$_AccountsFailure>
-    implements _$$_AccountsFailureCopyWith<$Res> {
-  __$$_AccountsFailureCopyWithImpl(
-      _$_AccountsFailure _value, $Res Function(_$_AccountsFailure) _then)
+class __$$AccountsFailureImplCopyWithImpl<$Res>
+    extends _$AccountsFailureCopyWithImpl<$Res, _$AccountsFailureImpl>
+    implements _$$AccountsFailureImplCopyWith<$Res> {
+  __$$AccountsFailureImplCopyWithImpl(
+      _$AccountsFailureImpl _value, $Res Function(_$AccountsFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -157,7 +163,7 @@ class __$$_AccountsFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_AccountsFailure(
+    return _then(_$AccountsFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -178,8 +184,8 @@ class __$$_AccountsFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AccountsFailure extends _AccountsFailure {
-  const _$_AccountsFailure(
+class _$AccountsFailureImpl extends _AccountsFailure {
+  const _$AccountsFailureImpl(
       {required this.stackTrace,
       required this.message,
       required this.errorType,
@@ -195,11 +201,14 @@ class _$_AccountsFailure extends _AccountsFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountsFailureCopyWith<_$_AccountsFailure> get copyWith =>
-      __$$_AccountsFailureCopyWithImpl<_$_AccountsFailure>(this, _$identity);
+  _$$AccountsFailureImplCopyWith<_$AccountsFailureImpl> get copyWith =>
+      __$$AccountsFailureImplCopyWithImpl<_$AccountsFailureImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -281,7 +290,7 @@ abstract class _AccountsFailure extends AccountsFailure {
       {required final StackTrace stackTrace,
       required final String message,
       required final AccountsErrorType errorType,
-      final Object? rawException}) = _$_AccountsFailure;
+      final Object? rawException}) = _$AccountsFailureImpl;
   const _AccountsFailure._() : super._();
 
   @override
@@ -292,18 +301,22 @@ abstract class _AccountsFailure extends AccountsFailure {
   AccountsErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_AccountsFailureCopyWith<_$_AccountsFailure> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AccountsFailureImplCopyWith<_$AccountsFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownAccountsFailureCopyWith<$Res>
+abstract class _$$UnknownAccountsFailureImplCopyWith<$Res>
     implements $AccountsFailureCopyWith<$Res> {
-  factory _$$_UnknownAccountsFailureCopyWith(_$_UnknownAccountsFailure value,
-          $Res Function(_$_UnknownAccountsFailure) then) =
-      __$$_UnknownAccountsFailureCopyWithImpl<$Res>;
+  factory _$$UnknownAccountsFailureImplCopyWith(
+          _$UnknownAccountsFailureImpl value,
+          $Res Function(_$UnknownAccountsFailureImpl) then) =
+      __$$UnknownAccountsFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -314,13 +327,16 @@ abstract class _$$_UnknownAccountsFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownAccountsFailureCopyWithImpl<$Res>
-    extends _$AccountsFailureCopyWithImpl<$Res, _$_UnknownAccountsFailure>
-    implements _$$_UnknownAccountsFailureCopyWith<$Res> {
-  __$$_UnknownAccountsFailureCopyWithImpl(_$_UnknownAccountsFailure _value,
-      $Res Function(_$_UnknownAccountsFailure) _then)
+class __$$UnknownAccountsFailureImplCopyWithImpl<$Res>
+    extends _$AccountsFailureCopyWithImpl<$Res, _$UnknownAccountsFailureImpl>
+    implements _$$UnknownAccountsFailureImplCopyWith<$Res> {
+  __$$UnknownAccountsFailureImplCopyWithImpl(
+      _$UnknownAccountsFailureImpl _value,
+      $Res Function(_$UnknownAccountsFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -329,7 +345,7 @@ class __$$_UnknownAccountsFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_UnknownAccountsFailure(
+    return _then(_$UnknownAccountsFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -350,8 +366,8 @@ class __$$_UnknownAccountsFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownAccountsFailure extends _UnknownAccountsFailure {
-  const _$_UnknownAccountsFailure(
+class _$UnknownAccountsFailureImpl extends _UnknownAccountsFailure {
+  const _$UnknownAccountsFailureImpl(
       {required this.stackTrace,
       required this.message,
       this.errorType = AccountsErrorType.unknown,
@@ -368,12 +384,14 @@ class _$_UnknownAccountsFailure extends _UnknownAccountsFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownAccountsFailureCopyWith<_$_UnknownAccountsFailure> get copyWith =>
-      __$$_UnknownAccountsFailureCopyWithImpl<_$_UnknownAccountsFailure>(
-          this, _$identity);
+  _$$UnknownAccountsFailureImplCopyWith<_$UnknownAccountsFailureImpl>
+      get copyWith => __$$UnknownAccountsFailureImplCopyWithImpl<
+          _$UnknownAccountsFailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -455,7 +473,7 @@ abstract class _UnknownAccountsFailure extends AccountsFailure {
       {required final StackTrace stackTrace,
       required final String message,
       final AccountsErrorType errorType,
-      final Object? rawException}) = _$_UnknownAccountsFailure;
+      final Object? rawException}) = _$UnknownAccountsFailureImpl;
   const _UnknownAccountsFailure._() : super._();
 
   @override
@@ -466,10 +484,13 @@ abstract class _UnknownAccountsFailure extends AccountsFailure {
   AccountsErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AccountsFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UnknownAccountsFailureCopyWith<_$_UnknownAccountsFailure> get copyWith =>
-      throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnknownAccountsFailureImplCopyWith<_$UnknownAccountsFailureImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -528,7 +549,9 @@ mixin _$AccountsException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AccountsExceptionCopyWith<AccountsException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -553,6 +576,8 @@ class _$AccountsExceptionCopyWithImpl<$Res, $Val extends AccountsException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -578,11 +603,11 @@ class _$AccountsExceptionCopyWithImpl<$Res, $Val extends AccountsException>
 }
 
 /// @nodoc
-abstract class _$$_AccountsExceptionCopyWith<$Res>
+abstract class _$$AccountsExceptionImplCopyWith<$Res>
     implements $AccountsExceptionCopyWith<$Res> {
-  factory _$$_AccountsExceptionCopyWith(_$_AccountsException value,
-          $Res Function(_$_AccountsException) then) =
-      __$$_AccountsExceptionCopyWithImpl<$Res>;
+  factory _$$AccountsExceptionImplCopyWith(_$AccountsExceptionImpl value,
+          $Res Function(_$AccountsExceptionImpl) then) =
+      __$$AccountsExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -590,13 +615,15 @@ abstract class _$$_AccountsExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AccountsExceptionCopyWithImpl<$Res>
-    extends _$AccountsExceptionCopyWithImpl<$Res, _$_AccountsException>
-    implements _$$_AccountsExceptionCopyWith<$Res> {
-  __$$_AccountsExceptionCopyWithImpl(
-      _$_AccountsException _value, $Res Function(_$_AccountsException) _then)
+class __$$AccountsExceptionImplCopyWithImpl<$Res>
+    extends _$AccountsExceptionCopyWithImpl<$Res, _$AccountsExceptionImpl>
+    implements _$$AccountsExceptionImplCopyWith<$Res> {
+  __$$AccountsExceptionImplCopyWithImpl(_$AccountsExceptionImpl _value,
+      $Res Function(_$AccountsExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -604,7 +631,7 @@ class __$$_AccountsExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_AccountsException(
+    return _then(_$AccountsExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -623,8 +650,8 @@ class __$$_AccountsExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AccountsException extends _AccountsException {
-  _$_AccountsException(
+class _$AccountsExceptionImpl extends _AccountsException {
+  _$AccountsExceptionImpl(
       {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
@@ -641,10 +668,10 @@ class _$_AccountsException extends _AccountsException {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AccountsException &&
+            other is _$AccountsExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -655,11 +682,13 @@ class _$_AccountsException extends _AccountsException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountsExceptionCopyWith<_$_AccountsException> get copyWith =>
-      __$$_AccountsExceptionCopyWithImpl<_$_AccountsException>(
+  _$$AccountsExceptionImplCopyWith<_$AccountsExceptionImpl> get copyWith =>
+      __$$AccountsExceptionImplCopyWithImpl<_$AccountsExceptionImpl>(
           this, _$identity);
 
   @override
@@ -741,7 +770,7 @@ abstract class _AccountsException extends AccountsException {
   factory _AccountsException(
       {required final StackTrace stackTrace,
       required final AccountsErrorType errorType,
-      final String? message}) = _$_AccountsException;
+      final String? message}) = _$AccountsExceptionImpl;
   _AccountsException._() : super._();
 
   @override
@@ -750,19 +779,22 @@ abstract class _AccountsException extends AccountsException {
   AccountsErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_AccountsExceptionCopyWith<_$_AccountsException> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AccountsExceptionImplCopyWith<_$AccountsExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownAccountsExceptionCopyWith<$Res>
+abstract class _$$UnknownAccountsExceptionImplCopyWith<$Res>
     implements $AccountsExceptionCopyWith<$Res> {
-  factory _$$_UnknownAccountsExceptionCopyWith(
-          _$_UnknownAccountsException value,
-          $Res Function(_$_UnknownAccountsException) then) =
-      __$$_UnknownAccountsExceptionCopyWithImpl<$Res>;
+  factory _$$UnknownAccountsExceptionImplCopyWith(
+          _$UnknownAccountsExceptionImpl value,
+          $Res Function(_$UnknownAccountsExceptionImpl) then) =
+      __$$UnknownAccountsExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -770,13 +802,17 @@ abstract class _$$_UnknownAccountsExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownAccountsExceptionCopyWithImpl<$Res>
-    extends _$AccountsExceptionCopyWithImpl<$Res, _$_UnknownAccountsException>
-    implements _$$_UnknownAccountsExceptionCopyWith<$Res> {
-  __$$_UnknownAccountsExceptionCopyWithImpl(_$_UnknownAccountsException _value,
-      $Res Function(_$_UnknownAccountsException) _then)
+class __$$UnknownAccountsExceptionImplCopyWithImpl<$Res>
+    extends _$AccountsExceptionCopyWithImpl<$Res,
+        _$UnknownAccountsExceptionImpl>
+    implements _$$UnknownAccountsExceptionImplCopyWith<$Res> {
+  __$$UnknownAccountsExceptionImplCopyWithImpl(
+      _$UnknownAccountsExceptionImpl _value,
+      $Res Function(_$UnknownAccountsExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -784,7 +820,7 @@ class __$$_UnknownAccountsExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_UnknownAccountsException(
+    return _then(_$UnknownAccountsExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -803,8 +839,8 @@ class __$$_UnknownAccountsExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownAccountsException extends _UnknownAccountsException {
-  _$_UnknownAccountsException(
+class _$UnknownAccountsExceptionImpl extends _UnknownAccountsException {
+  _$UnknownAccountsExceptionImpl(
       {required this.stackTrace, required this.errorType, this.message})
       : super._();
 
@@ -821,10 +857,10 @@ class _$_UnknownAccountsException extends _UnknownAccountsException {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UnknownAccountsException &&
+            other is _$UnknownAccountsExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -835,12 +871,14 @@ class _$_UnknownAccountsException extends _UnknownAccountsException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownAccountsExceptionCopyWith<_$_UnknownAccountsException>
-      get copyWith => __$$_UnknownAccountsExceptionCopyWithImpl<
-          _$_UnknownAccountsException>(this, _$identity);
+  _$$UnknownAccountsExceptionImplCopyWith<_$UnknownAccountsExceptionImpl>
+      get copyWith => __$$UnknownAccountsExceptionImplCopyWithImpl<
+          _$UnknownAccountsExceptionImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -921,7 +959,7 @@ abstract class _UnknownAccountsException extends AccountsException {
   factory _UnknownAccountsException(
       {required final StackTrace stackTrace,
       required final AccountsErrorType errorType,
-      final String? message}) = _$_UnknownAccountsException;
+      final String? message}) = _$UnknownAccountsExceptionImpl;
   _UnknownAccountsException._() : super._();
 
   @override
@@ -930,8 +968,11 @@ abstract class _UnknownAccountsException extends AccountsException {
   AccountsErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of AccountsException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UnknownAccountsExceptionCopyWith<_$_UnknownAccountsException>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnknownAccountsExceptionImplCopyWith<_$UnknownAccountsExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

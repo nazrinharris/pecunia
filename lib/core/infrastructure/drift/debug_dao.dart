@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'debug_dao.g.dart';
 
 @riverpod
-DebugDAO debugDAO(DebugDAORef ref) => ref.watch(pecuniaDBProvider).debugDAO;
+DebugDAO debugDAO(DebugDAORef ref) => ref.watch(pecuniaDBProvider).requireValue.debugDAO;
 
 @DriftAccessor(
   tables: [
@@ -19,7 +19,7 @@ DebugDAO debugDAO(DebugDAORef ref) => ref.watch(pecuniaDBProvider).debugDAO;
     TxnCategoriesTable,
   ],
 )
-class DebugDAO extends DatabaseAccessor<PecuniaDB> with _$DebugDAOMixin {
+class DebugDAO extends DatabaseAccessor<PecuniaDriftDB> with _$DebugDAOMixin {
   DebugDAO(super.db);
 
   Future<void> deleteAllTxnCategoriesEntries() {
