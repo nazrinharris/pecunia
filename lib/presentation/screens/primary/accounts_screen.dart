@@ -43,6 +43,7 @@ class AccountsScreen extends ConsumerWidget {
                         'Accounts List',
                         style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                               fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                              fontFamily: 'Instrument',
                               fontWeight: FontWeight.bold,
                             ),
                       ),
@@ -208,6 +209,7 @@ class AccountListTile extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'DMMono',
                   color: Colors.purple[100],
                 ),
               ),

@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
 import 'package:pecunia/core/infrastructure/shared_preferences/shared_preferences_constants.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';
 import 'package:pecunia/features/auth/usecases/continue_as_guest.dart';
@@ -55,6 +56,7 @@ class StartScreen extends HookConsumerWidget {
     final control = useState(Control.play);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
         child: Column(
           children: [
@@ -179,6 +181,7 @@ class WelcomeText extends StatelessWidget {
               'Welcome to',
               style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                     fontWeight: FontWeight.bold,
+                    fontFamily: 'Instrument',
                     color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
                   ),
             ),
@@ -230,56 +233,73 @@ class WelcomeText extends StatelessWidget {
               transform: const GradientRotation(math.pi / 4)),
         ),
         CustomAnimationBuilder(
-          control: control.value,
-          tween: MovieTween()
-            ..tween(
-              'opacity',
-              Tween<double>(begin: 0, end: 1),
-              curve: Curves.easeOutCubic,
-              duration: const Duration(milliseconds: 500),
-            )
-            ..tween(
-              'position',
-              Tween<Offset>(begin: const Offset(0, 70), end: Offset.zero),
-              curve: Curves.easeOutCubic,
-              duration: const Duration(milliseconds: 500),
-            )
-            ..tween(
-              'scale',
-              Tween<double>(begin: 1.2, end: 1),
-              curve: Curves.easeOutCubic,
-              duration: const Duration(milliseconds: 500),
-            ),
-          duration: const Duration(milliseconds: 1000),
-          delay: const Duration(milliseconds: 700),
-          builder: (context, value, child) {
-            return Opacity(
-              opacity: value.get('opacity'),
-              child: Transform.translate(
-                offset: value.get('position'),
-                child: Transform.scale(
-                  scale: value.get('scale'),
-                  child: child,
-                ),
+            control: control.value,
+            tween: MovieTween()
+              ..tween(
+                'opacity',
+                Tween<double>(begin: 0, end: 1),
+                curve: Curves.easeOutCubic,
+                duration: const Duration(milliseconds: 500),
+              )
+              ..tween(
+                'position',
+                Tween<Offset>(begin: const Offset(0, 70), end: Offset.zero),
+                curve: Curves.easeOutCubic,
+                duration: const Duration(milliseconds: 500),
+              )
+              ..tween(
+                'scale',
+                Tween<double>(begin: 1.2, end: 1),
+                curve: Curves.easeOutCubic,
+                duration: const Duration(milliseconds: 500),
               ),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 4),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.error,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Text(
-              'BETA',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onError,
-                    fontWeight: FontWeight.bold,
+            duration: const Duration(milliseconds: 1000),
+            delay: const Duration(milliseconds: 700),
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value.get('opacity'),
+                child: Transform.translate(
+                  offset: value.get('position'),
+                  child: Transform.scale(
+                    scale: value.get('scale'),
+                    child: child,
                   ),
-            ),
-          ),
-        ),
+                ),
+              );
+            },
+            child: const VersionTag()),
       ],
+    );
+  }
+}
+
+class VersionTag extends HookConsumerWidget {
+  const VersionTag({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final packageRef = ref.watch(packageInfoProvider);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.only(left: 14, right: 14, top: 6, bottom: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(
+          width: 2,
+          color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        ),
+      ),
+      child: Text(
+        packageRef.when(
+          data: (p) => 'beta v${p.version}',
+          error: (e, s) => 'Error retrieving app version',
+          loading: () => '',
+        ),
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontFamily: 'DMMono',
+              fontWeight: FontWeight.bold,
+            ),
+      ),
     );
   }
 }
@@ -329,7 +349,7 @@ class DescriptionText extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 84, vertical: 14),
         child: Text(
-          'Say hello to stress-free money management',
+          'Because your Walmart stints need control',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 color: Theme.of(context).colorScheme.primary,
@@ -361,7 +381,7 @@ class AuthButtons extends ConsumerWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
+            color: Theme.of(context).colorScheme.surfaceContainerLowest,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(34),
               topRight: Radius.circular(34),
@@ -374,35 +394,17 @@ class AuthButtons extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
-                      foregroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.onSecondary),
-                      splashFactory: InkRipple.splashFactory,
-                    ),
                     onPressed: () {
                       context.pushNamed('login');
                     },
-                    child: Text('Login',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondary,
-                        )),
+                    child: const Text('Login'),
                   ),
                   const SizedBox(width: 14),
                   ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.secondary),
-                      foregroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.onSecondary),
-                      splashFactory: InkRipple.splashFactory,
-                    ),
                     onPressed: () {
                       context.pushNamed('register');
                     },
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                      ),
-                    ),
+                    child: Text('Register'),
                   ),
                   const SizedBox(width: 14),
                   IconButton(

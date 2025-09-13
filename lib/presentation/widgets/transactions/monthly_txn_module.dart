@@ -102,6 +102,7 @@ class BuildMonthlyTxnModule extends ConsumerWidget {
                           style: TextStyle(
                             color: Colors.green[100],
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'DMMono',
                             fontSize: 32,
                           ),
                           textAlign: TextAlign.center,
@@ -127,6 +128,7 @@ class BuildMonthlyTxnModule extends ConsumerWidget {
                           style: TextStyle(
                             color: Colors.red[100],
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'DMMono',
                             fontSize: 32,
                           ),
                           textAlign: TextAlign.center,

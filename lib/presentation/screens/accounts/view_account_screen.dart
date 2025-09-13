@@ -168,6 +168,7 @@ class AccountDetails extends ConsumerWidget {
                         text: account.initialBalance.toString(),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'DMMono',
                           fontSize: 22,
                         ),
                         children: [
@@ -206,6 +207,7 @@ class AccountDetails extends ConsumerWidget {
                         text: account.balance.toStringAsFixed(2),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'DMMono',
                           fontSize: 22,
                         ),
                         children: [

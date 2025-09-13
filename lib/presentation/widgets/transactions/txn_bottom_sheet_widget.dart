@@ -109,6 +109,7 @@ class TxnBottomSheet extends ConsumerWidget {
                                 '$sign${txn.fundDetails.baseAmount.toStringAsFixed(2)} ${txn.fundDetails.baseCurrency.isoCode}',
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  fontFamily: 'DMMono',
                                   color: txn.fundDetails.transactionType == TransactionType.credit
                                       ? Colors.green[300]
                                       : Colors.red[300],
@@ -246,6 +247,7 @@ class BuildTxnAmountText extends ConsumerWidget {
                 style: TextStyle(
                   color: Colors.green[300],
                   fontSize: 14,
+                  fontFamily: 'DMMono',
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -255,6 +257,7 @@ class BuildTxnAmountText extends ConsumerWidget {
                 style: TextStyle(
                   color: Colors.red[300],
                   fontSize: 14,
+                  fontFamily: 'DMMono',
                   fontWeight: FontWeight.bold,
                 ),
               ),

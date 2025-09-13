@@ -117,14 +117,6 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path: "assets/app_icon/dev_bg.png"
 
-flutter_native_splash:
-  color: "#1C1B1F"
-  image: "assets/app_icon/dev_transparent.png"
-
-  android_12:
-    image: assets/app_icon/dev_transparent.png
-    icon_background_color: "#1C1B1F"
-
 flutter:
   uses-material-design: true
   assets:
@@ -134,38 +126,81 @@ flutter:
   fonts:
     - family: Subjectivity
       fonts:
-        - asset: fonts/Subjectivity-Black.otf
+        - asset: fonts/subjectivity/Subjectivity-Black.otf
           weight: 900
-        - asset: fonts/Subjectivity-BlackSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-BlackSlanted.otf
           weight: 900
           style: italic
-        - asset: fonts/Subjectivity-Bold.otf
+        - asset: fonts/subjectivity/Subjectivity-Bold.otf
           weight: 700
-        - asset: fonts/Subjectivity-BoldSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-BoldSlanted.otf
           weight: 700
           style: italic
-        - asset: fonts/Subjectivity-ExtraBold.otf
+        - asset: fonts/subjectivity/Subjectivity-ExtraBold.otf
           weight: 800
-        - asset: fonts/Subjectivity-ExtraBoldSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-ExtraBoldSlanted.otf
           weight: 800
           style: italic
-        - asset: fonts/Subjectivity-Light.otf
+        - asset: fonts/subjectivity/Subjectivity-Light.otf
           weight: 300
-        - asset: fonts/Subjectivity-LightSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-LightSlanted.otf
           weight: 300
           style: italic
-        - asset: fonts/Subjectivity-Medium.otf
+        - asset: fonts/subjectivity/Subjectivity-Medium.otf
           weight: 500
-        - asset: fonts/Subjectivity-MediumSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-MediumSlanted.otf
           weight: 500
           style: italic
-        - asset: fonts/Subjectivity-Regular.otf
+        - asset: fonts/subjectivity/Subjectivity-Regular.otf
           weight: 400
-        - asset: fonts/Subjectivity-RegularSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-RegularSlanted.otf
           weight: 400
           style: italic
-        - asset: fonts/Subjectivity-Thin.otf
+        - asset: fonts/subjectivity/Subjectivity-Thin.otf
           weight: 100
-        - asset: fonts/Subjectivity-ThinSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-ThinSlanted.otf
           weight: 100
           style: italic
+    - family: Nohemi
+      fonts:
+        - asset: fonts/nohemi/Nohemi-Black.ttf
+          weight: 900
+        - asset: fonts/nohemi/Nohemi-Bold.ttf
+          weight: 700
+        - asset: fonts/nohemi/Nohemi-ExtraBold.ttf
+          weight: 800
+        - asset: fonts/nohemi/Nohemi-ExtraLight.ttf
+          weight: 200
+        - asset: fonts/nohemi/Nohemi-Light.ttf
+          weight: 300
+        - asset: fonts/nohemi/Nohemi-Medium.ttf
+          weight: 500
+        - asset: fonts/nohemi/Nohemi-Regular.ttf
+          weight: 400
+        - asset: fonts/nohemi/Nohemi-SemiBold.ttf
+          weight: 600
+        - asset: fonts/nohemi/Nohemi-Thin.ttf
+          weight: 100
+    - family: Instrument
+      fonts:
+        - asset: fonts/instrument_serif/InstrumentSerif-Italic.ttf
+          style: italic
+        - asset: fonts/instrument_serif/InstrumentSerif-Regular.ttf
+          weight: 400
+    - family: DMMono
+      fonts:
+        - asset: fonts/dm_mono/DMMono-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: fonts/dm_mono/DMMono-Light.ttf
+          weight: 300
+        - asset: fonts/dm_mono/DMMono-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: fonts/dm_mono/DMMono-Medium.ttf
+          weight: 500
+        - asset: fonts/dm_mono/DMMono-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: fonts/dm_mono/DMMono-Regular.ttf
+          weight: 400

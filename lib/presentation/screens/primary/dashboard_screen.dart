@@ -79,6 +79,7 @@ class DashboardScreen extends ConsumerWidget {
                             value.fold(() => '', (t) => t.username),
                             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                                   fontSize: Theme.of(context).textTheme.headlineSmall!.fontSize,
+                                  fontFamily: 'Instrument',
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),

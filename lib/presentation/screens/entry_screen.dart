@@ -7,6 +7,7 @@ import 'package:pecunia/core/errors/app_info_errors/app_info_errors.dart';
 import 'package:pecunia/core/errors/auth_errors/auth_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
+import 'package:pecunia/core/infrastructure/package_info/package_info.dart';
 import 'package:pecunia/features/app_info/domain/app_info_repo.dart';
 import 'package:pecunia/features/auth/domain/auth_repo.dart';
 import 'package:pecunia/features/auth/domain/entities/pecunia_user.dart';

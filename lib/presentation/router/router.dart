@@ -6,6 +6,7 @@ import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_login_register_screen.dart';
 import 'package:pecunia/presentation/debug/debug_dialogs/debug_dialog_screen.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/debug_local_db_screen.dart';
+import 'package:pecunia/presentation/debug/debug_theme/debug_theme.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
 import 'package:pecunia/presentation/screens/accounts/edit_account_screen.dart';
 import 'package:pecunia/presentation/screens/accounts/view_account_screen.dart';
@@ -121,6 +122,11 @@ final router = GoRouter(
       path: '/debug-dialog',
       name: 'debug-dialog',
       builder: (context, state) => const DebugDialogScreen(),
+    ),
+    GoRoute(
+      path: '/debug-theme',
+      name: 'debug-theme',
+      builder: (context, state) => const DebugThemeScreen(),
     ),
 
     GoRoute(

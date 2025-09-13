@@ -71,79 +71,127 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
             context.pop();
           },
         ),
-        title: const Text('Debug Login & Register'),
+        title: const Row(
+          children: [
+            Text('Debug'),
+            SizedBox(width: 8),
+            Icon(Icons.bug_report),
+          ],
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            children: [
-              const Center(
-                child: Text('Users saved in "$kPrefsSavedUsers" in shared_preferences:'),
-              ),
-              const StoredSavedUserDetails(),
-              const SizedBox(height: 24),
-              const Text('Sessions saved in flutter_secure_storage:'),
-              const LocalSessions(),
-              const SizedBox(height: 14),
-              Container(
-                height: 36,
-                alignment: Alignment.centerLeft,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: ListView(
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              children: [
+                const Text('Other Debug Menus', style: TextStyle(fontFamily: 'Instrument', fontSize: 28)),
+                const Divider(),
+                Row(
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        ref.invalidate(debugGetAllSessionsProvider);
+                        context.pushNamed('debug-local-db');
                       },
-                      child: const Text('Refresh Sessions'),
+                      child: const Text('Debug Local DB'),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 8),
                     ElevatedButton(
-                      onPressed: () async {
-                        final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
-
-                        final allRead = await storage.readAll();
-                        final sessions = allRead.keys.where((key) => key.contains('pecunia_user_token_'));
-                        debugPrint('Sessions: $sessions : ${allRead[sessions.first]}');
+                      onPressed: () {
+                        context.pushNamed('debug-theme');
                       },
-                      child: const Text('Print All Sessions'),
+                      child: const Text('Debug Theme'),
                     ),
-                    const SizedBox(width: 14),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final crypto = ref.read(pecuniaCryptoProvider);
-                        final key = crypto.generateSalt();
-                        debugPrint(key);
-                      },
-                      child: const Text('Print Random Key'),
-                    ),
-                    const SizedBox(width: 14),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
-
-                        final allRead = await storage.readAll();
-                        debugPrint('All Read: $allRead');
-
-                        final uids = allRead.keys.where((key) => key.contains('pecunia_user_uid_'));
-                        for (final element in uids) {
-                          debugPrint('UID: $element : ${allRead[element]}');
-                        }
-                      },
-                      child: const Text('Print All Local Users'),
-                    ),
-                    const SizedBox(width: 14),
                   ],
                 ),
-              ),
-              const SizedBox(height: 14),
-              Container(
-                height: 36,
-                alignment: Alignment.centerLeft,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+                const SizedBox(height: 14),
+                const Text('Authentication', style: TextStyle(fontFamily: 'Instrument', fontSize: 28)),
+                const Divider(),
+                const Padding(
+                  padding: EdgeInsets.only(top: 14, bottom: 8),
+                  child: Text('Local Auth Information',
+                      style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                ),
+                const Text(
+                  'Stored "$kPrefsSavedUsers" in shared_preferences:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.start,
+                ),
+                const StoredSavedUserDetails(),
+                const SizedBox(height: 8),
+                const Text('Sessions saved in flutter_secure_storage:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const LocalSessions(),
+                const Padding(
+                  padding: EdgeInsets.only(top: 14, bottom: 8),
+                  child: Text('Local Auth Actions', style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final buttonWidth = (constraints.maxWidth - 8) / 2; // 2 columns with 8px gap
+                    return Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              ref.invalidate(debugGetAllSessionsProvider);
+                            },
+                            child: const Text('Refresh Sessions'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+
+                              final allRead = await storage.readAll();
+                              final sessions =
+                                  allRead.keys.where((key) => key.contains('pecunia_user_token_'));
+                              debugPrint('Sessions: $sessions : ${allRead[sessions.first]}');
+                            },
+                            child: const Text('Print Sessions'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final crypto = ref.read(pecuniaCryptoProvider);
+                              final key = crypto.generateSalt();
+                              debugPrint(key);
+                            },
+                            child: const Text('Print Random Key'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: buttonWidth,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+
+                              final allRead = await storage.readAll();
+                              debugPrint('All Read: $allRead');
+
+                              final uids = allRead.keys.where((key) => key.contains('pecunia_user_uid_'));
+                              for (final element in uids) {
+                                debugPrint('UID: $element : ${allRead[element]}');
+                              }
+                            },
+                            child: const Text('Print Local Users'),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: 14),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     ElevatedButton(
                       onPressed: () {
@@ -167,12 +215,12 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
                             );
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        backgroundColor: Colors.red[100]!.withOpacity(0.1),
+                        foregroundColor: Theme.of(context).colorScheme.error,
+                        backgroundColor: Theme.of(context).colorScheme.errorContainer,
                       ),
                       child: const Text('CLEAR ALL SESSIONS'),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () {
                         ref.read(pecuniaDialogsProvider).showConfirmationDialog(
@@ -187,30 +235,28 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
                             );
                       },
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        backgroundColor: Colors.red[100]!.withOpacity(0.1),
+                        foregroundColor: Theme.of(context).colorScheme.error,
+                        backgroundColor: Theme.of(context).colorScheme.errorContainer,
                       ),
                       child: const Text('CLEAR FLUTTER SECURE STORAGE'),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 24),
-              const LocalUsers(),
-              const SizedBox(height: 14),
-              Container(
-                height: 36,
-                alignment: Alignment.centerLeft,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
+                const SizedBox(height: 24),
+                const Text('Existing Local Users', style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                const LocalUsers(),
+                const SizedBox(height: 14),
+                Row(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        ref.invalidate(debugGetLocalUsersProvider);
-                      },
-                      child: const Text('Refresh Local Users'),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ref.invalidate(debugGetLocalUsersProvider);
+                        },
+                        child: const Text('Refresh Local Users'),
+                      ),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 8),
                     ElevatedButton(
                       onPressed: () async {
                         final secure = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
@@ -220,66 +266,52 @@ class DebugLoginAndRegisterScreen extends HookConsumerWidget {
                       },
                       child: const Text('Print All Read'),
                     ),
-                    const SizedBox(width: 14),
                   ],
                 ),
-              ),
-              const SizedBox(height: 14),
-              Container(
-                height: 36,
-                alignment: Alignment.centerLeft,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                              title: 'Delete All Local Users',
-                              message:
-                                  'This will delete all local users. This will not delete any sessions or the user-specific database data.',
-                              onConfirm: () async {
-                                final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
+                const SizedBox(height: 14),
+                ElevatedButton(
+                  onPressed: () {
+                    ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                          title: 'Delete All Local Users',
+                          message:
+                              'This will delete all local users. This will not delete any sessions or the user-specific database data.',
+                          onConfirm: () async {
+                            final storage = ref.read(pecuniaFlutterSecureStorageProvider).requireValue;
 
-                                final allRead = await storage.readAll();
-                                final uids = allRead.keys.where((key) => key.contains('pecunia_user_uid_'));
+                            final allRead = await storage.readAll();
+                            final uids = allRead.keys.where((key) => key.contains('pecunia_user_uid_'));
 
-                                for (final uidKey in uids) {
-                                  debugPrint(allRead[uidKey]);
-                                  final securedStorageManager = AuthSecuredStorageManager(storage);
-                                  (await securedStorageManager
-                                          .deleteUserDataAndCredentials(allRead[uidKey]!)
-                                          .run())
-                                      .fold(
-                                    (l) => debugPrint(l.toString()),
-                                    (r) => debugPrint('Deleted $r'),
-                                  );
-                                }
+                            for (final uidKey in uids) {
+                              debugPrint(allRead[uidKey]);
+                              final securedStorageManager = AuthSecuredStorageManager(storage);
+                              (await securedStorageManager
+                                      .deleteUserDataAndCredentials(allRead[uidKey]!)
+                                      .run())
+                                  .fold(
+                                (l) => debugPrint(l.toString()),
+                                (r) => debugPrint('Deleted $r'),
+                              );
+                            }
 
-                                ref.invalidate(debugGetLocalUsersProvider);
-                              },
-                              context: context,
-                            );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        backgroundColor: Colors.red[100]!.withOpacity(0.1),
-                      ),
-                      child: const Text('DELETE ALL LOCAL USERS'),
-                    ),
-                  ],
+                            ref.invalidate(debugGetLocalUsersProvider);
+                          },
+                          context: context,
+                        );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                  ),
+                  child: const Text('DELETE ALL LOCAL USERS'),
                 ),
-              ),
-              const SizedBox(height: 24),
-              const ActiveSession(),
-              const LocalAuthentication(),
-              const RemoteAuthentication(),
-              ElevatedButton(
-                onPressed: () {
-                  context.pushNamed('debug-local-db');
-                },
-                child: const Text('Navigate to DebugLocalDB'),
-              )
-            ],
+                const SizedBox(height: 24),
+                const Text('Current Active Session',
+                    style: TextStyle(fontFamily: 'Instrument', fontSize: 18)),
+                const ActiveSession(),
+                //const LocalAuthentication(),
+                //const RemoteAuthentication(),
+              ],
+            ),
           ),
         ),
       ),
@@ -294,60 +326,91 @@ class ActiveSession extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeSession = ref.watch(debugGetActiveSessionProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Active Session'),
-        const SizedBox(height: 14),
-        switch (activeSession) {
-          AsyncLoading() => const Center(
-              child: CupertinoActivityIndicator(),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Active Session',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-          AsyncError(:final Failure error) => Text(error.toString()),
-          AsyncData(:final Option<Session> value) when value.isNone() =>
-            const Text('No active session found'),
-          AsyncData(:final Option<Session> value) => Text(value.toString()),
-          _ => const Text('Unknown state'),
-        },
-        const SizedBox(height: 14),
-        Container(
-          height: 36,
-          alignment: Alignment.centerLeft,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  ref.invalidate(debugGetActiveSessionProvider);
-                },
-                child: const Text('Refresh Active Session'),
-              ),
-              const SizedBox(width: 14),
-              ElevatedButton(
-                onPressed: () {
-                  ref.read(pecuniaDialogsProvider).showConfirmationDialog(
-                        title: 'Remove Active Session',
-                        message:
-                            'This will remove the active session. It will NOT delete the actual session.',
-                        onConfirm: () async {
-                          final sessionManager = AuthLocalSessionManager(
-                              ref.read(pecuniaFlutterSecureStorageProvider).requireValue);
-
-                          await sessionManager.removeActiveSession().run();
-                        },
-                        context: context,
-                      );
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  backgroundColor: Colors.red[100]!.withOpacity(0.1),
+            const SizedBox(height: 12),
+            switch (activeSession) {
+              AsyncLoading() => const Center(
+                  child: CupertinoActivityIndicator(),
                 ),
-                child: const Text('REMOVE ACTIVE SESSION'),
-              ),
-            ],
-          ),
+              AsyncError(:final Failure error) => Text(
+                  error.toString(),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              AsyncData(:final Option<Session> value) when value.isNone() => Text(
+                  'No active session found',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              AsyncData(:final Option<Session> value) => Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    value.toString(),
+                    style: TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              _ => const Text('Unknown state'),
+            },
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      ref.invalidate(debugGetActiveSessionProvider);
+                    },
+                    child: const Text('Refresh'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+                            title: 'Remove Active Session',
+                            message:
+                                'This will remove the active session. It will NOT delete the actual session.',
+                            onConfirm: () async {
+                              final sessionManager = AuthLocalSessionManager(
+                                  ref.read(pecuniaFlutterSecureStorageProvider).requireValue);
+                              await sessionManager.removeActiveSession().run();
+                            },
+                            context: context,
+                          );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.error,
+                      backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                    ),
+                    child: const Text('REMOVE'),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -439,9 +502,60 @@ class LocalSessions extends ConsumerWidget {
       AsyncData(:final List<Session> value) => ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: value.length,
+          itemCount: value.length, // value is List<Session>
           itemBuilder: (context, index) {
-            return Text(value[index].toString());
+            final session = value[index];
+            final payload = session.jwt.payload as Map<String, dynamic>;
+
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: ListTile(
+                title: Row(
+                  children: [
+                    Text(
+                      payload['username'] as String? ?? 'Unknown',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        payload['email'] as String? ?? 'No email',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      session.uid,
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            fontStyle: FontStyle.italic,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                            fontFamily: 'monospace',
+                          ),
+                    ),
+                    if (payload['userType'] != null)
+                      Text(
+                        "UserType: ${payload['userType'] as String}",
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                      ),
+                  ],
+                ),
+                trailing: payload['dateCreated'] != null
+                    ? Text(
+                        (payload['dateCreated'] as String).substring(0, 10),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      )
+                    : null,
+              ),
+            );
           },
         ),
       _ => const Text('Unknown state'),
