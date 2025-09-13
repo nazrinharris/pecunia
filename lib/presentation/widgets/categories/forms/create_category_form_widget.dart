@@ -4,6 +4,7 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_iconpicker/Models/configuration.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -235,15 +236,15 @@ class IconPickerWidget extends HookConsumerWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(28),
         onTap: () async {
-          final icon = await FlutterIconPicker.showIconPicker(
-            context,
-            adaptiveDialog: true,
-            iconPackModes: [IconPack.material, IconPack.cupertino],
-            iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(44)),
-          );
+          final icon = await showIconPicker(context,
+              configuration: SinglePickerConfiguration(
+                adaptiveDialog: true,
+                iconPackModes: [IconPack.allMaterial],
+                iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(44)),
+              ));
 
           if (icon != null) {
-            iconController.value = icon;
+            iconController.value = icon.data;
           }
         },
         child: Container(

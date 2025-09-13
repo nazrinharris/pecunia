@@ -12,7 +12,7 @@ part of 'network_info_errors.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$NetworkInfoFailure {
@@ -21,7 +21,9 @@ mixin _$NetworkInfoFailure {
   NetworkInfoErrorType get errorType => throw _privateConstructorUsedError;
   Object? get rawException => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NetworkInfoFailureCopyWith<NetworkInfoFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +51,8 @@ class _$NetworkInfoFailureCopyWithImpl<$Res, $Val extends NetworkInfoFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -77,11 +81,11 @@ class _$NetworkInfoFailureCopyWithImpl<$Res, $Val extends NetworkInfoFailure>
 }
 
 /// @nodoc
-abstract class _$$_NetworkInfoFailureCopyWith<$Res>
+abstract class _$$NetworkInfoFailureImplCopyWith<$Res>
     implements $NetworkInfoFailureCopyWith<$Res> {
-  factory _$$_NetworkInfoFailureCopyWith(_$_NetworkInfoFailure value,
-          $Res Function(_$_NetworkInfoFailure) then) =
-      __$$_NetworkInfoFailureCopyWithImpl<$Res>;
+  factory _$$NetworkInfoFailureImplCopyWith(_$NetworkInfoFailureImpl value,
+          $Res Function(_$NetworkInfoFailureImpl) then) =
+      __$$NetworkInfoFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -92,13 +96,15 @@ abstract class _$$_NetworkInfoFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_NetworkInfoFailureCopyWithImpl<$Res>
-    extends _$NetworkInfoFailureCopyWithImpl<$Res, _$_NetworkInfoFailure>
-    implements _$$_NetworkInfoFailureCopyWith<$Res> {
-  __$$_NetworkInfoFailureCopyWithImpl(
-      _$_NetworkInfoFailure _value, $Res Function(_$_NetworkInfoFailure) _then)
+class __$$NetworkInfoFailureImplCopyWithImpl<$Res>
+    extends _$NetworkInfoFailureCopyWithImpl<$Res, _$NetworkInfoFailureImpl>
+    implements _$$NetworkInfoFailureImplCopyWith<$Res> {
+  __$$NetworkInfoFailureImplCopyWithImpl(_$NetworkInfoFailureImpl _value,
+      $Res Function(_$NetworkInfoFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -107,7 +113,7 @@ class __$$_NetworkInfoFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_NetworkInfoFailure(
+    return _then(_$NetworkInfoFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -128,8 +134,8 @@ class __$$_NetworkInfoFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_NetworkInfoFailure extends _NetworkInfoFailure {
-  const _$_NetworkInfoFailure(
+class _$NetworkInfoFailureImpl extends _NetworkInfoFailure {
+  const _$NetworkInfoFailureImpl(
       {required this.stackTrace,
       this.message = defaultUnknownNetworkInfoErrorMessage,
       this.errorType = NetworkInfoErrorType.unknownNetworkInfoError,
@@ -147,11 +153,13 @@ class _$_NetworkInfoFailure extends _NetworkInfoFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NetworkInfoFailureCopyWith<_$_NetworkInfoFailure> get copyWith =>
-      __$$_NetworkInfoFailureCopyWithImpl<_$_NetworkInfoFailure>(
+  _$$NetworkInfoFailureImplCopyWith<_$NetworkInfoFailureImpl> get copyWith =>
+      __$$NetworkInfoFailureImplCopyWithImpl<_$NetworkInfoFailureImpl>(
           this, _$identity);
 }
 
@@ -160,7 +168,7 @@ abstract class _NetworkInfoFailure extends NetworkInfoFailure {
       {required final StackTrace stackTrace,
       final String message,
       final NetworkInfoErrorType errorType,
-      final Object? rawException}) = _$_NetworkInfoFailure;
+      final Object? rawException}) = _$NetworkInfoFailureImpl;
   const _NetworkInfoFailure._() : super._();
 
   @override
@@ -171,8 +179,11 @@ abstract class _NetworkInfoFailure extends NetworkInfoFailure {
   NetworkInfoErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of NetworkInfoFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_NetworkInfoFailureCopyWith<_$_NetworkInfoFailure> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$NetworkInfoFailureImplCopyWith<_$NetworkInfoFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

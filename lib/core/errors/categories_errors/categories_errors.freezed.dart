@@ -12,7 +12,7 @@ part of 'categories_errors.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$CategoriesException {
@@ -70,7 +70,9 @@ mixin _$CategoriesException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoriesExceptionCopyWith<CategoriesException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -95,6 +97,8 @@ class _$CategoriesExceptionCopyWithImpl<$Res, $Val extends CategoriesException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -120,11 +124,11 @@ class _$CategoriesExceptionCopyWithImpl<$Res, $Val extends CategoriesException>
 }
 
 /// @nodoc
-abstract class _$$_CategoriesExceptionCopyWith<$Res>
+abstract class _$$CategoriesExceptionImplCopyWith<$Res>
     implements $CategoriesExceptionCopyWith<$Res> {
-  factory _$$_CategoriesExceptionCopyWith(_$_CategoriesException value,
-          $Res Function(_$_CategoriesException) then) =
-      __$$_CategoriesExceptionCopyWithImpl<$Res>;
+  factory _$$CategoriesExceptionImplCopyWith(_$CategoriesExceptionImpl value,
+          $Res Function(_$CategoriesExceptionImpl) then) =
+      __$$CategoriesExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -132,13 +136,15 @@ abstract class _$$_CategoriesExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_CategoriesExceptionCopyWithImpl<$Res>
-    extends _$CategoriesExceptionCopyWithImpl<$Res, _$_CategoriesException>
-    implements _$$_CategoriesExceptionCopyWith<$Res> {
-  __$$_CategoriesExceptionCopyWithImpl(_$_CategoriesException _value,
-      $Res Function(_$_CategoriesException) _then)
+class __$$CategoriesExceptionImplCopyWithImpl<$Res>
+    extends _$CategoriesExceptionCopyWithImpl<$Res, _$CategoriesExceptionImpl>
+    implements _$$CategoriesExceptionImplCopyWith<$Res> {
+  __$$CategoriesExceptionImplCopyWithImpl(_$CategoriesExceptionImpl _value,
+      $Res Function(_$CategoriesExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,7 +152,7 @@ class __$$_CategoriesExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_CategoriesException(
+    return _then(_$CategoriesExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -165,8 +171,8 @@ class __$$_CategoriesExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CategoriesException implements _CategoriesException {
-  const _$_CategoriesException(
+class _$CategoriesExceptionImpl implements _CategoriesException {
+  const _$CategoriesExceptionImpl(
       {required this.stackTrace, required this.errorType, this.message});
 
   @override
@@ -182,10 +188,10 @@ class _$_CategoriesException implements _CategoriesException {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CategoriesException &&
+            other is _$CategoriesExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -196,11 +202,13 @@ class _$_CategoriesException implements _CategoriesException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CategoriesExceptionCopyWith<_$_CategoriesException> get copyWith =>
-      __$$_CategoriesExceptionCopyWithImpl<_$_CategoriesException>(
+  _$$CategoriesExceptionImplCopyWith<_$CategoriesExceptionImpl> get copyWith =>
+      __$$CategoriesExceptionImplCopyWithImpl<_$CategoriesExceptionImpl>(
           this, _$identity);
 
   @override
@@ -282,7 +290,7 @@ abstract class _CategoriesException implements CategoriesException {
   const factory _CategoriesException(
       {required final StackTrace stackTrace,
       required final CategoriesErrorType errorType,
-      final String? message}) = _$_CategoriesException;
+      final String? message}) = _$CategoriesExceptionImpl;
 
   @override
   StackTrace get stackTrace;
@@ -290,19 +298,22 @@ abstract class _CategoriesException implements CategoriesException {
   CategoriesErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_CategoriesExceptionCopyWith<_$_CategoriesException> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CategoriesExceptionImplCopyWith<_$CategoriesExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownCategoriesExceptionCopyWith<$Res>
+abstract class _$$UnknownCategoriesExceptionImplCopyWith<$Res>
     implements $CategoriesExceptionCopyWith<$Res> {
-  factory _$$_UnknownCategoriesExceptionCopyWith(
-          _$_UnknownCategoriesException value,
-          $Res Function(_$_UnknownCategoriesException) then) =
-      __$$_UnknownCategoriesExceptionCopyWithImpl<$Res>;
+  factory _$$UnknownCategoriesExceptionImplCopyWith(
+          _$UnknownCategoriesExceptionImpl value,
+          $Res Function(_$UnknownCategoriesExceptionImpl) then) =
+      __$$UnknownCategoriesExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -310,15 +321,17 @@ abstract class _$$_UnknownCategoriesExceptionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownCategoriesExceptionCopyWithImpl<$Res>
+class __$$UnknownCategoriesExceptionImplCopyWithImpl<$Res>
     extends _$CategoriesExceptionCopyWithImpl<$Res,
-        _$_UnknownCategoriesException>
-    implements _$$_UnknownCategoriesExceptionCopyWith<$Res> {
-  __$$_UnknownCategoriesExceptionCopyWithImpl(
-      _$_UnknownCategoriesException _value,
-      $Res Function(_$_UnknownCategoriesException) _then)
+        _$UnknownCategoriesExceptionImpl>
+    implements _$$UnknownCategoriesExceptionImplCopyWith<$Res> {
+  __$$UnknownCategoriesExceptionImplCopyWithImpl(
+      _$UnknownCategoriesExceptionImpl _value,
+      $Res Function(_$UnknownCategoriesExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -326,7 +339,7 @@ class __$$_UnknownCategoriesExceptionCopyWithImpl<$Res>
     Object? errorType = null,
     Object? message = freezed,
   }) {
-    return _then(_$_UnknownCategoriesException(
+    return _then(_$UnknownCategoriesExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -345,8 +358,8 @@ class __$$_UnknownCategoriesExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownCategoriesException implements _UnknownCategoriesException {
-  _$_UnknownCategoriesException(
+class _$UnknownCategoriesExceptionImpl implements _UnknownCategoriesException {
+  _$UnknownCategoriesExceptionImpl(
       {required this.stackTrace,
       this.errorType = CategoriesErrorType.unknown,
       this.message});
@@ -365,10 +378,10 @@ class _$_UnknownCategoriesException implements _UnknownCategoriesException {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UnknownCategoriesException &&
+            other is _$UnknownCategoriesExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -379,12 +392,14 @@ class _$_UnknownCategoriesException implements _UnknownCategoriesException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownCategoriesExceptionCopyWith<_$_UnknownCategoriesException>
-      get copyWith => __$$_UnknownCategoriesExceptionCopyWithImpl<
-          _$_UnknownCategoriesException>(this, _$identity);
+  _$$UnknownCategoriesExceptionImplCopyWith<_$UnknownCategoriesExceptionImpl>
+      get copyWith => __$$UnknownCategoriesExceptionImplCopyWithImpl<
+          _$UnknownCategoriesExceptionImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -465,7 +480,7 @@ abstract class _UnknownCategoriesException implements CategoriesException {
   factory _UnknownCategoriesException(
       {required final StackTrace stackTrace,
       final CategoriesErrorType errorType,
-      final String? message}) = _$_UnknownCategoriesException;
+      final String? message}) = _$UnknownCategoriesExceptionImpl;
 
   @override
   StackTrace get stackTrace;
@@ -473,9 +488,12 @@ abstract class _UnknownCategoriesException implements CategoriesException {
   CategoriesErrorType get errorType;
   @override
   String? get message;
+
+  /// Create a copy of CategoriesException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UnknownCategoriesExceptionCopyWith<_$_UnknownCategoriesException>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnknownCategoriesExceptionImplCopyWith<_$UnknownCategoriesExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -536,7 +554,9 @@ mixin _$CategoriesFailure {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoriesFailureCopyWith<CategoriesFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -564,6 +584,8 @@ class _$CategoriesFailureCopyWithImpl<$Res, $Val extends CategoriesFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -592,11 +614,11 @@ class _$CategoriesFailureCopyWithImpl<$Res, $Val extends CategoriesFailure>
 }
 
 /// @nodoc
-abstract class _$$_CategoriesFailureCopyWith<$Res>
+abstract class _$$CategoriesFailureImplCopyWith<$Res>
     implements $CategoriesFailureCopyWith<$Res> {
-  factory _$$_CategoriesFailureCopyWith(_$_CategoriesFailure value,
-          $Res Function(_$_CategoriesFailure) then) =
-      __$$_CategoriesFailureCopyWithImpl<$Res>;
+  factory _$$CategoriesFailureImplCopyWith(_$CategoriesFailureImpl value,
+          $Res Function(_$CategoriesFailureImpl) then) =
+      __$$CategoriesFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -607,13 +629,15 @@ abstract class _$$_CategoriesFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_CategoriesFailureCopyWithImpl<$Res>
-    extends _$CategoriesFailureCopyWithImpl<$Res, _$_CategoriesFailure>
-    implements _$$_CategoriesFailureCopyWith<$Res> {
-  __$$_CategoriesFailureCopyWithImpl(
-      _$_CategoriesFailure _value, $Res Function(_$_CategoriesFailure) _then)
+class __$$CategoriesFailureImplCopyWithImpl<$Res>
+    extends _$CategoriesFailureCopyWithImpl<$Res, _$CategoriesFailureImpl>
+    implements _$$CategoriesFailureImplCopyWith<$Res> {
+  __$$CategoriesFailureImplCopyWithImpl(_$CategoriesFailureImpl _value,
+      $Res Function(_$CategoriesFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -622,7 +646,7 @@ class __$$_CategoriesFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_CategoriesFailure(
+    return _then(_$CategoriesFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -643,8 +667,8 @@ class __$$_CategoriesFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CategoriesFailure extends _CategoriesFailure {
-  const _$_CategoriesFailure(
+class _$CategoriesFailureImpl extends _CategoriesFailure {
+  const _$CategoriesFailureImpl(
       {required this.stackTrace,
       required this.message,
       required this.errorType,
@@ -660,11 +684,13 @@ class _$_CategoriesFailure extends _CategoriesFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CategoriesFailureCopyWith<_$_CategoriesFailure> get copyWith =>
-      __$$_CategoriesFailureCopyWithImpl<_$_CategoriesFailure>(
+  _$$CategoriesFailureImplCopyWith<_$CategoriesFailureImpl> get copyWith =>
+      __$$CategoriesFailureImplCopyWithImpl<_$CategoriesFailureImpl>(
           this, _$identity);
 
   @override
@@ -747,7 +773,7 @@ abstract class _CategoriesFailure extends CategoriesFailure {
       {required final StackTrace stackTrace,
       required final String message,
       required final CategoriesErrorType errorType,
-      final Object? rawException}) = _$_CategoriesFailure;
+      final Object? rawException}) = _$CategoriesFailureImpl;
   const _CategoriesFailure._() : super._();
 
   @override
@@ -758,19 +784,22 @@ abstract class _CategoriesFailure extends CategoriesFailure {
   CategoriesErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_CategoriesFailureCopyWith<_$_CategoriesFailure> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CategoriesFailureImplCopyWith<_$CategoriesFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownCategoriesFailureCopyWith<$Res>
+abstract class _$$UnknownCategoriesFailureImplCopyWith<$Res>
     implements $CategoriesFailureCopyWith<$Res> {
-  factory _$$_UnknownCategoriesFailureCopyWith(
-          _$_UnknownCategoriesFailure value,
-          $Res Function(_$_UnknownCategoriesFailure) then) =
-      __$$_UnknownCategoriesFailureCopyWithImpl<$Res>;
+  factory _$$UnknownCategoriesFailureImplCopyWith(
+          _$UnknownCategoriesFailureImpl value,
+          $Res Function(_$UnknownCategoriesFailureImpl) then) =
+      __$$UnknownCategoriesFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -781,13 +810,17 @@ abstract class _$$_UnknownCategoriesFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownCategoriesFailureCopyWithImpl<$Res>
-    extends _$CategoriesFailureCopyWithImpl<$Res, _$_UnknownCategoriesFailure>
-    implements _$$_UnknownCategoriesFailureCopyWith<$Res> {
-  __$$_UnknownCategoriesFailureCopyWithImpl(_$_UnknownCategoriesFailure _value,
-      $Res Function(_$_UnknownCategoriesFailure) _then)
+class __$$UnknownCategoriesFailureImplCopyWithImpl<$Res>
+    extends _$CategoriesFailureCopyWithImpl<$Res,
+        _$UnknownCategoriesFailureImpl>
+    implements _$$UnknownCategoriesFailureImplCopyWith<$Res> {
+  __$$UnknownCategoriesFailureImplCopyWithImpl(
+      _$UnknownCategoriesFailureImpl _value,
+      $Res Function(_$UnknownCategoriesFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -796,7 +829,7 @@ class __$$_UnknownCategoriesFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_UnknownCategoriesFailure(
+    return _then(_$UnknownCategoriesFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -817,8 +850,8 @@ class __$$_UnknownCategoriesFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownCategoriesFailure extends _UnknownCategoriesFailure {
-  const _$_UnknownCategoriesFailure(
+class _$UnknownCategoriesFailureImpl extends _UnknownCategoriesFailure {
+  const _$UnknownCategoriesFailureImpl(
       {required this.stackTrace,
       required this.message,
       this.errorType = CategoriesErrorType.unknown,
@@ -835,12 +868,14 @@ class _$_UnknownCategoriesFailure extends _UnknownCategoriesFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownCategoriesFailureCopyWith<_$_UnknownCategoriesFailure>
-      get copyWith => __$$_UnknownCategoriesFailureCopyWithImpl<
-          _$_UnknownCategoriesFailure>(this, _$identity);
+  _$$UnknownCategoriesFailureImplCopyWith<_$UnknownCategoriesFailureImpl>
+      get copyWith => __$$UnknownCategoriesFailureImplCopyWithImpl<
+          _$UnknownCategoriesFailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -922,7 +957,7 @@ abstract class _UnknownCategoriesFailure extends CategoriesFailure {
       {required final StackTrace stackTrace,
       required final String message,
       final CategoriesErrorType errorType,
-      final Object? rawException}) = _$_UnknownCategoriesFailure;
+      final Object? rawException}) = _$UnknownCategoriesFailureImpl;
   const _UnknownCategoriesFailure._() : super._();
 
   @override
@@ -933,8 +968,11 @@ abstract class _UnknownCategoriesFailure extends CategoriesFailure {
   CategoriesErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of CategoriesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UnknownCategoriesFailureCopyWith<_$_UnknownCategoriesFailure>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnknownCategoriesFailureImplCopyWith<_$UnknownCategoriesFailureImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

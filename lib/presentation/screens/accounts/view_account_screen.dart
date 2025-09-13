@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pecunia/core/errors/accounts_errors/accounts_errors.dart';
 import 'package:pecunia/core/errors/failures.dart';
+import 'package:pecunia/core/util/extensions.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/features/accounts/usecases/delete_account.dart';
 import 'package:pecunia/features/accounts/usecases/edit_account.dart';
@@ -14,6 +15,8 @@ import 'package:pecunia/features/accounts/usecases/get_account_by_id.dart';
 import 'package:pecunia/features/accounts/usecases/get_account_by_id_and_all_accounts.dart';
 import 'package:pecunia/features/accounts/usecases/validate_account_balance.dart';
 import 'package:pecunia/features/categories/domain/entities/category.dart';
+import 'package:pecunia/features/categories/usecases/get_all_categories.dart';
+import 'package:pecunia/features/transactions/domain/entities/transaction.dart';
 import 'package:pecunia/features/transactions/usecases/get_categories_by_txn_id.dart';
 import 'package:pecunia/features/transactions/usecases/get_transactions_by_account_id.dart';
 import 'package:pecunia/presentation/widgets/common/scale_button.dart';
@@ -72,7 +75,17 @@ class ViewAccountScreen extends ConsumerWidget {
 
     switch (res) {
       case AsyncLoading(:final value) when value == null:
-        return const Center(child: CupertinoActivityIndicator());
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                context.pop();
+              },
+              icon: const Icon(Icons.arrow_back),
+            ),
+          ),
+          body: const Center(child: CupertinoActivityIndicator()),
+        );
       case AsyncLoading(:final value) when value != null:
         return AccountDetails(value.account, value.accountsList);
       case AsyncError():
@@ -155,11 +168,12 @@ class AccountDetails extends ConsumerWidget {
                         text: account.initialBalance.toString(),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'DMMono',
                           fontSize: 22,
                         ),
                         children: [
                           TextSpan(
-                            text: ' ${account.currency.code}',
+                            text: ' ${account.currency.isoCode}',
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -193,11 +207,12 @@ class AccountDetails extends ConsumerWidget {
                         text: account.balance.toStringAsFixed(2),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'DMMono',
                           fontSize: 22,
                         ),
                         children: [
                           TextSpan(
-                            text: ' ${account.currency.code}',
+                            text: ' ${account.currency.isoCode}',
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -217,19 +232,20 @@ class AccountDetails extends ConsumerWidget {
             SafeArea(child: AccountMetadataCard(account)),
             const SizedBox(height: 4),
             SafeArea(child: AccountActions(account, accountsList)),
-            SafeArea(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                alignment: Alignment.center,
-                child: const Text(
-                  'Transactions',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+            // SafeArea(
+            //   child: Container(
+            //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            //     alignment: Alignment.center,
+            //     child: const Text(
+            //       'Transactions',
+            //       textAlign: TextAlign.center,
+            //       style: TextStyle(
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            const SizedBox(height: 14),
             SafeArea(child: TransactionsList(account)),
           ],
         ),
@@ -246,31 +262,54 @@ class TransactionsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final txnList = ref.watch(getTransactionsByAccountIdProvider(account.id));
+    final categoriesList = ref.watch(getAllCategoriesProvider);
+
     return txnList.when(
-      data: (transactions) {
-        if (transactions.isEmpty) {
+      data: (txnList) {
+        if (txnList.isEmpty) {
           return const Center(
             child: Text('No transactions yet!'),
           );
         }
+
+        final sortedTxnList = txnList.sortedByMostRecent;
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: transactions.length,
+            itemCount: sortedTxnList.length,
             itemBuilder: (context, index) {
-              final txn = transactions[index];
+              final txn = sortedTxnList[index];
 
               if (txn.isTransferTransaction) {
-                return TransferTxnListTile(
-                  account: account,
+                return MonthHeader(
                   txn: txn,
-                  enableTopDivider: index == 0,
-                  enableBottomDivider: index == transactions.length - 1,
+                  prevTxn: index == 0 ? null : txnList[index - 1],
+                  child: TransferTxnListTile(
+                    account: account,
+                    txn: txn,
+                    enableTopDivider: index == 0,
+                    enableBottomDivider: index == sortedTxnList.length - 1,
+                  ),
                 );
               }
 
+              // return MonthHeader(
+              //   txn: txn,
+              //   prevTxn: index == 0 ? null : txnList[index - 1],
+              //   child: TxnListTile(
+              //     account: account,
+              //     txn: txn,
+              //     category: null,
+              //     enableTopDivider: index == 0,
+              //     enableBottomDivider: index == sortedTxnList.length - 1,
+              //     hideAccountName: true,
+              //   ),
+              // );
+
+              // TODO: Optimize category retrieval
               final categoryValue = ref.watch(getCategoriesByTxnIdProvider(txn.id));
 
               return switch (categoryValue) {
@@ -278,20 +317,29 @@ class TransactionsList extends ConsumerWidget {
                     children: [
                       if (index == 0) Divider(color: Colors.grey.withOpacity(0.1)),
                       const ListTile(title: CupertinoActivityIndicator()),
-                      if (index == transactions.length - 1) Divider(color: Colors.grey.withOpacity(0.1)),
+                      if (index == sortedTxnList.length - 1) Divider(color: Colors.grey.withOpacity(0.1)),
                     ],
                   ),
-                AsyncError(:final Object error) => TxnListTileError(
-                    error as Failure,
-                    enableTopDivider: index == 0,
-                    enableBottomDivider: index == transactions.length - 1,
-                  ),
-                AsyncData(:final List<Category?> value) => TxnListTile(
-                    account: account,
+                AsyncError(:final Object error) => MonthHeader(
                     txn: txn,
-                    category: value.length == 1 ? value.first : null,
-                    enableTopDivider: index == 0,
-                    enableBottomDivider: index == transactions.length - 1,
+                    prevTxn: index == 0 ? null : txnList[index - 1],
+                    child: TxnListTileError(
+                      error as Failure,
+                      enableTopDivider: index == 0,
+                      enableBottomDivider: index == sortedTxnList.length - 1,
+                    ),
+                  ),
+                AsyncData(:final List<Category?> value) => MonthHeader(
+                    txn: txn,
+                    prevTxn: index == 0 ? null : txnList[index - 1],
+                    child: TxnListTile(
+                      account: account,
+                      txn: txn,
+                      category: value.length == 1 ? value.first : null,
+                      enableTopDivider: index == 0,
+                      enableBottomDivider: index == sortedTxnList.length - 1,
+                      hideAccountName: true,
+                    ),
                   ),
                 _ => const Center(child: Text('Something went wrong')),
               };
@@ -325,6 +373,58 @@ class TransactionsList extends ConsumerWidget {
 
     final account = accounts.firstWhere((element) => element.id == accountId);
     return account.name;
+  }
+}
+
+class MonthHeader extends ConsumerWidget {
+  const MonthHeader({
+    required this.txn,
+    required this.prevTxn,
+    required this.child,
+    super.key,
+  });
+
+  final Widget child;
+  final Transaction txn;
+  final Transaction? prevTxn;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (prevTxn == null) {
+      return Column(
+        children: [
+          buildHeader(context, ref),
+          child,
+        ],
+      );
+    }
+
+    final shouldBuild = txn.transactionDate.month != prevTxn!.transactionDate.month ||
+        txn.transactionDate.year != prevTxn!.transactionDate.year;
+
+    return Column(
+      children: [
+        if (shouldBuild) buildHeader(context, ref),
+        if (shouldBuild) Divider(color: Colors.grey.withOpacity(0.1)),
+        child,
+      ],
+    );
+  }
+
+  Widget buildHeader(BuildContext context, WidgetRef ref) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      alignment: Alignment.center,
+      child: Text(
+        '${txn.transactionDate.month.monthName} ${txn.transactionDate.year}',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+            ),
+      ),
+    );
   }
 }
 
@@ -587,9 +687,11 @@ class BuildAccountActionsGrid extends ConsumerWidget {
           height: 84,
           width: 84,
           child: ScaleButton(
-            onTap: () => ref.read(pecuniaDialogsProvider).showConfirmationDialog(
+            onTap: () => ref.read(pecuniaDialogsProvider).showTextEntryConfirmationDialog(
                 title: 'Are you sure you want to delete this account?',
-                message: 'This is irreversible',
+                description: 'This action cannot be undone.',
+                entryConfirmationText: 'DELETE',
+                confirmButtonText: 'Delete',
                 onConfirm: () {
                   ref.read(deleteAccountProvider.notifier).deleteAccount(account);
                 },

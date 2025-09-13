@@ -17,7 +17,7 @@ part 'transactions_local_dao.g.dart';
 
 @riverpod
 TransactionsLocalDAO transactionsLocalDAO(TransactionsLocalDAORef ref) =>
-    ref.watch(pecuniaDBProvider).transactionsLocalDAO;
+    ref.watch(pecuniaDBProvider).requireValue.transactionsLocalDAO;
 
 @DataClassName('TransactionDTO')
 class TransactionsTable extends Table {
@@ -62,7 +62,7 @@ class TransactionsTable extends Table {
   CategoriesTable,
   TxnCategoriesTable,
 ])
-class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$TransactionsLocalDAOMixin {
+class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDriftDB> with _$TransactionsLocalDAOMixin {
   TransactionsLocalDAO(super.db);
 
   TaskEither<Failure, Unit> createTransaction(Transaction txn, Category? category) {
@@ -375,7 +375,8 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
         var query = select(transactionsTable)
           ..where((tbl) => tbl.transactionType.equals(type.typeAsString))
           ..where((tbl) => tbl.transactionDate.isBetweenValues(startDate, endDate))
-          ..where((tbl) => tbl.baseCurrency.equals(currency.code) | tbl.targetCurrency.equals(currency.code));
+          ..where((tbl) =>
+              tbl.baseCurrency.equals(currency.isoCode) | tbl.targetCurrency.equals(currency.isoCode));
 
         if (!includeTransfers) {
           query = query..where((tbl) => tbl.linkedAccountId.isNull() & tbl.linkedTransactionId.isNull());
@@ -427,7 +428,10 @@ class TransactionsLocalDAO extends DatabaseAccessor<PecuniaDB> with _$Transactio
       }
     }
 
-    if (calculatedBalance != account.balance) {
+    final difference = (calculatedBalance - account.balance).abs();
+    const epsilon = 0.00001; // Small tolerance to handle potential floating point errors
+
+    if (difference > epsilon) {
       print(TransactionsErrorType.mismatchAccountBalance.message);
       print(StackTrace.current);
       throw TransactionsException(

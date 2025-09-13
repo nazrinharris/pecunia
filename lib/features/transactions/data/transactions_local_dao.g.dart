@@ -3,7 +3,7 @@
 part of 'transactions_local_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$TransactionsLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
+mixin _$TransactionsLocalDAOMixin on DatabaseAccessor<PecuniaDriftDB> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
   $TransactionsTableTable get transactionsTable =>
       attachedDatabase.transactionsTable;
@@ -17,7 +17,7 @@ mixin _$TransactionsLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
 // **************************************************************************
 
 String _$transactionsLocalDAOHash() =>
-    r'0ff24cc35e7a0031a089e438811dbe17f421879d';
+    r'd385309a589e78aaf5e9dcf91d58848880025698';
 
 /// See also [transactionsLocalDAO].
 @ProviderFor(transactionsLocalDAO)
@@ -32,5 +32,8 @@ final transactionsLocalDAOProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef TransactionsLocalDAORef = AutoDisposeProviderRef<TransactionsLocalDAO>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

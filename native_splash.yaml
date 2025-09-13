@@ -1,0 +1,22 @@
+# This file is used to configure the native splash screen for a Flutter application.
+# Because the configuration is in a seperate file, running the command is slightly different.
+# To generate the splash screen, run:
+# dart run flutter_native_splash:create --path=native_splash.yaml
+
+# Some precautions:
+# 1. Sometimes when updating the splash screen, even stopping and restarting the app may not clear the older values. To get around this, stop the app, stop the simulator, reopen simulator and run the app again.
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  color: "#0D0D0D"
+
+  branding: "assets/splash_assets/branding.png"
+  image: "assets/splash_assets/beta_logo.png"
+
+  android_12:
+    color: "#0D0D0D"
+    image: "assets/splash_assets/android_beta_logo.png"
+    branding: "assets/splash_assets/android_branding.png"

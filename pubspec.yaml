@@ -11,11 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Remote
-  supabase_flutter: ^1.6.2
+  # Remote and Authentication
+  supabase_flutter: ^2.3.4
+  dart_jsonwebtoken: ^2.12.1
 
   # Navigation
-  go_router: ^6.5.0
+  go_router: ^14.2.8
 
   # Business Logic, Dependency Injection
   hooks_riverpod:
@@ -27,27 +28,32 @@ dependencies:
   json_annotation: ^4.8.0
   equatable: ^2.0.5
   uuid:
-  money2: ^3.4.1
-  intl: ^0.18.1
+  money2: ^5.3.0
+  intl: ^0.19.0
 
   # Local Storage
-  drift: ^2.12.1
+  drift: ^2.25.0
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.0.0
   path: ^1.8.3
   drift_db_viewer: ^2.0.0
   shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.0.0
+
+  # Security
+  crypto: ^3.0.3
+  bcrypt: ^1.1.3
 
   # Functional Programming
-  fpdart: ^0.6.0
+  fpdart: ^1.1.0
 
   # Connectivity and Application Info
-  internet_connection_checker_plus: ^1.0.1
-  package_info_plus: ^4.2.0
+  internet_connection_checker_plus: ^2.7.0
+  package_info_plus: ^8.0.2
 
   # Icons and Splash
   cupertino_icons: ^1.0.2
-  flutter_native_splash: ^2.3.1
+  flutter_native_splash: ^2.4.4
 
   # Dialogs and Toast
   fl_toast: ^3.2.0
@@ -61,21 +67,21 @@ dependencies:
   animated_text_kit: ^4.2.2
   sprung: ^3.0.1
   flutter_speed_dial: ^7.0.0
-  fl_chart: ^0.63.0
+  syncfusion_flutter_charts: ^27.1.50
   page_view_dot_indicator: ^2.3.0
 
   # Convenience
-  screwdriver: ^4.1.0
+  screwdriver: ^5.3.0
   flex_color_picker: ^3.3.0
-  flutter_iconpicker: ^3.2.4
-  email_validator: ^2.1.17
+  flutter_iconpicker: ^4.0.1
+  email_validator: ^3.0.0
 
   # Testing
-  mocktail: ^0.3.0
+  mocktail: ^1.0.1
   clock: ^1.1.1
 
   # Logging
-  logger: ^1.4.0
+  logger: ^2.0.2+1
   stack_trace: ^1.11.0
 
 dev_dependencies:
@@ -90,18 +96,18 @@ dev_dependencies:
 
   # Linting
   custom_lint:
-  riverpod_lint: ^1.3.2
-  flutter_lints: ^2.0.0
-  very_good_analysis: ^5.0.0+1
+  riverpod_lint: ^2.3.4
+  flutter_lints: ^5.0.0
+  very_good_analysis: ^6.0.0
 
   # Local Storage
-  drift_dev: ^2.8.3
+  drift_dev: ^2.25.0
 
   # Package Name
   change_app_package_name: ^1.1.0
 
   # App Icons
-  flutter_launcher_icons: "^0.13.1"
+  flutter_launcher_icons: ^0.14.1
 
 flutter_launcher_icons:
   android: true
@@ -110,14 +116,6 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/app_icon/dev_bg.png"
-
-flutter_native_splash:
-  color: "#1C1B1F"
-  image: "assets/app_icon/dev_transparent.png"
-
-  android_12:
-    image: assets/app_icon/dev_transparent.png
-    icon_background_color: "#1C1B1F"
 
 flutter:
   uses-material-design: true
@@ -128,38 +126,81 @@ flutter:
   fonts:
     - family: Subjectivity
       fonts:
-        - asset: fonts/Subjectivity-Black.otf
+        - asset: fonts/subjectivity/Subjectivity-Black.otf
           weight: 900
-        - asset: fonts/Subjectivity-BlackSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-BlackSlanted.otf
           weight: 900
           style: italic
-        - asset: fonts/Subjectivity-Bold.otf
+        - asset: fonts/subjectivity/Subjectivity-Bold.otf
           weight: 700
-        - asset: fonts/Subjectivity-BoldSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-BoldSlanted.otf
           weight: 700
           style: italic
-        - asset: fonts/Subjectivity-ExtraBold.otf
+        - asset: fonts/subjectivity/Subjectivity-ExtraBold.otf
           weight: 800
-        - asset: fonts/Subjectivity-ExtraBoldSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-ExtraBoldSlanted.otf
           weight: 800
           style: italic
-        - asset: fonts/Subjectivity-Light.otf
+        - asset: fonts/subjectivity/Subjectivity-Light.otf
           weight: 300
-        - asset: fonts/Subjectivity-LightSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-LightSlanted.otf
           weight: 300
           style: italic
-        - asset: fonts/Subjectivity-Medium.otf
+        - asset: fonts/subjectivity/Subjectivity-Medium.otf
           weight: 500
-        - asset: fonts/Subjectivity-MediumSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-MediumSlanted.otf
           weight: 500
           style: italic
-        - asset: fonts/Subjectivity-Regular.otf
+        - asset: fonts/subjectivity/Subjectivity-Regular.otf
           weight: 400
-        - asset: fonts/Subjectivity-RegularSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-RegularSlanted.otf
           weight: 400
           style: italic
-        - asset: fonts/Subjectivity-Thin.otf
+        - asset: fonts/subjectivity/Subjectivity-Thin.otf
           weight: 100
-        - asset: fonts/Subjectivity-ThinSlanted.otf
+        - asset: fonts/subjectivity/Subjectivity-ThinSlanted.otf
           weight: 100
           style: italic
+    - family: Nohemi
+      fonts:
+        - asset: fonts/nohemi/Nohemi-Black.ttf
+          weight: 900
+        - asset: fonts/nohemi/Nohemi-Bold.ttf
+          weight: 700
+        - asset: fonts/nohemi/Nohemi-ExtraBold.ttf
+          weight: 800
+        - asset: fonts/nohemi/Nohemi-ExtraLight.ttf
+          weight: 200
+        - asset: fonts/nohemi/Nohemi-Light.ttf
+          weight: 300
+        - asset: fonts/nohemi/Nohemi-Medium.ttf
+          weight: 500
+        - asset: fonts/nohemi/Nohemi-Regular.ttf
+          weight: 400
+        - asset: fonts/nohemi/Nohemi-SemiBold.ttf
+          weight: 600
+        - asset: fonts/nohemi/Nohemi-Thin.ttf
+          weight: 100
+    - family: Instrument
+      fonts:
+        - asset: fonts/instrument_serif/InstrumentSerif-Italic.ttf
+          style: italic
+        - asset: fonts/instrument_serif/InstrumentSerif-Regular.ttf
+          weight: 400
+    - family: DMMono
+      fonts:
+        - asset: fonts/dm_mono/DMMono-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: fonts/dm_mono/DMMono-Light.ttf
+          weight: 300
+        - asset: fonts/dm_mono/DMMono-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: fonts/dm_mono/DMMono-Medium.ttf
+          weight: 500
+        - asset: fonts/dm_mono/DMMono-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: fonts/dm_mono/DMMono-Regular.ttf
+          weight: 400

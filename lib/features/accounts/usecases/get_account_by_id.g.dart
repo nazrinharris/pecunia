@@ -29,8 +29,6 @@ class _SystemHash {
   }
 }
 
-typedef GetAccountByIdRef = AutoDisposeFutureProviderRef<Account>;
-
 /// See also [getAccountById].
 @ProviderFor(getAccountById)
 const getAccountByIdProvider = GetAccountByIdFamily();
@@ -80,11 +78,11 @@ class GetAccountByIdFamily extends Family<AsyncValue<Account>> {
 class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
   /// See also [getAccountById].
   GetAccountByIdProvider(
-    this.accountId, {
-    this.debugReturnError,
-  }) : super.internal(
+    String accountId, {
+    bool? debugReturnError,
+  }) : this._internal(
           (ref) => getAccountById(
-            ref,
+            ref as GetAccountByIdRef,
             accountId,
             debugReturnError: debugReturnError,
           ),
@@ -97,10 +95,47 @@ class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
           dependencies: GetAccountByIdFamily._dependencies,
           allTransitiveDependencies:
               GetAccountByIdFamily._allTransitiveDependencies,
+          accountId: accountId,
+          debugReturnError: debugReturnError,
         );
+
+  GetAccountByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.accountId,
+    required this.debugReturnError,
+  }) : super.internal();
 
   final String accountId;
   final bool? debugReturnError;
+
+  @override
+  Override overrideWith(
+    FutureOr<Account> Function(GetAccountByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetAccountByIdProvider._internal(
+        (ref) => create(ref as GetAccountByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        accountId: accountId,
+        debugReturnError: debugReturnError,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Account> createElement() {
+    return _GetAccountByIdProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -118,4 +153,26 @@ class GetAccountByIdProvider extends AutoDisposeFutureProvider<Account> {
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GetAccountByIdRef on AutoDisposeFutureProviderRef<Account> {
+  /// The parameter `accountId` of this provider.
+  String get accountId;
+
+  /// The parameter `debugReturnError` of this provider.
+  bool? get debugReturnError;
+}
+
+class _GetAccountByIdProviderElement
+    extends AutoDisposeFutureProviderElement<Account> with GetAccountByIdRef {
+  _GetAccountByIdProviderElement(super.provider);
+
+  @override
+  String get accountId => (origin as GetAccountByIdProvider).accountId;
+  @override
+  bool? get debugReturnError =>
+      (origin as GetAccountByIdProvider).debugReturnError;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

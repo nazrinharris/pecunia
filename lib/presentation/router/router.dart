@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:pecunia/core/infrastructure/drift/pecunia_drift_db.dart';
 import 'package:pecunia/features/accounts/domain/entities/account.dart';
 import 'package:pecunia/presentation/debug/debug_auth/debug_login_register_screen.dart';
+import 'package:pecunia/presentation/debug/debug_dialogs/debug_dialog_screen.dart';
 import 'package:pecunia/presentation/debug/debug_local_db/debug_local_db_screen.dart';
+import 'package:pecunia/presentation/debug/debug_theme/debug_theme.dart';
 import 'package:pecunia/presentation/debug/debug_transactions/debug_transactions_screen.dart';
 import 'package:pecunia/presentation/screens/accounts/edit_account_screen.dart';
 import 'package:pecunia/presentation/screens/accounts/view_account_screen.dart';
@@ -34,19 +36,30 @@ final router = GoRouter(
       ),
     ),
     GoRoute(
-      path: '/start',
-      name: 'start',
-      pageBuilder: (context, state) => CustomTransitionPage(
-        key: state.pageKey,
-        child: const StartScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
-            child: child,
-          );
-        },
-      ),
-    ),
+        path: '/start',
+        name: 'start',
+        pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const StartScreen(),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                  child: child,
+                );
+              },
+            ),
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'login',
+            name: 'login',
+            builder: (context, state) => const LoginScreen(),
+          ),
+          GoRoute(
+            path: 'register',
+            name: 'register',
+            builder: (context, state) => const RegisterScreen(),
+          ),
+        ]),
     GoRoute(
       path: '/onboarding',
       name: 'onboarding',
@@ -60,16 +73,6 @@ final router = GoRouter(
           );
         },
       ),
-    ),
-    GoRoute(
-      path: '/login',
-      name: 'login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/register',
-      name: 'register',
-      builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
       path: '/main',
@@ -115,12 +118,22 @@ final router = GoRouter(
       name: 'debug-local-db',
       builder: (context, state) => const DebugLocalDBScreen(),
     ),
+    GoRoute(
+      path: '/debug-dialog',
+      name: 'debug-dialog',
+      builder: (context, state) => const DebugDialogScreen(),
+    ),
+    GoRoute(
+      path: '/debug-theme',
+      name: 'debug-theme',
+      builder: (context, state) => const DebugThemeScreen(),
+    ),
 
     GoRoute(
       path: '/drift-db-viewer',
       name: 'drift-db-viewer',
       builder: (context, state) {
-        final db = state.extra! as PecuniaDB;
+        final db = state.extra! as PecuniaDriftDB;
         return DriftDbViewer(db);
       },
     ),

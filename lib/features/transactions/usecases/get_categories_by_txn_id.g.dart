@@ -30,8 +30,6 @@ class _SystemHash {
   }
 }
 
-typedef GetCategoriesByTxnIdRef = AutoDisposeFutureProviderRef<List<Category>>;
-
 /// See also [getCategoriesByTxnId].
 @ProviderFor(getCategoriesByTxnId)
 const getCategoriesByTxnIdProvider = GetCategoriesByTxnIdFamily();
@@ -82,11 +80,11 @@ class GetCategoriesByTxnIdProvider
     extends AutoDisposeFutureProvider<List<Category>> {
   /// See also [getCategoriesByTxnId].
   GetCategoriesByTxnIdProvider(
-    this.txnId, {
-    this.debugReturnError,
-  }) : super.internal(
+    String txnId, {
+    bool? debugReturnError,
+  }) : this._internal(
           (ref) => getCategoriesByTxnId(
-            ref,
+            ref as GetCategoriesByTxnIdRef,
             txnId,
             debugReturnError: debugReturnError,
           ),
@@ -99,10 +97,47 @@ class GetCategoriesByTxnIdProvider
           dependencies: GetCategoriesByTxnIdFamily._dependencies,
           allTransitiveDependencies:
               GetCategoriesByTxnIdFamily._allTransitiveDependencies,
+          txnId: txnId,
+          debugReturnError: debugReturnError,
         );
+
+  GetCategoriesByTxnIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.txnId,
+    required this.debugReturnError,
+  }) : super.internal();
 
   final String txnId;
   final bool? debugReturnError;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<Category>> Function(GetCategoriesByTxnIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetCategoriesByTxnIdProvider._internal(
+        (ref) => create(ref as GetCategoriesByTxnIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        txnId: txnId,
+        debugReturnError: debugReturnError,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<Category>> createElement() {
+    return _GetCategoriesByTxnIdProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -120,4 +155,27 @@ class GetCategoriesByTxnIdProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GetCategoriesByTxnIdRef on AutoDisposeFutureProviderRef<List<Category>> {
+  /// The parameter `txnId` of this provider.
+  String get txnId;
+
+  /// The parameter `debugReturnError` of this provider.
+  bool? get debugReturnError;
+}
+
+class _GetCategoriesByTxnIdProviderElement
+    extends AutoDisposeFutureProviderElement<List<Category>>
+    with GetCategoriesByTxnIdRef {
+  _GetCategoriesByTxnIdProviderElement(super.provider);
+
+  @override
+  String get txnId => (origin as GetCategoriesByTxnIdProvider).txnId;
+  @override
+  bool? get debugReturnError =>
+      (origin as GetCategoriesByTxnIdProvider).debugReturnError;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

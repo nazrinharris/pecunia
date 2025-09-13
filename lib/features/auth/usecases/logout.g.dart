@@ -6,7 +6,7 @@ part of 'logout.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$logoutHash() => r'0d57b182897672d8818335026539948ca0c16b4f';
+String _$logoutHash() => r'3552000e9e9f2a83b9384e501d27e5e3360fc4da';
 
 /// See also [Logout].
 @ProviderFor(Logout)
@@ -21,4 +21,5 @@ final logoutProvider =
 );
 
 typedef _$Logout = AutoDisposeAsyncNotifier<Option<Unit>>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

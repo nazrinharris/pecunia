@@ -3,7 +3,7 @@
 part of 'debug_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$DebugDAOMixin on DatabaseAccessor<PecuniaDB> {
+mixin _$DebugDAOMixin on DatabaseAccessor<PecuniaDriftDB> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
   $CategoriesTableTable get categoriesTable => attachedDatabase.categoriesTable;
   $TransactionsTableTable get transactionsTable =>
@@ -16,7 +16,7 @@ mixin _$DebugDAOMixin on DatabaseAccessor<PecuniaDB> {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debugDAOHash() => r'2e4d17fa3aed614eac9e040e40786069d5f42f71';
+String _$debugDAOHash() => r'411eef45c70cfaafc53f9e232d9c1f556c2b9fc1';
 
 /// See also [debugDAO].
 @ProviderFor(debugDAO)
@@ -29,5 +29,8 @@ final debugDAOProvider = AutoDisposeProvider<DebugDAO>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef DebugDAORef = AutoDisposeProviderRef<DebugDAO>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

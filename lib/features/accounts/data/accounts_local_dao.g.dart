@@ -3,7 +3,7 @@
 part of 'accounts_local_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$AccountsLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
+mixin _$AccountsLocalDAOMixin on DatabaseAccessor<PecuniaDriftDB> {
   $AccountsTableTable get accountsTable => attachedDatabase.accountsTable;
   $TransactionsTableTable get transactionsTable =>
       attachedDatabase.transactionsTable;
@@ -13,7 +13,7 @@ mixin _$AccountsLocalDAOMixin on DatabaseAccessor<PecuniaDB> {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accountsLocalDAOHash() => r'd345b468835a386d6dc8a8eb3d9cda52a2d92113';
+String _$accountsLocalDAOHash() => r'e29149b2ca8c98b0e83be072d8a26a526c26aabe';
 
 /// See also [accountsLocalDAO].
 @ProviderFor(accountsLocalDAO)
@@ -27,5 +27,8 @@ final accountsLocalDAOProvider = AutoDisposeProvider<AccountsLocalDAO>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AccountsLocalDAORef = AutoDisposeProviderRef<AccountsLocalDAO>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

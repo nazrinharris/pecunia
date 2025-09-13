@@ -7,12 +7,12 @@ part of 'shared_preferences.dart';
 // **************************************************************************
 
 String _$pecuniaSharedPreferencesHash() =>
-    r'7614611d9d68d3ce49fdb14044e28bca5ae644ca';
+    r'92750fd9bba7ca4f35f76b4719336e999848cf46';
 
 /// See also [PecuniaSharedPreferences].
 @ProviderFor(PecuniaSharedPreferences)
-final pecuniaSharedPreferencesProvider = AutoDisposeAsyncNotifierProvider<
-    PecuniaSharedPreferences, SharedPreferences>.internal(
+final pecuniaSharedPreferencesProvider =
+    AsyncNotifierProvider<PecuniaSharedPreferences, SharedPreferences>.internal(
   PecuniaSharedPreferences.new,
   name: r'pecuniaSharedPreferencesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final pecuniaSharedPreferencesProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$PecuniaSharedPreferences
-    = AutoDisposeAsyncNotifier<SharedPreferences>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+typedef _$PecuniaSharedPreferences = AsyncNotifier<SharedPreferences>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

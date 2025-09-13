@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pecunia/core/errors/network_info_errors/network_info_errors.dart';
 import 'package:pecunia/core/infrastructure/network_info/network_info.dart';
 
-class MockInternetConnectionCheckerPlus extends Mock implements InternetConnectionCheckerPlus {}
+class MockInternetConnectionCheckerPlus extends Mock implements InternetConnection {}
 
 void main() {
   group('NetworkInfo -', () {
@@ -17,7 +17,7 @@ void main() {
       });
 
       test('returns NetworkInfoFailure when there is an error', () async {
-        when(() => connectionChecker.hasConnection).thenThrow(Exception());
+        when(() => connectionChecker.hasInternetAccess).thenThrow(Exception());
 
         final network = NetworkInfoImpl(connectionChecker);
         final result = await network.isConnected().run();
@@ -26,7 +26,7 @@ void main() {
       });
 
       test('returns true when the connection is available', () async {
-        when(() => connectionChecker.hasConnection).thenAnswer((_) async => true);
+        when(() => connectionChecker.hasInternetAccess).thenAnswer((_) async => true);
 
         final network = NetworkInfoImpl(connectionChecker);
         final result = await network.isConnected().run();
@@ -35,7 +35,7 @@ void main() {
       });
 
       test('returns false when the connection is not available', () async {
-        when(() => connectionChecker.hasConnection).thenAnswer((_) async => false);
+        when(() => connectionChecker.hasInternetAccess).thenAnswer((_) async => false);
 
         final network = NetworkInfoImpl(connectionChecker);
         final result = await network.isConnected().run();

@@ -7,12 +7,12 @@ part of 'network_info.dart';
 // **************************************************************************
 
 String _$internetConnectionCheckerPlusHash() =>
-    r'16781460d03575f880eaf4f80dcc0dc6197c68f1';
+    r'f6d3f05a559340102c41b22f26242d190f46f076';
 
 /// See also [internetConnectionCheckerPlus].
 @ProviderFor(internetConnectionCheckerPlus)
 final internetConnectionCheckerPlusProvider =
-    Provider<InternetConnectionCheckerPlus>.internal(
+    Provider<InternetConnection>.internal(
   internetConnectionCheckerPlus,
   name: r'internetConnectionCheckerPlusProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,8 +22,9 @@ final internetConnectionCheckerPlusProvider =
   allTransitiveDependencies: null,
 );
 
-typedef InternetConnectionCheckerPlusRef
-    = ProviderRef<InternetConnectionCheckerPlus>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef InternetConnectionCheckerPlusRef = ProviderRef<InternetConnection>;
 String _$networkInfoHash() => r'579d178d7cd70dcfdb486ea4e6f2b89088650b71';
 
 /// See also [networkInfo].
@@ -37,5 +38,8 @@ final networkInfoProvider = AutoDisposeProvider<NetworkInfo>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NetworkInfoRef = AutoDisposeProviderRef<NetworkInfo>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

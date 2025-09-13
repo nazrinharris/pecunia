@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:money2/money2.dart';
 import 'package:pecunia/core/errors/failures.dart';
 import 'package:pecunia/core/infrastructure/money2/pecunia_currencies.dart';
@@ -172,6 +173,8 @@ class CreateTxnForm extends HookConsumerWidget {
     final nameNode = useFocusNode();
     final descriptionNode = useFocusNode();
 
+    final chosenDate = useState(DateTime.now());
+
     useEffect(() {
       baseCurrency.value = chosenAccount.value.currency;
       targetCurrency.value = chosenAccount.value.currency;
@@ -240,7 +243,7 @@ class CreateTxnForm extends HookConsumerWidget {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: RadioListTile<TransactionType>(
-                      title: Text(type.toDescription()),
+                      title: Text(type.toDisplayName()),
                       value: type,
                       groupValue: txnType.value,
                       activeColor: txnType.value.isCredit() ? Colors.green[200] : Colors.red[200],
@@ -255,6 +258,8 @@ class CreateTxnForm extends HookConsumerWidget {
             ),
             const SizedBox(height: 14),
             CategoryField(chosenCategory),
+            const SizedBox(height: 14),
+            DateField(chosenDate),
             const SizedBox(height: 14),
             const Align(
               alignment: Alignment.centerLeft,
@@ -370,7 +375,7 @@ class CreateTxnForm extends HookConsumerWidget {
                   if (isCurrencyExchangeEnabled.value) {
                     exchangeRateInput = double.parse(exchangeRateController.text);
                     targetAmountInput = double.parse(targetAmountController.text);
-                    targetCurrencyInput = targetCurrency.value.code;
+                    targetCurrencyInput = targetCurrency.value.isoCode;
                   }
 
                   await ref.read(createTransactionProvider.notifier).createTransaction(
@@ -379,22 +384,63 @@ class CreateTxnForm extends HookConsumerWidget {
                         accountId: chosenAccount.value.id,
                         transactionType: txnType.value,
                         baseAmount: double.parse(baseAmountController.text),
-                        baseCurrency: baseCurrency.value.code,
+                        baseCurrency: baseCurrency.value.isoCode,
                         exchangeRate: exchangeRateInput,
                         targetCurrency: targetCurrencyInput,
                         targetAmount: targetAmountInput,
                         category: chosenCategory.value,
+                        transactionDate: chosenDate.value,
                       );
                 }
               },
               style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
+                  backgroundColor: WidgetStatePropertyAll(
                 Theme.of(context).colorScheme.onSecondary,
               )),
               child: const Text('Create Transaction'),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class DateField extends ConsumerWidget {
+  const DateField(this.date, {super.key});
+
+  final ValueNotifier<DateTime> date;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dateFormat = DateFormat('MMM dd, yyyy');
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Display formatted date
+          Text(
+            dateFormat.format(date.value),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          // Date picker button
+          IconButton(
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: date.value,
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+              );
+              if (picked != null && picked != date.value) {
+                date.value = picked;
+              }
+            },
+            icon: const Icon(Icons.calendar_today),
+          ),
+        ],
       ),
     );
   }
@@ -681,7 +727,7 @@ class BaseCurrencyField extends HookConsumerWidget {
                 return PecuniaCurrencies.toList().map<PopupMenuItem<Currency>>((Currency c) {
                   return PopupMenuItem<Currency>(
                     value: c,
-                    child: Text('${c.code} - ${c.name}', textAlign: TextAlign.center),
+                    child: Text('${c.isoCode} - ${c.name}', textAlign: TextAlign.center),
                   );
                 }).toList();
               },
@@ -691,7 +737,7 @@ class BaseCurrencyField extends HookConsumerWidget {
                   children: [
                     Expanded(
                         child: Text(
-                      baseCurrency.value.code,
+                      baseCurrency.value.isoCode,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -777,7 +823,7 @@ class TargetCurrencyField extends HookConsumerWidget {
                 return PecuniaCurrencies.toList().map<PopupMenuItem<Currency>>((Currency c) {
                   return PopupMenuItem<Currency>(
                     value: c,
-                    child: Text('${c.code} - ${c.name}', textAlign: TextAlign.center),
+                    child: Text('${c.isoCode} - ${c.name}', textAlign: TextAlign.center),
                   );
                 }).toList();
               },
@@ -787,7 +833,7 @@ class TargetCurrencyField extends HookConsumerWidget {
                   children: [
                     Expanded(
                         child: Text(
-                      targetCurrency.value.code,
+                      targetCurrency.value.isoCode,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,

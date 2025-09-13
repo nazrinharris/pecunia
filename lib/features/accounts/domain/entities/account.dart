@@ -62,7 +62,7 @@ class Account with _$Account {
       name: name,
       initialBalance: initialBalance,
       balance: balance,
-      currency: currency.code,
+      currency: currency.isoCode,
       createdOn: createdOn.toUtc(),
       description: description.value,
     );

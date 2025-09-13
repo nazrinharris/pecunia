@@ -12,7 +12,7 @@ part of 'auth_errors.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AuthException {
@@ -60,7 +60,9 @@ mixin _$AuthException {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuthExceptionCopyWith<AuthException> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -84,6 +86,8 @@ class _$AuthExceptionCopyWithImpl<$Res, $Val extends AuthException>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -104,31 +108,33 @@ class _$AuthExceptionCopyWithImpl<$Res, $Val extends AuthException>
 }
 
 /// @nodoc
-abstract class _$$_AuthExceptionCopyWith<$Res>
+abstract class _$$AuthExceptionImplCopyWith<$Res>
     implements $AuthExceptionCopyWith<$Res> {
-  factory _$$_AuthExceptionCopyWith(
-          _$_AuthException value, $Res Function(_$_AuthException) then) =
-      __$$_AuthExceptionCopyWithImpl<$Res>;
+  factory _$$AuthExceptionImplCopyWith(
+          _$AuthExceptionImpl value, $Res Function(_$AuthExceptionImpl) then) =
+      __$$AuthExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({StackTrace stackTrace, AuthErrorType errorType});
 }
 
 /// @nodoc
-class __$$_AuthExceptionCopyWithImpl<$Res>
-    extends _$AuthExceptionCopyWithImpl<$Res, _$_AuthException>
-    implements _$$_AuthExceptionCopyWith<$Res> {
-  __$$_AuthExceptionCopyWithImpl(
-      _$_AuthException _value, $Res Function(_$_AuthException) _then)
+class __$$AuthExceptionImplCopyWithImpl<$Res>
+    extends _$AuthExceptionCopyWithImpl<$Res, _$AuthExceptionImpl>
+    implements _$$AuthExceptionImplCopyWith<$Res> {
+  __$$AuthExceptionImplCopyWithImpl(
+      _$AuthExceptionImpl _value, $Res Function(_$AuthExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
   }) {
-    return _then(_$_AuthException(
+    return _then(_$AuthExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -143,8 +149,8 @@ class __$$_AuthExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AuthException extends _AuthException {
-  _$_AuthException({required this.stackTrace, required this.errorType})
+class _$AuthExceptionImpl extends _AuthException {
+  _$AuthExceptionImpl({required this.stackTrace, required this.errorType})
       : super._();
 
   @override
@@ -158,10 +164,10 @@ class _$_AuthException extends _AuthException {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AuthException &&
+            other is _$AuthExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -171,11 +177,13 @@ class _$_AuthException extends _AuthException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AuthExceptionCopyWith<_$_AuthException> get copyWith =>
-      __$$_AuthExceptionCopyWithImpl<_$_AuthException>(this, _$identity);
+  _$$AuthExceptionImplCopyWith<_$AuthExceptionImpl> get copyWith =>
+      __$$AuthExceptionImplCopyWithImpl<_$AuthExceptionImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -246,45 +254,50 @@ class _$_AuthException extends _AuthException {
 abstract class _AuthException extends AuthException {
   factory _AuthException(
       {required final StackTrace stackTrace,
-      required final AuthErrorType errorType}) = _$_AuthException;
+      required final AuthErrorType errorType}) = _$AuthExceptionImpl;
   _AuthException._() : super._();
 
   @override
   StackTrace get stackTrace;
   @override
   AuthErrorType get errorType;
+
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_AuthExceptionCopyWith<_$_AuthException> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AuthExceptionImplCopyWith<_$AuthExceptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownAuthExceptionCopyWith<$Res>
+abstract class _$$UnknownAuthExceptionImplCopyWith<$Res>
     implements $AuthExceptionCopyWith<$Res> {
-  factory _$$_UnknownAuthExceptionCopyWith(_$_UnknownAuthException value,
-          $Res Function(_$_UnknownAuthException) then) =
-      __$$_UnknownAuthExceptionCopyWithImpl<$Res>;
+  factory _$$UnknownAuthExceptionImplCopyWith(_$UnknownAuthExceptionImpl value,
+          $Res Function(_$UnknownAuthExceptionImpl) then) =
+      __$$UnknownAuthExceptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({StackTrace stackTrace, AuthErrorType errorType});
 }
 
 /// @nodoc
-class __$$_UnknownAuthExceptionCopyWithImpl<$Res>
-    extends _$AuthExceptionCopyWithImpl<$Res, _$_UnknownAuthException>
-    implements _$$_UnknownAuthExceptionCopyWith<$Res> {
-  __$$_UnknownAuthExceptionCopyWithImpl(_$_UnknownAuthException _value,
-      $Res Function(_$_UnknownAuthException) _then)
+class __$$UnknownAuthExceptionImplCopyWithImpl<$Res>
+    extends _$AuthExceptionCopyWithImpl<$Res, _$UnknownAuthExceptionImpl>
+    implements _$$UnknownAuthExceptionImplCopyWith<$Res> {
+  __$$UnknownAuthExceptionImplCopyWithImpl(_$UnknownAuthExceptionImpl _value,
+      $Res Function(_$UnknownAuthExceptionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? stackTrace = null,
     Object? errorType = null,
   }) {
-    return _then(_$_UnknownAuthException(
+    return _then(_$UnknownAuthExceptionImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -299,13 +312,15 @@ class __$$_UnknownAuthExceptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownAuthException extends _UnknownAuthException {
-  _$_UnknownAuthException({required this.stackTrace, required this.errorType})
+class _$UnknownAuthExceptionImpl extends _UnknownAuthException {
+  _$UnknownAuthExceptionImpl(
+      {required this.stackTrace, this.errorType = AuthErrorType.unknown})
       : super._();
 
   @override
   final StackTrace stackTrace;
   @override
+  @JsonKey()
   final AuthErrorType errorType;
 
   @override
@@ -314,10 +329,10 @@ class _$_UnknownAuthException extends _UnknownAuthException {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UnknownAuthException &&
+            other is _$UnknownAuthExceptionImpl &&
             (identical(other.stackTrace, stackTrace) ||
                 other.stackTrace == stackTrace) &&
             (identical(other.errorType, errorType) ||
@@ -327,12 +342,15 @@ class _$_UnknownAuthException extends _UnknownAuthException {
   @override
   int get hashCode => Object.hash(runtimeType, stackTrace, errorType);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownAuthExceptionCopyWith<_$_UnknownAuthException> get copyWith =>
-      __$$_UnknownAuthExceptionCopyWithImpl<_$_UnknownAuthException>(
-          this, _$identity);
+  _$$UnknownAuthExceptionImplCopyWith<_$UnknownAuthExceptionImpl>
+      get copyWith =>
+          __$$UnknownAuthExceptionImplCopyWithImpl<_$UnknownAuthExceptionImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -403,17 +421,20 @@ class _$_UnknownAuthException extends _UnknownAuthException {
 abstract class _UnknownAuthException extends AuthException {
   factory _UnknownAuthException(
       {required final StackTrace stackTrace,
-      required final AuthErrorType errorType}) = _$_UnknownAuthException;
+      final AuthErrorType errorType}) = _$UnknownAuthExceptionImpl;
   _UnknownAuthException._() : super._();
 
   @override
   StackTrace get stackTrace;
   @override
   AuthErrorType get errorType;
+
+  /// Create a copy of AuthException
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UnknownAuthExceptionCopyWith<_$_UnknownAuthException> get copyWith =>
-      throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnknownAuthExceptionImplCopyWith<_$UnknownAuthExceptionImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -433,6 +454,9 @@ mixin _$AuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -446,6 +470,9 @@ mixin _$AuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -459,6 +486,9 @@ mixin _$AuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -467,6 +497,8 @@ mixin _$AuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -474,6 +506,8 @@ mixin _$AuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -481,11 +515,15 @@ mixin _$AuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuthFailureCopyWith<AuthFailure> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -513,6 +551,8 @@ class _$AuthFailureCopyWithImpl<$Res, $Val extends AuthFailure>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -541,11 +581,11 @@ class _$AuthFailureCopyWithImpl<$Res, $Val extends AuthFailure>
 }
 
 /// @nodoc
-abstract class _$$_AuthFailureCopyWith<$Res>
+abstract class _$$AuthFailureImplCopyWith<$Res>
     implements $AuthFailureCopyWith<$Res> {
-  factory _$$_AuthFailureCopyWith(
-          _$_AuthFailure value, $Res Function(_$_AuthFailure) then) =
-      __$$_AuthFailureCopyWithImpl<$Res>;
+  factory _$$AuthFailureImplCopyWith(
+          _$AuthFailureImpl value, $Res Function(_$AuthFailureImpl) then) =
+      __$$AuthFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -556,13 +596,15 @@ abstract class _$$_AuthFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AuthFailureCopyWithImpl<$Res>
-    extends _$AuthFailureCopyWithImpl<$Res, _$_AuthFailure>
-    implements _$$_AuthFailureCopyWith<$Res> {
-  __$$_AuthFailureCopyWithImpl(
-      _$_AuthFailure _value, $Res Function(_$_AuthFailure) _then)
+class __$$AuthFailureImplCopyWithImpl<$Res>
+    extends _$AuthFailureCopyWithImpl<$Res, _$AuthFailureImpl>
+    implements _$$AuthFailureImplCopyWith<$Res> {
+  __$$AuthFailureImplCopyWithImpl(
+      _$AuthFailureImpl _value, $Res Function(_$AuthFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -571,7 +613,7 @@ class __$$_AuthFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_AuthFailure(
+    return _then(_$AuthFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -592,8 +634,8 @@ class __$$_AuthFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AuthFailure extends _AuthFailure {
-  const _$_AuthFailure(
+class _$AuthFailureImpl extends _AuthFailure {
+  const _$AuthFailureImpl(
       {required this.stackTrace,
       required this.message,
       required this.errorType,
@@ -609,11 +651,13 @@ class _$_AuthFailure extends _AuthFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AuthFailureCopyWith<_$_AuthFailure> get copyWith =>
-      __$$_AuthFailureCopyWithImpl<_$_AuthFailure>(this, _$identity);
+  _$$AuthFailureImplCopyWith<_$AuthFailureImpl> get copyWith =>
+      __$$AuthFailureImplCopyWithImpl<_$AuthFailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -627,6 +671,9 @@ class _$_AuthFailure extends _AuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) {
     return $default(stackTrace, message, errorType, rawException);
   }
@@ -643,6 +690,9 @@ class _$_AuthFailure extends _AuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) {
     return $default?.call(stackTrace, message, errorType, rawException);
   }
@@ -659,6 +709,9 @@ class _$_AuthFailure extends _AuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -673,6 +726,8 @@ class _$_AuthFailure extends _AuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) {
     return $default(this);
   }
@@ -683,6 +738,8 @@ class _$_AuthFailure extends _AuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) {
     return $default?.call(this);
   }
@@ -693,6 +750,8 @@ class _$_AuthFailure extends _AuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -707,7 +766,7 @@ abstract class _AuthFailure extends AuthFailure {
       {required final StackTrace stackTrace,
       required final String message,
       required final AuthErrorType errorType,
-      final Object? rawException}) = _$_AuthFailure;
+      final Object? rawException}) = _$AuthFailureImpl;
   const _AuthFailure._() : super._();
 
   @override
@@ -718,18 +777,22 @@ abstract class _AuthFailure extends AuthFailure {
   AuthErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_AuthFailureCopyWith<_$_AuthFailure> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AuthFailureImplCopyWith<_$AuthFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_NoInternetAuthFailureCopyWith<$Res>
+abstract class _$$NoInternetAuthFailureImplCopyWith<$Res>
     implements $AuthFailureCopyWith<$Res> {
-  factory _$$_NoInternetAuthFailureCopyWith(_$_NoInternetAuthFailure value,
-          $Res Function(_$_NoInternetAuthFailure) then) =
-      __$$_NoInternetAuthFailureCopyWithImpl<$Res>;
+  factory _$$NoInternetAuthFailureImplCopyWith(
+          _$NoInternetAuthFailureImpl value,
+          $Res Function(_$NoInternetAuthFailureImpl) then) =
+      __$$NoInternetAuthFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -740,13 +803,15 @@ abstract class _$$_NoInternetAuthFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_NoInternetAuthFailureCopyWithImpl<$Res>
-    extends _$AuthFailureCopyWithImpl<$Res, _$_NoInternetAuthFailure>
-    implements _$$_NoInternetAuthFailureCopyWith<$Res> {
-  __$$_NoInternetAuthFailureCopyWithImpl(_$_NoInternetAuthFailure _value,
-      $Res Function(_$_NoInternetAuthFailure) _then)
+class __$$NoInternetAuthFailureImplCopyWithImpl<$Res>
+    extends _$AuthFailureCopyWithImpl<$Res, _$NoInternetAuthFailureImpl>
+    implements _$$NoInternetAuthFailureImplCopyWith<$Res> {
+  __$$NoInternetAuthFailureImplCopyWithImpl(_$NoInternetAuthFailureImpl _value,
+      $Res Function(_$NoInternetAuthFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -755,7 +820,7 @@ class __$$_NoInternetAuthFailureCopyWithImpl<$Res>
     Object? errorType = null,
     Object? rawException = freezed,
   }) {
-    return _then(_$_NoInternetAuthFailure(
+    return _then(_$NoInternetAuthFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -776,8 +841,8 @@ class __$$_NoInternetAuthFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
-  const _$_NoInternetAuthFailure(
+class _$NoInternetAuthFailureImpl extends _NoInternetAuthFailure {
+  const _$NoInternetAuthFailureImpl(
       {required this.stackTrace,
       required this.message,
       this.errorType = AuthErrorType.noInternet,
@@ -794,12 +859,14 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NoInternetAuthFailureCopyWith<_$_NoInternetAuthFailure> get copyWith =>
-      __$$_NoInternetAuthFailureCopyWithImpl<_$_NoInternetAuthFailure>(
-          this, _$identity);
+  _$$NoInternetAuthFailureImplCopyWith<_$NoInternetAuthFailureImpl>
+      get copyWith => __$$NoInternetAuthFailureImplCopyWithImpl<
+          _$NoInternetAuthFailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -813,6 +880,9 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) {
     return noInternet(stackTrace, message, errorType, rawException);
   }
@@ -829,6 +899,9 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) {
     return noInternet?.call(stackTrace, message, errorType, rawException);
   }
@@ -845,6 +918,9 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (noInternet != null) {
@@ -859,6 +935,8 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) {
     return noInternet(this);
   }
@@ -869,6 +947,8 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) {
     return noInternet?.call(this);
   }
@@ -879,6 +959,8 @@ class _$_NoInternetAuthFailure extends _NoInternetAuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (noInternet != null) {
@@ -893,7 +975,7 @@ abstract class _NoInternetAuthFailure extends AuthFailure {
       {required final StackTrace stackTrace,
       required final String message,
       final AuthErrorType errorType,
-      final Object? rawException}) = _$_NoInternetAuthFailure;
+      final Object? rawException}) = _$NoInternetAuthFailureImpl;
   const _NoInternetAuthFailure._() : super._();
 
   @override
@@ -904,18 +986,21 @@ abstract class _NoInternetAuthFailure extends AuthFailure {
   AuthErrorType get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_NoInternetAuthFailureCopyWith<_$_NoInternetAuthFailure> get copyWith =>
-      throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$NoInternetAuthFailureImplCopyWith<_$NoInternetAuthFailureImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$_UnknownAuthFailureCopyWith<$Res>
+abstract class _$$UnknownAuthFailureImplCopyWith<$Res>
     implements $AuthFailureCopyWith<$Res> {
-  factory _$$_UnknownAuthFailureCopyWith(_$_UnknownAuthFailure value,
-          $Res Function(_$_UnknownAuthFailure) then) =
-      __$$_UnknownAuthFailureCopyWithImpl<$Res>;
+  factory _$$UnknownAuthFailureImplCopyWith(_$UnknownAuthFailureImpl value,
+          $Res Function(_$UnknownAuthFailureImpl) then) =
+      __$$UnknownAuthFailureImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -926,13 +1011,15 @@ abstract class _$$_UnknownAuthFailureCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UnknownAuthFailureCopyWithImpl<$Res>
-    extends _$AuthFailureCopyWithImpl<$Res, _$_UnknownAuthFailure>
-    implements _$$_UnknownAuthFailureCopyWith<$Res> {
-  __$$_UnknownAuthFailureCopyWithImpl(
-      _$_UnknownAuthFailure _value, $Res Function(_$_UnknownAuthFailure) _then)
+class __$$UnknownAuthFailureImplCopyWithImpl<$Res>
+    extends _$AuthFailureCopyWithImpl<$Res, _$UnknownAuthFailureImpl>
+    implements _$$UnknownAuthFailureImplCopyWith<$Res> {
+  __$$UnknownAuthFailureImplCopyWithImpl(_$UnknownAuthFailureImpl _value,
+      $Res Function(_$UnknownAuthFailureImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -941,7 +1028,7 @@ class __$$_UnknownAuthFailureCopyWithImpl<$Res>
     Object? errorType = freezed,
     Object? rawException = freezed,
   }) {
-    return _then(_$_UnknownAuthFailure(
+    return _then(_$UnknownAuthFailureImpl(
       stackTrace: null == stackTrace
           ? _value.stackTrace
           : stackTrace // ignore: cast_nullable_to_non_nullable
@@ -962,10 +1049,10 @@ class __$$_UnknownAuthFailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UnknownAuthFailure extends _UnknownAuthFailure {
-  const _$_UnknownAuthFailure(
+class _$UnknownAuthFailureImpl extends _UnknownAuthFailure {
+  const _$UnknownAuthFailureImpl(
       {required this.stackTrace,
-      required this.message,
+      this.message = defaultUnknownAuthErrorMessage,
       this.errorType = AuthErrorType.unknown,
       this.rawException})
       : super._();
@@ -973,6 +1060,7 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
   @override
   final StackTrace stackTrace;
   @override
+  @JsonKey()
   final String message;
   @override
   @JsonKey()
@@ -980,11 +1068,13 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
   @override
   final Object? rawException;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UnknownAuthFailureCopyWith<_$_UnknownAuthFailure> get copyWith =>
-      __$$_UnknownAuthFailureCopyWithImpl<_$_UnknownAuthFailure>(
+  _$$UnknownAuthFailureImplCopyWith<_$UnknownAuthFailureImpl> get copyWith =>
+      __$$UnknownAuthFailureImplCopyWithImpl<_$UnknownAuthFailureImpl>(
           this, _$identity);
 
   @override
@@ -999,6 +1089,9 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
     required TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)
         unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
   }) {
     return unknown(stackTrace, message, errorType, rawException);
   }
@@ -1015,6 +1108,9 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
     TResult? Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
   }) {
     return unknown?.call(stackTrace, message, errorType, rawException);
   }
@@ -1031,6 +1127,9 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
     TResult Function(StackTrace stackTrace, String message,
             AuthErrorType? errorType, Object? rawException)?
         unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (unknown != null) {
@@ -1045,6 +1144,8 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
     TResult Function(_AuthFailure value) $default, {
     required TResult Function(_NoInternetAuthFailure value) noInternet,
     required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
   }) {
     return unknown(this);
   }
@@ -1055,6 +1156,8 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
     TResult? Function(_AuthFailure value)? $default, {
     TResult? Function(_NoInternetAuthFailure value)? noInternet,
     TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
   }) {
     return unknown?.call(this);
   }
@@ -1065,6 +1168,8 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
     TResult Function(_AuthFailure value)? $default, {
     TResult Function(_NoInternetAuthFailure value)? noInternet,
     TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
     required TResult orElse(),
   }) {
     if (unknown != null) {
@@ -1077,9 +1182,9 @@ class _$_UnknownAuthFailure extends _UnknownAuthFailure {
 abstract class _UnknownAuthFailure extends AuthFailure {
   const factory _UnknownAuthFailure(
       {required final StackTrace stackTrace,
-      required final String message,
+      final String message,
       final AuthErrorType? errorType,
-      final Object? rawException}) = _$_UnknownAuthFailure;
+      final Object? rawException}) = _$UnknownAuthFailureImpl;
   const _UnknownAuthFailure._() : super._();
 
   @override
@@ -1090,8 +1195,226 @@ abstract class _UnknownAuthFailure extends AuthFailure {
   AuthErrorType? get errorType;
   @override
   Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_UnknownAuthFailureCopyWith<_$_UnknownAuthFailure> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnknownAuthFailureImplCopyWith<_$UnknownAuthFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$IncorrectCredentialsAuthFailureImplCopyWith<$Res>
+    implements $AuthFailureCopyWith<$Res> {
+  factory _$$IncorrectCredentialsAuthFailureImplCopyWith(
+          _$IncorrectCredentialsAuthFailureImpl value,
+          $Res Function(_$IncorrectCredentialsAuthFailureImpl) then) =
+      __$$IncorrectCredentialsAuthFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {StackTrace stackTrace,
+      String message,
+      AuthErrorType? errorType,
+      Object? rawException});
+}
+
+/// @nodoc
+class __$$IncorrectCredentialsAuthFailureImplCopyWithImpl<$Res>
+    extends _$AuthFailureCopyWithImpl<$Res,
+        _$IncorrectCredentialsAuthFailureImpl>
+    implements _$$IncorrectCredentialsAuthFailureImplCopyWith<$Res> {
+  __$$IncorrectCredentialsAuthFailureImplCopyWithImpl(
+      _$IncorrectCredentialsAuthFailureImpl _value,
+      $Res Function(_$IncorrectCredentialsAuthFailureImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? stackTrace = null,
+    Object? message = null,
+    Object? errorType = freezed,
+    Object? rawException = freezed,
+  }) {
+    return _then(_$IncorrectCredentialsAuthFailureImpl(
+      stackTrace: null == stackTrace
+          ? _value.stackTrace
+          : stackTrace // ignore: cast_nullable_to_non_nullable
+              as StackTrace,
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+      errorType: freezed == errorType
+          ? _value.errorType
+          : errorType // ignore: cast_nullable_to_non_nullable
+              as AuthErrorType?,
+      rawException:
+          freezed == rawException ? _value.rawException : rawException,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$IncorrectCredentialsAuthFailureImpl
+    extends _IncorrectCredentialsAuthFailure {
+  const _$IncorrectCredentialsAuthFailureImpl(
+      {required this.stackTrace,
+      required this.message,
+      this.errorType = AuthErrorType.incorrectCredentials,
+      this.rawException})
+      : super._();
+
+  @override
+  final StackTrace stackTrace;
+  @override
+  final String message;
+  @override
+  @JsonKey()
+  final AuthErrorType? errorType;
+  @override
+  final Object? rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$IncorrectCredentialsAuthFailureImplCopyWith<
+          _$IncorrectCredentialsAuthFailureImpl>
+      get copyWith => __$$IncorrectCredentialsAuthFailureImplCopyWithImpl<
+          _$IncorrectCredentialsAuthFailureImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
+        $default, {
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)
+        noInternet,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        unknown,
+    required TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials(stackTrace, message, errorType, rawException);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        $default, {
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        noInternet,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        unknown,
+    TResult? Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials?.call(
+        stackTrace, message, errorType, rawException);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        $default, {
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType errorType, Object? rawException)?
+        noInternet,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        unknown,
+    TResult Function(StackTrace stackTrace, String message,
+            AuthErrorType? errorType, Object? rawException)?
+        incorrectCredentials,
+    required TResult orElse(),
+  }) {
+    if (incorrectCredentials != null) {
+      return incorrectCredentials(stackTrace, message, errorType, rawException);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_AuthFailure value) $default, {
+    required TResult Function(_NoInternetAuthFailure value) noInternet,
+    required TResult Function(_UnknownAuthFailure value) unknown,
+    required TResult Function(_IncorrectCredentialsAuthFailure value)
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_AuthFailure value)? $default, {
+    TResult? Function(_NoInternetAuthFailure value)? noInternet,
+    TResult? Function(_UnknownAuthFailure value)? unknown,
+    TResult? Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
+  }) {
+    return incorrectCredentials?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_AuthFailure value)? $default, {
+    TResult Function(_NoInternetAuthFailure value)? noInternet,
+    TResult Function(_UnknownAuthFailure value)? unknown,
+    TResult Function(_IncorrectCredentialsAuthFailure value)?
+        incorrectCredentials,
+    required TResult orElse(),
+  }) {
+    if (incorrectCredentials != null) {
+      return incorrectCredentials(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _IncorrectCredentialsAuthFailure extends AuthFailure {
+  const factory _IncorrectCredentialsAuthFailure(
+      {required final StackTrace stackTrace,
+      required final String message,
+      final AuthErrorType? errorType,
+      final Object? rawException}) = _$IncorrectCredentialsAuthFailureImpl;
+  const _IncorrectCredentialsAuthFailure._() : super._();
+
+  @override
+  StackTrace get stackTrace;
+  @override
+  String get message;
+  @override
+  AuthErrorType? get errorType;
+  @override
+  Object? get rawException;
+
+  /// Create a copy of AuthFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$IncorrectCredentialsAuthFailureImplCopyWith<
+          _$IncorrectCredentialsAuthFailureImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

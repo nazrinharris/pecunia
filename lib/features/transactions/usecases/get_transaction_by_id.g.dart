@@ -30,8 +30,6 @@ class _SystemHash {
   }
 }
 
-typedef GetTransactionByIdRef = AutoDisposeFutureProviderRef<Transaction>;
-
 /// See also [getTransactionById].
 @ProviderFor(getTransactionById)
 const getTransactionByIdProvider = GetTransactionByIdFamily();
@@ -82,11 +80,11 @@ class GetTransactionByIdProvider
     extends AutoDisposeFutureProvider<Transaction> {
   /// See also [getTransactionById].
   GetTransactionByIdProvider(
-    this.txnId, {
-    this.debugReturnError,
-  }) : super.internal(
+    String txnId, {
+    bool? debugReturnError,
+  }) : this._internal(
           (ref) => getTransactionById(
-            ref,
+            ref as GetTransactionByIdRef,
             txnId,
             debugReturnError: debugReturnError,
           ),
@@ -99,10 +97,47 @@ class GetTransactionByIdProvider
           dependencies: GetTransactionByIdFamily._dependencies,
           allTransitiveDependencies:
               GetTransactionByIdFamily._allTransitiveDependencies,
+          txnId: txnId,
+          debugReturnError: debugReturnError,
         );
+
+  GetTransactionByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.txnId,
+    required this.debugReturnError,
+  }) : super.internal();
 
   final String txnId;
   final bool? debugReturnError;
+
+  @override
+  Override overrideWith(
+    FutureOr<Transaction> Function(GetTransactionByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GetTransactionByIdProvider._internal(
+        (ref) => create(ref as GetTransactionByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        txnId: txnId,
+        debugReturnError: debugReturnError,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Transaction> createElement() {
+    return _GetTransactionByIdProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -120,4 +155,27 @@ class GetTransactionByIdProvider
     return _SystemHash.finish(hash);
   }
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GetTransactionByIdRef on AutoDisposeFutureProviderRef<Transaction> {
+  /// The parameter `txnId` of this provider.
+  String get txnId;
+
+  /// The parameter `debugReturnError` of this provider.
+  bool? get debugReturnError;
+}
+
+class _GetTransactionByIdProviderElement
+    extends AutoDisposeFutureProviderElement<Transaction>
+    with GetTransactionByIdRef {
+  _GetTransactionByIdProviderElement(super.provider);
+
+  @override
+  String get txnId => (origin as GetTransactionByIdProvider).txnId;
+  @override
+  bool? get debugReturnError =>
+      (origin as GetTransactionByIdProvider).debugReturnError;
+}
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

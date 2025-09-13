@@ -1,7 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'pecunia_user.freezed.dart';
 part 'pecunia_user.g.dart';
+
+enum UserType {
+  remote('remote'),
+  local('local'),
+  guest('guest'),
+  unknown('unknown');
+
+  const UserType(this.typeAsString);
+
+  final String typeAsString;
+
+  static UserType fromString(String typeAsString) {
+    return UserType.values.firstWhere(
+      (element) => element.typeAsString == typeAsString,
+      orElse: () => UserType.unknown,
+    );
+  }
+}
 
 @freezed
 class PecuniaUser with _$PecuniaUser {
@@ -9,7 +28,8 @@ class PecuniaUser with _$PecuniaUser {
     required String uid,
     required String username,
     required DateTime dateCreated,
-    String? email,
+    required UserType userType,
+    required String? email,
   }) = _PecuniaUser;
 
   const PecuniaUser._();
@@ -19,9 +39,8 @@ class PecuniaUser with _$PecuniaUser {
         username: '',
         dateCreated: DateTime.now(),
         email: '',
+        userType: UserType.unknown,
       );
-
-  factory PecuniaUser.fromJson(Map<String, dynamic> json) => _$PecuniaUserFromJson(json);
 
   factory PecuniaUser.fromDTO(PecuniaUserDTO dto) {
     return PecuniaUser(
@@ -29,22 +48,32 @@ class PecuniaUser with _$PecuniaUser {
       username: dto.username,
       dateCreated: dto.dateCreated,
       email: dto.email,
+      userType: dto.userType,
+    );
+  }
+
+  PecuniaUserDTO toDTO() {
+    return PecuniaUserDTO(
+      uid: uid,
+      username: username,
+      dateCreated: dateCreated,
+      email: email,
+      userType: userType,
     );
   }
 }
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class PecuniaUserDTO with _$PecuniaUserDTO {
   factory PecuniaUserDTO({
     required String uid,
     required String username,
     required DateTime dateCreated,
-    String? email,
+    required UserType userType,
+    required String? email,
   }) = _PecuniaUserDTO;
 
   const PecuniaUserDTO._();
-
-  factory PecuniaUserDTO.fromJson(Map<String, dynamic> json) => _$PecuniaUserDTOFromJson(json);
 
   factory PecuniaUserDTO.fromDomain(PecuniaUser user) {
     return PecuniaUserDTO(
@@ -52,7 +81,23 @@ class PecuniaUserDTO with _$PecuniaUserDTO {
       username: user.username,
       dateCreated: user.dateCreated,
       email: user.email,
+      userType: user.userType,
     );
+  }
+
+  factory PecuniaUserDTO.fromJson(Map<String, dynamic> json) {
+    debugPrint('PecuniaUserDTO.fromJson: $json');
+    if (json['userType'] == null) {
+      return PecuniaUserDTO(
+        uid: json['uid'] as String,
+        email: json['email'] as String?,
+        username: json['username'] as String,
+        dateCreated: DateTime.parse(json['dateCreated'] as String),
+        userType: UserType.unknown,
+      );
+    } else {
+      return _$PecuniaUserDTOFromJson(json);
+    }
   }
 
   PecuniaUser toDomain() {
@@ -61,6 +106,7 @@ class PecuniaUserDTO with _$PecuniaUserDTO {
       username: username,
       dateCreated: dateCreated,
       email: email,
+      userType: userType,
     );
   }
 }

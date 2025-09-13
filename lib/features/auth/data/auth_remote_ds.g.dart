@@ -6,7 +6,7 @@ part of 'auth_remote_ds.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRemoteDSHash() => r'8c3ef8c7494715f0d778ef4cc61fdb3e304d5b0b';
+String _$authRemoteDSHash() => r'acc9f259207fa0f2c9b3bfda9aba535282907fb4';
 
 /// See also [authRemoteDS].
 @ProviderFor(authRemoteDS)
@@ -19,5 +19,8 @@ final authRemoteDSProvider = AutoDisposeProvider<AuthRemoteDS>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AuthRemoteDSRef = AutoDisposeProviderRef<AuthRemoteDS>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

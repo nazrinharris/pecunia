@@ -12,7 +12,7 @@ part of 'account.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$Account {
@@ -25,7 +25,9 @@ mixin _$Account {
   DateTime get createdOn => throw _privateConstructorUsedError;
   Description get description => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Account
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AccountCopyWith<Account> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -55,6 +57,8 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Account
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -105,10 +109,10 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
 }
 
 /// @nodoc
-abstract class _$$_AccountCopyWith<$Res> implements $AccountCopyWith<$Res> {
-  factory _$$_AccountCopyWith(
-          _$_Account value, $Res Function(_$_Account) then) =
-      __$$_AccountCopyWithImpl<$Res>;
+abstract class _$$AccountImplCopyWith<$Res> implements $AccountCopyWith<$Res> {
+  factory _$$AccountImplCopyWith(
+          _$AccountImpl value, $Res Function(_$AccountImpl) then) =
+      __$$AccountImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -123,12 +127,15 @@ abstract class _$$_AccountCopyWith<$Res> implements $AccountCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_AccountCopyWithImpl<$Res>
-    extends _$AccountCopyWithImpl<$Res, _$_Account>
-    implements _$$_AccountCopyWith<$Res> {
-  __$$_AccountCopyWithImpl(_$_Account _value, $Res Function(_$_Account) _then)
+class __$$AccountImplCopyWithImpl<$Res>
+    extends _$AccountCopyWithImpl<$Res, _$AccountImpl>
+    implements _$$AccountImplCopyWith<$Res> {
+  __$$AccountImplCopyWithImpl(
+      _$AccountImpl _value, $Res Function(_$AccountImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Account
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -141,7 +148,7 @@ class __$$_AccountCopyWithImpl<$Res>
     Object? createdOn = null,
     Object? description = null,
   }) {
-    return _then(_$_Account(
+    return _then(_$AccountImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -180,8 +187,8 @@ class __$$_AccountCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Account extends _Account {
-  const _$_Account(
+class _$AccountImpl extends _Account {
+  const _$AccountImpl(
       {required this.id,
       required this.creatorUid,
       required this.name,
@@ -215,10 +222,10 @@ class _$_Account extends _Account {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Account &&
+            other is _$AccountImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.creatorUid, creatorUid) ||
                 other.creatorUid == creatorUid) &&
@@ -238,11 +245,13 @@ class _$_Account extends _Account {
   int get hashCode => Object.hash(runtimeType, id, creatorUid, name,
       initialBalance, balance, currency, createdOn, description);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Account
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountCopyWith<_$_Account> get copyWith =>
-      __$$_AccountCopyWithImpl<_$_Account>(this, _$identity);
+  _$$AccountImplCopyWith<_$AccountImpl> get copyWith =>
+      __$$AccountImplCopyWithImpl<_$AccountImpl>(this, _$identity);
 }
 
 abstract class _Account extends Account {
@@ -254,7 +263,7 @@ abstract class _Account extends Account {
       required final double balance,
       required final Currency currency,
       required final DateTime createdOn,
-      required final Description description}) = _$_Account;
+      required final Description description}) = _$AccountImpl;
   const _Account._() : super._();
 
   @override
@@ -273,8 +282,11 @@ abstract class _Account extends Account {
   DateTime get createdOn;
   @override
   Description get description;
+
+  /// Create a copy of Account
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$_AccountCopyWith<_$_Account> get copyWith =>
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AccountImplCopyWith<_$AccountImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
